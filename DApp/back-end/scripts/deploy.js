@@ -23,6 +23,13 @@ async function main() {
       lockedAmount
     )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
   );
+
+  const Lands = await hre.ethers.deployContract("Lands",[], {
+
+  })
+  console.log("Deploying lands...");
+  await Lands.waitForDeployment()
+  console.log("Land deployed!");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
