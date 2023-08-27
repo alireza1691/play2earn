@@ -62,6 +62,28 @@ library StringUtils {
         require(value == 0, "Strings: hex length insufficient");
         return string(buffer);
     }
+
+       function concatenate(uint8 x, uint8 y) internal pure returns (uint256) {
+        string memory strX = toString(x);
+        string memory strY = toString(y);
+        string memory concatenated = string(abi.encodePacked(strX, strY));
+        // return concatenated;
+        uint256 concatenatedUint = convertToUint(concatenated);
+        return concatenatedUint;
+    }
+    function convertToUint(string memory str) internal pure returns (uint256) {
+        uint256 result = 0;
+        bytes memory strBytes = bytes(str);
+        
+        for (uint256 i = 0; i < strBytes.length; i++) {
+            uint256 digit = uint256(uint8(strBytes[i])) - 48;
+            result = result * 10 + digit;
+        }
+        
+        return result;
+    }
+
+
     
 
     function getFirstTwoLetters(string memory input) internal pure returns (uint8) {

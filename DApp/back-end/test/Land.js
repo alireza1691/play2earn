@@ -2,6 +2,8 @@
 const {
     time,
     loadFixture,
+    mine,
+    mineUpTo,
   } = require("@nomicfoundation/hardhat-toolbox/network-helpers");
   const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
   const { expect, util } = require("chai");
@@ -44,7 +46,7 @@ const { ethers } = require("hardhat");
       console.log("Minted");
       const Building = await ethers.getContractFactory("Building");
       console.log("Deploying building...");
-      const building = await Building.deploy( lands.getAddress(),{})
+      const building = await Building.deploy( lands.getAddress(),stAdd,wdAdd,irAdd,gdAdd,fdAdd,{})
       await lands.addItem(building.getAddress())
       await lands.deposit(100100)
       console.log("Deployed! minting a Stone mine...");
@@ -52,14 +54,15 @@ const { ethers } = require("hardhat");
       console.log("Builded");
       const uri = await building.tokenURI(1)
       console.log(uri);
-
+      // await mine(10000,1)
+      
       const upgrade = await building.upgrade(1)
       // const i = await building.test_()
       // console.log(i);
       const uriAfterUpgrade = await building.tokenURI(1)
       console.log(uriAfterUpgrade);
 
-      wait(5)
+      await mineUpTo(1000)
   
  
 
