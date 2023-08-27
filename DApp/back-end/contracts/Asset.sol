@@ -1907,24 +1907,24 @@ contract EFS is Ownable, ERC721A, DefaultOperatorFilterer {
 
     uint64 public publicTotalSupply = 0;
 
-// Maximum supply for each type of card
-uint256 public CommonMaxSupply = 700;
-uint256 public EpicMaxSupply = 250;
-uint256 public GoldMaxSupply = 50;
-uint256 public UniqueMaxSupply = 1;
+    // Maximum supply for each type of card
+    uint256 public CommonMaxSupply = 700;
+    uint256 public EpicMaxSupply = 250;
+    uint256 public GoldMaxSupply = 50;
+    uint256 public UniqueMaxSupply = 1;
 
-// Ratios for each type of card (divided by 1000)
-uint256 public CommonCardRatio = 1 * 10 ** 18;
-uint256 public EpicCardRatio = 3 * 10 ** 18;
-uint256 public GoldCardRatio = 10 * 10 ** 18;
-uint256 public UniqueCardRatio = 30 * 10 ** 18;
+    // Ratios for each type of card (divided by 1000)
+    uint256 public CommonCardRatio = 1 * 10 ** 18;
+    uint256 public EpicCardRatio = 3 * 10 ** 18;
+    uint256 public GoldCardRatio = 10 * 10 ** 18;
+    uint256 public UniqueCardRatio = 30 * 10 ** 18;
 
-// Ratios for each star rating of players (divided by 1000)
-uint256 public OneStarRatio = 1 * 10 ** 18;
-uint256 public TwoStarRatio = 1.2 * 10 ** 18;
-uint256 public ThreeStarRatio = 1.3 * 10 ** 18;
-uint256 public FourStarRatio = 1.5 * 10 ** 18;
-  
+    // Ratios for each star rating of players (divided by 1000)
+    uint256 public OneStarRatio = 1 * 10 ** 18;
+    uint256 public TwoStarRatio = 1.2 * 10 ** 18;
+    uint256 public ThreeStarRatio = 1.3 * 10 ** 18;
+    uint256 public FourStarRatio = 1.5 * 10 ** 18;
+    
 
    
 
@@ -1955,21 +1955,21 @@ uint256 public FourStarRatio = 1.5 * 10 ** 18;
     }
 
   // Function to add star ratings for cards
-function addCardsStar(CardsStar[] memory _data) public onlyOwner {
-    // Iterate over the array of card star data
-    for (uint i = 0; i < _data.length; i++) {
-        // Assign the star rating to the corresponding card ID in the mapping
-        cardStarRatio[_data[i].id] = _data[i].star;
+    function addCardsStar(CardsStar[] memory _data) public onlyOwner {
+        // Iterate over the array of card star data
+        for (uint i = 0; i < _data.length; i++) {
+            // Assign the star rating to the corresponding card ID in the mapping
+            cardStarRatio[_data[i].id] = _data[i].star;
+        }
     }
-}
 
    // Get the price in ETH for a card
-function getPriceEth(
-    uint256 _cardId,
-    uint256 _cardType
-) public view returns (uint256) {
-    uint256 _types;
-    uint256 _star;
+    function getPriceEth(
+        uint256 _cardId,
+        uint256 _cardType
+    ) public view returns (uint256) {
+        uint256 _types;
+        uint256 _star;
 
     // Determine the ratio for the given card type
     if (_cardType == 1) {
@@ -2002,15 +2002,15 @@ function getPriceEth(
     
     // Convert the price to ETH by dividing by 10^18 twice
     return ethPrice / (10 ** 18) / (10 ** 18);
-}
+    }
 
 
-// Get the total price in ETH for a basket of cards
-function getPriceEthBasket(
-    uint64[] memory playerIds,
-    uint64[] memory playerTypes,
-    uint64[] memory mintAmounts
-) public view returns (uint256) {
+    // Get the total price in ETH for a basket of cards
+    function getPriceEthBasket(
+        uint64[] memory playerIds,
+        uint64[] memory playerTypes,
+        uint64[] memory mintAmounts
+    ) public view returns (uint256) {
     // Check that the lengths of the input arrays are the same
     require(
         playerIds.length == playerTypes.length &&
@@ -2068,15 +2068,15 @@ function getPriceEthBasket(
 
     // Return the total price in ETH
     return totalPrice;
-}
+    }
 
     //Get Supply
    // Get the supply of a player's NFTs and perform a max supply validation
-function getSupply(
-    uint256 _playerId,
-    uint256 _playerType,
-    uint256 _mintAmount
-) public view returns (uint256) {
+    function getSupply(
+        uint256 _playerId,
+        uint256 _playerType,
+        uint256 _mintAmount
+    ) public view returns (uint256) {
     // Check the player type and perform the corresponding max supply validation
     if (_playerType == 1) {
         require(
@@ -2112,11 +2112,11 @@ function getSupply(
 
     // Return the current supply of the player's NFTs for the specified type
     return totalSupply[_playerId][_playerType];
-}
+    }
    
    // Get the remaining supply for a specific player and player type
-function getRemaining(uint256 _playerId, uint256 _playerType) public view returns (uint256) {
-    uint256 _maxSupply;
+    function getRemaining(uint256 _playerId, uint256 _playerType) public view returns (uint256) {
+        uint256 _maxSupply;
 
     // Determine the maximum supply based on the player type
     if (_playerType == 1) {
@@ -2133,10 +2133,10 @@ function getRemaining(uint256 _playerId, uint256 _playerType) public view return
 
     // Calculate the remaining supply by subtracting the current supply from the maximum supply
     return _maxSupply - totalSupply[_playerId][_playerType];
-}
+    }
 
-// Get the remaining supply for all player types for a specific player
-function getRemainingId(uint256 _playerId) public view returns (string memory) {
+    // Get the remaining supply for all player types for a specific player
+    function getRemainingId(uint256 _playerId) public view returns (string memory) {
     // Calculate the remaining supply for each player type
     uint256 _Common = CommonMaxSupply - totalSupply[_playerId][1];
     uint256 _Epic = EpicMaxSupply - totalSupply[_playerId][2];
@@ -2145,22 +2145,22 @@ function getRemainingId(uint256 _playerId) public view returns (string memory) {
 
     // Concatenate the remaining supply values into a string and return it
     return string.concat(Strings.toString(_Common), ",", Strings.toString(_Epic), ",", Strings.toString(_Gold), ",", Strings.toString(_Unique));
-}
-// Function to calculate the sum of an array
-function sumArray(uint64[] memory arr) private pure returns (uint) {
+    }
+    // Function to calculate the sum of an array
+    function sumArray(uint64[] memory arr) private pure returns (uint) {
     uint sum;
     for (uint i = 0; i < arr.length; i++) {
         sum += arr[i];
     }
     return sum;
-}
+    }
 
-// Function to buy a basket of cards
-function BuyCardsBasket(
+    // Function to buy a basket of cards
+    function BuyCardsBasket(
     uint64[] memory _playerIds,
     uint64[] memory _playerTypes,
     uint64[] memory _mintAmounts
-) public payable mintCompliance(sumArray(_mintAmounts)) {
+    ) public payable mintCompliance(sumArray(_mintAmounts)) {
     require(publicSaleActive, "Public sale is not active");
     require(
         _playerIds.length == _playerTypes.length &&
@@ -2183,14 +2183,14 @@ function BuyCardsBasket(
 
     // Mint the cards to the buyer
     _safeMint(msg.sender, sumArray(_mintAmounts));
-}
+    }
    // Function to buy cards directly and mint them to a specified address
-function BuyDirectly(
-    uint64[] memory _playerIds,
-    uint64[] memory _playerTypes,
-    uint64[] memory _mintAmounts,
-    address _to
-) public onlyOwner mintCompliance(sumArray(_mintAmounts)) {
+    function BuyDirectly(
+        uint64[] memory _playerIds,
+        uint64[] memory _playerTypes,
+        uint64[] memory _mintAmounts,
+        address _to
+    ) public onlyOwner mintCompliance(sumArray(_mintAmounts)) {
     require(
         _playerIds.length == _playerTypes.length &&
             _playerTypes.length == _mintAmounts.length,
@@ -2205,18 +2205,18 @@ function BuyDirectly(
 
     // Mint the cards directly to the specified address
     _safeMint(_to, sumArray(_mintAmounts));
-}
+    }
 
 
 
-function assignMetadatas(
-    uint64[] memory _playerIds,
-    uint64[] memory _playerTypes,
-    uint64[] memory _mintAmounts
-) private {
-    uint256 currentTokenID = _currentIndex;
-    uint256 index;
-    uint256 length =  _playerIds.length;
+    function assignMetadatas(
+        uint64[] memory _playerIds,
+        uint64[] memory _playerTypes,
+        uint64[] memory _mintAmounts
+    ) private {
+        uint256 currentTokenID = _currentIndex;
+        uint256 index;
+        uint256 length =  _playerIds.length;
 
     while (index < length) {
         uint256 lastSupply = getSupply(_playerIds[index], _playerTypes[index],_mintAmounts[index]);
@@ -2238,15 +2238,15 @@ function assignMetadatas(
          publicTotalSupply += _mintAmounts[index];
         index = unsafe_inc(index);
     }
-}
-
-
-
-
- function unsafe_inc(uint x) private pure returns (uint) {
-        unchecked { return x + 1; }
     }
-  function makeNumbers(string memory _number) private  pure  returns (string memory) { 
+
+
+
+
+    function unsafe_inc(uint x) private pure returns (uint) {
+            unchecked { return x + 1; }
+        }
+    function makeNumbers(string memory _number) private  pure  returns (string memory) { 
       
     if(bytes(_number).length==1){ 
         return string.concat("000",_number); 
@@ -2257,7 +2257,7 @@ function assignMetadatas(
     }    else{ 
         return _number; 
     } 
-}
+    }
     //@return token ids owned by an address in the collection
     function walletOfOwner(
         address _owner
