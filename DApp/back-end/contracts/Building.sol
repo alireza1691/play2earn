@@ -26,25 +26,20 @@ contract Building is ERC721 {
     uint256 private constant baseRequireGold = 0 ether;
     uint256 private constant baseRequireFood = 20 ether;
 
-    uint256 private constant baseRevenue = 10 ether;
+    uint256 private constant baseRevenue = 8 ether;
     uint256 private constant baseCapacity = 80 ether;
 
     uint256 private currentTokenID = 1;
 
     uint256 private constant defaultLevel = 1;
-    uint256 private constant defaultHealth = 100;
 
     struct Status {
         uint256 level;
         uint256 latestActionTimestamp;
-        uint256 health;
+        uint256 attachedLand;
     }
 
     mapping(uint256 => Status) private tokenIdStatus;
-
-    // mapping(uint256 => string) private tokenIdData;
-
-    mapping(uint256 => uint256) private attachedLand;
 
     constructor(address landsContractAddress, address _stone, address _wood, address _iron, address _gold, address _food) ERC721("STM", "Stone mine") {
         lands = Lands(landsContractAddress);
@@ -55,77 +50,87 @@ contract Building is ERC721 {
         food = IERC20(_food);
     }
 
+    modifier onlyLandOwner(uint256 landTokenId) {
+        require(lands.ownerOf(landTokenId) == msg.sender, "Land not owned by you");
+        _;
+    }
+
     modifier belongToCaller(uint256 tokenId) {
         require(_ownerOf(tokenId) == msg.sender, "Not owned by you");
         _;
     }
-    // modifier checkRequieGoods(uint256 tokenId) {
-    //     uint256 wood = lands.getGoodsBal(tokenId, address(wood));
-    //     uint256 stone = lands.getGoodsBal(tokenId).stoneBal;
-    //     uint256 iron = lands.getGoodsBal(tokenId).woodBal;
-    //     uint256 food = lands.getGoodsBal(tokenId).woodBal;
-    //     require(wood > baseRequireWood, "Insufficient wood");
-    //     require(stone > baseRequireStone, "Insufficient stone");
-    //     require(iron > baseRequireIron, "Insufficient iron");
-    //     require(wood > baseRequireFood, "Insufficient food");
-    //     _;
-    // }
 
+    modifier timestampLimitation (uint256 tokenId){
+        uint256 latestActionTimestamp = tokenIdStatus[tokenId].latestActionTimestamp;
+        uint256 period = block.timestamp - latestActionTimestamp;
+        require(period < 1 days, "Sorry, revenue should claim before action");
+        _;
+    }
 
 
     function _baseURI() internal view virtual override returns (string memory) {
         return "Set this string";
     }
 
-    function build(uint256 landTokenId) external {
+    function build(uint256 landTokenId) external onlyLandOwner(landTokenId){
         uint256 woodBal = getBal(landTokenId, address(wood));
         uint256 ironBal = getBal(landTokenId, address(iron));
         uint256 foodBal = getBal(landTokenId, address(food));
-        require(woodBal >= baseRequireWood && ironBal >= baseRequireIron && foodBal >= baseRequireFood, "Insufficient goods");
+        require(woodBal >= baseRequireWood && ironBal >= baseRequireIron && foodBal >= baseRequireFood, "Insufficient commodities");
         lands.spendAsset(landTokenId, address(wood), baseRequireWood);
         lands.spendAsset(landTokenId, address(iron), baseRequireIron);
         lands.spendAsset(landTokenId, address(food), baseRequireFood);
-        tokenIdStatus[currentTokenID] = Status(defaultLevel, block.timestamp, defaultHealth);
+        tokenIdStatus[currentTokenID] = Status(defaultLevel, block.timestamp, landTokenId);
         _safeMint(msg.sender, currentTokenID);
         _attachToLand(landTokenId, currentTokenID);
         currentTokenID ++;
     }
 
 
-    function upgrade(uint256 tokenId) external {
-
-        tokenIdStatus[tokenId].level +=1 ;
+    function upgrade(uint256 buildingTokenId, uint256 landTokenId) external timestampLimitation(buildingTokenId){
+        uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
+        uint256 woodBal = getBal(landTokenId, address(wood));
+        uint256 ironBal = getBal(landTokenId, address(iron));
+        uint256 foodBal = getBal(landTokenId, address(food));
+        require(woodBal >= baseRequireWood * (currentLevel + 1) 
+        && ironBal >= baseRequireIron * (currentLevel + 1) 
+        && foodBal >= baseRequireFood * (currentLevel + 1) 
+        , "Insufficient commodities");
+        lands.spendAsset(landTokenId, address(wood), (baseRequireWood * (currentLevel + 1) ));
+        lands.spendAsset(landTokenId, address(iron), (baseRequireIron * (currentLevel + 1) ));
+        lands.spendAsset(landTokenId, address(food), (baseRequireFood * (currentLevel + 1) ));
+        tokenIdStatus[buildingTokenId].level +=1 ;
     }
 
     function _attachToLand(uint256 landTokenId,uint256 buildingTokenId) internal {
-        require(attachedLand[landTokenId] == 0, "Building is already attached to one land");
-        require(lands.ownerOf(landTokenId) == msg.sender, "Land not owned by you");
-        attachedLand[landTokenId] = buildingTokenId;
+        require(tokenIdStatus[buildingTokenId].attachedLand == landTokenId, "Building is already attached to one land");
         lands.attach(address(this), buildingTokenId, landTokenId);
     }
 
     function claimRevenue(uint256 tokenId) external belongToCaller(tokenId){
-        uint256 previousTimestamp = tokenIdStatus[tokenId].latestActionTimestamp;
-        uint256 currentTimestamp = block.timestamp;
-        uint256 elapsedTime = currentTimestamp - previousTimestamp;
-        uint256 reward = (elapsedTime / (1 seconds)) * baseRevenue;
-        if (reward > baseCapacity) {
-            reward = baseCapacity;
-        }
+        uint256 revenueAmount = getCurrentRevenue(tokenId);
         tokenIdStatus[tokenId].latestActionTimestamp = block.timestamp;
-        lands.claimItem(2,reward);
+        lands.claimAsset(address(wood), revenueAmount, tokenIdStatus[tokenId].attachedLand);
     }
-        
-    // function repair(uint256 tokenId) external {
-    //     uint256 bal= lands.getLand(tokenId).woodBal;
-    // }
 
-    function getCurrentRevenue() external view {}
 
-    function getLevel() external view {}
+    function getCurrentRevenue(uint256 tokenId) public view returns(uint256) {
+        uint256 latestActionTimestamp = tokenIdStatus[tokenId].latestActionTimestamp;
+        uint256 period = block.timestamp - latestActionTimestamp;
+        uint256 revenuePerDay = tokenIdStatus[tokenId].level * baseRevenue;
+        uint256 rev = (period / 1 days) * revenuePerDay;
+        if (rev > baseCapacity * tokenIdStatus[tokenId].level) {
+            rev = baseCapacity * tokenIdStatus[tokenId].level;
+        }
+        return rev;
+    }
 
-    function getBal(uint256 landTokenId,address goodsAddress) public view returns (uint256) {
-        return lands.getItemBal(landTokenId,goodsAddress);
+    function getStatus(uint256 tokenId) external view returns(Status memory){
+        return tokenIdStatus[tokenId];
+    }
+
+    function getBal(uint256 landTokenId,address commodityTokenAddress) public view returns (uint256) {
+        return lands.getAssetBal(landTokenId,commodityTokenAddress);
     }
 
     function tokenURI(
@@ -143,7 +148,7 @@ contract Building is ERC721 {
                 ? string(
                     abi.encodePacked(    
                         StringUtils.toString(tokenIdStatus[_tokenId].level) ,
-                        StringUtils.toString(tokenIdStatus[_tokenId].health) ,
+                        StringUtils.toString(tokenIdStatus[_tokenId].attachedLand),
                         StringUtils.toString(tokenIdStatus[_tokenId].latestActionTimestamp) ,
                         currentBaseURI
                         // ".json"

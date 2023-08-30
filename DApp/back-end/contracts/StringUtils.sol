@@ -83,116 +83,134 @@ library StringUtils {
         return result;
     }
 
+    function calculateDistanceAndEstimateTime(uint8 coordinate1X, uint8 coordinate1Y, uint8 coordinate2X, uint8 coordinate2Y, uint speed) internal pure returns (uint distance, uint estimatedTime) {
+        // Calculate the Euclidean distance between the two coordinates using the Pythagorean theorem
+        uint deltaX = coordinate2X > coordinate1X ? coordinate2X - coordinate1X : coordinate1X - coordinate2X;
+        uint deltaY = coordinate2Y > coordinate1Y ? coordinate2Y - coordinate1Y : coordinate1Y - coordinate2Y;
+        distance = sqrt(deltaX**2 + deltaY**2);
 
+        // Estimate the time based on the predefined speed (distance / speed)
+        estimatedTime = distance / speed;
+
+        return (distance, estimatedTime);
+    }
     
 
-    function getFirstTwoLetters(string memory input) internal pure returns (uint8) {
-        bytes memory inputBytes = bytes(input);
-        
-        require(inputBytes.length >= 2, "Input string should have at least two characters");
-        
-        bytes2 firstTwoBytes;
-        assembly {
-            firstTwoBytes := mload(add(inputBytes, 32))
+    function sqrt(uint x) internal pure returns (uint y) {
+        uint z = (x + 1) / 2;
+        y = x;
+        while (z < y) {
+            y = z;
+            z = (x / z + z) / 2;
         }
+    }
+    // function getFirstTwoLetters(string memory input) internal pure returns (uint8) {
+    //     bytes memory inputBytes = bytes(input);
+        
+    //     require(inputBytes.length >= 2, "Input string should have at least two characters");
+        
+    //     bytes2 firstTwoBytes;
+    //     assembly {
+    //         firstTwoBytes := mload(add(inputBytes, 32))
+    //     }
 
-        uint8 firstLetter = uint8(firstTwoBytes[0]);
-        uint8 secondLetter = uint8(firstTwoBytes[1]);
-        uint8 combinedLetters = (firstLetter << 4) | secondLetter;
+    //     uint8 firstLetter = uint8(firstTwoBytes[0]);
+    //     uint8 secondLetter = uint8(firstTwoBytes[1]);
+    //     uint8 combinedLetters = (firstLetter << 4) | secondLetter;
 
         
-        return combinedLetters;
-    }
+    //     return combinedLetters;
+    // }
 
-    function substring(string memory str, uint startIndex, uint endIndex) internal pure returns (string memory) {
-    bytes memory strBytes = bytes(str);
-    require(startIndex <= endIndex && endIndex < strBytes.length, "Invalid substring range");
+    // function substring(string memory str, uint startIndex, uint endIndex) internal pure returns (string memory) {
+    //     bytes memory strBytes = bytes(str);
+    //     require(startIndex <= endIndex && endIndex < strBytes.length, "Invalid substring range");
 
-    bytes memory result = new bytes(endIndex - startIndex + 1);
-    for (uint i = startIndex; i <= endIndex; i++) {
-        result[i - startIndex] = strBytes[i];
-    }
+    //     bytes memory result = new bytes(endIndex - startIndex + 1);
+    //     for (uint i = startIndex; i <= endIndex; i++) {
+    //         result[i - startIndex] = strBytes[i];
+    //     }
 
-    return string(result);
-    }
-    function substring(string memory str, uint startIndex) internal pure returns (string memory) {
-    return substring(str, startIndex, bytes(str).length - 1);
-    }
+    //     return string(result);
+    // }
+    // function substring(string memory str, uint startIndex) internal pure returns (string memory) {
+    //     return substring(str, startIndex, bytes(str).length - 1);
+    // }
 
-    function convertFirstLetterToUint8(string memory input) internal pure returns (uint8) {
-        require(bytes(input).length > 0, "Empty string");
+    // function convertFirstLetterToUint8(string memory input) internal pure returns (uint8) {
+    //     require(bytes(input).length > 0, "Empty string");
 
-        bytes memory firstLetterBytes = bytes(input);
-        uint8 firstLetterAscii = uint8(firstLetterBytes[0]);
-        uint8 firstLetterNumeric = firstLetterAscii - 48;
+    //     bytes memory firstLetterBytes = bytes(input);
+    //     uint8 firstLetterAscii = uint8(firstLetterBytes[0]);
+    //     uint8 firstLetterNumeric = firstLetterAscii - 48;
 
 
-        return firstLetterNumeric;
-    }
-    function convertTimestampLettersToUint(string memory input) internal pure returns (uint256) {
-    require(bytes(input).length >= 4, "Input string should have at least 4 characters");
+    //     return firstLetterNumeric;
+    // }
+    // function convertTimestampLettersToUint(string memory input) internal pure returns (uint256) {
+    //     require(bytes(input).length >= 4, "Input string should have at least 4 characters");
 
-    bytes memory inputBytes = bytes(input);
-    uint256 convertedUint;
+    //     bytes memory inputBytes = bytes(input);
+    //     uint256 convertedUint;
 
-    for (uint256 i = 3; i < inputBytes.length; i++) {
-        uint8 charValue = uint8(inputBytes[i]) - 48; // Convert ASCII value to numeric value
-        convertedUint = convertedUint * 10 + charValue;
-    }
+    //     for (uint256 i = 3; i < inputBytes.length; i++) {
+    //         uint8 charValue = uint8(inputBytes[i]) - 48; // Convert ASCII value to numeric value
+    //         convertedUint = convertedUint * 10 + charValue;
+    //     }
 
-    return convertedUint;
-}
+    //     return convertedUint;
+    // }
 
-    function replaceFirstLetterWithNumber(string memory input, uint8 number) internal pure returns (string memory) {
-    require(bytes(input).length > 0, "Empty string");
+    // function replaceFirstLetterWithNumber(string memory input, uint8 number) internal pure returns (string memory) {
+    //     require(bytes(input).length > 0, "Empty string");
 
-    // string memory numberStr = toString(number);
-    bytes memory inputBytes = bytes(input);
+    //     // string memory numberStr = toString(number);
+    //     bytes memory inputBytes = bytes(input);
 
-    inputBytes[0] = bytes1(number);
+    //     inputBytes[0] = bytes1(number);
 
-    // bytes memory result = new bytes(inputBytes.length);
-    // result[0] = bytes1(numberStr[0]);
+    //     // bytes memory result = new bytes(inputBytes.length);
+    //     // result[0] = bytes1(numberStr[0]);
 
-    return string(inputBytes);
-}
-function removeCharacterAtIndex(string memory input, uint index) internal pure returns (string memory) {
-    require(index < bytes(input).length, "Invalid index");
+    //     return string(inputBytes);
+    // }
+    // function removeCharacterAtIndex(string memory input, uint index) internal pure returns (string memory) {
+    //     require(index < bytes(input).length, "Invalid index");
 
-    bytes memory inputBytes = bytes(input);
-    bytes memory result = new bytes(inputBytes.length - 1);
+    //     bytes memory inputBytes = bytes(input);
+    //     bytes memory result = new bytes(inputBytes.length - 1);
 
-    for (uint i = 0; i < index; i++) {
-        result[i] = inputBytes[i];
-    }
+    //     for (uint i = 0; i < index; i++) {
+    //         result[i] = inputBytes[i];
+    //     }
 
-    for (uint i = index + 1; i < inputBytes.length; i++) {
-        result[i - 1] = inputBytes[i];
-    }
+    //     for (uint i = index + 1; i < inputBytes.length; i++) {
+    //         result[i - 1] = inputBytes[i];
+    //     }
 
-    return string(result);
-}
+    //     return string(result);
+    // }
 
-function attachLetterAtIndex(string memory input, uint index, string memory letter) internal pure returns (string memory) {
-    require(index <= bytes(input).length, "Invalid index");
+// function attachLetterAtIndex(string memory input, uint index, string memory letter) internal pure returns (string memory) {
+//     require(index <= bytes(input).length, "Invalid index");
 
-    bytes memory inputBytes = bytes(input);
-    bytes memory letterBytes = bytes(letter);
-    bytes memory result = new bytes(inputBytes.length + letterBytes.length);
+//     bytes memory inputBytes = bytes(input);
+//     bytes memory letterBytes = bytes(letter);
+//     bytes memory result = new bytes(inputBytes.length + letterBytes.length);
 
-    for (uint i = 0; i < index; i++) {
-        result[i] = inputBytes[i];
-    }
+//     for (uint i = 0; i < index; i++) {
+//         result[i] = inputBytes[i];
+//     }
 
-    for (uint i = 0; i < letterBytes.length; i++) {
-        result[index + i] = letterBytes[i];
-    }
+//     for (uint i = 0; i < letterBytes.length; i++) {
+//         result[index + i] = letterBytes[i];
+//     }
 
-    for (uint i = index; i < inputBytes.length; i++) {
-        result[i + letterBytes.length] = inputBytes[i];
-    }
+//     for (uint i = index; i < inputBytes.length; i++) {
+//         result[i + letterBytes.length] = inputBytes[i];
+//     }
 
-    return string(result);
-}
+//     return string(result);
+// }
 
 }

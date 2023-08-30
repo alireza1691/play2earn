@@ -1,0 +1,7 @@
+add time for building each item
+add army
+swap
+tokens
+add attack
+health and repair
+attack and defence calculation
