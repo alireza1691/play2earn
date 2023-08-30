@@ -28,21 +28,22 @@ contract Lands is ERC721, Ownable {
         normal,
         attacked
     }
-    enum AttackStatus {
-        onTheWay,
-        atLocation,
-        done
-    }
+    // enum AttackStatus {
+    //     onTheWay,
+    //     atLocation,
+    //     done
+    // }
 
     mapping (uint256 => Land) public tokenIdLand;
     mapping (uint256 => Building[]) private landItems;
     mapping (uint256 => mapping(address => uint256)) private balances;
     mapping (address => uint8) private difficultyCost;
+    mapping (uint256 => WarInfo[]) private activeWars;
     // mapping (uint256 => AttackStatus[]) attacksSatus;
 
 
     struct WarInfo {
-        AttackStatus status;
+        // AttackStatus status;
         uint256 targetId;
         address[] armyTokenAddresses;
         uint256[] armyAmounts;
@@ -166,31 +167,40 @@ contract Lands is ERC721, Ownable {
         difficultyCost[assetAddress] = newAmount;
     }
 
-    function dispatchArmy(address[] memory armyAddresses,uint256[] memory armyAmounts,uint256 attackerId, uint256 targetId) external landOwner(attackerId){
+    // function dispatchArmy(address[] memory armyAddresses,uint256[] memory armyAmounts,uint256 attackerId, uint256 targetId) external landOwner(attackerId){
+    //     require(armyAddresses.length == armyAmounts.length, "Lengths does not match");
+    //     for (uint i = 0; i < armyAddresses.length; i++) {
+    //         require(getAssetBal(attackerId, armyAddresses[i]) > armyAmounts[i], "InsufficientArmy");
+    //         balances[attackerId][armyAddresses[i]] -= armyAmounts[i];
+    //         activeWars[attackerId].push(WarInfo(AttackStatus.onTheWay, targetId, armyAddresses, armyAmounts));
+    //     }
+    // }
+    function attack(address[] memory armyAddresses,uint256[] memory armyAmounts,uint256 attackerId, uint256 targetId) external returns(uint, uint){
         require(armyAddresses.length == armyAmounts.length, "Lengths does not match");
         for (uint i = 0; i < armyAddresses.length; i++) {
             require(getAssetBal(attackerId, armyAddresses[i]) > armyAmounts[i], "InsufficientArmy");
             balances[attackerId][armyAddresses[i]] -= armyAmounts[i];
+            activeWars[attackerId].push(WarInfo( targetId, armyAddresses, armyAmounts));
         }
     }
-    function attack(/*uint256 attacketTokenId, uint256 defenderTokenId*/) external view returns(uint, uint){
-        uint speed = 10;
-        // (uint distance, uint time) = StringUtils.calculateDistanceAndEstimateTime(
-        //     tokenIdLand[attacketTokenId].coordinateX,
-        //     tokenIdLand[attacketTokenId].coordinateY,
-        //     tokenIdLand[defenderTokenId].coordinateX,
-        //     tokenIdLand[defenderTokenId].coordinateY,
-        //     speed
-        //     );
-        (uint distance, uint time) = StringUtils.calculateDistanceAndEstimateTime(
-            110,
-            111,
-            240,
-            101,
-            speed
-            );
-            return(distance, time);
-    }
+    // function attack(/*uint256 attacketTokenId, uint256 defenderTokenId*/) external view returns(uint, uint){
+    //     uint speed = 10;
+    //     // (uint distance, uint time) = StringUtils.calculateDistanceAndEstimateTime(
+    //     //     tokenIdLand[attacketTokenId].coordinateX,
+    //     //     tokenIdLand[attacketTokenId].coordinateY,
+    //     //     tokenIdLand[defenderTokenId].coordinateX,
+    //     //     tokenIdLand[defenderTokenId].coordinateY,
+    //     //     speed
+    //     //     );
+    //     (uint distance, uint time) = StringUtils.calculateDistanceAndEstimateTime(
+    //         110,
+    //         111,
+    //         240,
+    //         101,
+    //         speed
+    //         );
+    //         return(distance, time);
+    // }
     function swap() external {}
     function calculateTimestamp() external {}
     function repair() external {}

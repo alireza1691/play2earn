@@ -91,8 +91,10 @@ describe("Lands", function () {
 
     console.log("Mining 10000 blocks in order to waiting for stone mine revenue...");
     await mine(100000000, 1);
-    const distance = await lands.attack()
-    console.log(distance);
+ 
+    const Army = await ethers.getContractFactory("Army");
+    const army = await Army.deploy();
+    console.log( await army.test());
 
     return {
       lands,
