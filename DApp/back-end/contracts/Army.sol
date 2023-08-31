@@ -44,4 +44,58 @@ contract Army is  ERC1155{
     function test() external view returns (Info memory) {
         return tokenIdInfo[4];
     }
+
+    function uri(uint256 tokenId) view public override returns (string memory) {
+        return tokenIdInfo[tokenId].imageURL;
+    }
+
+    function calculate(uint256[] memory attackerArmyIds,
+    uint256[] memory attackerArmyAmount,
+    uint256[] memory defenderArmyIds,
+    uint256[] memory defenderArmyAmount
+    )  external view returns (
+        // uint256[] memory killedTroopsOfAttacker, 
+        // uint256[] memory killedTroopsOfDefender,
+        bool ,
+        // int256 ,
+        // int256 ,
+        uint256 ,
+        uint256 ,
+        uint256 ,
+        uint256
+        ) {
+        uint256 totalAttackerHp;
+        uint256 totalAttackPower;
+        for (uint i = 0; i < attackerArmyIds.length; i++) {
+            uint256 hp = tokenIdInfo[attackerArmyIds[i]].hp ;
+            uint256 power = tokenIdInfo[attackerArmyIds[i]].attackPower ;
+            totalAttackerHp += hp * attackerArmyAmount[i];
+            totalAttackPower += power * attackerArmyAmount[i];
+        }
+        uint256 totalDefenderHp;
+        uint256 totalDefenderPower;
+        for (uint i = 0; i < attackerArmyIds.length; i++) {
+            uint256 hp = tokenIdInfo[defenderArmyIds[i]].hp ;
+            uint256 power = tokenIdInfo[defenderArmyIds[i]].defPower ;
+            totalDefenderHp += hp * defenderArmyAmount[i];
+            totalDefenderPower += power * defenderArmyAmount[i];
+        }
+        int256 attRes = int256(totalAttackPower) - int256(totalDefenderHp);
+        int256 defRes = int256(totalDefenderPower) - int256(totalAttackerHp);
+        bool successAttack = attRes > defRes ? true : false ;
+        uint256[] memory remainedAttackerTroops;
+        uint256[] memory remainedDefenderTroops;
+        uint256 remainedDefenderPower;
+        for (uint i = 0; i < defenderArmyAmount.length; i++) {
+            uint256 remianedTroops = attackerArmyAmount[i] * (totalAttackPower - totalDefenderHp);
+            remainedDefenderTroops[i] = remianedTroops;
+            remainedDefenderPower += remianedTroops * tokenIdInfo[defenderArmyIds[i]].attackPower;
+        }
+        for (uint i = 0; i < attackerArmyAmount.length; i++) {
+             uint256 remianedTroops = attackerArmyAmount[i] * (remainedDefenderPower - totalAttackerHp);
+             remainedAttackerTroops[i] = remianedTroops;
+        }
+
+        return (successAttack,totalAttackerHp, totalAttackPower, totalDefenderHp, totalDefenderPower);
+    }
 }

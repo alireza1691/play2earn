@@ -96,6 +96,8 @@ describe("Lands", function () {
     const army = await Army.deploy();
     console.log( await army.test());
 
+    console.log(await army.calculate([1,2,3],[10,10,10],[1,2,3],[8,11,8],));
+
     return {
       lands,
       owner,
