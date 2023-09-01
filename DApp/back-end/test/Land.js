@@ -36,6 +36,13 @@ describe("Lands", function () {
     console.log("Deploying lands...");
     const lands = await Lands.deploy(stAdd, wdAdd, irAdd, gdAdd, fdAdd, {});
     console.log("Lands deployed!");
+    console.log("Attaching lands address into commodities...");
+    await stone.attachLandsAddress(lands.getAddress())
+    await stone.attachLandsAddress(lands.getAddress())
+    await stone.attachLandsAddress(lands.getAddress())
+    await stone.attachLandsAddress(lands.getAddress())
+    await stone.attachLandsAddress(lands.getAddress())
+    console.log("Attached!");
     const Building = await ethers.getContractFactory("Building");
     console.log("Deploying building...");
     const building = await Building.deploy(
@@ -96,7 +103,7 @@ describe("Lands", function () {
     const army = await Army.deploy();
     console.log( await army.test());
 
-    console.log(await army.calculate([1,2,3],[10,10,10],[1,2,3],[8,11,8],));
+    // console.log(await army.calculate([1,2,3],[11,10,10],[1,2,3],[8,11,8],));
 
     return {
       lands,

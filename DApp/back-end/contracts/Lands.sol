@@ -23,6 +23,7 @@ contract Lands is ERC721, Ownable {
 
     address[] private items;
     uint8 private constant baseCapacity = 6;
+    uint256 private transferCost = 3;
 
     enum LandStatus {
         normal,
@@ -90,7 +91,6 @@ contract Lands is ERC721, Ownable {
         }
         _;
     }
-
     modifier isCommodity (address enteredAddress) {
         require( enteredAddress == address(stone) ||
         enteredAddress == address(wood) ||
@@ -129,14 +129,19 @@ contract Lands is ERC721, Ownable {
         balances[landTokenId][address(gold)] += 10000 ether;
         balances[landTokenId][address(food)] += 10000 ether;
     }
-    function buy(address commodityTokenAddress, uint256 amount) external isCommodity(commodityTokenAddress) {
+    // function buy(address commodityTokenAddress, uint256 amount) external isCommodity(commodityTokenAddress) {
 
+    // }
+    function deposit(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
+        ICommodity(commodityTokenAddress).use(msg.sender, amount);
+        balances[landId][commodityTokenAddress] += amount;
     }
-    function deposit(address commodityTokenAddress, uint256 amount) external {
-        TransferHelper.safeTransferFrom(commodityTokenAddress, msg.sender, address(this),amount);
+    function withdraw(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
+        require(balances[landId][commodityTokenAddress] >= amount, "Insufficient balance");
+        balances[landId][commodityTokenAddress] -= amount;
+        ICommodity(commodityTokenAddress).withdraw(msg.sender, amount);
     }
-    function withdraw(address commodityTokenAddress, uint256 amount) external {}
-    function transferCommodities(address[] memory assets, uint256[] memory amounts) external {}
+    // function transferCommodities(address[] memory assets, uint256[] memory amounts) external {}
     function spendAsset(uint256 landTokenId,
         address assetAddress,
         uint256 amount
@@ -202,9 +207,12 @@ contract Lands is ERC721, Ownable {
     //         return(distance, time);
     // }
     function swap() external {}
-    function calculateTimestamp() external {}
+    // function calculateTimestamp() external {}
     function repair() external {}
-    function calculateWarResult() external {}
+    function transferCommodity(address commodityTokenAddress, uint256 amount, uint256 fromId, uint256 toId) external isCommodity(commodityTokenAddress) landOwner(fromId){
+        require(getAssetBal(fromId,commodityTokenAddress) >= amount, "Insufficient balance");
+        balances[toId][commodityTokenAddress] += amount * (100-transferCost) / 100;
+    }
 
 
     // function getLand(uint256 tokenId) external view returns(Land memory) {

@@ -76,7 +76,7 @@ interface ICommodity {
      */
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
 
-    function mint(address account, uint256 amount) external;
+    function withdraw(address account, uint256 amount) external;
 
     function use(address account, uint256 amount) external;
 }
