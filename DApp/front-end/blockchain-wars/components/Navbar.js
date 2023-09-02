@@ -37,9 +37,12 @@ const Navbar = (
 //   }, [admin, address, main]);
 
   return (
-      <MyNav expand="lg" data-bs-theme="dark" bg="transparent" style={{"boxShadow":"0px 5px 10px #36143f","borderBottom":"0.15rem solid #36143f"}}>
+      <MyNav expand="lg" data-bs-theme="dark" bg="transparent" style={{
+        // "boxShadow":"0px 5px 10px #36143f",
+        // "borderBottom":"0.15rem solid #36143f"
+        }}>
       <Container fluid>
-        <MyNav.Brand href="#" onClick={()=>{router.push('/')}}>Bettinga</MyNav.Brand>
+        <MyNav.Brand href="#" onClick={()=>{router.push('/')}}>Blockchain wars</MyNav.Brand>
         <MyNav.Toggle aria-controls="navbarScroll" />
         <MyNav.Collapse id="navbarScroll">
           <Nav
@@ -48,8 +51,9 @@ const Navbar = (
             navbarScroll
           >
              {/* style={{"backgroundColor":"rgba(244, 105, 227, 0.3)","borderRadius":"0.5rem","color":"white"}}  */}
+             <Nav.Link href="#action1" onClick={()=>{router.push('/bet')}}>Home</Nav.Link>
             <Nav.Link href="#action1" onClick={()=>{router.push('/bet')}}>Explore</Nav.Link>
-            <Nav.Link href="#action2" onClick={()=>{router.push('/dashboard')}}>Dashboard</Nav.Link>
+            {/* <Nav.Link href="#action2" onClick={()=>{router.push('/dashboard')}}>Dashboard</Nav.Link>
             <NavDropdown title="More" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">...</NavDropdown.Item>
               <NavDropdown.Item href="#action4" onClick={()=>{router.push('/about')}}>
@@ -68,7 +72,7 @@ const Navbar = (
             </NavDropdown>
             <Nav.Link href="#" onClick={()=>{router.push('/token')}}>
               Token
-            </Nav.Link> 
+            </Nav.Link>  */}
           </Nav>
           <ConnectWallet
               auth={{ loginOptional: false }}
