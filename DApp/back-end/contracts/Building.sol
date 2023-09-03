@@ -1,23 +1,30 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-// import { Converter } from "./Converter.sol";
-// import "./Strings.sol";
+
 import "./Lands.sol";
 import "./StringUtils.sol";
-// import "./Strings.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+// import { ICommodity } from "./ICommodity.sol";
 
-contract BuildingV1 is ERC721 {
+
+contract Building is ERC721 {
 
     Lands lands;
 
-    address[] private commoditiesAddress;
-    uint256[] private baseRequireGoods;
+    address stone;
+    address wood ;
+    address iron ;
+    address gold ;
+    address food ;
 
+    uint256 private immutable baseRequireStone ;
+    uint256 private immutable baseRequireWood ;
+    uint256 private immutable baseRequireIron ;
+    uint256 private immutable baseRequireGold ;
+    uint256 private immutable baseRequireFood ;
 
     uint256 private immutable baseRevenue;
-    address private immutable earnedCommodity;
     uint256 private constant baseCapacity = 80 ether;
 
     uint256 private tokenIdCounter = 1;
@@ -32,13 +39,19 @@ contract BuildingV1 is ERC721 {
 
     mapping(uint256 => Status) private tokenIdStatus;
 
-    constructor(address landsAddress, address[] memory commoditiesTokenAddress, uint256[] memory baseRequireAmounts, uint256 baseBuildingRevenue, address revenueCommodityAddress) ERC721("STM", "Stone mine") {
-        require(commoditiesTokenAddress.length == baseRequireAmounts.length, "Length does not match");
-        lands = Lands(landsAddress);
-        commoditiesAddress = commoditiesTokenAddress;
-        baseRequireGoods = baseRequireAmounts;
-        baseRevenue = baseBuildingRevenue;
-        earnedCommodity = revenueCommodityAddress;
+    constructor(string memory name, string memory symbol, address[5] memory commodities, uint256[5] memory baseRequireAmounts, uint256 rev) ERC721(name, symbol) {
+        lands = Lands(msg.sender);
+        stone = commodities[0];
+        wood = commodities[1];
+        iron = commodities[2];
+        gold = commodities[3];
+        food = commodities[4];
+        baseRequireStone = baseRequireAmounts[0];
+        baseRequireWood = baseRequireAmounts[1];
+        baseRequireIron = baseRequireAmounts[2];
+        baseRequireGold = baseRequireAmounts[3];
+        baseRequireFood = baseRequireAmounts[4];
+        baseRevenue = rev;
     }
 
     modifier onlyLandOwner(uint256 landTokenId) {
@@ -64,16 +77,13 @@ contract BuildingV1 is ERC721 {
     }
 
     function build(uint256 landTokenId) external onlyLandOwner(landTokenId){
-        // uint256[] balance;
-        for (uint i = 0; i < commoditiesAddress.length; i++) {
-            uint256 bal = getBal(landTokenId, commoditiesAddress[i]);
-            // balance[i] = bal;
-            require(bal >= baseRequireGoods[i], "Insufficient commodities");
-            // lands.spendAsset(landTokenId, address(wood), baseRequireWood);
-        }
-
-        lands.spendAssets(landTokenId, commoditiesAddress, baseRequireGoods);
-
+        uint256 woodBal = getBal(landTokenId, address(wood));
+        uint256 ironBal = getBal(landTokenId, address(iron));
+        uint256 foodBal = getBal(landTokenId, address(food));
+        require(woodBal >= baseRequireWood && ironBal >= baseRequireIron && foodBal >= baseRequireFood, "Insufficient commodities");
+        lands.spendAsset(landTokenId, address(wood), baseRequireWood);
+        lands.spendAsset(landTokenId, address(iron), baseRequireIron);
+        lands.spendAsset(landTokenId, address(food), baseRequireFood);
         tokenIdStatus[tokenIdCounter] = Status(defaultLevel, block.timestamp, landTokenId);
         _safeMint(msg.sender, tokenIdCounter);
         _attachToLand(landTokenId, tokenIdCounter);
@@ -82,16 +92,17 @@ contract BuildingV1 is ERC721 {
 
 
     function upgrade(uint256 buildingTokenId, uint256 landTokenId) external timestampLimitation(buildingTokenId){
-        uint256[] memory requireUpgradeCommodities;
         uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
-        for (uint i = 0; i < commoditiesAddress.length; i++) {
-            uint256 bal = getBal(landTokenId, commoditiesAddress[i]);
-            uint256 requireUpgradeAmount =  baseRequireGoods[i] * (currentLevel + 1);
-            require(bal >= requireUpgradeAmount, "Insufficient commodities");
-            requireUpgradeCommodities[i] = requireUpgradeAmount;
-        }
-
-        lands.spendAssets(landTokenId,commoditiesAddress, requireUpgradeCommodities);
+        uint256 woodBal = getBal(landTokenId, address(wood));
+        uint256 ironBal = getBal(landTokenId, address(iron));
+        uint256 foodBal = getBal(landTokenId, address(food));
+        require(woodBal >= baseRequireWood * (currentLevel + 1) 
+        && ironBal >= baseRequireIron * (currentLevel + 1) 
+        && foodBal >= baseRequireFood * (currentLevel + 1) 
+        , "Insufficient commodities");
+        lands.spendAsset(landTokenId, address(wood), (baseRequireWood * (currentLevel + 1) ));
+        lands.spendAsset(landTokenId, address(iron), (baseRequireIron * (currentLevel + 1) ));
+        lands.spendAsset(landTokenId, address(food), (baseRequireFood * (currentLevel + 1) ));
         tokenIdStatus[buildingTokenId].level +=1 ;
     }
 
@@ -103,7 +114,7 @@ contract BuildingV1 is ERC721 {
     function claimRevenue(uint256 tokenId) external belongToCaller(tokenId){
         uint256 revenueAmount = getCurrentRevenue(tokenId);
         tokenIdStatus[tokenId].latestActionTimestamp = block.timestamp;
-        lands.claimAsset(earnedCommodity, revenueAmount, tokenIdStatus[tokenId].attachedLand);
+        lands.claimAsset(address(wood), revenueAmount, tokenIdStatus[tokenId].attachedLand);
     }
 
 

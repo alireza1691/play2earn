@@ -82,6 +82,7 @@ const Navbar = (
                 side: "bottom",
                 align: "center",
               }}
+              style={{"backgroundColor":"rgba(0, 0, 0, 0.4)","border":"none","color":"white"}}
             />
         </MyNav.Collapse>
       </Container>
