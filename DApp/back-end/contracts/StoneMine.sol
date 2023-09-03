@@ -7,18 +7,18 @@ import "./Lands.sol";
 import "./StringUtils.sol";
 // import "./Strings.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import { IERC20 } from "@openzeppelin/contracts/interfaces/IERC20.sol";
+import { ICommodity } from "./ICommodity.sol";
 
 
-contract Building is ERC721 {
+contract StoneMine is ERC721 {
 
     Lands lands;
 
-    IERC20 stone;
-    IERC20 wood ;
-    IERC20 iron ;
-    IERC20 gold ;
-    IERC20 food ;
+    ICommodity stone;
+    ICommodity wood ;
+    ICommodity iron ;
+    ICommodity gold ;
+    ICommodity food ;
 
     uint256 private constant baseRequireWood = 200 ether;
     uint256 private constant baseRequireStone = 0 ether;
@@ -29,7 +29,7 @@ contract Building is ERC721 {
     uint256 private constant baseRevenue = 8 ether;
     uint256 private constant baseCapacity = 80 ether;
 
-    uint256 private currentTokenID = 1;
+    uint256 private tokenIdCounter = 1;
 
     uint256 private constant defaultLevel = 1;
 
@@ -43,11 +43,11 @@ contract Building is ERC721 {
 
     constructor(address landsContractAddress, address _stone, address _wood, address _iron, address _gold, address _food) ERC721("STM", "Stone mine") {
         lands = Lands(landsContractAddress);
-        stone = IERC20(_stone);
-        wood = IERC20(_wood);
-        iron = IERC20(_iron);
-        gold = IERC20(_gold);
-        food = IERC20(_food);
+        stone = ICommodity(_stone);
+        wood = ICommodity(_wood);
+        iron = ICommodity(_iron);
+        gold = ICommodity(_gold);
+        food = ICommodity(_food);
     }
 
     modifier onlyLandOwner(uint256 landTokenId) {
@@ -80,10 +80,10 @@ contract Building is ERC721 {
         lands.spendAsset(landTokenId, address(wood), baseRequireWood);
         lands.spendAsset(landTokenId, address(iron), baseRequireIron);
         lands.spendAsset(landTokenId, address(food), baseRequireFood);
-        tokenIdStatus[currentTokenID] = Status(defaultLevel, block.timestamp, landTokenId);
-        _safeMint(msg.sender, currentTokenID);
-        _attachToLand(landTokenId, currentTokenID);
-        currentTokenID ++;
+        tokenIdStatus[tokenIdCounter] = Status(defaultLevel, block.timestamp, landTokenId);
+        _safeMint(msg.sender, tokenIdCounter);
+        _attachToLand(landTokenId, tokenIdCounter);
+        tokenIdCounter ++;
     }
 
 

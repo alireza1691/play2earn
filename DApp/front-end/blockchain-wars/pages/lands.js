@@ -3,6 +3,8 @@ import LandsComponent from "../components/LandsComponent";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 const lands = () => {
   const [viewLands, setViewLands] = useState([]);
@@ -87,25 +89,40 @@ const lands = () => {
         </div>}
         {isLandSelected && 
             <div className="overlay">
-                <div className="selectedLandWindow">
+                {/* <div className="selectedLandWindow">
                 <h4>Land</h4>
                 <p>Coordinate:{selectedLand.coordinate}</p>
                 <p>Owner:</p>
                 <p>Level:</p>
                 <button onClick={handleCloseLandWindow}>Close</button>
-                </div>
+                </div> */}
+                <Card style={{ width: "18rem" ,backgroundColor:"white",boxShadow:"0px 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.5)"}} className="card">
+                <Card.Img variant="top" src="/asset_land.png" className="cardImg" />
+                <Card.Body>
+                  <Card.Title>Card Title</Card.Title>
+                  <Card.Text>Land</Card.Text>
+                  <Card.Text>Coordinate:{selectedLand.coordinate}</Card.Text>
+                  <Card.Text>Owner:</Card.Text>
+                  <Button variant="primary" onClick={handleCloseLandWindow}>Close</Button>
+                </Card.Body>
+              </Card>
             </div>}
     <Container>
         <Row>
             <Col>
-        {/* <h4 className="clickableH4" onClick={() => setViewLands([])}>Back</h4> */}
+            <div style={{"display":"flex","justifyContent":"center"}}>
+                {viewLands.length > 0 ? (
+                    <h4 className="clickableH4" onClick={() => setViewLands([])}>Back</h4>
+                ):(
+                    <h3 className="h3Text">Choose a parcel</h3>
+                )}
+        </div>
         </Col>
         </Row>
         <Row>
             <Col>
         {viewLands.length > 0 ? (
         <>
-        <h4 className="clickableH4" onClick={() => setViewLands([])}>Back</h4>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div className="landGrid">
             {viewLands.map((land) => (
@@ -123,7 +140,6 @@ const lands = () => {
         </>
       ) : (
         <>
-        <h3 className="h3Text">Choose a parcel</h3>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div className="viewGrid">
             {views().map((view) => (

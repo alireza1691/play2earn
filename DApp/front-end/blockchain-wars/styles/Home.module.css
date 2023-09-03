@@ -33,6 +33,13 @@
   -webkit-text-fill-color: transparent;
 }
 
+.gradientText4 {
+  background: -webkit-linear-gradient(white,#bfa3da, #c735b0,white);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .title a:hover,
 .title a:focus,
 .title a:active {

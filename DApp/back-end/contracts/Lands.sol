@@ -149,6 +149,18 @@ contract Lands is ERC721, Ownable {
             balances[landTokenId][assetAddress] -= amount;
 
     }
+    // function transferCommodities(address[] memory assets, uint256[] memory amounts) external {}
+    function spendAssets(uint256 landTokenId,
+        address[] memory assetAddress,
+        uint256[] memory amount
+        ) external onlyItems{
+            require(assetAddress.length == amount.length, "Length does not match");
+            for (uint i = 0; i < assetAddress.length; i++) {
+                balances[landTokenId][assetAddress[i]] -= amount[i];
+            }
+            // balances[landTokenId][assetAddress] -= amount;
+
+    }
     // Attach item to the land
     function attach(address buildingContractAddress, uint256 buildingTokenId, uint256 landTokenId)external{
         require(tokenIdLand[landTokenId].level * baseCapacity >= landItems[landTokenId].length, "You have not enough capacity. Please upgrade your land.");

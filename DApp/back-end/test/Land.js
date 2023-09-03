@@ -43,9 +43,9 @@ describe("Lands", function () {
     await stone.attachLandsAddress(lands.getAddress())
     await stone.attachLandsAddress(lands.getAddress())
     console.log("Attached!");
-    const Building = await ethers.getContractFactory("Building");
+    const StoneMine = await ethers.getContractFactory("StoneMine");
     console.log("Deploying building...");
-    const building = await Building.deploy(
+    const stoneMine = await StoneMine.deploy(
       lands.getAddress(),
       stAdd,
       wdAdd,
@@ -56,7 +56,7 @@ describe("Lands", function () {
     );
     console.log("Building (stone mine) deployed!");
     console.log("Adding Building addess ass authorized item in lands...");
-    await lands.addItem(building.getAddress());
+    await lands.addItem(stoneMine.getAddress());
     console.log("Depositing in lands...");
     await lands.testDeposit(100100);
     const woodbal1 = await lands.getAssetBal(100100, wdAdd);
@@ -76,10 +76,10 @@ describe("Lands", function () {
     await lands.mintLand(100, 100);
     console.log("Minted");
     console.log("Building a Stone mine...");
-    await building.build(100100);
+    await stoneMine.build(100100);
     console.log("Builded");
     console.log("Getting token uri...");
-    const uri = await building.tokenURI(1);
+    const uri = await stoneMine.tokenURI(1);
     console.log(uri);
 
 
@@ -109,7 +109,7 @@ describe("Lands", function () {
       lands,
       owner,
       otherAccount,
-      building,
+      stoneMine,
       wdAdd,
       irAdd,
       stAdd,
@@ -148,23 +148,23 @@ describe("Lands", function () {
       expect(ownerOfMintedLand).to.equal(await owner.getAddress());
     });
     it("Should upgrade the building", async function () {
-      const { lands, building } = await loadFixture(deployLandsContract);
-      const uriBeforeUpgrade = await building.tokenURI(1);
-      const statusBeforeUpgrade = await building.getStatus(1)
-      await expect(building.upgrade(1, 100100)).to.be.revertedWith("Sorry, revenue should claim before action")
-      await building.claimRevenue(1)
-      await building.upgrade(1, 100100);
-      const statusAfterUpgrade = await building.getStatus(1)
-      const uriAfterUpgrade = await building.tokenURI(1);
+      const { lands, stoneMine } = await loadFixture(deployLandsContract);
+      const uriBeforeUpgrade = await stoneMine.tokenURI(1);
+      const statusBeforeUpgrade = await stoneMine.getStatus(1)
+      await expect(stoneMine.upgrade(1, 100100)).to.be.revertedWith("Sorry, revenue should claim before action")
+      await stoneMine.claimRevenue(1)
+      await stoneMine.upgrade(1, 100100);
+      const statusAfterUpgrade = await stoneMine.getStatus(1)
+      const uriAfterUpgrade = await stoneMine.tokenURI(1);
       expect(statusBeforeUpgrade.level).to.equal(1);
       expect(statusAfterUpgrade.level).to.equal(2);
       expect(uriBeforeUpgrade == uriAfterUpgrade).to.equal(false);
     });
     it("Should claim revenue and check balances", async function () {
-      const { lands, building ,wdAdd} = await loadFixture(deployLandsContract);
+      const { lands,stoneMine ,wdAdd} = await loadFixture(deployLandsContract);
       const balBeforeClaiming = await lands.getAssetBal(100100,wdAdd)
       console.log(ethers.formatEther(balBeforeClaiming));
-      await building.claimRevenue(1)
+      await stoneMine.claimRevenue(1)
       const balAfterClaiming = await lands.getAssetBal(100100,wdAdd)
       console.log(ethers.formatEther(balAfterClaiming));
       expect(balBeforeClaiming + ethers.parseEther("80")).to.equal(balAfterClaiming);
