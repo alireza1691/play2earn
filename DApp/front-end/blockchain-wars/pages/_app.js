@@ -7,13 +7,17 @@ import TestABI from "../Blockchain/Test.json"
 import { useEffect, useState } from "react";
 import { landsSepolia } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/LandsV1.json";
-
+import axios from "axios";
+import dotenv from "dotenv"
+dotenv.config();
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
 const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }) {
+
+	const apiKey = process.env.ARBISCAN_API_KEY
 
 	const [address, setAddress] = useState()
 	const [provider, setProvider] = useState()
@@ -24,6 +28,7 @@ function MyApp({ Component, pageProps }) {
 	const [landImgUrl, setLandImgUrl] = useState();
 	const [landsInstance, setLandsInstance] = useState();
 	const [isOwnedLand, setIsOwnedLand] = useState(false)
+	const [commoditiesBalance, setCommoditiesBalance] = useState({})
 	// const contract = new ethers.Contract("0xB223692473310018eD9Aec48cBAE98f99484a0E4", TestABI, infuraProvider);
 
 	// async function callViewFunction() {
@@ -84,6 +89,25 @@ function MyApp({ Component, pageProps }) {
 		if (landBalance > 0) {
 			setIsOwnedLand(true)
 			console.log(`User owned ${landBalance.toString()} land`);
+			let contractEvents = []
+			try {
+				const response = await axios.get(
+					// `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
+					// `https://api.arbiscan.io/api?module=contract&action=getabi&address=${landsSepolia}&apikey=${apiKey}`
+					`https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&apikey=${apiKey}`
+
+
+				);
+				console.log("Fetched events");
+				console.log(response);
+				const events = response.data.result;
+				contractEvents.push(...events)
+			} catch (error) {
+				console.error("Error fetching contract events:", error);
+			}
+			console.log("Sorting events by block number...");
+			contractEvents.sort((a, b) => b.blockNumber - a.blockNumber);
+			console.log("Here is sorted events:",contractEvents);
 		}
 	  }
 

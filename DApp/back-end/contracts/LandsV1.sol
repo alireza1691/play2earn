@@ -239,7 +239,7 @@ contract LandsV1 is ERC721, Ownable {
     // }
 
     function getAssetBal(uint256 tokenId, uint256 commodityIndex) public view returns(uint256) {
-            return balances[tokenId][convertIndexToAddress(commodityIndex)];
+        return balances[tokenId][convertIndexToAddress(commodityIndex)];
     }
 
     function convertIndexToAddress (uint256 commodityIndex) internal view returns(address commodityContractAddress){

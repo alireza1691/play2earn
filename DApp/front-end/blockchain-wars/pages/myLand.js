@@ -10,10 +10,10 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Dropdown from "react-bootstrap/Dropdown";
-
+import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 
-const lands = ({infuraProvider, address}) => {
+const lands = ({infuraProvider, address, landImgUrl}) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
@@ -85,11 +85,33 @@ const lands = ({infuraProvider, address}) => {
             </Col> */}
             <Col md={{ span: 4, offset: 0 }}>
               <Card className="card">
+              {landImgUrl !== undefined ? (
                 <Card.Img
                   variant="top"
-                  src="/asset_land.png"
+                  // src="/asset_land.png"
+                  src={landImgUrl}
                   className="cardImg"
                 />
+              ) : (
+
+                <div
+                    style={{
+                      display: "block",
+                      marginTop: "1%",
+                      height: "200px",
+                      paddingTop: "15%",
+                      width: "100%",
+                      textAlign: "center",
+                    }}
+                  >
+                    <h2 style={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
+                      Fetching...
+                    </h2>
+                    <Spinner animation="border" role="status" style={{"textAlign":"center"}}>
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                  </div>
+              )}
                 <Card.Body>
                   <Card.Title>Card Title</Card.Title>
                   <Card.Text>
