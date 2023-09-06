@@ -231,6 +231,10 @@ contract Lands is ERC721, Ownable {
     //     return tokenIdLand[tokenId];
     // }
 
+    function getItems() view public returns (address[] memory) {
+        return items;
+    }
+
     function getAssetBal(uint256 tokenId, address tokenAddress) public view returns(uint256) {
         return balances[tokenId][tokenAddress];
     }

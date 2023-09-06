@@ -8,19 +8,19 @@ import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 // import { IERC20 } from "@openzeppelin/contracts/interfaces/IERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { TransferHelper } from "./TransferHelper.sol";
-import { ICommodity } from "./ICommodity.sol";
-import { Building } from "./Building.sol";
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+// import { Building } from "./Building.sol";
 
 error Lands__InvalidCoordinate();
 error Lands__LandAlreadyMinted();
 
-contract Lands is ERC721, Ownable {
+contract LandsV1 is ERC721, Ownable {
 
-    ICommodity stone;
-    ICommodity wood ;
-    ICommodity iron ;
-    ICommodity gold ;
-    ICommodity food ;
+    IERC20 stone;
+    IERC20 wood ;
+    IERC20 iron ;
+    IERC20 gold ;
+    IERC20 food ;
 
     address[] private items;
     uint8 private constant baseCapacity = 6;
@@ -37,7 +37,8 @@ contract Lands is ERC721, Ownable {
     // }
 
     mapping (uint256 => Land) public tokenIdLand;
-    mapping (uint256 => BuildingInfo[]) private landItems;
+    // mapping (uint256 => BuildingInfo[]) private landItems;
+     mapping (uint256 => uint256[]) private landBuildings;
     mapping (uint256 => mapping(address => uint256)) private balances;
     mapping (address => uint8) private difficultyCost;
     mapping (uint256 => WarInfo[]) private activeWars;
@@ -51,10 +52,10 @@ contract Lands is ERC721, Ownable {
         uint256[] armyAmounts;
     }
 
-    struct BuildingInfo {
-        address buildingContractAddress;
-        uint256 tokenId;
-    }
+    // struct BuildingInfo {
+    //     address buildingContractAddress;
+    //     uint256 tokenId;
+    // }
 
     struct Land {
         uint8 coordinateX;
@@ -66,11 +67,11 @@ contract Lands is ERC721, Ownable {
 
 
     constructor(address _stone, address _wood, address _iron, address _gold, address _food) ERC721("Polygon wars land","PWL"){
-        stone = ICommodity(_stone);
-        wood = ICommodity(_wood);
-        iron = ICommodity(_iron);
-        gold = ICommodity(_gold);
-        food = ICommodity(_food);
+        stone = IERC20(_stone);
+        wood = IERC20(_wood);
+        iron = IERC20(_iron);
+        gold = IERC20(_gold);
+        food = IERC20(_food);
     }
 
     modifier landOwner (uint256 id ) {
@@ -134,13 +135,15 @@ contract Lands is ERC721, Ownable {
 
     // }
     function deposit(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
-        ICommodity(commodityTokenAddress).use(msg.sender, amount);
+        TransferHelper.safeTransferFrom(commodityTokenAddress,msg.sender,address(this),amount);
+        // IERC20(commodityTokenAddress).use(msg.sender, amount);
         balances[landId][commodityTokenAddress] += amount;
     }
     function withdraw(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
         require(balances[landId][commodityTokenAddress] >= amount, "Insufficient balance");
         balances[landId][commodityTokenAddress] -= amount;
-        ICommodity(commodityTokenAddress).withdraw(msg.sender, amount);
+        TransferHelper.safeTransfer(commodityTokenAddress, msg.sender, amount);
+        // IERC20(commodityTokenAddress).withdraw(msg.sender, amount);
     }
     // function transferCommodities(address[] memory assets, uint256[] memory amounts) external {}
     function spendAsset(uint256 landTokenId,
@@ -151,21 +154,22 @@ contract Lands is ERC721, Ownable {
 
     }
     // function transferCommodities(address[] memory assets, uint256[] memory amounts) external {}
-    function spendAssets(uint256 landTokenId,
-        address[] memory assetAddress,
-        uint256[] memory amount
+    function spendCommodities(uint256 landTokenId,
+        uint256[5] memory amounts
         ) external onlyItems{
-            require(assetAddress.length == amount.length, "Length does not match");
-            for (uint i = 0; i < assetAddress.length; i++) {
-                balances[landTokenId][assetAddress[i]] -= amount[i];
+            // require(amounts.length == 5, "Length does not match");
+            for (uint i = 0; i < 5; i++) {
+                balances[landTokenId][convertIndexToAddress(i)] -= amounts[i];
             }
             // balances[landTokenId][assetAddress] -= amount;
 
     }
     // Attach item to the land
-    function attach(address buildingContractAddress, uint256 buildingTokenId, uint256 landTokenId)external{
-        require(tokenIdLand[landTokenId].level * baseCapacity >= landItems[landTokenId].length, "You have not enough capacity. Please upgrade your land.");
-        landItems[landTokenId].push(BuildingInfo(buildingContractAddress,buildingTokenId));
+    function attach(/*address buildingContractAddress,*/ uint256 buildingTokenId, uint256 landTokenId)external{
+        // require(tokenIdLand[landTokenId].level * baseCapacity >= landItems[landTokenId].length, "You have not enough capacity. Please upgrade your land.");
+        // landItems[landTokenId].push(BuildingInfo(buildingContractAddress,buildingTokenId));
+        require(tokenIdLand[landTokenId].level * baseCapacity >= landBuildings[landTokenId].length, "You have not enough capacity. Please upgrade your land.");
+        landBuildings[landTokenId].push(buildingTokenId);
     }
 
     // Add new attachable building or item to the land.
@@ -173,10 +177,10 @@ contract Lands is ERC721, Ownable {
         items.push(newItem);
     }
     // Claiming collected amount of an asset
-    function claimAsset(address assetTokenAddress, uint256 amount, uint256 landTokenId) external onlyItems {
-        uint8 difficulty = difficultyCost[assetTokenAddress];
+    function claimAsset(uint256 assetIndex, uint256 amount, uint256 landTokenId) external onlyItems {
+        uint8 difficulty = difficultyCost[convertIndexToAddress(assetIndex)];
         uint256 netAmount = amount * (100 - difficulty) / 100;
-        balances[landTokenId][assetTokenAddress] += netAmount;
+        balances[landTokenId][convertIndexToAddress(assetIndex)] += netAmount;
     }
     // Changing difficulty of commodity extraction. 
     // Use case of this function is managing tokenomics of commodities.
@@ -185,22 +189,22 @@ contract Lands is ERC721, Ownable {
         difficultyCost[assetAddress] = newAmount;
     }
 
-    function deployItem(string memory name,string memory symbol, uint256[5] memory requireCommoditiesAmount, uint256 baseRev ) external onlyOwner {
-        Building newItem = new Building(
-            name,
-            symbol,
-            [
-                address(stone),
-                address(wood),
-                address(iron),
-                address(gold),
-                address(food)
-            ],
-            requireCommoditiesAmount,
-            baseRev
-            );
-            items.push(address(newItem));
-    }
+    // function deployItem(string memory name,string memory symbol, uint256[5] memory requireCommoditiesAmount, uint256 baseRev ) external onlyOwner {
+    //     Building newItem = new Building(
+    //         name,
+    //         symbol,
+    //         [
+    //             address(stone),
+    //             address(wood),
+    //             address(iron),
+    //             address(gold),
+    //             address(food)
+    //         ],
+    //         requireCommoditiesAmount,
+    //         baseRev
+    //         );
+    //         items.push(address(newItem));
+    // }
 
     // function dispatchArmy(address[] memory armyAddresses,uint256[] memory armyAmounts,uint256 attackerId, uint256 targetId) external landOwner(attackerId){
     //     require(armyAddresses.length == armyAmounts.length, "Lengths does not match");
@@ -210,68 +214,61 @@ contract Lands is ERC721, Ownable {
     //         activeWars[attackerId].push(WarInfo(AttackStatus.onTheWay, targetId, armyAddresses, armyAmounts));
     //     }
     // }
-    function attack(address[] memory armyAddresses,uint256[] memory armyAmounts,uint256 attackerId, uint256 targetId) external returns(uint, uint){
-        require(armyAddresses.length == armyAmounts.length, "Lengths does not match");
-        for (uint i = 0; i < armyAddresses.length; i++) {
-            require(getAssetBal(attackerId, armyAddresses[i]) > armyAmounts[i], "InsufficientArmy");
-            balances[attackerId][armyAddresses[i]] -= armyAmounts[i];
-            activeWars[attackerId].push(WarInfo( targetId, armyAddresses, armyAmounts));
-        }
-    }
-    // function attack(/*uint256 attacketTokenId, uint256 defenderTokenId*/) external view returns(uint, uint){
-    //     uint speed = 10;
-    //     // (uint distance, uint time) = StringUtils.calculateDistanceAndEstimateTime(
-    //     //     tokenIdLand[attacketTokenId].coordinateX,
-    //     //     tokenIdLand[attacketTokenId].coordinateY,
-    //     //     tokenIdLand[defenderTokenId].coordinateX,
-    //     //     tokenIdLand[defenderTokenId].coordinateY,
-    //     //     speed
-    //     //     );
-    //     (uint distance, uint time) = StringUtils.calculateDistanceAndEstimateTime(
-    //         110,
-    //         111,
-    //         240,
-    //         101,
-    //         speed
-    //         );
-    //         return(distance, time);
+    // function attack(address[] memory armyAddresses,uint256[] memory armyAmounts,uint256 attackerId, uint256 targetId) external returns(uint, uint){
+    //     require(armyAddresses.length == armyAmounts.length, "Lengths does not match");
+    //     for (uint i = 0; i < armyAddresses.length; i++) {
+    //         require(getAssetBal(attackerId, armyAddresses[i]) > armyAmounts[i], "InsufficientArmy");
+    //         balances[attackerId][armyAddresses[i]] -= armyAmounts[i];
+    //         activeWars[attackerId].push(WarInfo( targetId, armyAddresses, armyAmounts));
+    //     }
     // }
-    function swap() external {}
+
+    // function swap() external {}
     // function calculateTimestamp() external {}
-    function repair() external {}
-    function transferCommodity(address commodityTokenAddress, uint256 amount, uint256 fromId, uint256 toId) external isCommodity(commodityTokenAddress) landOwner(fromId){
-        require(getAssetBal(fromId,commodityTokenAddress) >= amount, "Insufficient balance");
-        balances[toId][commodityTokenAddress] += amount * (100-transferCost) / 100;
+    // function repair() external {}
+    function transferCommodity(uint256 commodityIndex, uint256 amount, uint256 fromId, uint256 toId) external isCommodity(convertIndexToAddress(commodityIndex)) landOwner(fromId){
+        require(getAssetBal(fromId,commodityIndex) >= amount, "Insufficient balance");
+        balances[toId][convertIndexToAddress(commodityIndex)] += amount * (100-transferCost) / 100;
     }
 
-
+    // function getLandItems(uint256 landTokenId) view public returns (uint256[] memory) {
+    //     return landBuildings[landTokenId];
+    // }
     // function getLand(uint256 tokenId) external view returns(Land memory) {
     //     return tokenIdLand[tokenId];
     // }
 
-    function getAssetBal(uint256 tokenId, address tokenAddress) public view returns(uint256) {
-        return balances[tokenId][tokenAddress];
+    function getAssetBal(uint256 tokenId, uint256 commodityIndex) public view returns(uint256) {
+            return balances[tokenId][convertIndexToAddress(commodityIndex)];
     }
 
-    // function _getAddressByIndex(uint256 index) view internal returns (address indexAddress) {
-    //     if (index == 1) {
-    //         return address(stone);
-    //     }
-    //     if (index == 2) {
-    //         return address(wood);
-    //     }
-    //     if (index == 3) {
-    //         return address(iron);
-    //     }
-    //     if (index == 4) {
-    //         return address(gold);
-    //     }
-    //     if (index == 5) {
-    //         return address(food);
-    //     }
-    // }
+    function convertIndexToAddress (uint256 commodityIndex) internal view returns(address commodityContractAddress){
+        require(commodityIndex <= 5, "Invalid index");
+        if (commodityIndex == 0) {
+            return address(stone);
+        }
+        if (commodityIndex == 1) {
+            return address(wood);
+        }
+        if (commodityIndex == 2) {
+            return address(iron);
+        }
+        if (commodityIndex == 3) {
+            return address(gold);
+        }
+        if (commodityIndex == 4) {
+            return address(food);
+        }
+    } 
 
-        function tokenURI(
+    function _baseURI() internal  view virtual override   returns (string memory) {
+        return "https://ipfs.io/ipfs/Qmaz1NiFrfiXS9BckHNySzdmkpq5GTirU2RoTt4Sji8hdm";
+    }
+    function URI () public view returns (string memory){
+        return _baseURI();
+    }
+
+    function tokenURI(
         uint256 _tokenId
     ) public view virtual override returns (string memory) {
         require(
@@ -294,50 +291,5 @@ contract Lands is ERC721, Ownable {
                 )
                 : "";
     }
-    // function assignMetadatas(
-    //     uint64[] memory _playerIds,
-    //     uint64[] memory _playerTypes,
-    //     uint64[] memory _mintAmounts
-    //     ) private {
-    //     uint256 currentTokenID = _currentIndex;
-    //     uint256 index;
-    //     uint256 length =  _playerIds.length;
-
-    //     while (index < length) {
-    //     uint256 lastSupply = getSupply(_playerIds[index], _playerTypes[index],_mintAmounts[index]);
-    //     uint64 mintAmount = _mintAmounts[index];
-    //      string memory _typeOfPlayer =  Strings.toString(_playerTypes[index]);
-    //      string memory _idOfPlayer =  makeNumbers(Strings.toString(_playerIds[index]));
-       
-    //     for (uint i = 0; i < mintAmount; i = unsafe_inc(i)) {
-    //         lastSupply = lastSupply + 1;
-           
-    //         cardsData[currentTokenID]=string.concat(
-    //             _idOfPlayer,
-    //            _typeOfPlayer,
-    //             Strings.toString(lastSupply));
-            
-    //         currentTokenID = currentTokenID + 1;
-    //     }
-    //      totalSupply[_playerIds[index]][_playerTypes[index]] += _mintAmounts[index];
-    //      publicTotalSupply += _mintAmounts[index];
-    //     index = unsafe_inc(index);
-    //     }
-    // }
-    // function tokenURI(
-    //     uint256 _tokenId
-    //     ) public view virtual override returns (string memory) {
-    //     require(
-    //         _exists(_tokenId),
-    //         "ERC721Metadata: URI query for nonexistent token"
-    //     );
-
-    //     string memory currentBaseURI = _baseURI();
-
-    //     return
-    //         bytes(currentBaseURI).length > 0
-    //                        ? string(abi.encodePacked(currentBaseURI, cardsData[_tokenId], ".json"))
-
-    //             : "";
-    // }
+   
 }

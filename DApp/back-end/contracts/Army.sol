@@ -15,6 +15,10 @@ contract Army is  ERC1155{
 
     mapping (uint256 tokenId => Info) private tokenIdInfo;
 
+    // struct requireBuild {
+        
+    // }
+
     struct Info {
         uint8 attackPower;
         uint8 defPower;

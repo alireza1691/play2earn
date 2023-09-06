@@ -211,4 +211,72 @@ body {
 }
 .card {
   background-color: rgba(255, 255, 255, 0.3);
+  max-width: 18rem;
+}
+
+.selectedLandWindow {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0px 0.5rem 0.1rem rgba(0, 0, 0, 0.3);
+}
+
+.myLandColumn {
+  display: block;
+}
+
+.myLandColumn h6 {
+  color: rgb(221, 221, 221);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  padding: 0.3rem;
+  margin-right: 2rem;
+  font-size: 1rem;
+}
+
+.myLandBox {
+  display: flex;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.05);
+  min-height: 15rem;
+}
+.landBoxColumn {
+  display: block;
+  width: 50%;
+  padding: 1rem;
+}
+.balanceHeader {
+  display: flex;
+  padding: 1rem;
+}
+.balanceHeader img {
+  height: 30px;
+  width:  30px;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 0.2rem;
+  border-radius: 0.3rem;
+}
+.selectDropdown {
+  width: fit-content !important;
+  background-color: white !important;
+  color: black !important;
+  border: none;
+  border-left: 2px solid grey;
+}
+.selectDropdown:hover{
+  color: #000000;
+}
+.dropdownTokenLogo{
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  /* style={{"width":"15px","height":"15px","marginRight":"10px" */
+}
+
+@media (max-width: 767px) {
+  .balanceHeader {
+    display: block;
+    padding: 1rem;
+  }
 }

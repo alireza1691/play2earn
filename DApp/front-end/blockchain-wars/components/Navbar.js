@@ -5,15 +5,18 @@ import Nav from 'react-bootstrap/Nav';
 import { Navbar as MyNav } from 'react-bootstrap';
 import { useRouter } from "next/router";
 import NavDropdown from 'react-bootstrap/NavDropdown';
-
+import { useAddress } from "@thirdweb-dev/react";
 
 const Navbar = (
-    // { admin, address, main }
+    { connect }
     ) => {
   const [balance, setBalance] = useState();
   const [owner, setOwner] = useState();
   const router = useRouter();
 
+  const address = useAddress();
+
+  console.log(address);
 //   useEffect(() => {
 //     const fetchOnchainData = async () => {
 //       try {
@@ -83,6 +86,7 @@ const Navbar = (
                 align: "center",
               }}
               style={{"backgroundColor":"rgba(0, 0, 0, 0.4)","border":"none","color":"white"}}
+              // onClick={connect}
             />
         </MyNav.Collapse>
       </Container>
