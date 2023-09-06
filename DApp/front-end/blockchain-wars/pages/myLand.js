@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LandsComponent from "../components/LandsComponent";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -13,11 +13,12 @@ import Dropdown from "react-bootstrap/Dropdown";
 
 import Accordion from "react-bootstrap/Accordion";
 
-const lands = ({infuraProvider}) => {
+const lands = ({infuraProvider, address}) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [landItems, setLandItems] = useState([]);
+
 
   const handleClose = () => {
     setIsTransactionRejected(false);
@@ -32,6 +33,21 @@ const lands = ({infuraProvider}) => {
     setIsLandSelected(false);
     setSelectedItem({});
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      // const lands = new ethers.Contract(
+      //   landsSepolia,
+      //   Lands.abi,
+      //   infuraProvider
+      // );
+      // const imgURL = await lands.URI();
+      // setLandImgUrl(imgURL);
+      // console.log(imgURL);
+    };
+    fetchData();
+  }, [infuraProvider, address]);
+
 
   return (
     <>

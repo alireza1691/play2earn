@@ -8,7 +8,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useAddress } from "@thirdweb-dev/react";
 
 const Navbar = (
-    { connect }
+    { connect, landsInstance, setAddress }
     ) => {
   const [balance, setBalance] = useState();
   const [owner, setOwner] = useState();
@@ -16,28 +16,22 @@ const Navbar = (
 
   const address = useAddress();
 
-  console.log(address);
-//   useEffect(() => {
-//     const fetchOnchainData = async () => {
-//       try {
-//         if (
-//           address !== undefined &&
-//           admin !== undefined &&
-//           main !== undefined
-//         ) {
-//           const adminOwner = await admin.owner();
-//           setOwner(adminOwner);
-//           const balanceOfAccount = await main.balance(address);
-//           setBalance(Number(balanceOfAccount));
-//           console.log(Number(balanceOfAccount));
-//         }
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
+  useEffect(() => {
+    const fetchOnchainData = async () => {
+      try {
+        if (address !== undefined) {
+          console.log(address);
+          setAddress(address)
+        }
+        
 
-//     fetchOnchainData();
-//   }, [admin, address, main]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchOnchainData();
+  }, [address]);
 
   return (
       <MyNav expand="lg" data-bs-theme="dark" bg="transparent" style={{

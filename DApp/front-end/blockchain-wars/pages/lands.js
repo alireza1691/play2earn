@@ -6,16 +6,15 @@ import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
-import { landsSepolia } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/LandsV1.json";
+
 import { ethers } from "ethers";
 
-const lands = ({ infuraProvider, address }) => {
+const lands = ({ infuraProvider, address, landImgUrl }) => {
   const [viewLands, setViewLands] = useState([]);
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState({});
-  const [landImgUrl, setLandImgUrl] = useState();
+  
 
   const handleClose = () => {
     setIsTransactionRejected(false);
@@ -78,14 +77,14 @@ const lands = ({ infuraProvider, address }) => {
   // fillLands(100,100)
   useEffect(() => {
     const fetchData = async () => {
-      const lands = new ethers.Contract(
-        landsSepolia,
-        Lands.abi,
-        infuraProvider
-      );
-      const imgURL = await lands.URI();
-      setLandImgUrl(imgURL);
-      console.log(imgURL);
+    //   const lands = new ethers.Contract(
+    //     landsSepolia,
+    //     Lands.abi,
+    //     infuraProvider
+    //   );
+    //   const imgURL = await lands.URI();
+    //   setLandImgUrl(imgURL);
+    //   console.log(imgURL);
     };
     fetchData();
   }, [infuraProvider, address]);
