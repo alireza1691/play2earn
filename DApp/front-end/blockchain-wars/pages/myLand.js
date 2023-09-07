@@ -3,8 +3,7 @@ import LandsComponent from "../components/LandsComponent";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-// import styles from "./../styles/Home.module.css"
-// import Image from "next/image";
+import { ethers } from "ethers";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -12,12 +11,19 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
+import { landsSepolia } from "../Blockchain/Addresses";
+import Lands from "../Blockchain/LandsV1.json";
 
-const lands = ({infuraProvider, address, landImgUrl}) => {
+const lands = ({provider, address, landImgUrl, ownedLands, commoditiesBalance}) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [landItems, setLandItems] = useState([]);
+  // const [stoneBal, setStoneBal] = useState()
+  // const [woodBal, setWoodBal] = useState([])
+  // const [ironBal, setIronBal] = useState([])
+  // const [goldBal, setGoldBal] = useState([])
+  // const [foodBal, setFoodBal] = useState([])
 
 
   const handleClose = () => {
@@ -36,17 +42,32 @@ const lands = ({infuraProvider, address, landImgUrl}) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // const lands = new ethers.Contract(
-      //   landsSepolia,
-      //   Lands.abi,
-      //   infuraProvider
-      // );
-      // const imgURL = await lands.URI();
-      // setLandImgUrl(imgURL);
-      // console.log(imgURL);
+      // console.log(provider);
+      if (provider && commoditiesBalance.length >0) {
+        console.log(commoditiesBalance);
+        const lands = new ethers.Contract(
+          landsSepolia,
+          Lands.abi,
+          provider
+        );
+        // console.log("hello");
+        // console.log(commoditiesBalance);
+        // let commoditiesBal =[{}]
+        // for (let index = 0; index < commoditiesBalance.length; index++) {
+        //   commoditiesBalance[index]
+        //   const thisLandCommodities = {st: commoditiesBalance[index].stone, wd: commoditiesBalance[index].wood, ir: commoditiesBalance[index].iron, gd: commoditiesBalance[index].gold, fd: commoditiesBalance[index].food}
+        //   commoditiesBal.push(thisLandCommodities)
+        // }
+        // console.log(commoditiesBal);
+        // setStoneBal(commoditiesBalance[0])
+        // setWoodBal()
+        // setIronBal()
+        // setGoldBal()
+        // setFoodBal()
+      }
     };
     fetchData();
-  }, [infuraProvider, address]);
+  }, [provider,commoditiesBalance]);
 
 
   return (
@@ -120,9 +141,10 @@ const lands = ({infuraProvider, address, landImgUrl}) => {
                   </Card.Text>
                   <Button
                     variant="primary"
+                    
                     onClick={() => handleOpenWindow(selectedItem)}
                   >
-                    Go somewhere
+                    {ownedLands > 0 ? "Open" : "Buy a land"}
                   </Button>
                 </Card.Body>
               </Card>
@@ -131,15 +153,15 @@ const lands = ({infuraProvider, address, landImgUrl}) => {
               <div className="myLandColumn">
                 <div className="balanceHeader">
                   <img src="/Stone.png"></img>
-                  <h6>Stone:</h6>
+                  <h6>{commoditiesBalance[0].stone !== undefined ? commoditiesBalance[0].stone : "0"}</h6>
                   <img src="/Wood.png"></img>
-                  <h6>Wood:</h6>
+                  <h6>{commoditiesBalance[0].wood !== undefined ? commoditiesBalance[0].wood : "0"}</h6>
                   <img src="/Iron.png"></img>
-                  <h6>Iron:</h6>
+                  <h6>{commoditiesBalance[0].iron !== undefined ? commoditiesBalance[0].iron : "0"}</h6>
                   <img src="/Gold.png"></img>
-                  <h6>Gold:</h6>
+                  <h6>{commoditiesBalance[0].gold !== undefined ? commoditiesBalance[0].gold : "0"}</h6>
                   <img src="/Food.png"></img>
-                  <h6>Food:</h6>
+                  <h6>{commoditiesBalance[0].food !== undefined ? commoditiesBalance[0].food : "0"}</h6>
                 </div>
 
                 <div className="myLandBox">

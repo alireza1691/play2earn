@@ -1,4 +1,4 @@
-import { ThirdwebProvider, useAddress } from "@thirdweb-dev/react";
+import { ThirdwebProvider, useAddress, useSigner } from "@thirdweb-dev/react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
@@ -17,7 +17,7 @@ const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }) {
 
-	const apiKey = process.env.ARBISCAN_API_KEY
+	const apiKey = process.env.SEPOLIA_API_KEY
 
 	const [address, setAddress] = useState()
 	const [provider, setProvider] = useState()
@@ -26,9 +26,9 @@ function MyApp({ Component, pageProps }) {
 	const [castle, setCastle] = useState()
 	const [landTokenId, setLandTokenId] = useState()
 	const [landImgUrl, setLandImgUrl] = useState();
-	const [landsInstance, setLandsInstance] = useState();
-	const [isOwnedLand, setIsOwnedLand] = useState(false)
-	const [commoditiesBalance, setCommoditiesBalance] = useState({})
+	const [ownedLands, setOwnedLands] = useState()
+	const [commoditiesBalance, setCommoditiesBalance] = useState([{}])
+	const [connectedAddressLands, setConnectedAddressLands] = useState([])
 	// const contract = new ethers.Contract("0xB223692473310018eD9Aec48cBAE98f99484a0E4", TestABI, infuraProvider);
 
 	// async function callViewFunction() {
@@ -41,6 +41,16 @@ function MyApp({ Component, pageProps }) {
 	//   }
 
 	//   callViewFunction()
+
+	const convertAddress = (input) => {
+		if (input.length > 3) {
+			
+		const prefix = input.substring(0, 2);
+		const suffix = input.substring(2);
+		const zeros = '000000000000000000000000';
+		return prefix + zeros + suffix;
+		}
+	}
 
 
 	const connectReq = async () => {
@@ -81,33 +91,47 @@ function MyApp({ Component, pageProps }) {
         Lands.abi,
         infuraProvider
       );
-	  setLandsInstance(lands)
       const imgURL = await lands.URI();
       setLandImgUrl(imgURL);
 	  if (address) {
+		console.log(convertAddress(address));
 		const landBalance = await lands.balanceOf(address)
+		setOwnedLands(landBalance)
 		if (landBalance > 0) {
-			setIsOwnedLand(true)
+	
 			console.log(`User owned ${landBalance.toString()} land`);
-			let contractEvents = []
+			let tokenIds = []
+			let commoditiesBal = []
 			try {
 				const response = await axios.get(
 					// `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
-					// `https://api.arbiscan.io/api?module=contract&action=getabi&address=${landsSepolia}&apikey=${apiKey}`
-					`https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&apikey=${apiKey}`
-
-
+					`https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&topic2=${convertAddress(address)}&apikey=${apiKey}`
 				);
 				console.log("Fetched events");
 				console.log(response);
 				const events = response.data.result;
-				contractEvents.push(...events)
+				for (let index = 0; index < events.length; index++) {
+					const topics = events[index].topics
+					console.log(topics);
+					if (topics.length === 4) {
+						console.log(parseInt(topics[3],16));
+						tokenIds.push(parseInt(topics[3],16))
+						const stoneBal = await lands.getAssetBal(parseInt(topics[3],16),0)
+						const woodBal = await lands.getAssetBal(parseInt(topics[3],16),1)
+						const ironBal = await lands.getAssetBal(parseInt(topics[3],16),2)
+						const goldBal = await lands.getAssetBal(parseInt(topics[3],16),3)
+						const foodBal = await lands.getAssetBal(parseInt(topics[3],16),4)
+						const landBalances = {stone: ethers.utils.formatEther(stoneBal.toString()), wood: ethers.utils.formatEther(woodBal.toString()), iron: ethers.utils.formatEther(ironBal.toString()), gold: ethers.utils.formatEther(goldBal.toString()), food: ethers.utils.formatEther(foodBal.toString())}
+						commoditiesBal.push(landBalances)
+						console.log(landBalances);
+					}
+				}
 			} catch (error) {
 				console.error("Error fetching contract events:", error);
 			}
-			console.log("Sorting events by block number...");
-			contractEvents.sort((a, b) => b.blockNumber - a.blockNumber);
-			console.log("Here is sorted events:",contractEvents);
+			console.log(commoditiesBal);
+			setConnectedAddressLands(tokenIds)
+			setCommoditiesBalance(commoditiesBal)
 		}
 	  }
 
@@ -115,19 +139,14 @@ function MyApp({ Component, pageProps }) {
     fetchData();
   }, [ address]);
 
-//   const address = useAddress();
-//   useEffect(() => {
-//     console.log(address);
-//   }, []);
 
-  
   return (
     <ThirdwebProvider
       activeChain={activeChain}
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
     >
-      <Navbar setAddress={setAddress} setIsOwnedLand={setIsOwnedLand}/>
-      <Component {...pageProps} connectReq={connectReq} provider={provider} landImgUrl={landImgUrl} />
+      <Navbar setAddress={setAddress} />
+      <Component {...pageProps} connectReq={connectReq} provider={provider} landImgUrl={landImgUrl} ownedLands={ownedLands} commoditiesBalance={commoditiesBalance}/>
     </ThirdwebProvider>
   );
 }

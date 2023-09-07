@@ -16,6 +16,7 @@ const Navbar = (
 
   const address = useAddress();
 
+
   useEffect(() => {
     const fetchOnchainData = async () => {
       try {
