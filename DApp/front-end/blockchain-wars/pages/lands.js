@@ -6,10 +6,11 @@ import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
-
+import { landsSepolia } from "../Blockchain/Addresses";
+import Lands from "../Blockchain/LandsV1.json";
 import { ethers } from "ethers";
 
-const lands = ({ infuraProvider, address, landImgUrl }) => {
+const lands = ({ provider, address, landImgUrl, mintedLands }) => {
   const [viewLands, setViewLands] = useState([]);
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -40,9 +41,9 @@ const lands = ({ infuraProvider, address, landImgUrl }) => {
           id: counter,
           id: counter,
           x: x,
-          xStartingPoint: x * 10,
+          xStartingPoint: 100 + (x * 10),
           y: y,
-          yStartingPoint: y * 10,
+          yStartingPoint: 100 + (y * 10),
           color: "green",
         };
         counter++;
@@ -59,13 +60,16 @@ const lands = ({ infuraProvider, address, landImgUrl }) => {
     let counter = 0;
     for (let y = yStartingPoint; y < yStartingPoint + 10; y++) {
       for (let x = xStartingPoint; x < xStartingPoint + 10; x++) {
+
         const land = {
           id: counter,
           x: x,
           y: y,
           color: "green",
           coordinate: x.toString() + "," + Number(y),
+          tokenId: x.toString() + y.toString()
         };
+        console.log(land);
         counter++;
         lands.push(land);
       }
@@ -77,17 +81,17 @@ const lands = ({ infuraProvider, address, landImgUrl }) => {
   // fillLands(100,100)
   useEffect(() => {
     const fetchData = async () => {
-    //   const lands = new ethers.Contract(
-    //     landsSepolia,
-    //     Lands.abi,
-    //     infuraProvider
-    //   );
+      const lands = new ethers.Contract(
+        landsSepolia,
+        Lands.abi,
+        provider
+      );
     //   const imgURL = await lands.URI();
     //   setLandImgUrl(imgURL);
     //   console.log(imgURL);
     };
     fetchData();
-  }, [infuraProvider, address]);
+  }, [provider, address]);
 
   return (
     <>

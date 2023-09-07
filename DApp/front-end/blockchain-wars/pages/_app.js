@@ -29,6 +29,7 @@ function MyApp({ Component, pageProps }) {
 	const [ownedLands, setOwnedLands] = useState()
 	const [commoditiesBalance, setCommoditiesBalance] = useState([{}])
 	const [connectedAddressLands, setConnectedAddressLands] = useState([])
+	const [mintedLands, setMintedLands] = useState([])
 	// const contract = new ethers.Contract("0xB223692473310018eD9Aec48cBAE98f99484a0E4", TestABI, infuraProvider);
 
 	// async function callViewFunction() {
@@ -100,6 +101,7 @@ function MyApp({ Component, pageProps }) {
 		if (landBalance > 0) {
 	
 			console.log(`User owned ${landBalance.toString()} land`);
+			let mintedLands = []
 			let tokenIds = []
 			let commoditiesBal = []
 			try {
@@ -108,13 +110,15 @@ function MyApp({ Component, pageProps }) {
 					`https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&topic2=${convertAddress(address)}&apikey=${apiKey}`
 				);
 				console.log("Fetched events");
-				console.log(response);
+				// console.log(response);
 				const events = response.data.result;
 				for (let index = 0; index < events.length; index++) {
 					const topics = events[index].topics
-					console.log(topics);
-					if (topics.length === 4) {
-						console.log(parseInt(topics[3],16));
+					// console.log(topics);
+					if (topics.length === 4
+						 && topics[2] == convertAddress(address.toLowerCase())
+						 ) {
+						// console.log(parseInt(topics[3],16));
 						tokenIds.push(parseInt(topics[3],16))
 						const stoneBal = await lands.getAssetBal(parseInt(topics[3],16),0)
 						const woodBal = await lands.getAssetBal(parseInt(topics[3],16),1)
@@ -123,15 +127,22 @@ function MyApp({ Component, pageProps }) {
 						const foodBal = await lands.getAssetBal(parseInt(topics[3],16),4)
 						const landBalances = {stone: ethers.utils.formatEther(stoneBal.toString()), wood: ethers.utils.formatEther(woodBal.toString()), iron: ethers.utils.formatEther(ironBal.toString()), gold: ethers.utils.formatEther(goldBal.toString()), food: ethers.utils.formatEther(foodBal.toString())}
 						commoditiesBal.push(landBalances)
-						console.log(landBalances);
+						// console.log(landBalances);
+					}
+					if (topics.length === 4 &&
+						topics[1] == "0x0000000000000000000000000000000000000000000000000000000000000000" &&
+						100 <= parseInt(topics[3],16) <= 200
+						) {
+							mintedLands.push(parseInt(topics[3],16).toString())
 					}
 				}
 			} catch (error) {
 				console.error("Error fetching contract events:", error);
 			}
-			console.log(commoditiesBal);
+			// console.log(commoditiesBal);
 			setConnectedAddressLands(tokenIds)
 			setCommoditiesBalance(commoditiesBal)
+			setMintedLands(mintedLands)
 		}
 	  }
 
@@ -146,7 +157,7 @@ function MyApp({ Component, pageProps }) {
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
     >
       <Navbar setAddress={setAddress} />
-      <Component {...pageProps} connectReq={connectReq} provider={provider} landImgUrl={landImgUrl} ownedLands={ownedLands} commoditiesBalance={commoditiesBalance}/>
+      <Component {...pageProps} connectReq={connectReq} provider={provider} landImgUrl={landImgUrl} ownedLands={ownedLands} commoditiesBalance={commoditiesBalance} mintedLands={mintedLands}/>
     </ThirdwebProvider>
   );
 }
