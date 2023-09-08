@@ -10,25 +10,30 @@ import { landsSepolia } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/LandsV1.json";
 import { ethers } from "ethers";
 
-const lands = ({ provider, address, landImgUrl, mintedLands }) => {
+const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
   const [viewLands, setViewLands] = useState([]);
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState({});
-  
+  const [closePopUp, setClosePopUp] = useState(false);
 
   const handleClose = () => {
     setIsTransactionRejected(false);
   };
 
-  const handleOpenLandWindow = (landCoordinate) => {
+  const handleOpenLandWindow = (land) => {
     setIsLandSelected(true);
-    setSelectedLand({ coordinate: landCoordinate });
+    setSelectedLand(land);
   };
 
   const handleCloseLandWindow = () => {
     setIsLandSelected(false);
     setSelectedLand({});
+  };
+
+  const handleClosePopUp = () => {
+    setClosePopUp(true);
+    dataLoad();
   };
 
   const views = () => {
@@ -41,9 +46,9 @@ const lands = ({ provider, address, landImgUrl, mintedLands }) => {
           id: counter,
           id: counter,
           x: x,
-          xStartingPoint: 100 + (x * 10),
+          xStartingPoint: 100 + x * 10,
           y: y,
-          yStartingPoint: 100 + (y * 10),
+          yStartingPoint: 100 + y * 10,
           color: "green",
         };
         counter++;
@@ -60,14 +65,27 @@ const lands = ({ provider, address, landImgUrl, mintedLands }) => {
     let counter = 0;
     for (let y = yStartingPoint; y < yStartingPoint + 10; y++) {
       for (let x = xStartingPoint; x < xStartingPoint + 10; x++) {
-
+        const tokenId = x.toString() + y.toString();
+        const isMinted = false;
+        let img = "/emptyLandImg.png";
+        let owner
+        for (let index = 0; index < mintedLands.length; index++) {
+          if (tokenId == mintedLands[index].tokenId) {
+            isMinted == true;
+            img = "/mintedLand.png";
+            owner = mintedLands[index].owner
+          }
+        }
         const land = {
           id: counter,
           x: x,
           y: y,
           color: "green",
           coordinate: x.toString() + "," + Number(y),
-          tokenId: x.toString() + y.toString()
+          tokenId: tokenId,
+          isMinted: isMinted,
+          image: img,
+          owner: owner
         };
         console.log(land);
         counter++;
@@ -81,21 +99,42 @@ const lands = ({ provider, address, landImgUrl, mintedLands }) => {
   // fillLands(100,100)
   useEffect(() => {
     const fetchData = async () => {
-      const lands = new ethers.Contract(
-        landsSepolia,
-        Lands.abi,
-        provider
-      );
-    //   const imgURL = await lands.URI();
-    //   setLandImgUrl(imgURL);
-    //   console.log(imgURL);
+      console.log("Lands route");
+      const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
+      //   const imgURL = await lands.URI();
+      //   setLandImgUrl(imgURL);
+      //   console.log(imgURL);
     };
     fetchData();
-  }, [provider, address]);
+  }, [address]);
 
   return (
     <>
       <div className="scrollableScreen">
+        {!address && closePopUp == false && (
+          <div className="overlay">
+            <Card
+              style={{
+                padding: "0.5rem",
+                width: "15rem",
+                backgroundColor: "white",
+                boxShadow: "0px 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.5)",
+              }}
+              className="card"
+            >
+                 <Card.Body>
+              <Card.Text style={{"fontSize":"0.9rem"}}>
+                If you have any land we recommend to connect your wallet
+              </Card.Text>
+              <div style={{"display":"flex","justifyContent":"end"}}>
+              <Button variant="outline-secondary" onClick={handleClosePopUp} size="sm">
+                Close
+              </Button>
+              </div>
+              </Card.Body>
+            </Card>
+          </div>
+        )}
         {isTransactionRejected && (
           <div className="overlay">
             <div className="transactionRejectedWindow">
@@ -105,15 +144,8 @@ const lands = ({ provider, address, landImgUrl, mintedLands }) => {
             </div>
           </div>
         )}
-        {isLandSelected && (
+        {isLandSelected && selectedLand &&(
           <div className="overlay">
-            {/* <div className="selectedLandWindow">
-                <h4>Land</h4>
-                <p>Coordinate:{selectedLand.coordinate}</p>
-                <p>Owner:</p>
-                <p>Level:</p>
-                <button onClick={handleCloseLandWindow}>Close</button>
-                </div> */}
             <Card
               style={{
                 width: "18rem",
@@ -130,31 +162,35 @@ const lands = ({ provider, address, landImgUrl, mintedLands }) => {
                   className="cardImg"
                 />
               ) : (
-
                 <div
-                    style={{
-                      display: "block",
-                      marginTop: "1%",
-                      height: "200px",
-                      paddingTop: "15%",
-                      width: "100%",
-                      textAlign: "center",
-                    }}
+                  style={{
+                    display: "block",
+                    marginTop: "1%",
+                    height: "200px",
+                    paddingTop: "15%",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <h2 style={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
+                    Fetching...
+                  </h2>
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ textAlign: "center" }}
                   >
-                    <h2 style={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
-                      Fetching...
-                    </h2>
-                    <Spinner animation="border" role="status" style={{"textAlign":"center"}}>
                     <span className="visually-hidden">Loading...</span>
                   </Spinner>
-                  </div>
+                </div>
               )}
 
               <Card.Body>
                 <Card.Title>Card Title</Card.Title>
                 <Card.Text>Land</Card.Text>
                 <Card.Text>Coordinate:{selectedLand.coordinate}</Card.Text>
-                <Card.Text>Owner:</Card.Text>
+                {selectedLand.owner !== undefined && <Card.Text>Owner: {selectedLand.owner}</Card.Text> }
+                
                 <Button variant="primary" onClick={handleCloseLandWindow}>
                   Close
                 </Button>
@@ -186,15 +222,12 @@ const lands = ({ provider, address, landImgUrl, mintedLands }) => {
                         <div
                           className="item"
                           key={land.id}
-                          onClick={() => handleOpenLandWindow(land.coordinate)}
+                          onClick={() => handleOpenLandWindow(land)}
                         >
                           {/* <p style={{ color: "black", fontSize: "0.6rem" }}>
                   {land.coordinate}
                 </p> */}
-                          <img
-                            className="landImg"
-                            src="/emptyLandImg.png"
-                          ></img>
+                          <img className="landImg" src={land.image}></img>
                         </div>
                       ))}
                     </div>

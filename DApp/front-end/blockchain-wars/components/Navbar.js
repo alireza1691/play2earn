@@ -6,20 +6,47 @@ import { Navbar as MyNav } from 'react-bootstrap';
 import { useRouter } from "next/router";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useAddress } from "@thirdweb-dev/react";
+import { landsSepolia } from "../Blockchain/Addresses";
+import axios from "axios";
+import dotenv from "dotenv";
+// dotenv.config();
+require("dotenv").config();
 
 const Navbar = (
-    { connect, landsInstance, setAddress }
+    { connect, landsInstance, setAddress, setLandsApiResponse }
     ) => {
   const [balance, setBalance] = useState();
   const [owner, setOwner] = useState();
   const router = useRouter();
 
+  const apiKey = process.env.SEPOLIA_API_KEY;
   const address = useAddress();
+
+  let previousResponse
+
+  // const etherScanApiCall = async () => {
+  //   if (previousResponse == undefined) {
+  //     try {
+  //       const response = await axios.get(
+  //         `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&apikey=${apiKey}`
+  //       );
+  //       console.log("Fetched events");
+  //       previousResponse = response;
+  //       return response;
+  //     } catch (error) {}
+  //   } else {
+  //     console.log("Response already exist");
+  //     return previousResponse;
+  //   }
+  // };
 
 
   useEffect(() => {
     const fetchOnchainData = async () => {
       try {
+        // const res = await etherScanApiCall()
+        // console.log("Api called");
+        // setLandsApiResponse(res)
         if (address !== undefined) {
           console.log(address);
           setAddress(address)
