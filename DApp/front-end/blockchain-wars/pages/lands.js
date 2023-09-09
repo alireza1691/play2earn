@@ -10,6 +10,8 @@ import { landsSepolia } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/LandsV1.json";
 import { ethers } from "ethers";
 import { useSigner, useConnect, useMetamask, useWalletConnect, metamaskWallet } from "@thirdweb-dev/react";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 const metamaskConfig = metamaskWallet();
 
@@ -259,8 +261,18 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
               {viewLands.length > 0 ? (
                 <>
                   <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div className="landGrid">
+                    <div className="landGrid" >
                       {viewLands.map((land) => (
+                        <OverlayTrigger
+                        
+                        key={land.id}
+                        // placement={land.id}
+                        overlay={
+                          <Tooltip id={`tooltip-${land.id}`}>
+                        <strong >{land.coordinate}</strong>.
+                          </Tooltip>
+                        }
+                      >
                         <div
                           className="item"
                           key={land.id}
@@ -271,6 +283,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
                 </p> */}
                           <img className="landImg" src={land.image}></img>
                         </div>
+                        </OverlayTrigger>
                       ))}
                     </div>
                   </div>
@@ -288,7 +301,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
                           }
                         >
                             <p className="defaultP">
-                            {view.xStartingPoint},{view.yStartingPoint}
+                            {view.xStartingPoint} {view.yStartingPoint}
                             </p>
                         </div>
                       ))}

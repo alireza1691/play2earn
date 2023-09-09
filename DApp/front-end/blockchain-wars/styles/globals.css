@@ -84,6 +84,10 @@ body {
 .item:hover {
   background-color: green;
 }
+.item img:hover{
+  opacity: 0.7;
+}
+
 .clickableH4 {
   text-align: center;
   font-size: 1.2rem;
@@ -283,6 +287,10 @@ body {
   height: 15px;
   margin-right: 10px;
   /* style={{"width":"15px","height":"15px","marginRight":"10px" */
+}
+.toolTipPopup{
+  background-color: white !important;
+  color: white;
 }
 
 @media (max-width: 767px) {

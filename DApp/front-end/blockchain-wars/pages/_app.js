@@ -139,6 +139,7 @@ const dataLoad = async () => {
     const fetchData = async () => {
       const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
       const imgURL = await lands.URI();
+	  console.log(imgURL);
       setLandImgUrl(imgURL);
       if (address) {
         // console.log(convertAddress(address));
