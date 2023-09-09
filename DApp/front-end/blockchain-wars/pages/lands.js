@@ -9,13 +9,21 @@ import { Card } from "react-bootstrap";
 import { landsSepolia } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/LandsV1.json";
 import { ethers } from "ethers";
+import { useSigner, useConnect, useMetamask, useWalletConnect, metamaskWallet } from "@thirdweb-dev/react";
 
-const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
+const metamaskConfig = metamaskWallet();
+
+const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectReq }) => {
   const [viewLands, setViewLands] = useState([]);
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState({});
   const [closePopUp, setClosePopUp] = useState(false);
+
+  const connectWithMetamask = useMetamask();
+
+  const connect = useConnect();
+  const signer = useSigner();
 
   const handleClose = () => {
     setIsTransactionRejected(false);
@@ -24,6 +32,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
   const handleOpenLandWindow = (land) => {
     setIsLandSelected(true);
     setSelectedLand(land);
+    console.log(land);
   };
 
   const handleCloseLandWindow = () => {
@@ -36,6 +45,15 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
     dataLoad();
   };
 
+  const mintLand = async () => {
+    try {
+        const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
+        await lands.mintLand(selectedLand.x, selectedLand.y)
+    } catch (error) {
+        
+    }
+  };
+
   const views = () => {
     let counter = 0;
     let view = [];
@@ -44,7 +62,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
       for (let x = 0; x < 10; x++) {
         const item = {
           id: counter,
-          id: counter,
+        //   id: counter,
           x: x,
           xStartingPoint: 100 + x * 10,
           y: y,
@@ -66,14 +84,12 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
     for (let y = yStartingPoint; y < yStartingPoint + 10; y++) {
       for (let x = xStartingPoint; x < xStartingPoint + 10; x++) {
         const tokenId = x.toString() + y.toString();
-        const isMinted = false;
         let img = "/emptyLandImg.png";
-        let owner
+        let owner;
         for (let index = 0; index < mintedLands.length; index++) {
           if (tokenId == mintedLands[index].tokenId) {
-            isMinted == true;
             img = "/mintedLand.png";
-            owner = mintedLands[index].owner
+            owner = mintedLands[index].owner;
           }
         }
         const land = {
@@ -83,9 +99,9 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
           color: "green",
           coordinate: x.toString() + "," + Number(y),
           tokenId: tokenId,
-          isMinted: isMinted,
+          isMinted: owner == undefined ? false : true,
           image: img,
-          owner: owner
+          owner: owner,
         };
         console.log(land);
         counter++;
@@ -122,15 +138,19 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
               }}
               className="card"
             >
-                 <Card.Body>
-              <Card.Text style={{"fontSize":"0.9rem"}}>
-                If you have any land we recommend to connect your wallet
-              </Card.Text>
-              <div style={{"display":"flex","justifyContent":"end"}}>
-              <Button variant="outline-secondary" onClick={handleClosePopUp} size="sm">
-                Close
-              </Button>
-              </div>
+              <Card.Body>
+                <Card.Text style={{ fontSize: "0.9rem" }}>
+                  If you have any land we recommend to connect your wallet
+                </Card.Text>
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={handleClosePopUp}
+                    size="sm"
+                  >
+                    Close
+                  </Button>
+                </div>
               </Card.Body>
             </Card>
           </div>
@@ -144,7 +164,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
             </div>
           </div>
         )}
-        {isLandSelected && selectedLand &&(
+        {isLandSelected && selectedLand && (
           <div className="overlay">
             <Card
               style={{
@@ -184,16 +204,38 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
                   </Spinner>
                 </div>
               )}
-
               <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>Land</Card.Text>
-                <Card.Text>Coordinate:{selectedLand.coordinate}</Card.Text>
-                {selectedLand.owner !== undefined && <Card.Text>Owner: {selectedLand.owner}</Card.Text> }
-                
-                <Button variant="primary" onClick={handleCloseLandWindow}>
-                  Close
+                <Card.Title>Land {selectedLand.coordinate}</Card.Title>
+                {selectedLand.isMinted ? (
+                  <Card.Text>Owner: {selectedLand.owner}</Card.Text>
+                ) : (
+                    <>
+                  <Card.Text>Land is available to mint</Card.Text>
+                  <Card.Text>Price : 0.3 ETH</Card.Text>
+                  <Button variant="primary" onClick={signer ? mintLand : connectWithMetamask} style={{"marginRight":"20px"}}>
+                  Mint
                 </Button>
+                </>
+                )}
+
+                {/* <Card.Title>Card Title</Card.Title> */}
+                {/* <Card.Text>Land</Card.Text> */}
+                {/* <Card.Text>Coordinate:{selectedLand.coordinate}</Card.Text>
+                {selectedLand.owner !== undefined && (
+                  <Card.Text>Owner: {selectedLand.owner}</Card.Text>
+                )} */}
+                <div style={{ display: "flex", justifyContent: "end" }}>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={handleCloseLandWindow}
+                    size="sm"
+                  >
+                    Close
+                  </Button>
+                </div>
+                {/* <Button variant="outline-secondary" size="sm" onClick={handleCloseLandWindow}>
+                  Close
+                </Button> */}
               </Card.Body>
             </Card>
           </div>
@@ -244,7 +286,11 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad }) => {
                           onClick={() =>
                             fillLands(view.xStartingPoint, view.yStartingPoint)
                           }
-                        ></div>
+                        >
+                            <p className="defaultP">
+                            {view.xStartingPoint},{view.yStartingPoint}
+                            </p>
+                        </div>
                       ))}
                     </div>
                   </div>

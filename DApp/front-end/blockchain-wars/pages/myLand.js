@@ -133,20 +133,38 @@ const lands = ({provider, address, landImgUrl, ownedLands, commoditiesBalance}) 
                   </Spinner>
                   </div>
               )}
+
+              {ownedLands > 0 ? (
                 <Card.Body>
-                  <Card.Title>Card Title</Card.Title>
+                <Card.Title>Card Title</Card.Title>
+                <Card.Text>
+                  Some quick example text to build on the card title and make
+                  up the bulk of the card's content.
+                </Card.Text>
+                <Button
+                  variant="primary"
+                  
+                  onClick={() => handleOpenWindow(selectedItem)}
+                >
+                  Open
+                </Button>
+              </Card.Body>
+              ) : (
+                <Card.Body>
+                  <Card.Title>You have not any land</Card.Title>
                   <Card.Text>
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
+                    Explore in map and mint your land.
                   </Card.Text>
                   <Button
                     variant="primary"
                     
                     onClick={() => handleOpenWindow(selectedItem)}
                   >
-                    {ownedLands > 0 ? "Open" : "Buy a land"}
+                    Explore
                   </Button>
                 </Card.Body>
+              )}
+                
               </Card>
             </Col>
             <Col md={{ span: 8, offset: 0 }}>

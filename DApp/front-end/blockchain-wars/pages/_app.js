@@ -3,18 +3,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
 import { ethers } from "ethers";
+import { Mumbai, Polygon, Sepolia, Ethereum, Arbitrum} from "@thirdweb-dev/chains"
 import TestABI from "../Blockchain/Test.json";
 import { useEffect, useState } from "react";
 import { landsSepolia } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/LandsV1.json";
 import axios from "axios";
 import dotenv from "dotenv";
+import {
+	metamaskWallet,
+	coinbaseWallet,
+	walletConnect,
+  } from "@thirdweb-dev/react";
+
 // dotenv.config();
 require("dotenv").config();
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-const activeChain = "ethereum";
+// const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }) {
   const apiKey = process.env.SEPOLIA_API_KEY;
@@ -67,20 +74,23 @@ function MyApp({ Component, pageProps }) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const network = await provider.getNetwork();
 
-      if (network.chainId !== Polygon.chainId) {
-        const mainnetHexStringChainId =
-          "0x" + parseInt(Polygon.chainId).toString(16);
+      if (network.chainId !== Sepolia.chainId) {
+        const hexStringChainId =
+          "0x" + parseInt(Sepolia.chainId).toString(16);
         await window.ethereum.request({
           method: "wallet_addEthereumChain",
           params: [
             {
-              chainId: mainnetHexStringChainId,
-              rpcUrls: ["https://polygon.llamarpc.com"],
-              chainName: "Polygon Mainnet",
+            //   chainId: hexStringChainId,
+            //   rpcUrls: ["https://polygon.llamarpc.com"],
+            //   chainName: "Polygon Mainnet",
+			chainId: hexStringChainId,
+			rpcUrls: ["https://sepolia.infura.io/v3/"],
+			chainName: "Sepolia test network",
             },
           ],
         });
-        if (network.chainId == Polygon.chainId) {
+        if (network.chainId == Sepolia.chainId) {
           location.reload();
         }
       }
@@ -213,8 +223,17 @@ const dataLoad = async () => {
 
   return (
     <ThirdwebProvider
-      activeChain={activeChain}
+    //   activeChain={activeChain}
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
+	  supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
+	  supportedChains={[Sepolia]}
+	  dAppMeta={{
+        name: "Blockchain wars",
+        description: "Stategic & decentralized play to earn game based on nft",
+        logoUrl: "https://example.com/logo.png",
+        url: "https://example.com",
+        isDarkMode: false,
+      }}
     >
       <Navbar setAddress={setAddress} />
       <Component
