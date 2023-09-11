@@ -71,10 +71,12 @@ contract Building is ERC721, Ownable {
         uint256 requiredFood;
         uint256 baseRev;
         uint256 baseCapacity;
-        uint8 revTokenIndex;
+        uint256 revTokenIndex;
         string imageURL;
         string biuldingName;
     }
+
+    Info[] private buildings;
 
     struct Status {
         uint256 level;
@@ -84,7 +86,7 @@ contract Building is ERC721, Ownable {
     }
 
     mapping (uint256 => Status) private tokenIdStatus;
-    mapping (uint8 => Info) private buildingInfo;
+    // mapping (uint8 => Info) private buildingInfo;
 
 
     //  ******************************************************************************
@@ -98,11 +100,8 @@ contract Building is ERC721, Ownable {
 
     constructor(address landsContractAddress/*, address[5] memory commodities*/) ERC721("Buildings", "BDG") {
         lands = LandsV1(landsContractAddress);
-        // stone = commodities[0];
-        // wood = commodities[1];
-        // iron = commodities[2];
-        // gold = commodities[3];
-        // food = commodities[4];
+        buildings.push(Info(0,200 ether,150 ether,0, 25 ether,8 ether,80 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
+        buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,8 ether,80 ether,1,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
     }
 
 
@@ -115,16 +114,22 @@ contract Building is ERC721, Ownable {
     //  ******************************************************************************
 
 
+    /// @notice Making sure caller is owner of pointed land in Lands contract.
     modifier onlyLandOwner(uint256 landTokenId) {
         require(lands.ownerOf(landTokenId) == msg.sender, "Land not owned by you");
         _;
     }
 
+
+    /// @notice Making sure caller of token is owner of entered toeknId.
     modifier belongToCaller(uint256 tokenId) {
         require(_ownerOf(tokenId) == msg.sender, "Not owned by you");
         _;
     }
 
+    /// @notice Modofier to prevent upgrade and actions that change variable x times.
+    /// Imagine a building that extracted 80 amounts of a commodity, if users do not claim them and upgrade the building, then they can claim  160, this modifier prevents it by checking last action time.
+    /// @dev If last timestamp action > 1 day => revert
     modifier timestampLimitation (uint256 tokenId){
         uint256 latestActionTimestamp = tokenIdStatus[tokenId].latestActionTimestamp;
         uint256 period = block.timestamp - latestActionTimestamp;
@@ -145,7 +150,7 @@ contract Building is ERC721, Ownable {
 
     function build(uint256 landTokenId, uint8 buildingIndex) external onlyLandOwner(landTokenId){
         require(buildingIndex < buildingCounter, "Building is not valid");
-        Info memory selecteduilding = buildingInfo[buildingIndex];
+        Info memory selecteduilding = buildings[buildingIndex];
         uint256 stoneBal = getBal(landTokenId, 0);
         uint256 woodBal = getBal(landTokenId, 1);
         uint256 ironBal = getBal(landTokenId, 2);
@@ -166,8 +171,6 @@ contract Building is ERC721, Ownable {
             selecteduilding.requiredFood,
             selecteduilding.requiredGold
             ]);
-        // lands.spendAsset(landTokenId, address(iron), baseRequireIron);
-        // lands.spendAsset(landTokenId, address(food), baseRequireFood);
         tokenIdStatus[tokenIdCounter] = Status(defaultLevel, block.timestamp, landTokenId,buildingIndex);
         _safeMint(msg.sender, tokenIdCounter);
         _attachToLand(landTokenId, tokenIdCounter);
@@ -176,35 +179,37 @@ contract Building is ERC721, Ownable {
 
 
     function upgrade(uint256 buildingTokenId, uint256 landTokenId) external timestampLimitation(buildingTokenId){
-        Status memory buildingStatus = getStatus(buildingTokenId);
-        Info memory selecteduilding = getBuilding(buildingStatus.buildingTypeIndex);
-        uint256 currentLevel = buildingStatus.level;
-        uint256 stoneBal = getBal(landTokenId, 0);
-        uint256 woodBal = getBal(landTokenId, 1);
-        uint256 ironBal = getBal(landTokenId, 2);
-        uint256 foodBal = getBal(landTokenId, 3);
-        uint256 goldBal = getBal(landTokenId, 4);
-        require(stoneBal >= selecteduilding.requiredStone * (currentLevel+1) &&
-        woodBal >= selecteduilding.requiredWood * (currentLevel+1) && 
-        ironBal >= selecteduilding.requiredIron * (currentLevel+1) &&
-        foodBal >= selecteduilding.requiredFood * (currentLevel+1) &&
-        goldBal >= selecteduilding.requiredGold * (currentLevel+1)
+        uint256 typeIndex = tokenIdStatus[buildingTokenId].buildingTypeIndex;
+        uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
+        // Status memory buildingStatus = getStatus(buildingTokenId);
+        Info memory selecteduilding = buildings[typeIndex];
+        // uint256 currentLevel = buildingStatus.level;
+        uint256 requiredStone = selecteduilding.requiredStone * (currentLevel+1);
+        uint256 requiredWood = selecteduilding.requiredWood * (currentLevel+1);
+        uint256 requiredIron = selecteduilding.requiredIron * (currentLevel+1);
+        uint256 requiredGold = selecteduilding.requiredGold * (currentLevel+1);
+        uint256 requiredFood = selecteduilding.requiredFood * (currentLevel+1);
+        require(getBal(landTokenId, 0) >= requiredStone &&
+        getBal(landTokenId, 1) >= requiredWood && 
+        getBal(landTokenId, 2) >= requiredIron &&
+        getBal(landTokenId, 3) >= requiredGold &&
+        getBal(landTokenId, 4) >= requiredFood
         , "Insufficient commodities");
         lands.spendCommodities(landTokenId, [
-            selecteduilding.requiredStone * (currentLevel+1),
-            selecteduilding.requiredWood * (currentLevel+1),
-            selecteduilding.requiredIron * (currentLevel+1),
-            selecteduilding.requiredFood * (currentLevel+1),
-            selecteduilding.requiredGold * (currentLevel+1)
+            requiredStone,
+            requiredWood,
+            requiredIron,
+            requiredGold,
+            requiredFood
             ]);
-        tokenIdStatus[buildingTokenId].level +=1 ;
+        tokenIdStatus[buildingTokenId].level = currentLevel+1 ;
     }
 
 
 
     function claimRevenue(uint256 buildingTokenId) external belongToCaller(buildingTokenId){
         Status memory buildingStatus = getStatus(buildingTokenId);
-        Info memory selecteduildingInfo = buildingInfo[buildingStatus.buildingTypeIndex];
+        Info memory selecteduildingInfo = buildings[buildingStatus.buildingTypeIndex];
         uint256 revenueAmount = getCurrentRevenue(buildingTokenId);
         tokenIdStatus[buildingTokenId].latestActionTimestamp = block.timestamp;
         lands.claimAsset(selecteduildingInfo.revTokenIndex, revenueAmount, tokenIdStatus[buildingTokenId].attachedLand);
@@ -220,29 +225,18 @@ contract Building is ERC721, Ownable {
     //  ******************************************************************************
 
     function addNewBuilding(uint256[7] memory requiredCommodities, string memory imgUrl, string memory name) external onlyOwner {
-
-        //         uint8 requiredStone;
-        // uint8 requiredWood;
-        // uint8 requiredIron;
-        // uint8 requiredGold;
-        // uint8 requiredFood;
-        // uint8 baseRev;
-        // uint8 baseCapacity;
-        // uint8 revTokenIndex;
-        // string imageURL;
-        buildingInfo[buildingCounter] = Info(
-            requiredCommodities[0],
+        buildings.push(Info(
+                        requiredCommodities[0],
             requiredCommodities[1],
             requiredCommodities[2],
             requiredCommodities[3],
             requiredCommodities[4],
             requiredCommodities[5],
             requiredCommodities[6],
-            buildingCounter,
+            buildings.length,
             imgUrl,
             name
-        );
-        buildingCounter++;
+        ));
     }
 
 
@@ -257,7 +251,7 @@ contract Building is ERC721, Ownable {
 
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
         Status memory buildingStatus = getStatus(buildingTokenId);
-        Info memory selecteduilding = getBuilding(buildingStatus.buildingTypeIndex);
+        Info memory selecteduilding = buildings[buildingStatus.buildingTypeIndex];
         uint256 latestActionTimestamp = buildingStatus.latestActionTimestamp;
         uint256 period = block.timestamp - latestActionTimestamp;
         uint256 revenuePerDay = buildingStatus.level * selecteduilding.baseRev;
@@ -272,10 +266,10 @@ contract Building is ERC721, Ownable {
         return tokenIdStatus[tokenId];
     }
 
-    function getBuilding(uint8 typeIndex) view public returns (Info memory) {
-        return buildingInfo[typeIndex];
+    function getBuildings() view public returns (Info[] memory) {
+        return buildings;
     }
-
+    // remove this and get balance directly
     function getBal(uint256 landTokenId,uint8 commodityTokenIndex) public view returns (uint256) {
         return lands.getAssetBal(landTokenId,commodityTokenIndex);
     }
@@ -289,7 +283,7 @@ contract Building is ERC721, Ownable {
         );
 
         Status memory thisTokenIdStatus = tokenIdStatus[_tokenId];
-        Info memory thisBuildingInfo = buildingInfo[thisTokenIdStatus.buildingTypeIndex];
+        Info memory thisBuildingInfo = buildings[thisTokenIdStatus.buildingTypeIndex];
         // string memory currentBaseURI = _baseURI();
 
         return  thisBuildingInfo.imageURL;

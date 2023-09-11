@@ -140,11 +140,11 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
               }}
               className="card"
             >
-              <Card.Body>
-                <Card.Text style={{ fontSize: "0.9rem" }}>
+              <Card.Body style={{"textAlign":"justify"}}>
+                <Card.Text style={{ fontSize: "0.9rem",textAlign:"center"}}>
                   If you have any land we recommend to connect your wallet
                 </Card.Text>
-                <div style={{ display: "flex", justifyContent: "end" }}>
+                <div style={{ display: "flex", justifyContent: "center"}}>
                   <Button
                     variant="outline-secondary"
                     onClick={handleClosePopUp}

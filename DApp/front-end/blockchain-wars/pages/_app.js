@@ -38,8 +38,8 @@ function MyApp({ Component, pageProps }) {
   const [landTokenId, setLandTokenId] = useState();
   const [landImgUrl, setLandImgUrl] = useState();
   const [ownedLands, setOwnedLands] = useState();
-  const [commoditiesBalance, setCommoditiesBalance] = useState([{}]);
-  const [connectedAddressLands, setConnectedAddressLands] = useState([]);
+  const [landObj, setLandObj] = useState([]);
+//   const [connectedAddressLands, setConnectedAddressLands] = useState([]);
   const [mintedLands, setMintedLands] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [response, setResponse] = useState()
@@ -65,41 +65,38 @@ function MyApp({ Component, pageProps }) {
       return prefix + zeros + suffix;
     }
   };
-  const removeExtraBytes = (input) => {
 
-  }
+//   const connectReq = async () => {
+//     if (typeof window.ethereum !== "undefined") {
+//       const provider = new ethers.providers.Web3Provider(window.ethereum);
+//       const network = await provider.getNetwork();
 
-  const connectReq = async () => {
-    if (typeof window.ethereum !== "undefined") {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const network = await provider.getNetwork();
-
-      if (network.chainId !== Sepolia.chainId) {
-        const hexStringChainId =
-          "0x" + parseInt(Sepolia.chainId).toString(16);
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-            //   chainId: hexStringChainId,
-            //   rpcUrls: ["https://polygon.llamarpc.com"],
-            //   chainName: "Polygon Mainnet",
-			chainId: hexStringChainId,
-			rpcUrls: ["https://sepolia.infura.io/v3/"],
-			chainName: "Sepolia test network",
-            },
-          ],
-        });
-        if (network.chainId == Sepolia.chainId) {
-          location.reload();
-        }
-      }
-      console.log("Connected!");
-      return provider;
-    } else {
-      return null;
-    }
-  };
+//       if (network.chainId !== Sepolia.chainId) {
+//         const hexStringChainId =
+//           "0x" + parseInt(Sepolia.chainId).toString(16);
+//         await window.ethereum.request({
+//           method: "wallet_addEthereumChain",
+//           params: [
+//             {
+//             //   chainId: hexStringChainId,
+//             //   rpcUrls: ["https://polygon.llamarpc.com"],
+//             //   chainName: "Polygon Mainnet",
+// 			chainId: hexStringChainId,
+// 			rpcUrls: ["https://sepolia.infura.io/v3/"],
+// 			chainName: "Sepolia test network",
+//             },
+//           ],
+//         });
+//         if (network.chainId == Sepolia.chainId) {
+//           location.reload();
+//         }
+//       }
+//       console.log("Connected!");
+//       return provider;
+//     } else {
+//       return null;
+//     }
+//   };
 
 
 const dataLoad = async () => {
@@ -139,7 +136,6 @@ const dataLoad = async () => {
     const fetchData = async () => {
       const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
       const imgURL = await lands.URI();
-	  console.log(imgURL);
       setLandImgUrl(imgURL);
       if (address) {
         // console.log(convertAddress(address));
@@ -148,8 +144,9 @@ const dataLoad = async () => {
         if (landBalance > 0) {
           console.log(`User owned ${landBalance.toString()} land`);
           let mintedLands = [];
-          let tokenIds = [];
-          let commoditiesBal = [];
+        //   let tokenIds = [];
+          let landObject = [];
+		  let counter = 1
           try {
             const response = await axios.get(
               // `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
@@ -163,12 +160,12 @@ const dataLoad = async () => {
             for (let index = 0; index < events.length; index++) {
               const topics = events[index].topics;
               // console.log(topics);
-              if (
+              if (Array.isArray(topics) &&
                 topics.length === 4 &&
                 topics[2] == convertAddress(address.toLowerCase())
               ) {
                 // console.log(parseInt(topics[3],16));
-                tokenIds.push(parseInt(topics[3], 16));
+                // tokenIds.push(parseInt(topics[3], 16));
                 const stoneBal = await lands.getAssetBal(
                   parseInt(topics[3], 16),
                   0
@@ -189,15 +186,18 @@ const dataLoad = async () => {
                   parseInt(topics[3], 16),
                   4
                 );
-                const landBalances = {
+                const landInfo = {
+					id: counter,
                   stone: ethers.utils.formatEther(stoneBal.toString()),
                   wood: ethers.utils.formatEther(woodBal.toString()),
                   iron: ethers.utils.formatEther(ironBal.toString()),
                   gold: ethers.utils.formatEther(goldBal.toString()),
                   food: ethers.utils.formatEther(foodBal.toString()),
+				  coordinate: parseInt(topics[3], 16)
                 };
-                commoditiesBal.push(landBalances);
+                landObject.push(landInfo);
                 // console.log(landBalances);
+				counter ++
               }
               if (
                 topics.length === 4 &&
@@ -212,10 +212,12 @@ const dataLoad = async () => {
           } catch (error) {
             console.error("Error fetching contract events:", error);
           }
-          console.log(commoditiesBal);
-          setConnectedAddressLands(tokenIds);
-          setCommoditiesBalance(commoditiesBal);
+        //   console.log(landObject);
+        //   setConnectedAddressLands(tokenIds);
+		//   console.log("Connected address owned these lands:",tokenIds);
+          setLandObj(landObject);
           setMintedLands(mintedLands);
+		  console.log("Connected address owned these lands:",landObject);
         }
 	}
     };
@@ -239,13 +241,14 @@ const dataLoad = async () => {
       <Navbar setAddress={setAddress} />
       <Component
         {...pageProps}
-        connectReq={connectReq}
+        // connectReq={connectReq}
         provider={provider}
         landImgUrl={landImgUrl}
         ownedLands={ownedLands}
-        commoditiesBalance={commoditiesBalance}
+        landObj={landObj}
         mintedLands={mintedLands}
 		dataLoad={dataLoad}
+		// connectedAddressLands={connectedAddressLands}
       />
     </ThirdwebProvider>
   );

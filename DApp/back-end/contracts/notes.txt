@@ -5,3 +5,10 @@ tokens
 add attack
 health and repair
 attack and defence calculation
+
+
+
+    Info stoneMine = Info( 0, 200, 150, 0, 25, 8, 80, stone, "Replace this with image url");
+    Info lumberMill = Info( 50, 50, 250, 0, 25, 8, 80, wood, "Replace this with image url");
+    Info ironMine = Info( 100, 100, 100, 0, 25, 8, 80, iron,"Replace this with image url");
+    Info ranchHouse = Info( 250, 50, 0, 0, 100, 10, 100, food,"Replace this with image url");

@@ -11,20 +11,30 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
-import { landsSepolia } from "../Blockchain/Addresses";
+import { landsSepolia, townSepolia } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/LandsV1.json";
+import Town from "../Blockchain/Town.json";
+import { useRouter } from "next/router";
+import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 
-const lands = ({provider, address, landImgUrl, ownedLands, commoditiesBalance}) => {
+const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
+  const [isLandOpened, setIsLandOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [landItems, setLandItems] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+  const [buildings, setBuildings] = useState();
+  const [selectedLand, setSelectedLand] = useState()
   // const [stoneBal, setStoneBal] = useState()
   // const [woodBal, setWoodBal] = useState([])
   // const [ironBal, setIronBal] = useState([])
   // const [goldBal, setGoldBal] = useState([])
   // const [foodBal, setFoodBal] = useState([])
-
+  const router = useRouter();
+  const address = useAddress();
+  const signer = useSigner();
+  const connectWithMetamask = useMetamask();
 
   const handleClose = () => {
     setIsTransactionRejected(false);
@@ -40,35 +50,48 @@ const lands = ({provider, address, landImgUrl, ownedLands, commoditiesBalance}) 
     setSelectedItem({});
   };
 
+  const mintBuilding = async () => {
+    if (!signer) {
+      connectWithMetamask
+    }
+    try {
+      const TownInstance = new ethers.Contract(
+        townSepolia,
+        Town.abi,
+        signer
+      );
+      await TownInstance.build(selectedLand.coordinate, 1)
+    } catch (error) {  
+      console.log(error);
+    }
+
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       // console.log(provider);
-      if (provider && commoditiesBalance.length >0) {
-        console.log(commoditiesBalance);
-        const lands = new ethers.Contract(
-          landsSepolia,
-          Lands.abi,
+      if (provider && landObj.length > 0 && ownedLands) {
+        console.log(landObj);
+        const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
+        if (ownedLands == 0) {
+          setIsFetching(false);
+        }
+        if (ownedLands > 0 && landObj.length > 0) {
+          setIsFetching(false);
+        }
+
+        const TownInstance = new ethers.Contract(
+          townSepolia,
+          Town.abi,
           provider
         );
-        // console.log("hello");
-        // console.log(commoditiesBalance);
-        // let commoditiesBal =[{}]
-        // for (let index = 0; index < commoditiesBalance.length; index++) {
-        //   commoditiesBalance[index]
-        //   const thisLandCommodities = {st: commoditiesBalance[index].stone, wd: commoditiesBalance[index].wood, ir: commoditiesBalance[index].iron, gd: commoditiesBalance[index].gold, fd: commoditiesBalance[index].food}
-        //   commoditiesBal.push(thisLandCommodities)
-        // }
-        // console.log(commoditiesBal);
-        // setStoneBal(commoditiesBalance[0])
-        // setWoodBal()
-        // setIronBal()
-        // setGoldBal()
-        // setFoodBal()
+        const existedBuildings = await TownInstance.getBuildings();
+        console.log(existedBuildings);
+        setBuildings(existedBuildings);
       }
     };
     fetchData();
-  }, [provider,commoditiesBalance]);
-
+  }, [provider, landObj, ownedLands, landObj]);
 
   return (
     <>
@@ -85,146 +108,252 @@ const lands = ({provider, address, landImgUrl, ownedLands, commoditiesBalance}) 
         {isLandSelected && (
           <div className="overlay">
             <div className="selectedLandWindow">
-              <h4>Land</h4>
+              <Card className="card">
+                <Card.Img
+                  variant="top"
+                  src={buildings[0].imageURL}
+                  className="cardImg"
+                />
+                <Card.Body>
+                  <Card.Title>{buildings[0].biuldingName}</Card.Title>
+                  <Card.Text>
+                    Some quick example text to build on the card title and make
+                    up the bulk of the card's content.
+                  </Card.Text>
+                  <Button
+                    variant="primary"
+                    onClick={() => handleCloseLandWindow()}
+                  >
+                    Open
+                  </Button>
+                </Card.Body>
+              </Card>
+              {/* <h4>Land</h4>
               <p>Coordinate</p>
               <p>Owner:</p>
               <p>Level:</p>
               <Button variant="primary" onClick={handleCloseLandWindow}>
                 Close
-              </Button>
+              </Button> */}
             </div>
           </div>
         )}
         <Container>
-          <Row>
-            {/* <Col md={{ span: 4, offset: 0 }}>
-              <div className="itemCard">
-                <div className="cardImage">
-                  <img src="/asset_land.png"></img>
-                </div>
-              </div>
-            </Col> */}
-            <Col md={{ span: 4, offset: 0 }}>
-              <Card className="card">
-              {landImgUrl !== undefined ? (
-                <Card.Img
-                  variant="top"
-                  // src="/asset_land.png"
-                  src={landImgUrl}
-                  className="cardImg"
-                />
-              ) : (
+          {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
+            <>
+              {selectedLand == undefined && landObj.map((land, key) => (
+        
+                  <React.Fragment key={land.coordinate + land.id + key}>
+                    <Row>
+                      <Col md={{ span: 4, offset: 0 }} >
+                        <Card className="card">
+                          <Card.Img
+                            variant="top"
+                            src={landImgUrl}
+                            className="cardImg"
+                          />
+                          <Card.Body>
+                            <Card.Title>{land.coordinate}</Card.Title>
+                            <Card.Text>
+                              Some quick example text to build on the card title
+                              and make up the bulk of the card's content.
+                            </Card.Text>
+                            <Button
+                              variant="primary"
+                              onClick={() => setSelectedLand(land)}
+                            >
+                              Open land
+                            </Button>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </React.Fragment>
+      
+              ))}
 
+            </>
+          ) : (
+            <>
+              {address != undefined && isFetching ? (
                 <div
+                  style={{
+                    display: "block",
+                    marginTop: "1%",
+                    height: "200px",
+                    paddingTop: "15%",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <h2
                     style={{
-                      display: "block",
-                      marginTop: "1%",
-                      height: "200px",
-                      paddingTop: "15%",
-                      width: "100%",
-                      textAlign: "center",
+                      fontFamily: "monospace",
+                      fontSize: "0.9rem",
+                      color: "white",
                     }}
                   >
-                    <h2 style={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
-                      Fetching...
-                    </h2>
-                    <Spinner animation="border" role="status" style={{"textAlign":"center"}}>
+                    Loading...
+                  </h2>
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ textAlign: "center", color: "white" }}
+                  >
                     <span className="visually-hidden">Loading...</span>
                   </Spinner>
-                  </div>
-              )}
-
-              {ownedLands > 0 ? (
-                <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make
-                  up the bulk of the card's content.
-                </Card.Text>
-                <Button
-                  variant="primary"
-                  
-                  onClick={() => handleOpenWindow(selectedItem)}
-                >
-                  Open
-                </Button>
-              </Card.Body>
+                </div>
               ) : (
-                <Card.Body>
-                  <Card.Title>You have not any land</Card.Title>
-                  <Card.Text>
-                    Explore in map and mint your land.
-                  </Card.Text>
-                  <Button
-                    variant="primary"
-                    
-                    onClick={() => handleOpenWindow(selectedItem)}
+                <Row>
+                  <Col
+                    md={{ span: 4, offset: 4 }}
+                    style={{ display: "flex", justifyContent: "center" }}
                   >
-                    Explore
-                  </Button>
-                </Card.Body>
+                    <Card className="card">
+                      <Card.Body>
+                        <Card.Title>Not land found.</Card.Title>
+                        <Card.Text>
+                          To participate in game you need a land.
+                        </Card.Text>
+                        <Card.Text>Explore and mint your land.</Card.Text>
+                        <Card.Text>
+                          If you have any land connect owner wallet.
+                        </Card.Text>
+                        <Button
+                          variant="primary"
+                          onClick={() => {
+                            router.push("/lands");
+                          }}
+                        >
+                          Explore
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
               )}
-                
-              </Card>
-            </Col>
-            <Col md={{ span: 8, offset: 0 }}>
-              <div className="myLandColumn">
-                <div className="balanceHeader">
-                  <img src="/Stone.png"></img>
-                  <h6>{commoditiesBalance[0].stone !== undefined ? commoditiesBalance[0].stone : "0"}</h6>
-                  <img src="/Wood.png"></img>
-                  <h6>{commoditiesBalance[0].wood !== undefined ? commoditiesBalance[0].wood : "0"}</h6>
-                  <img src="/Iron.png"></img>
-                  <h6>{commoditiesBalance[0].iron !== undefined ? commoditiesBalance[0].iron : "0"}</h6>
-                  <img src="/Gold.png"></img>
-                  <h6>{commoditiesBalance[0].gold !== undefined ? commoditiesBalance[0].gold : "0"}</h6>
-                  <img src="/Food.png"></img>
-                  <h6>{commoditiesBalance[0].food !== undefined ? commoditiesBalance[0].food : "0"}</h6>
-                </div>
-
-                <div className="myLandBox">
-                  <div className="landBoxColumn">
-                    <InputGroup className="mb-3" size="sm">
-                      <Form.Control placeholder="Enter amount..." aria-label="Amount (to the nearest dollar)" style={{"width":"50%"}}/>
-                      <Dropdown >
-                        <Dropdown.Toggle variant="success" id="dropdown-basic" className="selectDropdown">
-                          Select
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                          <Dropdown.Item href="#/action-1">
-                          <img src="/Stone.png" className="dropdownTokenLogo"></img>
-                            Stone
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-2">
-                          <img src="/Wood.png" className="dropdownTokenLogo"></img>
-                            Wood
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-3">
-                          <img src="/Iron.png" className="dropdownTokenLogo"></img>
-                            Iron
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-4">
-                          <img src="/Gold.png" className="dropdownTokenLogo"></img>
-                            Gold
-                          </Dropdown.Item>
-                          <Dropdown.Item href="#/action-5">
-                          <img src="/Food.png" className="dropdownTokenLogo"></img>
-                            Food
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    </InputGroup>
-                    <Button variant="outline-light" size="sm" style={{"marginRight":"10px"}}>Deposit</Button>
-                    <Button variant="outline-light" size="sm">Withdraw</Button>
+            </>
+          )}
+          { selectedLand !== undefined &&
+          <>
+                        <Row>
+              <Col md={{ span: 8, offset: 0 }}>
+                <div className="myLandColumn">
+                  <div className="balanceHeader">
+                    <img src="/Stone.png"></img>
+                    <h6>{selectedLand.stone !== undefined ? selectedLand.stone : "0"}</h6>
+                    <img src="/Wood.png"></img>
+                    <h6>{selectedLand.wood !== undefined ? selectedLand.wood : "0"}</h6>
+                    <img src="/Iron.png"></img>
+                    <h6>{selectedLand.iron !== undefined ? selectedLand.iron : "0"}</h6>
+                    <img src="/Gold.png"></img>
+                    <h6>{selectedLand.gold !== undefined ? selectedLand.gold : "0"}</h6>
+                    <img src="/Food.png"></img>
+                    <h6>{selectedLand.food !== undefined ? selectedLand.food : "0"}</h6>
                   </div>
-                  <div className="landBoxColumn">
-                    <p> Some text</p>
+
+                  <div className="myLandBox">
+                    <div className="landBoxColumn">
+                      <InputGroup className="mb-3" size="sm">
+                        <Form.Control
+                          placeholder="Enter amount..."
+                          aria-label="Amount (to the nearest dollar)"
+                          style={{ width: "50%" }}
+                        />
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="success"
+                            id="dropdown-basic"
+                            className="selectDropdown"
+                          >
+                            Select
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">
+                              <img
+                                src="/Stone.png"
+                                className="dropdownTokenLogo"
+                              ></img>
+                              Stone
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">
+                              <img
+                                src="/Wood.png"
+                                className="dropdownTokenLogo"
+                              ></img>
+                              Wood
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">
+                              <img
+                                src="/Iron.png"
+                                className="dropdownTokenLogo"
+                              ></img>
+                              Iron
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-4">
+                              <img
+                                src="/Gold.png"
+                                className="dropdownTokenLogo"
+                              ></img>
+                              Gold
+                            </Dropdown.Item>
+                            <Dropdown.Item href="#/action-5">
+                              <img
+                                src="/Food.png"
+                                className="dropdownTokenLogo"
+                              ></img>
+                              Food
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </InputGroup>
+                      <Button
+                        variant="outline-light"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                      >
+                        Deposit
+                      </Button>
+                      <Button variant="outline-light" size="sm">
+                        Withdraw
+                      </Button>
+                    </div>
+                    <div className="landBoxColumn">
+                      <p> Some text</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Col>
-          </Row>
+              </Col>
+              </Row>
+              <Row>
+                {buildings.map((item, key) => (
+                              <Card className="card" key={key}>
+                              <Card.Img
+                                variant="top"
+                                src={item.imageURL}
+                                className="cardImg"
+                              />
+                              <Card.Body>
+                                <Card.Title>{item.biuldingName}</Card.Title>
+                                <Card.Text>
+                                  Some quick example text to build on the card title and make
+                                  up the bulk of the card's content.
+                                </Card.Text>
+                                <Button
+                                  variant="primary"
+                                  onClick={() => mintBuilding()}
+                                >
+                                  Open
+                                </Button>
+                              </Card.Body>
+                            </Card>
+                ))
+                }
+  
+            </Row>
+            </>
+          }
           <Row>
             <Col></Col>
           </Row>
