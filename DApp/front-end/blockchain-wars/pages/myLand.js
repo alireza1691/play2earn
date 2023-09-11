@@ -327,7 +327,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
               </Col>
               </Row>
               <Row>
-                {buildings.map((item, key) => (
+                { Array.isArray(buildings) && buildings.map((item, key) => (
                               <Card className="card" key={key}>
                               <Card.Img
                                 variant="top"

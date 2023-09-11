@@ -19,7 +19,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 
 
-contract Building is ERC721, Ownable {
+contract Town is ERC721, Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
@@ -59,7 +59,8 @@ contract Building is ERC721, Ownable {
     // uint256 private constant baseCapacity = 80 ether;
 
     uint256 private tokenIdCounter = 1;
-    uint8 private buildingCounter ;
+    uint256 private constant baseCapacity = 80 ether;
+    // uint8 private buildingCounter ;
 
     uint256 private constant defaultLevel = 1;
 
@@ -70,10 +71,9 @@ contract Building is ERC721, Ownable {
         uint256 requiredGold;
         uint256 requiredFood;
         uint256 baseRev;
-        uint256 baseCapacity;
         uint256 revTokenIndex;
         string imageURL;
-        string biuldingName;
+        string buildingName;
     }
 
     Info[] private buildings;
@@ -85,8 +85,10 @@ contract Building is ERC721, Ownable {
         uint8 buildingTypeIndex;
     }
 
+    /// @notice Token id => status of token id
     mapping (uint256 => Status) private tokenIdStatus;
-    // mapping (uint8 => Info) private buildingInfo;
+    /// @notice Land token id => owned token ids
+    mapping (uint256 => uint256[]) private balances;
 
 
     //  ******************************************************************************
@@ -100,8 +102,8 @@ contract Building is ERC721, Ownable {
 
     constructor(address landsContractAddress/*, address[5] memory commodities*/) ERC721("Buildings", "BDG") {
         lands = LandsV1(landsContractAddress);
-        buildings.push(Info(0,200 ether,150 ether,0, 25 ether,8 ether,80 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
-        buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,8 ether,80 ether,1,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
+        buildings.push(Info(0,200 ether,150 ether,0, 25 ether,8 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
+        buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,8 ether,1,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
     }
 
 
@@ -149,20 +151,14 @@ contract Building is ERC721, Ownable {
 
 
     function build(uint256 landTokenId, uint8 buildingIndex) external onlyLandOwner(landTokenId){
-        require(buildingIndex < buildingCounter, "Building is not valid");
+        require(buildingIndex < buildings.length, "Building is not valid");
         Info memory selecteduilding = buildings[buildingIndex];
-        uint256 stoneBal = getBal(landTokenId, 0);
-        uint256 woodBal = getBal(landTokenId, 1);
-        uint256 ironBal = getBal(landTokenId, 2);
-        uint256 foodBal = getBal(landTokenId, 3);
-        uint256 goldBal = getBal(landTokenId, 4);
-        require(stoneBal >= selecteduilding.requiredStone &&
-        woodBal >= selecteduilding.requiredWood && 
-        ironBal >= selecteduilding.requiredIron &&
-        foodBal >= selecteduilding.requiredFood &&
-        goldBal >= selecteduilding.requiredGold
+        require(getBal(landTokenId, 0) >= selecteduilding.requiredStone &&
+        getBal(landTokenId, 1) >= selecteduilding.requiredWood && 
+        getBal(landTokenId, 2) >= selecteduilding.requiredIron &&
+        getBal(landTokenId, 3) >= selecteduilding.requiredFood &&
+        getBal(landTokenId, 4) >= selecteduilding.requiredGold
         , "Insufficient commodities");
-
 
         lands.spendCommodities(landTokenId, [
             selecteduilding.requiredStone,
@@ -171,9 +167,9 @@ contract Building is ERC721, Ownable {
             selecteduilding.requiredFood,
             selecteduilding.requiredGold
             ]);
+        _safeMint(address(lands), tokenIdCounter);
         tokenIdStatus[tokenIdCounter] = Status(defaultLevel, block.timestamp, landTokenId,buildingIndex);
-        _safeMint(msg.sender, tokenIdCounter);
-        _attachToLand(landTokenId, tokenIdCounter);
+        balances[landTokenId].push(tokenIdCounter);
         tokenIdCounter ++;
     }
 
@@ -181,9 +177,7 @@ contract Building is ERC721, Ownable {
     function upgrade(uint256 buildingTokenId, uint256 landTokenId) external timestampLimitation(buildingTokenId){
         uint256 typeIndex = tokenIdStatus[buildingTokenId].buildingTypeIndex;
         uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
-        // Status memory buildingStatus = getStatus(buildingTokenId);
         Info memory selecteduilding = buildings[typeIndex];
-        // uint256 currentLevel = buildingStatus.level;
         uint256 requiredStone = selecteduilding.requiredStone * (currentLevel+1);
         uint256 requiredWood = selecteduilding.requiredWood * (currentLevel+1);
         uint256 requiredIron = selecteduilding.requiredIron * (currentLevel+1);
@@ -224,7 +218,7 @@ contract Building is ERC721, Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
 
-    function addNewBuilding(uint256[7] memory requiredCommodities, string memory imgUrl, string memory name) external onlyOwner {
+    function addNewBuilding(uint256[6] memory requiredCommodities, string memory imgUrl, string memory name) external onlyOwner {
         buildings.push(Info(
                         requiredCommodities[0],
             requiredCommodities[1],
@@ -232,7 +226,6 @@ contract Building is ERC721, Ownable {
             requiredCommodities[3],
             requiredCommodities[4],
             requiredCommodities[5],
-            requiredCommodities[6],
             buildings.length,
             imgUrl,
             name
@@ -256,8 +249,8 @@ contract Building is ERC721, Ownable {
         uint256 period = block.timestamp - latestActionTimestamp;
         uint256 revenuePerDay = buildingStatus.level * selecteduilding.baseRev;
         uint256 rev = (period / 1 days) * revenuePerDay;
-        if (rev > selecteduilding.baseCapacity * buildingStatus.level) {
-            rev = selecteduilding.baseCapacity * buildingStatus.level;
+        if (rev > baseCapacity * buildingStatus.level) {
+            rev = baseCapacity * buildingStatus.level;
         }
         return rev;
     }
@@ -315,9 +308,5 @@ contract Building is ERC721, Ownable {
         return "Set this string";
     }
 
-    function _attachToLand(uint256 landTokenId,uint256 buildingTokenId) internal {
-        require(tokenIdStatus[buildingTokenId].attachedLand == landTokenId, "Building is already attached to one land");
-        lands.attach( buildingTokenId, landTokenId);
-    }
 
 }
