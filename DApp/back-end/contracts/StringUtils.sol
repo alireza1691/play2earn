@@ -104,6 +104,8 @@ library StringUtils {
             z = (x / z + z) / 2;
         }
     }
+
+    
     // function getFirstTwoLetters(string memory input) internal pure returns (uint8) {
     //     bytes memory inputBytes = bytes(input);
         

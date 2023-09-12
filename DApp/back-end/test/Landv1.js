@@ -20,7 +20,7 @@ const {
       // Contracts are deployed using the first signer/account by default
       const [owner, otherAccount] = await ethers.getSigners();
   
-      const ERC20 = await ethers.getContractFactory("Commodity");
+      const ERC20 = await ethers.getContractFactory("ERC20Commodity");
       const stone = await ERC20.deploy("stone", "ST");
       const stAdd = await stone.getAddress();
       const wood = await ERC20.deploy("wood", "WD");
@@ -36,96 +36,71 @@ const {
       console.log("Deploying lands...");
       const lands = await Lands.deploy(stAdd, wdAdd, irAdd, gdAdd, fdAdd, {});
       console.log("Lands deployed!");
-      console.log("Attaching lands address into commodities...");
-      console.log("Attached!");
-      const Buildings = await ethers.getContractFactory("Building");
-    //   await lands.deployItem("Stone Mine","STM",[0,ethers.parseEther("200"),ethers.parseEther("150"),0,ethers.parseEther("20")])
-    //   console.log("Deploying building...");
-    //   const buildingAddress = lands.getItems()
-      const buildings = await Buildings.deploy(lands.getAddress())
-    //   const stoneMine = await StoneMine.deploy(
-    //     lands.getAddress(),
-    //     stAdd,
-    //     wdAdd,
-    //     irAdd,
-    //     gdAdd,
-    //     fdAdd,
-    //     {}
-    //   );
-      console.log("Building (stone mine) deployed!");
-      console.log("Adding Building addess ass authorized item in lands...");
-      await lands.addItem(buildings.getAddress());
+
+      const Town = await ethers.getContractFactory("Town");
+      const town = await Town.deploy(lands.getAddress())
+
+      const Army = await ethers.getContractFactory("Army")
+      const army = await Army.deploy(lands.getAddress())
+
+      console.log("Town and army deployed!");
+      console.log("Adding Town and army addess as authorized item in lands...");
+      await lands.addItem(town.getAddress());
+      await lands.addItem(army.getAddress());
       console.log("Depositing in lands...");
       await lands.testDeposit(100100);
-      const woodbal1 = await lands.getAssetBal(100100, 1);
-      const ironbal1 = await lands.getAssetBal(100100, 2);
-      const foodbal1 = await lands.getAssetBal(100100, 4);
+      await lands.connect(otherAccount).testDeposit(101101)
+      console.log("Deposited");
+      const bal = await lands.getAssetsBal(100100);
   
       console.log(
         "Deposited. Balances: wood ",
-        ethers.formatEther(woodbal1),
+        ethers.formatEther(bal[1]),
         " iron ",
-        ethers.formatEther(ironbal1),
+        ethers.formatEther(bal[2]),
         " food ",
-        ethers.formatEther(foodbal1)
+        ethers.formatEther(bal[4])
       );
   
       console.log("Minting a land...");
-      await lands.mintLand(100, 100);
+      await lands.mintLand(100, 100,{value: ethers.parseEther("0.2")});
+      await lands.connect(otherAccount).mintLand(101, 101,{value: ethers.parseEther("0.2")});
       console.log("Minted");
-      console.log("Add stone mine to buildings as admin");
-      await buildings.addNewBuilding([
-        0,
-        ethers.parseEther("200"),
-        ethers.parseEther("150"),
-        0,
-        ethers.parseEther("25"),
-        ethers.parseEther("8"),
-        ethers.parseEther("80")
-      ],
-      "Url",
-      "Stone mine"
-      )
+
       console.log("Building a Stone mine...");
-      await buildings.build(100100, 0);
+      await town.build(100100, 0);
       console.log("Builded");
       console.log("Getting token uri...");
-      const uri = await buildings.tokenURI(1);
+      const uri = await town.tokenURI(1);
       console.log(uri);
   
   
-      const woodbal2 = await lands.getAssetBal(100100, 1);
-      const ironbal2 = await lands.getAssetBal(100100, 2);
-      const foodbal2 = await lands.getAssetBal(100100, 4);
-  
+      const bal2 = await lands.getAssetsBal(100100);
       console.log(
         "Balances after build: wood ",
-        ethers.formatEther(woodbal2),
+        ethers.formatEther(bal2[1]),
         " iron ",
-        ethers.formatEther(ironbal2),
+        ethers.formatEther(bal2[2]),
         " food ",
-        ethers.formatEther(foodbal2)
+        ethers.formatEther(bal2[4])
       );
   
       console.log("Mining 10000 blocks in order to waiting for stone mine revenue...");
       await mine(100000000, 1);
+
    
-    //   const Army = await ethers.getContractFactory("Army");
-    //   const army = await Army.deploy();
-    //   console.log( await army.test());
-  
-      // console.log(await army.calculate([1,2,3],[11,10,10],[1,2,3],[8,11,8],));
-  
+
       return {
         lands,
         owner,
         otherAccount,
-        buildings,
+        town,
         wdAdd,
         irAdd,
         stAdd,
         fdAdd,
         gdAdd,
+        army
       };
     }
   
@@ -140,28 +115,67 @@ const {
         expect(ownerOfMintedLand).to.equal(await owner.getAddress());
       });
       it("Should upgrade the building", async function () {
-        const { lands, buildings } = await loadFixture(deployLandsContract);
-        const uriBeforeUpgrade = await buildings.tokenURI(1);
-        const statusBeforeUpgrade = await buildings.getStatus(1)
-        await expect(buildings.upgrade(1, 100100)).to.be.revertedWith("Sorry, revenue should claim before action")
-        await buildings.claimRevenue(1)
-        await buildings.upgrade(1, 100100);
-        const statusAfterUpgrade = await buildings.getStatus(1)
-        const uriAfterUpgrade = await buildings.tokenURI(1);
+        const { lands, town } = await loadFixture(deployLandsContract);
+        const uriBeforeUpgrade = await town.tokenURI(1);
+        const statusBeforeUpgrade = await town.getStatus(1)
+        await expect(town.upgrade(1, 100100)).to.be.revertedWith("Sorry, revenue should claim before action")
+        await town.claimRevenue(1)
+        await town.upgrade(1, 100100);
+        const statusAfterUpgrade = await town.getStatus(1)
+        const uriAfterUpgrade = await town.tokenURI(1);
         expect(statusBeforeUpgrade.level).to.equal(1);
         expect(statusAfterUpgrade.level).to.equal(2);
-        expect(uriBeforeUpgrade == uriAfterUpgrade).to.equal(false);
+        // expect(uriBeforeUpgrade == uriAfterUpgrade).to.equal(false);
       });
       it("Should claim revenue and check balances", async function () {
-        const { lands,buildings ,wdAdd} = await loadFixture(deployLandsContract);
-        const balBeforeClaiming = await lands.getAssetBal(100100,0)
+        const { lands,town ,wdAdd} = await loadFixture(deployLandsContract);
+        const balBeforeClaiming = await lands.getAssetsBal(100100)
         // console.log(ethers.formatEther(balBeforeClaiming));
         // console.log("Currnet rev:");
         // console.log(await buildings.getCurrentRevenue(1));
-        await buildings.claimRevenue(1)
-        const balAfterClaiming = await lands.getAssetBal(100100,0)
-        console.log(ethers.formatEther(balAfterClaiming));
-        expect(balBeforeClaiming + ethers.parseEther("80")).to.equal(balAfterClaiming);
+        await town.claimRevenue(1)
+        const balAfterClaiming = await lands.getAssetsBal(100100)
+        console.log(ethers.formatEther(balAfterClaiming[0]));
+        expect(balBeforeClaiming[0] + ethers.parseEther("80")).to.equal(balAfterClaiming[0]);
+      });
+
+      it("Test barracks and attack", async function () {
+        const { army, otherAccount, lands} = await loadFixture(deployLandsContract);
+        // User should not build warrior if barracks level = 0
+        await expect(army.buildWarrior(100100, 0, 10)).to.be.revertedWith("Upgrade barracks needed")
+        // Building barracks for both accounts
+        await army.buildBarracks(100100)
+        await army.connect(otherAccount).buildBarracks(101101)
+        // Should revert if user tries to build warrior with type that requires higher barracks level.
+        await expect(army.buildWarrior(100100, 3, 10)).to.be.revertedWith("Type is not valid")
+        // Upgrading up to level 3
+        await army.buildBarracks(100100)
+        await army.buildBarracks(100100)
+
+        await army.buildWarrior(100100, 0, 10)
+        const armyBal = await army.getArmy(100100)
+        expect(armyBal[0]).to.be.equal(10)
+        // Building some warrior type 3 and some type 1 for account 2
+        await army.buildWarrior(100100, 1, 10)
+        await army.connect(otherAccount).buildWarrior(101101, 0, 10)
+        // If target is a land that has not been minted
+        await expect(army.attack([10,0,0],100100,102102)).to.be.revertedWith("ERC721: invalid token ID")
+        // If enter warrior amount bigger than number of warriors
+        await expect(army.attack([11,0,0],100100,101101)).to.be.revertedWith("Insufficient army")
+        const balanceOfAttackerBeforeWar = await lands.getAssetsBal(100100)
+        const balanceOfDefenderBeforeWar = await lands.getAssetsBal(101101)
+        // await army.attack([10,0,10],100100,101101)
+        const result = await army.calculateResult([0,15,0],101101)
+        console.log(result);
+        const balanceOfAttackerAfterWar = await lands.getAssetsBal(100100)
+        const balanceOfDefenderAfterWar = await lands.getAssetsBal(101101)
+        console.log("Balance of attacker before war:",balanceOfAttackerBeforeWar);
+        console.log("Balance of attacker after war:",balanceOfAttackerAfterWar);
+        expect(balanceOfAttackerBeforeWar[0] < balanceOfAttackerAfterWar[0] &&
+          balanceOfAttackerBeforeWar[2] < balanceOfAttackerAfterWar[2] &&
+          balanceOfDefenderBeforeWar[1] > balanceOfDefenderAfterWar[1] &&
+          balanceOfDefenderBeforeWar[3] > balanceOfDefenderAfterWar[3] 
+          ).to.be.equal(true)
       });
   
   

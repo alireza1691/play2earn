@@ -7,6 +7,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { TransferHelper } from "./TransferHelper.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+
 error Lands__InvalidCoordinate();
 error Lands__LandAlreadyMinted();
 
@@ -21,6 +22,7 @@ contract LandsV1 is ERC721, Ownable {
     address[] private items;
     uint8 private constant baseCapacity = 6;
     uint256 private transferCost = 3;
+    uint256 private constant defaultLandPrice = 200000000 gwei; // Equal 0.2 ether
 
     enum LandStatus {
         normal,
@@ -103,8 +105,8 @@ contract LandsV1 is ERC721, Ownable {
 
     // Mint new land by coordinate in x and y dimension
     function mintLand(uint8 x, uint8 y) external payable isExist(x,y) isCorrectCoordinate(x,y){
-        // uint256 tokenId = Converter.concatenate(x, y);
-         uint256 tokenId = StringUtils.concatenate(x, y);
+        require(msg.value >= defaultLandPrice, "msg.value less than land price");
+        uint256 tokenId = StringUtils.concatenate(x, y);
         _mint(msg.sender, tokenId);
         tokenIdLand[tokenId] = defaultLand;
     }
@@ -118,6 +120,7 @@ contract LandsV1 is ERC721, Ownable {
     }
 
     function deposit(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
+        require(_ownerOf(landId) != address(0), "Invalid land");
         TransferHelper.safeTransferFrom(commodityTokenAddress,msg.sender,address(this),amount);
         // IERC20(commodityTokenAddress).use(msg.sender, amount);
         balances[landId][commodityTokenAddress] += amount;
@@ -157,6 +160,17 @@ contract LandsV1 is ERC721, Ownable {
         uint256 netAmount = amount * (100 - difficulty) / 100;
         balances[landTokenId][convertIndexToAddress(assetIndex)] += netAmount;
     }
+
+
+    function loot(uint256 attackerLandId, uint256 targetLandId, uint256 lootPercentage) external onlyItems {
+        for (uint i = 0; i < 5; i++) {
+            uint256 lootAmount = balances[targetLandId][convertIndexToAddress(i)] * lootPercentage / 100;
+            balances[targetLandId][convertIndexToAddress(i)] -= lootAmount;
+            balances[attackerLandId][convertIndexToAddress(i)] += lootAmount;
+        }    
+    }
+
+
     // Changing difficulty of commodity extraction. 
     // Use case of this function is managing tokenomics of commodities.
     function setDifficulty(address assetAddress, uint8 newAmount) external onlyOwner{
@@ -184,7 +198,7 @@ contract LandsV1 is ERC721, Ownable {
     // function calculateTimestamp() external {}
     // function repair() external {}
     function transferCommodity(uint256 commodityIndex, uint256 amount, uint256 fromId, uint256 toId) external isCommodity(convertIndexToAddress(commodityIndex)) landOwner(fromId){
-        require(getAssetBal(fromId,commodityIndex) >= amount, "Insufficient balance");
+        require(getAssetsBal(fromId)[commodityIndex] >= amount, "Insufficient balance");
         balances[toId][convertIndexToAddress(commodityIndex)] += amount * (100-transferCost) / 100;
     }
 
@@ -192,12 +206,21 @@ contract LandsV1 is ERC721, Ownable {
         return tokenIdLand[tokenId];
     }
 
-    function getAssetBal(uint256 tokenId, uint256 commodityIndex) public view returns(uint256) {
-        return balances[tokenId][convertIndexToAddress(commodityIndex)];
+    // function getAssetBal(uint256 tokenId, uint256 commodityIndex) public view returns(uint256) {
+    //     return balances[tokenId][convertIndexToAddress(commodityIndex)];
+    // }
+
+    function getAssetsBal(uint256 tokenId) view public returns (uint256[5] memory) {
+        uint256[5] memory balancesArray;
+        for (uint i = 0; i < 5; i++) {
+            uint256 thisIndexBalance = balances[tokenId][convertIndexToAddress(i)];
+            balancesArray[i] = thisIndexBalance;
+        }
+        return balancesArray;
     }
 
     function convertIndexToAddress (uint256 commodityIndex) internal view returns(address commodityContractAddress){
-        require(commodityIndex <= 5, "Invalid index");
+        require(commodityIndex < 5, "Invalid index");
         if (commodityIndex == 0) {
             return address(stone);
         }
@@ -248,6 +271,6 @@ contract LandsV1 is ERC721, Ownable {
 
 
 
-    
+
    
 }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 
 import "./LandsV1.sol";
 import "./StringUtils.sol";
-import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+// import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 // import { ICommodity } from "./ICommodity.sol";
 
@@ -19,7 +19,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 
 
-contract Town is ERC721, Ownable {
+contract Town is Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
@@ -41,22 +41,10 @@ contract Town is ERC721, Ownable {
 
     LandsV1 lands;
 
-    // address stone;
-    // address wood ;
-    // address iron ;
-    // address gold ;
-    // address food ;
 
-    // uint256 private immutable baseRequireStone ;
-    // uint256 private immutable baseRequireWood ;
-    // uint256 private immutable baseRequireIron ;
-    // uint256 private immutable baseRequireGold ;
-    // uint256 private immutable baseRequireFood ;
-
-    // string[] private commodities = ["Stone","Wood","Iron","Gold","Food"];
-
-    // uint256 private immutable baseRevenue;
-    // uint256 private constant baseCapacity = 80 ether;
+    event Build( uint256 buildingTypeIndex, uint256 indexed tokenId, uint256 indexed landTokenId);
+    event Upgrade( uint256 indexed tokenId, uint256 level);
+    event Claim( uint256 indexed tokenId, uint256 amount, uint256 commodityIndex);
 
     uint256 private tokenIdCounter = 1;
     uint256 private constant baseCapacity = 80 ether;
@@ -89,6 +77,8 @@ contract Town is ERC721, Ownable {
     mapping (uint256 => Status) private tokenIdStatus;
     /// @notice Land token id => owned token ids
     mapping (uint256 => uint256[]) private balances;
+    /// @notice token ID => landId
+    mapping (uint256 => uint256) private belongTo;
 
 
     //  ******************************************************************************
@@ -100,7 +90,7 @@ contract Town is ERC721, Ownable {
     //  ******************************************************************************
 
 
-    constructor(address landsContractAddress/*, address[5] memory commodities*/) ERC721("Buildings", "BDG") {
+    constructor(address landsContractAddress)  {
         lands = LandsV1(landsContractAddress);
         buildings.push(Info(0,200 ether,150 ether,0, 25 ether,8 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
         buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,8 ether,1,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
@@ -125,7 +115,7 @@ contract Town is ERC721, Ownable {
 
     /// @notice Making sure caller of token is owner of entered toeknId.
     modifier belongToCaller(uint256 tokenId) {
-        require(_ownerOf(tokenId) == msg.sender, "Not owned by you");
+        require(lands.ownerOf(belongTo[tokenId]) == msg.sender, "Not owned by you");
         _;
     }
 
@@ -153,11 +143,11 @@ contract Town is ERC721, Ownable {
     function build(uint256 landTokenId, uint8 buildingIndex) external onlyLandOwner(landTokenId){
         require(buildingIndex < buildings.length, "Building is not valid");
         Info memory selecteduilding = buildings[buildingIndex];
-        require(getBal(landTokenId, 0) >= selecteduilding.requiredStone &&
-        getBal(landTokenId, 1) >= selecteduilding.requiredWood && 
-        getBal(landTokenId, 2) >= selecteduilding.requiredIron &&
-        getBal(landTokenId, 3) >= selecteduilding.requiredFood &&
-        getBal(landTokenId, 4) >= selecteduilding.requiredGold
+        require(lands.getAssetsBal(landTokenId)[0] >= selecteduilding.requiredStone &&
+        lands.getAssetsBal(landTokenId)[1] >= selecteduilding.requiredWood && 
+        lands.getAssetsBal(landTokenId)[2] >= selecteduilding.requiredIron &&
+        lands.getAssetsBal(landTokenId)[3] >= selecteduilding.requiredFood &&
+        lands.getAssetsBal(landTokenId)[4] >= selecteduilding.requiredGold
         , "Insufficient commodities");
 
         lands.spendCommodities(landTokenId, [
@@ -167,10 +157,11 @@ contract Town is ERC721, Ownable {
             selecteduilding.requiredFood,
             selecteduilding.requiredGold
             ]);
-        _safeMint(address(lands), tokenIdCounter);
+        belongTo[tokenIdCounter] = landTokenId;
         tokenIdStatus[tokenIdCounter] = Status(defaultLevel, block.timestamp, landTokenId,buildingIndex);
         balances[landTokenId].push(tokenIdCounter);
         tokenIdCounter ++;
+        emit Build(buildingIndex, tokenIdCounter-1, landTokenId);
     }
 
 
@@ -183,11 +174,11 @@ contract Town is ERC721, Ownable {
         uint256 requiredIron = selecteduilding.requiredIron * (currentLevel+1);
         uint256 requiredGold = selecteduilding.requiredGold * (currentLevel+1);
         uint256 requiredFood = selecteduilding.requiredFood * (currentLevel+1);
-        require(getBal(landTokenId, 0) >= requiredStone &&
-        getBal(landTokenId, 1) >= requiredWood && 
-        getBal(landTokenId, 2) >= requiredIron &&
-        getBal(landTokenId, 3) >= requiredGold &&
-        getBal(landTokenId, 4) >= requiredFood
+        require(lands.getAssetsBal(landTokenId)[0] >= requiredStone &&
+        lands.getAssetsBal(landTokenId)[1] >= requiredWood && 
+        lands.getAssetsBal(landTokenId)[2] >= requiredIron &&
+        lands.getAssetsBal(landTokenId)[3] >= requiredGold &&
+        lands.getAssetsBal(landTokenId)[4] >= requiredFood
         , "Insufficient commodities");
         lands.spendCommodities(landTokenId, [
             requiredStone,
@@ -197,6 +188,7 @@ contract Town is ERC721, Ownable {
             requiredFood
             ]);
         tokenIdStatus[buildingTokenId].level = currentLevel+1 ;
+        emit Upgrade(buildingTokenId, currentLevel+1);
     }
 
 
@@ -207,6 +199,7 @@ contract Town is ERC721, Ownable {
         uint256 revenueAmount = getCurrentRevenue(buildingTokenId);
         tokenIdStatus[buildingTokenId].latestActionTimestamp = block.timestamp;
         lands.claimAsset(selecteduildingInfo.revTokenIndex, revenueAmount, tokenIdStatus[buildingTokenId].attachedLand);
+        emit Claim(buildingTokenId, revenueAmount, selecteduildingInfo.revTokenIndex);
     }
 
 
@@ -218,14 +211,14 @@ contract Town is ERC721, Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
 
-    function addNewBuilding(uint256[6] memory requiredCommodities, string memory imgUrl, string memory name) external onlyOwner {
+    function addNewBuilding(uint256[5] memory requiredCommodities,uint256 baseRev, string memory imgUrl, string memory name) external onlyOwner {
         buildings.push(Info(
-                        requiredCommodities[0],
+            requiredCommodities[0],
             requiredCommodities[1],
             requiredCommodities[2],
             requiredCommodities[3],
             requiredCommodities[4],
-            requiredCommodities[5],
+            baseRev,
             buildings.length,
             imgUrl,
             name
@@ -263,17 +256,16 @@ contract Town is ERC721, Ownable {
         return buildings;
     }
     // remove this and get balance directly
-    function getBal(uint256 landTokenId,uint8 commodityTokenIndex) public view returns (uint256) {
-        return lands.getAssetBal(landTokenId,commodityTokenIndex);
-    }
+    //   function getBal(uint256 landTokenId) public view returns (uint256[5] memory) {
+    //     return lands.getAssetsBal(landTokenId);
+    // }
+    // function getBal(uint256 landTokenId,uint8 commodityTokenIndex) public view returns (uint256) {
+    //     return lands.getAssetsBal(landTokenId)[commodityTokenIndex];
+    // }
 
     function tokenURI(
         uint256 _tokenId
-    ) public view virtual override returns (string memory) {
-        require(
-            _exists(_tokenId),
-            "ERC721Metadata: URI query for nonexistent token"
-        );
+    ) public view returns (string memory) {
 
         Status memory thisTokenIdStatus = tokenIdStatus[_tokenId];
         Info memory thisBuildingInfo = buildings[thisTokenIdStatus.buildingTypeIndex];
@@ -304,7 +296,7 @@ contract Town is ERC721, Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
 
-    function _baseURI() internal view virtual override returns (string memory) {
+    function _baseURI() internal view returns (string memory) {
         return "Set this string";
     }
 
