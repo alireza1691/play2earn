@@ -12,7 +12,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 import { landsSepolia, townSepolia } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/LandsV1.json";
+import Lands from "../Blockchain/Lands.json";
 import Town from "../Blockchain/Town.json";
 import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";

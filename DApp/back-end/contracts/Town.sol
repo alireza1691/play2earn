@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 
-import "./LandsV1.sol";
+import "./Lands.sol";
 import "./StringUtils.sol";
 // import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
@@ -29,6 +29,10 @@ contract Town is Ownable {
     //  ******************************************************************************
 
 
+    event Build( uint256 buildingTypeIndex, uint256 indexed tokenId, uint256 indexed landTokenId);
+    event Upgrade( uint256 indexed tokenId, uint256 level);
+    event Claim( uint256 indexed tokenId, uint256 amount, uint256 commodityIndex);
+
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -39,17 +43,12 @@ contract Town is Ownable {
     //  ******************************************************************************
 
 
-    LandsV1 lands;
+    Lands lands;
 
-
-    event Build( uint256 buildingTypeIndex, uint256 indexed tokenId, uint256 indexed landTokenId);
-    event Upgrade( uint256 indexed tokenId, uint256 level);
-    event Claim( uint256 indexed tokenId, uint256 amount, uint256 commodityIndex);
 
     uint256 private tokenIdCounter = 1;
     uint256 private constant baseCapacity = 80 ether;
-    // uint8 private buildingCounter ;
-
+    uint256 private constant baseRev = 8 ether;
     uint256 private constant defaultLevel = 1;
 
     struct Info {
@@ -58,7 +57,6 @@ contract Town is Ownable {
         uint256 requiredIron;
         uint256 requiredGold;
         uint256 requiredFood;
-        uint256 baseRev;
         uint256 revTokenIndex;
         string imageURL;
         string buildingName;
@@ -76,7 +74,7 @@ contract Town is Ownable {
     /// @notice Token id => status of token id
     mapping (uint256 => Status) private tokenIdStatus;
     /// @notice Land token id => owned token ids
-    mapping (uint256 => uint256[]) private balances;
+    mapping (uint256 => uint256[]) private buildedBuildings;
     /// @notice token ID => landId
     mapping (uint256 => uint256) private belongTo;
 
@@ -88,12 +86,16 @@ contract Town is Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
-
+    //    Info ironMine = Info( 100, 100, 100, 0, 25, 8, 80, iron,"Replace this with image url");
+    // Info ranchHouse = Info( 250 ether, 50 ether, 0, 0, 100 ether, 10, 100, food,"Replace this with image url");
 
     constructor(address landsContractAddress)  {
-        lands = LandsV1(landsContractAddress);
-        buildings.push(Info(0,200 ether,150 ether,0, 25 ether,8 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
-        buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,8 ether,1,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","StoneMine"));
+        lands = Lands(landsContractAddress);
+        buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","Stone mine"));
+        buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,1,"https://ipfs.io/ipfs/QmU99dxpwMoFAGSoQPLxB6YVAoYSk1iwbDoKj2CuM2pKyB","Lumber mill"));
+        buildings.push(Info(100 ether, 100 ether, 100 ether, 0, 25 ether, 2, "Url","Iron mine"));
+        buildings.push(Info(2500 ether, 250 ether, 250 ether, 0, 50 ether, 3, "Url","Gold mine"));
+        buildings.push(Info( 250 ether, 50 ether, 0, 0, 100 ether, 4,"Replace this with image url","ranchHouse"));
     }
 
 
@@ -159,7 +161,7 @@ contract Town is Ownable {
             ]);
         belongTo[tokenIdCounter] = landTokenId;
         tokenIdStatus[tokenIdCounter] = Status(defaultLevel, block.timestamp, landTokenId,buildingIndex);
-        balances[landTokenId].push(tokenIdCounter);
+        buildedBuildings[landTokenId].push(tokenIdCounter);
         tokenIdCounter ++;
         emit Build(buildingIndex, tokenIdCounter-1, landTokenId);
     }
@@ -211,15 +213,14 @@ contract Town is Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
 
-    function addNewBuilding(uint256[5] memory requiredCommodities,uint256 baseRev, string memory imgUrl, string memory name) external onlyOwner {
-        buildings.push(Info(
+    function updateBuilding(uint256 index, uint256[5] memory requiredCommodities, string memory imgUrl, string memory name) external onlyOwner {
+        buildings[index] = (Info(
             requiredCommodities[0],
             requiredCommodities[1],
             requiredCommodities[2],
             requiredCommodities[3],
             requiredCommodities[4],
-            baseRev,
-            buildings.length,
+            index,
             imgUrl,
             name
         ));
@@ -237,10 +238,9 @@ contract Town is Ownable {
 
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
         Status memory buildingStatus = getStatus(buildingTokenId);
-        Info memory selecteduilding = buildings[buildingStatus.buildingTypeIndex];
         uint256 latestActionTimestamp = buildingStatus.latestActionTimestamp;
         uint256 period = block.timestamp - latestActionTimestamp;
-        uint256 revenuePerDay = buildingStatus.level * selecteduilding.baseRev;
+        uint256 revenuePerDay = buildingStatus.level * baseRev;
         uint256 rev = (period / 1 days) * revenuePerDay;
         if (rev > baseCapacity * buildingStatus.level) {
             rev = baseCapacity * buildingStatus.level;
@@ -255,13 +255,11 @@ contract Town is Ownable {
     function getBuildings() view public returns (Info[] memory) {
         return buildings;
     }
-    // remove this and get balance directly
-    //   function getBal(uint256 landTokenId) public view returns (uint256[5] memory) {
-    //     return lands.getAssetsBal(landTokenId);
-    // }
-    // function getBal(uint256 landTokenId,uint8 commodityTokenIndex) public view returns (uint256) {
-    //     return lands.getAssetsBal(landTokenId)[commodityTokenIndex];
-    // }
+
+    function landBuildings(uint256 landTokenId) view public returns (uint256[] memory) {
+        return buildedBuildings[landTokenId];
+    }
+
 
     function tokenURI(
         uint256 _tokenId

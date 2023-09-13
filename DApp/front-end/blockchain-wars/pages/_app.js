@@ -7,7 +7,7 @@ import { Mumbai, Polygon, Sepolia, Ethereum, Arbitrum} from "@thirdweb-dev/chain
 import TestABI from "../Blockchain/Test.json";
 import { useEffect, useState } from "react";
 import { landsSepolia } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/LandsV1.json";
+import Lands from "../Blockchain/Lands.json";
 import axios from "axios";
 import dotenv from "dotenv";
 import {
@@ -121,7 +121,7 @@ const dataLoad = async () => {
 		  100 <= parseInt(topics[3], 16) <= 200
 		) {
 			let ownerAddress = topics[2].replace("000000000000000000000000", "");
-			console.log("Onwe of land with token id:",(topics[3], 16).toString(),"is:",ownerAddress);
+			console.log("Onwer of land with token id:",(topics[3], 16).toString(),"is:",ownerAddress);
 		  mintedLands.push({tokenId: parseInt(topics[3], 16).toString(), owner: ownerAddress});
 		}
 	  }
@@ -138,6 +138,7 @@ const dataLoad = async () => {
       const imgURL = await lands.URI();
       setLandImgUrl(imgURL);
       if (address) {
+		// dataLoad()
         // console.log(convertAddress(address));
         const landBalance = await lands.balanceOf(address);
         setOwnedLands(landBalance);
@@ -154,7 +155,7 @@ const dataLoad = async () => {
             );
             console.log("Fetched events");
             // setIsDataLoaded(true);
-
+				console.log(response);
             // console.log(response);
             const events = response.data.result;
             for (let index = 0; index < events.length; index++) {
@@ -166,48 +167,32 @@ const dataLoad = async () => {
               ) {
                 // console.log(parseInt(topics[3],16));
                 // tokenIds.push(parseInt(topics[3], 16));
-                const stoneBal = await lands.getAssetBal(
-                  parseInt(topics[3], 16),
-                  0
-                );
-                const woodBal = await lands.getAssetBal(
-                  parseInt(topics[3], 16),
-                  1
-                );
-                const ironBal = await lands.getAssetBal(
-                  parseInt(topics[3], 16),
-                  2
-                );
-                const goldBal = await lands.getAssetBal(
-                  parseInt(topics[3], 16),
-                  3
-                );
-                const foodBal = await lands.getAssetBal(
-                  parseInt(topics[3], 16),
-                  4
-                );
+				const commoditiesBalance = await lands.getAssetsBal(parseInt(topics[3], 16))
+   
                 const landInfo = {
 					id: counter,
-                  stone: ethers.utils.formatEther(stoneBal.toString()),
-                  wood: ethers.utils.formatEther(woodBal.toString()),
-                  iron: ethers.utils.formatEther(ironBal.toString()),
-                  gold: ethers.utils.formatEther(goldBal.toString()),
-                  food: ethers.utils.formatEther(foodBal.toString()),
+                  stone: ethers.utils.formatEther(commoditiesBalance[0].toString()),
+                  wood: ethers.utils.formatEther(commoditiesBalance[1].toString()),
+                  iron: ethers.utils.formatEther(commoditiesBalance[2].toString()),
+                  gold: ethers.utils.formatEther(commoditiesBalance[3].toString()),
+                  food: ethers.utils.formatEther(commoditiesBalance[4].toString()),
 				  coordinate: parseInt(topics[3], 16)
                 };
                 landObject.push(landInfo);
                 // console.log(landBalances);
 				counter ++
               }
-              if (
+              if (Array.isArray(topics) &&
                 topics.length === 4 &&
                 topics[1] ==
                   "0x0000000000000000000000000000000000000000000000000000000000000000" &&
                 100 <= parseInt(topics[3], 16) <= 200
               ) {
-                mintedLands.push(parseInt(topics[3], 16).toString());
+				let ownerAddress = topics[2].replace("000000000000000000000000", "");
+                mintedLands.push({tokenId: parseInt(topics[3], 16).toString(),owner: ownerAddress});
                 console.log(topics[2]);
               }
+		
             }
           } catch (error) {
             console.error("Error fetching contract events:", error);
@@ -217,6 +202,7 @@ const dataLoad = async () => {
 		//   console.log("Connected address owned these lands:",tokenIds);
           setLandObj(landObject);
           setMintedLands(mintedLands);
+		  console.log("Here is minted lands:",mintedLands);
 		  console.log("Connected address owned these lands:",landObject);
         }
 	}

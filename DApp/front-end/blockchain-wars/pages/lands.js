@@ -7,15 +7,15 @@ import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
 import { landsSepolia } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/LandsV1.json";
+import Lands from "../Blockchain/Lands.json";
 import { ethers } from "ethers";
-import { useSigner, useConnect, useMetamask, useWalletConnect, metamaskWallet } from "@thirdweb-dev/react";
+import { useSigner, useConnect, useMetamask, useWalletConnect, metamaskWallet, useAddress } from "@thirdweb-dev/react";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 
 const metamaskConfig = metamaskWallet();
 
-const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectReq }) => {
+const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => {
   const [viewLands, setViewLands] = useState([]);
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -24,8 +24,11 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
 
   const connectWithMetamask = useMetamask();
 
+  const landPrice = ethers.utils.parseEther("0.02")
+
   const connect = useConnect();
   const signer = useSigner();
+  const address = useAddress();
 
   const handleClose = () => {
     setIsTransactionRejected(false);
@@ -50,7 +53,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
   const mintLand = async () => {
     try {
         const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
-        await lands.mintLand(selectedLand.x, selectedLand.y)
+        await lands.mintLand(selectedLand.x, selectedLand.y,{value:landPrice})
     } catch (error) {
         
     }
@@ -105,7 +108,6 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
           image: img,
           owner: owner,
         };
-        console.log(land);
         counter++;
         lands.push(land);
       }
@@ -117,7 +119,6 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
   // fillLands(100,100)
   useEffect(() => {
     const fetchData = async () => {
-      console.log("Lands route");
       const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
       //   const imgURL = await lands.URI();
       //   setLandImgUrl(imgURL);
@@ -275,6 +276,7 @@ const lands = ({ provider, address, landImgUrl, mintedLands, dataLoad, connectRe
                       >
                         <div
                           className="item"
+                          style={{"backgroundColor":"darkgreen"}}
                           key={land.id}
                           onClick={() => handleOpenLandWindow(land)}
                         >

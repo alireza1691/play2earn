@@ -32,7 +32,7 @@ const {
       const food = await ERC20.deploy("food", "FD");
       const fdAdd = await food.getAddress();
   
-      const Lands = await ethers.getContractFactory("LandsV1");
+      const Lands = await ethers.getContractFactory("Lands");
       console.log("Deploying lands...");
       const lands = await Lands.deploy(stAdd, wdAdd, irAdd, gdAdd, fdAdd, {});
       console.log("Lands deployed!");
@@ -156,7 +156,7 @@ const {
         const armyBal = await army.getArmy(100100)
         expect(armyBal[0]).to.be.equal(10)
         // Building some warrior type 3 and some type 1 for account 2
-        await army.buildWarrior(100100, 1, 10)
+        await army.buildWarrior(100100, 1, 15)
         await army.connect(otherAccount).buildWarrior(101101, 0, 10)
         // If target is a land that has not been minted
         await expect(army.attack([10,0,0],100100,102102)).to.be.revertedWith("ERC721: invalid token ID")
@@ -164,9 +164,7 @@ const {
         await expect(army.attack([11,0,0],100100,101101)).to.be.revertedWith("Insufficient army")
         const balanceOfAttackerBeforeWar = await lands.getAssetsBal(100100)
         const balanceOfDefenderBeforeWar = await lands.getAssetsBal(101101)
-        // await army.attack([10,0,10],100100,101101)
-        const result = await army.calculateResult([0,15,0],101101)
-        console.log(result);
+        await army.attack([0,15,0],100100,101101)
         const balanceOfAttackerAfterWar = await lands.getAssetsBal(100100)
         const balanceOfDefenderAfterWar = await lands.getAssetsBal(101101)
         console.log("Balance of attacker before war:",balanceOfAttackerBeforeWar);
@@ -176,7 +174,14 @@ const {
           balanceOfDefenderBeforeWar[1] > balanceOfDefenderAfterWar[1] &&
           balanceOfDefenderBeforeWar[3] > balanceOfDefenderAfterWar[3] 
           ).to.be.equal(true)
+        const remainedArmyOfAtatcker = await army.getArmy(100100)
+        const remainedArmyOfDefender = await army.getArmy(101101)
+        expect(remainedArmyOfAtatcker[1]).to.be.below(15)
+        expect(remainedArmyOfDefender[0]).to.be.below(10)
+
+
       });
+      
   
   
     });
