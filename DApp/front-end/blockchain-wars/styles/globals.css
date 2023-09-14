@@ -278,19 +278,20 @@ body {
 .balanceHeader {
   justify-content: space-between;
   display: flex;
-  /* padding: 1rem; */
+  padding: 1rem;
+  /* width: fit-content; */
 }
 .balanceHeader h6 {
   color: rgb(221, 221, 221);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   padding: 0.3rem;
   margin-right: 2rem;
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .balanceHeader img {
-  height: 30px;
-  width:  30px;
+  height: 25px;
+  width:  25px;
   background-color: rgba(255, 255, 255, 0.15);
   padding: 0.2rem;
   border-radius: 0.3rem;
@@ -363,7 +364,7 @@ justify-content: space-between;
   height: 160px;
   width: 200px;
   left: 0;
-  /* object-fit: cover; */
+  justify-self: center;
 }
 .InfoColumn{
   position: static;
@@ -377,7 +378,7 @@ justify-content: space-between;
   color: rgb(214, 214, 214);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   margin-left: 0.5rem;
-  font-weight: 600;
+  font-weight: 500;
 
 }
 .commodityLogo{
@@ -386,6 +387,7 @@ justify-content: space-between;
 }
 .commodityBalance {
   display: flex;
+  height: 25px;
   /* margin-top: 0.5rem; */
 }
 @media (max-width: 767px) {

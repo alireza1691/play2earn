@@ -26,6 +26,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [isFetching, setIsFetching] = useState(true);
   const [buildings, setBuildings] = useState();
   const [selectedLand, setSelectedLand] = useState()
+  const [ownerBuildings, setOwnedBuildings] = useState()
   // const [stoneBal, setStoneBal] = useState()
   // const [woodBal, setWoodBal] = useState([])
   // const [ironBal, setIronBal] = useState([])
@@ -50,7 +51,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
     setSelectedItem({});
   };
 
-  const mintBuilding = async () => {
+  const mintBuilding = async (buildingIndex) => {
     if (!signer) {
       connectWithMetamask
     }
@@ -60,7 +61,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         Town.abi,
         signer
       );
-      await TownInstance.build(selectedLand.coordinate, 1)
+      await TownInstance.build(selectedLand.coordinate, buildingIndex)
     } catch (error) {  
       console.log(error);
     }
@@ -69,6 +70,20 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (signer && address && selectedLand) {
+        const town = new ethers.Contract(townSepolia, Town.abi, signer);
+        const ownedBuildings = await town.landBuildings(selectedLand.coordinate)
+        const existedBuildings = await town.getBuildings();
+        
+        let ownedBuildingsArray = []
+        for (let index = 0; index < ownedBuildings.length; index++) {
+          const element = await town.getStatus(ownedBuildings[index])
+          ownedBuildingsArray.push({imageURL: existedBuildings[index].imageURL, name: existedBuildings[index].buildingName, tokenId: selectedLand.coordinate})
+        }
+        setOwnedBuildings(ownedBuildingsArray)
+        console.log("Owned buildings");
+        console.log(ownedBuildingsArray);
+      }
       // console.log(provider);
       if (provider && landObj.length > 0 && ownedLands) {
         console.log(landObj);
@@ -88,11 +103,10 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const existedBuildings = await TownInstance.getBuildings();
         console.log(existedBuildings);
         setBuildings(existedBuildings);
-        console.log("Land object:",landObj);
       }
     };
     fetchData();
-  }, [provider, landObj, ownedLands]);
+  }, [provider, landObj, ownedLands, address, signer,selectedLand]);
 
   return (
     <>
@@ -239,7 +253,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
           { selectedLand !== undefined &&
           <>
                         <Row>
-              <Col md={{ span: 8, offset: 0 }}>
+              <Col md={{ span: 12, offset: 0 }}>
                 <div className="myLandColumn">
                   <div className="balanceHeader">
                     <div className="commodityBalance">
@@ -337,7 +351,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </div>
                 </div>
               </Col>
-              <Col md={{ span: 4, offset: 0 }} >
+              {/* <Col md={{ span: 4, offset: 0 }} >
                 <div className="myLandColumn">
                   <div className="balanceHeader">
                   <h6>Barracks level: 0</h6>
@@ -347,7 +361,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </div>
 
                 </div>
-              </Col>
+              </Col> */}
               </Row>
               <Row>
                 { Array.isArray(buildings) && buildings.map((item, key) => (
@@ -431,7 +445,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         <Button disabled >Build</Button>
 
                       ) : (
-                        <Button >Build</Button>
+                        <Button style={{"bottom":"0px"}} onClick={()=>mintBuilding(key)} >Build</Button>
 
                       )
 
