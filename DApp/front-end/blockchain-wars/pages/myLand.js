@@ -88,17 +88,18 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const existedBuildings = await TownInstance.getBuildings();
         console.log(existedBuildings);
         setBuildings(existedBuildings);
+        console.log("Land object:",landObj);
       }
     };
     fetchData();
-  }, [provider, landObj, ownedLands, landObj]);
+  }, [provider, landObj, ownedLands]);
 
   return (
     <>
       <div className="scrollableScreen">
         {isTransactionRejected && (
           <div className="overlay">
-            <div className="transactionRejectedWindow">
+            <div className="transactionRejectWindow">
               <p>Transaction Rejected</p>
               <p>Please try again or contact support.</p>
               <button onClick={handleClose}>Close</button>
@@ -141,11 +142,12 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         <Container>
           {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
             <>
+                                <Row>
               {selectedLand == undefined && landObj.map((land, key) => (
         
                   <React.Fragment key={land.coordinate + land.id + key}>
-                    <Row>
-                      <Col md={{ span: 4, offset: 0 }} >
+
+                      <Col md={{ span: 3, offset: 0 }} >
                         <Card className="card">
                           <Card.Img
                             variant="top"
@@ -155,23 +157,23 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           <Card.Body>
                             <Card.Title>{land.coordinate}</Card.Title>
                             <Card.Text>
-                              Some quick example text to build on the card title
-                              and make up the bulk of the card's content.
+                             Desxription of the land
                             </Card.Text>
                             <Button
                               variant="primary"
                               onClick={() => setSelectedLand(land)}
+                              size="sm"
                             >
                               Open land
                             </Button>
                           </Card.Body>
                         </Card>
                       </Col>
-                    </Row>
+             
                   </React.Fragment>
       
               ))}
-
+         </Row>
             </>
           ) : (
             <>
@@ -240,16 +242,26 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
               <Col md={{ span: 8, offset: 0 }}>
                 <div className="myLandColumn">
                   <div className="balanceHeader">
+                    <div className="commodityBalance">
                     <img src="/Stone.png"></img>
                     <h6>{selectedLand.stone !== undefined ? selectedLand.stone : "0"}</h6>
+                    </div>
+                    <div className="commodityBalance">
                     <img src="/Wood.png"></img>
                     <h6>{selectedLand.wood !== undefined ? selectedLand.wood : "0"}</h6>
+                    </div>
+                    <div className="commodityBalance">
                     <img src="/Iron.png"></img>
                     <h6>{selectedLand.iron !== undefined ? selectedLand.iron : "0"}</h6>
+                    </div>
+                    <div className="commodityBalance">
                     <img src="/Gold.png"></img>
                     <h6>{selectedLand.gold !== undefined ? selectedLand.gold : "0"}</h6>
+                    </div>
+                    <div className="commodityBalance">
                     <img src="/Food.png"></img>
                     <h6>{selectedLand.food !== undefined ? selectedLand.food : "0"}</h6>
+                    </div>
                   </div>
 
                   <div className="myLandBox">
@@ -325,20 +337,32 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </div>
                 </div>
               </Col>
+              <Col md={{ span: 4, offset: 0 }} >
+                <div className="myLandColumn">
+                  <div className="balanceHeader">
+                  <h6>Barracks level: 0</h6>
+                  </div>
+                  <div className="myLandBox">
+
+                  </div>
+
+                </div>
+              </Col>
               </Row>
               <Row>
                 { Array.isArray(buildings) && buildings.map((item, key) => (
-                              <Card className="card" key={key}>
+                              <Card className="buildingCard"  key={key}>
                               <Card.Img
                                 variant="top"
                                 src={item.imageURL}
                                 className="cardImg"
+                                height={200}
+                                width={100}
                               />
                               <Card.Body>
                                 <Card.Title>{item.biuldingName}</Card.Title>
                                 <Card.Text>
-                                  Some quick example text to build on the card title and make
-                                  up the bulk of the card's content.
+                                  Add description
                                 </Card.Text>
                                 <Button
                                   variant="primary"
@@ -351,6 +375,72 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                 ))
                 }
   
+            </Row>
+            <Row>
+            <div className="buildingsColumn">
+            { Array.isArray(buildings) && buildings.map((item, key) => (
+                  <div className="buildingInfo" key={key}>
+                    <img src={item.imageURL}></img>
+                    <div className="InfoColumn">
+                      <div style={{"padding":"0.5rem"}}>
+                      <h4 className="defaultH2">{item.buildingName}</h4>
+                      </div>
+                      <div className="commodityBalance" >
+                        <img
+                          src="/Stone.png"
+                          className="commodityLogo"
+                        ></img>
+                        <p>{ethers.utils.formatEther(item.requiredStone)}</p>
+                      </div>
+                      <div className="commodityBalance">
+                        <img
+                          src="/Wood.png"
+                          className="commodityLogo"
+                        ></img>
+                        <p>{ethers.utils.formatEther(item.requiredWood)}</p>
+                      </div>
+                      <div className="commodityBalance">
+                        <img
+                          src="/Iron.png"
+                          className="commodityLogo"
+                        ></img>
+                        <p>{ethers.utils.formatEther(item.requiredIron)}</p>
+                      </div>
+                      <div className="commodityBalance">
+                        <img
+                          src="/Gold.png"
+                          className="commodityLogo"
+                        ></img>
+                        <p>{ethers.utils.formatEther(item.requiredGold)}</p>
+                      </div>
+                      <div className="commodityBalance">
+                        <img
+                          src="/Food.png"
+                          className="commodityLogo"
+                        ></img>
+                        <p>{ethers.utils.formatEther(item.requiredFood)}</p>
+                      </div>
+                    </div>
+                    <div className="InfoColumn">
+                    <p>Difficulty: 0% {Number(selectedLand.stone)} va {Number(item.requiredStone)}</p>
+                      { Number(selectedLand.stone)  <= Number(ethers.utils.formatEther(item.requiredStone)) ||
+                      Number(selectedLand.wood)  <= Number(ethers.utils.formatEther(item.requiredWood)) ||
+                      Number(selectedLand.iron)  <= Number(ethers.utils.formatEther(item.requiredIron)) ||
+                      Number(selectedLand.gold)  <= Number(ethers.utils.formatEther(item.requiredGold)) ||
+                      Number(selectedLand.food)  <= Number(ethers.utils.formatEther(item.requiredFood)) ? (
+                        <Button disabled >Build</Button>
+
+                      ) : (
+                        <Button >Build</Button>
+
+                      )
+
+                      }
+                    </div>
+                  </div>
+                ))
+                }
+                    </div>
             </Row>
             </>
           }

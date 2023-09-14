@@ -21,6 +21,7 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState({});
   const [closePopUp, setClosePopUp] = useState(false);
+  const [visibleConfirmation, setVisibleConfirmation] = useState(false);
 
   const connectWithMetamask = useMetamask();
 
@@ -54,8 +55,10 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
     try {
         const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
         await lands.mintLand(selectedLand.x, selectedLand.y,{value:landPrice})
+        setVisibleConfirmation(true)
     } catch (error) {
-        
+        setIsLandSelected(false)
+        setIsTransactionRejected(true)
     }
   };
 
@@ -118,18 +121,79 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
   }
   // fillLands(100,100)
   useEffect(() => {
+    if (visibleConfirmation) {
+        const timeout = setTimeout(() => {
+            setVisibleConfirmation(false);
+        }, 5000);
+        return () => clearTimeout(timeout)
+    }
     const fetchData = async () => {
       const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
-      //   const imgURL = await lands.URI();
-      //   setLandImgUrl(imgURL);
-      //   console.log(imgURL);
     };
     fetchData();
-  }, [address]);
+  }, [address, visibleConfirmation]);
 
   return (
     <>
       <div className="scrollableScreen">
+        {visibleConfirmation == true ?(
+        <div className="popUpConfirmation">
+            {/* <Card
+              style={{
+                padding: "0.5rem",
+                width: "15rem",
+                backgroundColor: "white",
+                boxShadow: "0px 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.5)",
+              }}
+              className="card"
+            >
+              <Card.Body style={{"textAlign":"justify"}}>
+                <Card.Text style={{ fontSize: "0.9rem",textAlign:"center"}}>
+                  Transaction submitted
+                </Card.Text>
+                <Card.Text style={{ fontSize: "0.9rem",textAlign:"center"}}>
+                  To update map you may need to refresh the page
+                </Card.Text>
+                <div style={{ display: "flex", justifyContent: "center"}}>
+                  <Button
+                    variant="outline-secondary"
+                    onClick={handleClosePopUp}
+                    size="sm"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card> */}
+            <div
+                  style={{
+                    display: "block",
+                    marginTop: "1%",
+                    height: "200px",
+                    paddingTop: "15%",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontFamily: "verdana",
+                      fontSize: "0.9rem",
+                      color: "black",
+                    }}
+                  >
+                    Confirming...
+                  </h2>
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ textAlign: "center", color: "rgb(73, 90, 246)" }}
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </div>
+        </div>):("")
+        }
         {!address && closePopUp == false && (
           <div className="overlay">
             <Card
@@ -160,10 +224,18 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
         )}
         {isTransactionRejected && (
           <div className="overlay">
-            <div className="transactionRejectedWindow">
+            <div className="transactionRejectWindow">
               <p>Transaction Rejected</p>
               <p>Please try again or contact support.</p>
-              <button onClick={handleClose}>Close</button>
+              <Button
+                    variant="outline-secondary"
+                    onClick={handleClose}
+                    size="sm"
+                    style={{"cursor":"pointer"}}
+                  >
+                    Close
+                  </Button>
+              {/* <button onClick={handleClose}>Close</button> */}
             </div>
           </div>
         )}
@@ -280,9 +352,6 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
                           key={land.id}
                           onClick={() => handleOpenLandWindow(land)}
                         >
-                          {/* <p style={{ color: "black", fontSize: "0.6rem" }}>
-                  {land.coordinate}
-                </p> */}
                           <img className="landImg" src={land.image}></img>
                         </div>
                         </OverlayTrigger>
