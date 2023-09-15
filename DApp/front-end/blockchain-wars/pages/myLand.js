@@ -20,18 +20,12 @@ import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
-  const [isLandOpened, setIsLandOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  const [landItems, setLandItems] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
   const [buildings, setBuildings] = useState();
-  const [selectedLand, setSelectedLand] = useState()
-  const [ownerBuildings, setOwnedBuildings] = useState()
-  // const [stoneBal, setStoneBal] = useState()
-  // const [woodBal, setWoodBal] = useState([])
-  // const [ironBal, setIronBal] = useState([])
-  // const [goldBal, setGoldBal] = useState([])
-  // const [foodBal, setFoodBal] = useState([])
+  const [selectedLand, setSelectedLand] = useState();
+  const [ownedBuildings, setOwnedBuildings] = useState();
+
   const router = useRouter();
   const address = useAddress();
   const signer = useSigner();
@@ -53,34 +47,38 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
 
   const mintBuilding = async (buildingIndex) => {
     if (!signer) {
-      connectWithMetamask
+      connectWithMetamask;
     }
     try {
-      const TownInstance = new ethers.Contract(
-        townSepolia,
-        Town.abi,
-        signer
-      );
-      await TownInstance.build(selectedLand.coordinate, buildingIndex)
-    } catch (error) {  
+      const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
+      await TownInstance.build(selectedLand.coordinate, buildingIndex);
+    } catch (error) {
       console.log(error);
     }
-
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       if (signer && address && selectedLand) {
         const town = new ethers.Contract(townSepolia, Town.abi, signer);
-        const ownedBuildings = await town.landBuildings(selectedLand.coordinate)
+        const ownedBuildings = await town.landBuildings(
+          selectedLand.coordinate
+        );
         const existedBuildings = await town.getBuildings();
-        
-        let ownedBuildingsArray = []
+
+        let ownedBuildingsArray = [];
         for (let index = 0; index < ownedBuildings.length; index++) {
-          const element = await town.getStatus(ownedBuildings[index])
-          ownedBuildingsArray.push({imageURL: existedBuildings[index].imageURL, name: existedBuildings[index].buildingName, tokenId: selectedLand.coordinate})
+          const status = await town.getStatus(ownedBuildings[index]);
+          const revenue = await town.getCurrentRevenue(ownedBuildings[index]);
+          ownedBuildingsArray.push({
+            imageURL: existedBuildings[index].imageURL,
+            name: existedBuildings[index].buildingName,
+            tokenId: ownedBuildings[index],
+            level: status.level,
+            revenue: revenue,
+          });
         }
-        setOwnedBuildings(ownedBuildingsArray)
+        setOwnedBuildings(ownedBuildingsArray);
         console.log("Owned buildings");
         console.log(ownedBuildingsArray);
       }
@@ -106,7 +104,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
       }
     };
     fetchData();
-  }, [provider, landObj, ownedLands, address, signer,selectedLand]);
+  }, [provider, landObj, ownedLands, address, signer, selectedLand]);
 
   return (
     <>
@@ -123,7 +121,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         {isLandSelected && (
           <div className="overlay">
             <div className="selectedLandWindow">
-              <Card className="card">
+              <Card className="defaultCard">
                 <Card.Img
                   variant="top"
                   src={buildings[0].imageURL}
@@ -156,38 +154,29 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         <Container>
           {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
             <>
-                                <Row>
-              {selectedLand == undefined && landObj.map((land, key) => (
-        
-                  <React.Fragment key={land.coordinate + land.id + key}>
-
-                      <Col md={{ span: 3, offset: 0 }} >
-                        <Card className="card">
-                          <Card.Img
-                            variant="top"
-                            src={landImgUrl}
-                            className="cardImg"
-                          />
-                          <Card.Body>
-                            <Card.Title>{land.coordinate}</Card.Title>
-                            <Card.Text>
-                             Desxription of the land
-                            </Card.Text>
+              <Row>
+                {selectedLand == undefined &&
+                  landObj.map((land, key) => (
+                    <React.Fragment key={land.coordinate + key}>
+                      <Col md={{ span: 6, offset: 0 }}>
+                        <div className="listItemInfo">
+                          <img src={landImgUrl}></img>
+                          <div className="listItemColumn">
+                            <h2 className="defaultH2">Land</h2>
+                            <p>Token ID: {land.coordinate}</p>
+                            <p>Level: 1</p>
                             <Button
                               variant="primary"
                               onClick={() => setSelectedLand(land)}
-                              size="sm"
                             >
-                              Open land
+                              Open
                             </Button>
-                          </Card.Body>
-                        </Card>
+                          </div>
+                        </div>
                       </Col>
-             
-                  </React.Fragment>
-      
-              ))}
-         </Row>
+                    </React.Fragment>
+                  ))}
+              </Row>
             </>
           ) : (
             <>
@@ -225,7 +214,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                     md={{ span: 4, offset: 4 }}
                     style={{ display: "flex", justifyContent: "center" }}
                   >
-                    <Card className="card">
+                    <Card className="defaultCard">
                       <Card.Body>
                         <Card.Title>Not land found.</Card.Title>
                         <Card.Text>
@@ -250,214 +239,303 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
               )}
             </>
           )}
-          { selectedLand !== undefined &&
-          <>
-                        <Row>
-              <Col md={{ span: 12, offset: 0 }}>
-                <div className="myLandColumn">
-                  <div className="balanceHeader">
-                    <div className="commodityBalance">
-                    <img src="/Stone.png"></img>
-                    <h6>{selectedLand.stone !== undefined ? selectedLand.stone : "0"}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                    <img src="/Wood.png"></img>
-                    <h6>{selectedLand.wood !== undefined ? selectedLand.wood : "0"}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                    <img src="/Iron.png"></img>
-                    <h6>{selectedLand.iron !== undefined ? selectedLand.iron : "0"}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                    <img src="/Gold.png"></img>
-                    <h6>{selectedLand.gold !== undefined ? selectedLand.gold : "0"}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                    <img src="/Food.png"></img>
-                    <h6>{selectedLand.food !== undefined ? selectedLand.food : "0"}</h6>
-                    </div>
-                  </div>
-
-                  <div className="myLandBox">
-                    <div className="landBoxColumn">
-                      <InputGroup className="mb-3" size="sm">
-                        <Form.Control
-                          placeholder="Enter amount..."
-                          aria-label="Amount (to the nearest dollar)"
-                          style={{ width: "50%" }}
-                        />
-                        <Dropdown>
-                          <Dropdown.Toggle
-                            variant="success"
-                            id="dropdown-basic"
-                            className="selectDropdown"
-                          >
-                            Select
-                          </Dropdown.Toggle>
-
-                          <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">
-                              <img
-                                src="/Stone.png"
-                                className="dropdownTokenLogo"
-                              ></img>
-                              Stone
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">
-                              <img
-                                src="/Wood.png"
-                                className="dropdownTokenLogo"
-                              ></img>
-                              Wood
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">
-                              <img
-                                src="/Iron.png"
-                                className="dropdownTokenLogo"
-                              ></img>
-                              Iron
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-4">
-                              <img
-                                src="/Gold.png"
-                                className="dropdownTokenLogo"
-                              ></img>
-                              Gold
-                            </Dropdown.Item>
-                            <Dropdown.Item href="#/action-5">
-                              <img
-                                src="/Food.png"
-                                className="dropdownTokenLogo"
-                              ></img>
-                              Food
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </InputGroup>
-                      <Button
-                        variant="outline-light"
-                        size="sm"
-                        style={{ marginRight: "10px" }}
-                      >
-                        Deposit
-                      </Button>
-                      <Button variant="outline-light" size="sm">
-                        Withdraw
-                      </Button>
-                    </div>
-                    <div className="landBoxColumn">
-                      <p> Some text</p>
-                    </div>
-                  </div>
-                </div>
-              </Col>
-              {/* <Col md={{ span: 4, offset: 0 }} >
-                <div className="myLandColumn">
-                  <div className="balanceHeader">
-                  <h6>Barracks level: 0</h6>
-                  </div>
-                  <div className="myLandBox">
-
-                  </div>
-
-                </div>
-              </Col> */}
-              </Row>
+          {selectedLand !== undefined && (
+            <>
               <Row>
-                { Array.isArray(buildings) && buildings.map((item, key) => (
-                              <Card className="buildingCard"  key={key}>
-                              <Card.Img
-                                variant="top"
-                                src={item.imageURL}
-                                className="cardImg"
-                                height={200}
-                                width={100}
-                              />
-                              <Card.Body>
-                                <Card.Title>{item.biuldingName}</Card.Title>
-                                <Card.Text>
-                                  Add description
-                                </Card.Text>
-                                <Button
-                                  variant="primary"
-                                  onClick={() => mintBuilding()}
-                                >
-                                  Open
-                                </Button>
-                              </Card.Body>
-                            </Card>
-                ))
-                }
-  
-            </Row>
-            <Row>
-            <div className="buildingsColumn">
-            { Array.isArray(buildings) && buildings.map((item, key) => (
-                  <div className="buildingInfo" key={key}>
-                    <img src={item.imageURL}></img>
-                    <div className="InfoColumn">
-                      <div style={{"padding":"0.5rem"}}>
-                      <h4 className="defaultH2">{item.buildingName}</h4>
-                      </div>
-                      <div className="commodityBalance" >
-                        <img
-                          src="/Stone.png"
-                          className="commodityLogo"
-                        ></img>
-                        <p>{ethers.utils.formatEther(item.requiredStone)}</p>
+                <Col md={{ span: 12, offset: 0 }}>
+                  <div className="myLandColumn">
+                    <h4
+                      className="clickableH4"
+                      onClick={() => setSelectedLand()}
+                    >
+                      Back to lands
+                    </h4>
+                    <div className="balanceHeader">
+                      <div className="commodityBalance">
+                        <img src="/Stone.png"></img>
+                        <h6>
+                          {selectedLand.stone !== undefined
+                            ? selectedLand.stone
+                            : "0"}
+                        </h6>
                       </div>
                       <div className="commodityBalance">
-                        <img
-                          src="/Wood.png"
-                          className="commodityLogo"
-                        ></img>
-                        <p>{ethers.utils.formatEther(item.requiredWood)}</p>
+                        <img src="/Wood.png"></img>
+                        <h6>
+                          {selectedLand.wood !== undefined
+                            ? selectedLand.wood
+                            : "0"}
+                        </h6>
                       </div>
                       <div className="commodityBalance">
-                        <img
-                          src="/Iron.png"
-                          className="commodityLogo"
-                        ></img>
-                        <p>{ethers.utils.formatEther(item.requiredIron)}</p>
+                        <img src="/Iron.png"></img>
+                        <h6>
+                          {selectedLand.iron !== undefined
+                            ? selectedLand.iron
+                            : "0"}
+                        </h6>
                       </div>
                       <div className="commodityBalance">
-                        <img
-                          src="/Gold.png"
-                          className="commodityLogo"
-                        ></img>
-                        <p>{ethers.utils.formatEther(item.requiredGold)}</p>
+                        <img src="/Gold.png"></img>
+                        <h6>
+                          {selectedLand.gold !== undefined
+                            ? selectedLand.gold
+                            : "0"}
+                        </h6>
                       </div>
                       <div className="commodityBalance">
-                        <img
-                          src="/Food.png"
-                          className="commodityLogo"
-                        ></img>
-                        <p>{ethers.utils.formatEther(item.requiredFood)}</p>
+                        <img src="/Food.png"></img>
+                        <h6>
+                          {selectedLand.food !== undefined
+                            ? selectedLand.food
+                            : "0"}
+                        </h6>
                       </div>
                     </div>
-                    <div className="InfoColumn">
-                    <p>Difficulty: 0% {Number(selectedLand.stone)} va {Number(item.requiredStone)}</p>
-                      { Number(selectedLand.stone)  <= Number(ethers.utils.formatEther(item.requiredStone)) ||
-                      Number(selectedLand.wood)  <= Number(ethers.utils.formatEther(item.requiredWood)) ||
-                      Number(selectedLand.iron)  <= Number(ethers.utils.formatEther(item.requiredIron)) ||
-                      Number(selectedLand.gold)  <= Number(ethers.utils.formatEther(item.requiredGold)) ||
-                      Number(selectedLand.food)  <= Number(ethers.utils.formatEther(item.requiredFood)) ? (
-                        <Button disabled >Build</Button>
 
-                      ) : (
-                        <Button style={{"bottom":"0px"}} onClick={()=>mintBuilding(key)} >Build</Button>
+                    <div className="myLandBox">
+                      <div className="landBoxColumn">
+                        <InputGroup className="mb-3" size="sm">
+                          <Form.Control
+                            placeholder="Enter amount..."
+                            aria-label="Amount (to the nearest dollar)"
+                            style={{ width: "50%" }}
+                          />
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              variant="success"
+                              id="dropdown-basic"
+                              className="selectDropdown"
+                            >
+                              Select
+                            </Dropdown.Toggle>
 
-                      )
-
-                      }
+                            <Dropdown.Menu>
+                              <Dropdown.Item href="#/action-1">
+                                <img
+                                  src="/Stone.png"
+                                  className="dropdownTokenLogo"
+                                ></img>
+                                Stone
+                              </Dropdown.Item>
+                              <Dropdown.Item href="#/action-2">
+                                <img
+                                  src="/Wood.png"
+                                  className="dropdownTokenLogo"
+                                ></img>
+                                Wood
+                              </Dropdown.Item>
+                              <Dropdown.Item href="#/action-3">
+                                <img
+                                  src="/Iron.png"
+                                  className="dropdownTokenLogo"
+                                ></img>
+                                Iron
+                              </Dropdown.Item>
+                              <Dropdown.Item href="#/action-4">
+                                <img
+                                  src="/Gold.png"
+                                  className="dropdownTokenLogo"
+                                ></img>
+                                Gold
+                              </Dropdown.Item>
+                              <Dropdown.Item href="#/action-5">
+                                <img
+                                  src="/Food.png"
+                                  className="dropdownTokenLogo"
+                                ></img>
+                                Food
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        </InputGroup>
+                        <Button
+                          variant="outline-light"
+                          size="sm"
+                          style={{ marginRight: "10px" }}
+                        >
+                          Deposit
+                        </Button>
+                        <Button variant="outline-light" size="sm">
+                          Withdraw
+                        </Button>
+                      </div>
+                      <div className="landBoxColumn">
+                      </div>
                     </div>
                   </div>
-                ))
-                }
-                    </div>
-            </Row>
+                </Col>
+              </Row>
+              <Row style={{ marginTop: "1rem" }}>
+                {Array.isArray(ownedBuildings) &&
+                  ownedBuildings.map((item, key) => (
+                    <Col key={key} md={{ span: 6, offset: 0 }}>
+                      <div className="listItemInfo">
+                        <img src={item.imageURL}></img>
+                        <div className="infoColumn">
+                          <h2 className="defaultH2">{item.name}</h2>
+                          <h4>
+                            Revenue: {ethers.utils.formatEther(item.revenue)}
+                          </h4>
+                          <div>
+                            <Button
+                              variant="outline-light"
+                              style={{ marginBottom: "0.5rem" }}
+                              onClick={() => mintBuilding(key)}
+                              size="sm"
+                            >
+                              Claim
+                            </Button>
+                          </div>
+                          <h4>level: {item.level.toString()}</h4>
+                          <div>
+                            <Button
+                              variant="outline-light"
+                              style={{}}
+                              onClick={() => mintBuilding(key)}
+                              size="sm"
+                            >
+                              Upgrade
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+                  ))}
+              </Row>
+              <Row style={{ marginTop: "1rem" }}>
+                <Accordion>
+                  <Accordion.Item eventKey="0" className="accordionBackground">
+                    <Accordion.Header className="accordion">
+                      Buildings
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div className="listItemColumn">
+                        {Array.isArray(buildings) &&
+                          buildings.map((item, key) => (
+                            <Col key={key}>
+                              <div className="listItemInfo">
+                                <img src={item.imageURL}></img>
+                                <div className="InfoColumn">
+                                  <div style={{ padding: "0.5rem" }}>
+                                    <h4 className="defaultH2">
+                                      {item.buildingName}
+                                    </h4>
+                                  </div>
+                                  <div className="commodityBalance">
+                                    <img
+                                      src="/Stone.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                    <p>
+                                      {ethers.utils.formatEther(
+                                        item.requiredStone
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div className="commodityBalance">
+                                    <img
+                                      src="/Wood.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                    <p>
+                                      {ethers.utils.formatEther(
+                                        item.requiredWood
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div className="commodityBalance">
+                                    <img
+                                      src="/Iron.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                    <p>
+                                      {ethers.utils.formatEther(
+                                        item.requiredIron
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div className="commodityBalance">
+                                    <img
+                                      src="/Gold.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                    <p>
+                                      {ethers.utils.formatEther(
+                                        item.requiredGold
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div className="commodityBalance">
+                                    <img
+                                      src="/Food.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                    <p>
+                                      {ethers.utils.formatEther(
+                                        item.requiredFood
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="InfoColumn">
+                                  <p>Difficulty: 0%</p>
+                                  {Number(selectedLand.stone) <=
+                                    Number(
+                                      ethers.utils.formatEther(
+                                        item.requiredStone
+                                      )
+                                    ) ||
+                                  Number(selectedLand.wood) <=
+                                    Number(
+                                      ethers.utils.formatEther(
+                                        item.requiredWood
+                                      )
+                                    ) ||
+                                  Number(selectedLand.iron) <=
+                                    Number(
+                                      ethers.utils.formatEther(
+                                        item.requiredIron
+                                      )
+                                    ) ||
+                                  Number(selectedLand.gold) <=
+                                    Number(
+                                      ethers.utils.formatEther(
+                                        item.requiredGold
+                                      )
+                                    ) ||
+                                  Number(selectedLand.food) <=
+                                    Number(
+                                      ethers.utils.formatEther(
+                                        item.requiredFood
+                                      )
+                                    ) ? (
+                                    <Button disabled>Build</Button>
+                                  ) : (
+                                    <Button
+                                      style={{ bottom: "0px" }}
+                                      onClick={() => mintBuilding(key)}
+                                    >
+                                      Build
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            </Col>
+                          ))}
+                      </div>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="1" className="accordionBackground">
+                    <Accordion.Header className="accordion">
+                      Bararcks
+                    </Accordion.Header>
+                    <Accordion.Body></Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </Row>
             </>
-          }
+          )}
           <Row>
             <Col></Col>
           </Row>

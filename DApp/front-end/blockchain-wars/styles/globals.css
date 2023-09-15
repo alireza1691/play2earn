@@ -186,10 +186,11 @@ body {
   font-size: 1.4rem;
   color: white;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  background: linear-gradient(to right, rgb(175, 175, 175),rgb(255, 255, 255), rgb(187, 187, 187),rgb(240, 240, 240) );
+  background: linear-gradient(to bottom, rgb(175, 175, 175),rgb(255, 255, 255), rgb(187, 187, 187),rgb(240, 240, 240) );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  width: fit-content;
+  /* width: fit-content; */
+  width: 100%;
 }
 
 .scrollableScreen {
@@ -243,7 +244,7 @@ body {
 .cardImg:hover {
   transform: scale(1.1) 
 }
-.card {
+.defaultCard {
   background-color: rgba(255, 255, 255, 0.3);
   max-width: 12rem;
   margin-bottom: 5rem;
@@ -349,22 +350,33 @@ body {
 .transactionRejectWindow p {
   color: rgb(73, 90, 246);
 }
-.buildingsColumn {
+.listItemColumn {
 display: block;
+width: 100%;
 }
-.buildingInfo {
+.listItemInfo {
 display: flex;
 background-color: rgba(255, 255, 255, 0.1);
 padding: 0.5rem;
 margin-top: 0.5rem;
 border-radius: 0.5rem;
 justify-content: space-between;
+text-align: center;
 }
-.buildingInfo img{
+.listItemInfo img{
   height: 160px;
   width: 200px;
   left: 0;
   justify-self: center;
+  transition: transform 0.15s ease;
+}
+.listItemInfo h4{
+color: white;
+font-family: Verdana, Geneva, Tahoma, sans-serif;
+font-size: 0.9rem;
+}
+.listItemInfo img:hover{
+  transform: scale(1.1) 
 }
 .InfoColumn{
   position: static;
@@ -373,7 +385,7 @@ justify-content: space-between;
   height: 100%;
   justify-content: space-around;
 }
-.InfoColumn p {
+.listItemColumn p {
   font-size: 0.8rem;
   color: rgb(214, 214, 214);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -389,6 +401,45 @@ justify-content: space-between;
   display: flex;
   height: 25px;
   /* margin-top: 0.5rem; */
+}
+
+.buildingCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; 
+  width: 100% !important;
+  min-width: 200px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.buildingCard p{
+  font-size: 0.8rem;
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.buildingCard img {
+  height: 220px;
+  width: 100%;
+  padding: 1rem;
+  /* object-fit: cover; */
+}
+.buildingCard .cardBody {
+  flex-grow: 1;
+}
+.buildingCard .cardBody .buttonContainer {
+  display: flex;
+  justify-content: space-between;
+}
+.accordionBackground {
+  background-color: rgba(22, 5, 58, 0.4)!important;
+}
+/* .accordion .accordion-item {
+  background-color: #03000d !important;
+  color: #000000 !important;
+} */
+.accordion :first-child{
+  border: none;
+
 }
 @media (max-width: 767px) {
   .balanceHeader {
@@ -412,7 +463,7 @@ justify-content: space-between;
     text-align: center;
   }
   .InfoColumn{
-    display: block;
+    display: block ;
     text-align: center;
     width: 100%;
 
@@ -421,9 +472,38 @@ justify-content: space-between;
     font-size: 1.2rem;
     padding: 1rem;
   }
+  .listItemInfo{
+    display: block;
+  }
 
   .commodityBalance {
     width: 100%;
     justify-content: space-around;
+  }
+  .listItemInfo img{
+    height: 120px;
+    width: 160px;
+    left: 0;
+    justify-self: center;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .buildingCard img {
+    height: 160px;
+    width: 160px;
+    max-width: 200px;
+    /* min-width: 180px; */
+    padding: 0px;
+    /* object-fit: cover; */
+  }
+  .buildingCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; 
+    width: 100%;
+    min-width: 160px;
+    background-color: rgba(255, 255, 255, 0.3);
   }
 }

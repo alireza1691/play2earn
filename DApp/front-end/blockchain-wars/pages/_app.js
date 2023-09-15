@@ -170,7 +170,6 @@ const dataLoad = async () => {
 				const commoditiesBalance = await lands.getAssetsBal(parseInt(topics[3], 16))
    
                 const landInfo = {
-					id: counter,
                   stone: ethers.utils.formatEther(commoditiesBalance[0].toString()),
                   wood: ethers.utils.formatEther(commoditiesBalance[1].toString()),
                   iron: ethers.utils.formatEther(commoditiesBalance[2].toString()),
