@@ -131,6 +131,7 @@ contract Army is Ownable{
         require(msg.sender == lands.ownerOf(landId), "Callerr is not land owner");
         require(typeIndex < types.length, "Type is not valid");
         require(typeIndex < level[landId] && level[landId] != 0, "Upgrade barracks needed");
+        require(types[typeIndex].price >= lands.getAssetsBal(landId)[4], "Insufficient gold");
         lands.spendCommodities(landId,[0,0,0,types[typeIndex].price,0]);
         balances[landId][typeIndex] += amount;
     }
@@ -188,6 +189,18 @@ contract Army is Ownable{
             amounts[i] = balances[landId][i];
         }
         return amounts;
+    }
+
+    function getTypes() view public returns (Info[] memory) {
+        return types;
+    }
+
+    function getLevel(uint256 landTokenId) view public returns (uint256) {
+        return level[landTokenId];
+    }
+
+    function getRequiredCommodities() view public returns (uint256[5] memory) {
+        return requiredCommodities;
     }
 
     //  ******************************************************************************

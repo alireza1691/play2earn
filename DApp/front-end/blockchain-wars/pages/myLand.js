@@ -214,26 +214,12 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                     md={{ span: 4, offset: 4 }}
                     style={{ display: "flex", justifyContent: "center" }}
                   >
-                    <Card className="defaultCard">
-                      <Card.Body>
-                        <Card.Title>Not land found.</Card.Title>
-                        <Card.Text>
-                          To participate in game you need a land.
-                        </Card.Text>
-                        <Card.Text>Explore and mint your land.</Card.Text>
-                        <Card.Text>
-                          If you have any land connect owner wallet.
-                        </Card.Text>
-                        <Button
-                          variant="primary"
-                          onClick={() => {
-                            router.push("/lands");
-                          }}
-                        >
-                          Explore
-                        </Button>
-                      </Card.Body>
-                    </Card>
+                    <div style={{"display":"block","textAlign":"center"}}>
+                    <h4 className="defaultH4">Not land found.</h4>
+                    <h4 className="defaultH4">To participate in game you need a land.</h4>
+                    <h4 className="defaultH4"><span onClick={() =>{router.push("/lands")}} style={{"textDecoration":"underLine","cursor":"pointer","color":"white"}} >Explore</span> and mint your land.</h4>
+                    <h4 className="defaultH4" style={{"marginTop":"2rem"}}>If you have any land, connect your wallet.</h4>
+                          </div>
                   </Col>
                 </Row>
               )}
