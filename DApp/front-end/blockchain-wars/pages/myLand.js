@@ -11,9 +11,15 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
-import { landsSepolia, townSepolia } from "../Blockchain/Addresses";
+import CloseButton from "react-bootstrap/CloseButton";
+import {
+  landsSepolia,
+  townSepolia,
+  armySepolia,
+} from "../Blockchain/Addresses";
 import Lands from "../Blockchain/Lands.json";
 import Town from "../Blockchain/Town.json";
+import Army from "../Blockchain/Army.json";
 import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 
@@ -25,6 +31,12 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [buildings, setBuildings] = useState();
   const [selectedLand, setSelectedLand] = useState();
   const [ownedBuildings, setOwnedBuildings] = useState();
+  const [existedWarriors, setExistedWarriors] = useState();
+  const [army, setArmy] = useState();
+  const [barracksLevel, setBarracksLevel] = useState();
+  const [inputValue, setInputValue] = useState(""); // State variable to store the input value
+  const [requiredBarracksCommodities, setRequiredBarracksCommodities] =
+    useState();
 
   const router = useRouter();
   const address = useAddress();
@@ -46,9 +58,9 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   };
 
   const mintBuilding = async (buildingIndex) => {
-    if (!signer) {
-      connectWithMetamask;
-    }
+    // if (!signer) {
+    //   connectWithMetamask;
+    // }
     try {
       const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
       await TownInstance.build(selectedLand.coordinate, buildingIndex);
@@ -56,16 +68,57 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
       console.log(error);
     }
   };
+  const upgradeBarracks = async () => {
+    try {
+      const army = new ethers.Contract(armySepolia, Army.abi, signer);
+      await army.buildBarracks(selectedLand.coordinate)
+    } catch (error) {
+      setIsTransactionRejected(true)
+    }
+  }
+
+  const recruit = async (typeIndex) => {
+    try {
+      console.log("Input value:", inputValue);
+      const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
+      const goldBal = await lands.getAssetsBal(selectedLand.coordinate)
+      console.log(goldBal.toString());
+      const army = new ethers.Contract(armySepolia, Army.abi, signer);
+      // await army.recruit(selectedLand.coordinate, typeIndex, inputValue)
+      await army.buildWarrior(selectedLand.coordinate, typeIndex, inputValue)
+    } catch (error) {
+      console.log(error);
+      setIsTransactionRejected(true)
+    }
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
       if (signer && address && selectedLand) {
+        if (ownedLands == 0) {
+          setIsFetching(false);
+        }
+        if (ownedLands > 0 && landObj.length > 0) {
+          setIsFetching(false);
+        }
         const town = new ethers.Contract(townSepolia, Town.abi, signer);
+        const army = new ethers.Contract(armySepolia, Army.abi, signer);
         const ownedBuildings = await town.landBuildings(
           selectedLand.coordinate
         );
         const existedBuildings = await town.getBuildings();
-
+        setBuildings(existedBuildings);
+        const existedWarriors = await army.getTypes();
+        const landArmy = await army.getArmy(selectedLand.coordinate);
+        const level = await army.getLevel(selectedLand.coordinate);
+        const requiredComs = await army.getRequiredCommodities();
+        setExistedWarriors(existedWarriors);
+        setArmy(landArmy);
+        setBarracksLevel(level);
+        setRequiredBarracksCommodities(requiredComs);
+        console.log("Existed warriors:", existedWarriors);
+        console.log("Current existed army:", landArmy);
         let ownedBuildingsArray = [];
         for (let index = 0; index < ownedBuildings.length; index++) {
           const status = await town.getStatus(ownedBuildings[index]);
@@ -82,29 +135,9 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         console.log("Owned buildings");
         console.log(ownedBuildingsArray);
       }
-      // console.log(provider);
-      if (provider && landObj.length > 0 && ownedLands) {
-        console.log(landObj);
-        const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
-        if (ownedLands == 0) {
-          setIsFetching(false);
-        }
-        if (ownedLands > 0 && landObj.length > 0) {
-          setIsFetching(false);
-        }
-
-        const TownInstance = new ethers.Contract(
-          townSepolia,
-          Town.abi,
-          provider
-        );
-        const existedBuildings = await TownInstance.getBuildings();
-        console.log(existedBuildings);
-        setBuildings(existedBuildings);
-      }
     };
     fetchData();
-  }, [provider, landObj, ownedLands, address, signer, selectedLand]);
+  }, [provider, ownedLands, address, signer, selectedLand]);
 
   return (
     <>
@@ -214,12 +247,30 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                     md={{ span: 4, offset: 4 }}
                     style={{ display: "flex", justifyContent: "center" }}
                   >
-                    <div style={{"display":"block","textAlign":"center"}}>
-                    <h4 className="defaultH4">Not land found.</h4>
-                    <h4 className="defaultH4">To participate in game you need a land.</h4>
-                    <h4 className="defaultH4"><span onClick={() =>{router.push("/lands")}} style={{"textDecoration":"underLine","cursor":"pointer","color":"white"}} >Explore</span> and mint your land.</h4>
-                    <h4 className="defaultH4" style={{"marginTop":"2rem"}}>If you have any land, connect your wallet.</h4>
-                          </div>
+                    <div style={{ display: "block", textAlign: "center" }}>
+                      <h4 className="defaultH4">Not land found.</h4>
+                      <h4 className="defaultH4">
+                        To participate in game you need a land.
+                      </h4>
+                      <h4 className="defaultH4">
+                        <span
+                          onClick={() => {
+                            router.push("/lands");
+                          }}
+                          style={{
+                            textDecoration: "underLine",
+                            cursor: "pointer",
+                            color: "white",
+                          }}
+                        >
+                          Explore
+                        </span>{" "}
+                        and mint your land.
+                      </h4>
+                      <h4 className="defaultH4" style={{ marginTop: "2rem" }}>
+                        If you have any land, connect your wallet.
+                      </h4>
+                    </div>
                   </Col>
                 </Row>
               )}
@@ -346,8 +397,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           Withdraw
                         </Button>
                       </div>
-                      <div className="landBoxColumn">
-                      </div>
+                      <div className="landBoxColumn"></div>
                     </div>
                   </div>
                 </Col>
@@ -404,9 +454,9 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                 <img src={item.imageURL}></img>
                                 <div className="InfoColumn">
                                   <div style={{ padding: "0.5rem" }}>
-                                    <h4 className="defaultH2">
+                                    <h2 className="defaultH2">
                                       {item.buildingName}
-                                    </h4>
+                                    </h2>
                                   </div>
                                   <div className="commodityBalance">
                                     <img
@@ -514,9 +564,206 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </Accordion.Item>
                   <Accordion.Item eventKey="1" className="accordionBackground">
                     <Accordion.Header className="accordion">
-                      Bararcks
+                      Barracks{" "}
                     </Accordion.Header>
-                    <Accordion.Body></Accordion.Body>
+                    <Accordion.Body>
+                      <div className="listItemColumn">
+                        {Array.isArray(requiredBarracksCommodities) && (
+                          <Col>
+                            <div
+                              className="listItemInfo"
+                              style={{ backgroundColor: "transparent" }}
+                            >
+                              <img src={"Barracks.png"}></img>
+                              <div className="InfoColumn">
+                                <div style={{ padding: "0.5rem" }}>
+                                  <h2 className="defaultH2">
+                                    Barracks{" "}
+                                    {barracksLevel !== undefined &&
+                                      ` (level: ${barracksLevel.toString()})`}
+                                  </h2>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Stone.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                    {Number(
+                                      ethers.utils.formatEther(
+                                        requiredBarracksCommodities[0]
+                                      )
+                                    ) *
+                                      (Number(barracksLevel) + 1)}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Wood.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                    {Number(
+                                      ethers.utils.formatEther(
+                                        requiredBarracksCommodities[1]
+                                      )
+                                    ) *
+                                      (Number(barracksLevel) + 1)}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Iron.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                    {Number(
+                                      ethers.utils.formatEther(
+                                        requiredBarracksCommodities[2]
+                                      )
+                                    ) *
+                                      (Number(barracksLevel) + 1)}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Gold.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                    {Number(
+                                      ethers.utils.formatEther(
+                                        requiredBarracksCommodities[3]
+                                      )
+                                    ) *
+                                      (Number(barracksLevel) + 1)}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Food.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                    {Number(
+                                      ethers.utils.formatEther(
+                                        requiredBarracksCommodities[4]
+                                      )
+                                    ) *
+                                      (Number(barracksLevel) + 1)}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="InfoColumn">
+                                {Number(selectedLand.stone) <=
+                                  Number(
+                                    ethers.utils.formatEther(
+                                      requiredBarracksCommodities[0]
+                                    ) *
+                                      (Number(barracksLevel) + 1)
+                                  ) ||
+                                Number(selectedLand.wood) <=
+                                  Number(
+                                    ethers.utils.formatEther(
+                                      requiredBarracksCommodities[1]
+                                    ) *
+                                      (Number(barracksLevel) + 1)
+                                  ) ||
+                                Number(selectedLand.iron) <=
+                                  Number(
+                                    ethers.utils.formatEther(
+                                      requiredBarracksCommodities[2]
+                                    ) *
+                                      (Number(barracksLevel) + 1)
+                                  ) ||
+                                Number(selectedLand.gold) <=
+                                  Number(
+                                    ethers.utils.formatEther(
+                                      requiredBarracksCommodities[3]
+                                    ) *
+                                      (Number(barracksLevel) + 1)
+                                  ) ||
+                                Number(selectedLand.food) <=
+                                  Number(
+                                    ethers.utils.formatEther(
+                                      requiredBarracksCommodities[4]
+                                    ) *
+                                      (Number(barracksLevel) + 1)
+                                  ) ? (
+                                  <Button disabled>Upgrade</Button>
+                                ) : (
+                                  <Button
+                                    style={{ bottom: "0px" }}
+                                    onClick={() => upgradeBarracks()}
+                                  >
+                                    Upgrade
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          </Col>
+                        )}
+
+                        {Array.isArray(existedWarriors) &&
+                          existedWarriors.map((item, key) => (
+                            <Col key={key}>
+                              <div className="listItemInfo">
+                                <img
+                                  className="warriorImage"
+                                  src={item.imageURL}
+                                ></img>
+                                <div className="InfoColumn">
+                                  <div style={{ padding: "0.5rem" }}>
+                                    <h2 className="defaultH2">{item.name}</h2>
+                                  </div>
+                                  <p>Attack power: {item.attackPower}</p>
+                                  <p>Defence power: {item.defPower}</p>
+                                  <p>HP: {item.hp}</p>
+                                </div>
+                                <div className="InfoColumn">
+                                  
+                                  <div className="commodityBalance">
+                                    <p>
+                                      Price:{" "}
+                                      {ethers.utils.formatEther(item.price)}
+                                    </p>
+                                    <img
+                                      src="/Gold.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                  </div>
+                                  <InputGroup
+                                    className="mb-3"
+                                    size="sm"
+                                    style={{ padding: "1rem" }}
+                                  >
+                                    {barracksLevel >= item.requiredLevel ? (
+                                      <>
+                                        <Form.Control
+                                          placeholder="Enter amount..."
+                                          aria-label="Amount (to the nearest dollar)"
+                                          onChange={(e) => setInputValue(e.target.value)} 
+
+                                        />
+                                        <Button onClick={() => recruit(key)}>Build</Button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Form.Control
+                                          placeholder={`Requires barracks level ${item.requiredLevel.toString()}`}
+                                          aria-label="Amount (to the nearest dollar)"
+                                          disabled
+                                        />
+                                        <Button disabled>Build</Button>
+                                      </>
+                                    )}
+                                  </InputGroup>
+                                </div>
+                              </div>
+                            </Col>
+                          ))}
+                      </div>
+                    </Accordion.Body>
                   </Accordion.Item>
                 </Accordion>
               </Row>

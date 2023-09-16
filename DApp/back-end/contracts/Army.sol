@@ -54,6 +54,7 @@ contract Army is Ownable{
         uint8 attackPower;
         uint8 defPower;
         uint8 hp;
+        uint8 requiredLevel;
         string imageURL;
         string name;
         uint256 price;
@@ -72,9 +73,9 @@ contract Army is Ownable{
 
 
     constructor(address landsContractAddress){
-        types.push(Info( 60, 90, 140, "https://ipfs.io/ipfs/QmTd17tuN1FmMYbQyEDbDA7L97a9fPo6YzRYJVTGcP1jWo","Spear man",5 ether));
-        types.push(Info( 90, 70, 200, "https://ipfs.io/ipfs/QmUjNQwfx3DkVW115cywXTbgBSbkh53u1k3bDcmaA9xagJ","Swordsman",8 ether));
-        types.push(Info( 40, 60, 80, "https://ipfs.io/ipfs/QmeXxnC5iqzeXeBF5DjXPeLLu4636As4mQpv9LtotHFMSp","Archer",10 ether));
+        types.push(Info( 60, 90, 140, 1, "https://ipfs.io/ipfs/QmTd17tuN1FmMYbQyEDbDA7L97a9fPo6YzRYJVTGcP1jWo","Spear man",5 ether));
+        types.push(Info( 90, 70, 200, 2, "https://ipfs.io/ipfs/QmUjNQwfx3DkVW115cywXTbgBSbkh53u1k3bDcmaA9xagJ","Swordsman",8 ether));
+        types.push(Info( 40, 60, 80, 3, "https://ipfs.io/ipfs/QmeXxnC5iqzeXeBF5DjXPeLLu4636As4mQpv9LtotHFMSp","Archer",10 ether));
         lands = Lands(landsContractAddress);
     }
 
@@ -127,12 +128,12 @@ contract Army is Ownable{
         level[landId] ++;
     }
 
-    function buildWarrior(uint256 landId, uint256 typeIndex, uint256 amount) external{
+    function recruit(uint256 landId, uint256 typeIndex, uint256 amount) external{
         require(msg.sender == lands.ownerOf(landId), "Callerr is not land owner");
         require(typeIndex < types.length, "Type is not valid");
-        require(typeIndex < level[landId] && level[landId] != 0, "Upgrade barracks needed");
-        require(types[typeIndex].price >= lands.getAssetsBal(landId)[4], "Insufficient gold");
-        lands.spendCommodities(landId,[0,0,0,types[typeIndex].price,0]);
+        require(types[typeIndex].requiredLevel <= level[landId] && level[landId] != 0, "Upgrade barracks needed");
+        require(types[typeIndex].price * amount <= lands.getAssetsBal(landId)[3], "Insufficient gold");
+        lands.spendCommodities(landId,[0,0,0,types[typeIndex].price * amount,0]);
         balances[landId][typeIndex] += amount;
     }
 
@@ -170,8 +171,8 @@ contract Army is Ownable{
     //  ******************************************************************************
     //  ******************************************************************************
 
-    function updateType(uint8[3] memory physicalInfo, string memory imageURL, string memory name, uint256 price, uint256 typeIndex) external onlyOwner{
-        types[typeIndex] = Info( physicalInfo[0], physicalInfo[1], physicalInfo[2], imageURL,name,price );
+    function updateType(uint8[3] memory physicalInfo,uint8 requiredLevel, string memory imageURL, string memory name, uint256 price, uint256 typeIndex) external onlyOwner{
+        types[typeIndex] = Info( physicalInfo[0], physicalInfo[1], physicalInfo[2], requiredLevel, imageURL,name,price );
     }
 
 
