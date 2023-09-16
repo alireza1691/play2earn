@@ -12,10 +12,11 @@ import { ethers } from "ethers";
 import { useSigner, useConnect, useMetamask, useWalletConnect, metamaskWallet, useAddress } from "@thirdweb-dev/react";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import CloseButton from "react-bootstrap/CloseButton";
 
 const metamaskConfig = metamaskWallet();
 
-const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => {
+const lands = ({ provider,  landImgUrl, mintedLands, dataLoad }) => {
   const [viewLands, setViewLands] = useState([]);
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -86,7 +87,6 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
     return view;
   };
   function fillLands(xStartingPoint, yStartingPoint) {
-    console.log("change view called");
     let lands = [];
     let counter = 0;
     for (let y = yStartingPoint; y < yStartingPoint + 10; y++) {
@@ -225,7 +225,7 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
         {isTransactionRejected && (
           <div className="overlay">
             <div className="transactionRejectWindow">
-              <p>Transaction Rejected</p>
+              <p>Transaction rejected or failed</p>
               <p>Please try again or contact support.</p>
               <Button
                     variant="outline-secondary"
@@ -235,6 +235,7 @@ const lands = ({ provider,  landImgUrl, mintedLands, dataLoad, connectReq }) => 
                   >
                     Close
                   </Button>
+
               {/* <button onClick={handleClose}>Close</button> */}
             </div>
           </div>

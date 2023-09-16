@@ -79,7 +79,8 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
 
   const recruit = async (typeIndex) => {
     try {
-      console.log("Input value:", inputValue);
+      console.log(typeIndex);
+      console.log("Input value:",inputValue);
       const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
       const goldBal = await lands.getAssetsBal(selectedLand.coordinate)
       console.log(goldBal.toString());
@@ -95,15 +96,15 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (signer && address && selectedLand) {
+      if (signer && address && selectedLand && provider) {
         if (ownedLands == 0) {
           setIsFetching(false);
         }
         if (ownedLands > 0 && landObj.length > 0) {
           setIsFetching(false);
         }
-        const town = new ethers.Contract(townSepolia, Town.abi, signer);
-        const army = new ethers.Contract(armySepolia, Army.abi, signer);
+        const town = new ethers.Contract(townSepolia, Town.abi, provider);
+        const army = new ethers.Contract(armySepolia, Army.abi, provider);
         const ownedBuildings = await town.landBuildings(
           selectedLand.coordinate
         );
@@ -745,7 +746,9 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                           onChange={(e) => setInputValue(e.target.value)} 
 
                                         />
-                                        <Button onClick={() => recruit(key)}>Build</Button>
+                                        <Button 
+                                        onClick={() => recruit(key)}
+                                        >Build</Button>
                                       </>
                                     ) : (
                                       <>

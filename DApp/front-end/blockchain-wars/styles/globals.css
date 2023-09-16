@@ -347,9 +347,7 @@ body {
   font-size: 0.85rem;
   color: rgb(62, 62, 62);
 }
-.transactionRejectWindow p {
-  color: rgb(73, 90, 246);
-}
+
 .listItemColumn {
 display: block;
 width: 100%;
