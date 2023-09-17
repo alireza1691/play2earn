@@ -37,6 +37,8 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [inputValue, setInputValue] = useState(""); // State variable to store the input value
   const [requiredBarracksCommodities, setRequiredBarracksCommodities] =
     useState();
+  const [visibleConfirmation, setVisibleConfirmation] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
 
   const router = useRouter();
   const address = useAddress();
@@ -58,12 +60,10 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   };
 
   const mintBuilding = async (buildingIndex) => {
-    // if (!signer) {
-    //   connectWithMetamask;
-    // }
     try {
       const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
       await TownInstance.build(selectedLand.coordinate, buildingIndex);
+      setVisibleConfirmation(true);
     } catch (error) {
       console.log(error);
     }
@@ -71,38 +71,70 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const upgradeBarracks = async () => {
     try {
       const army = new ethers.Contract(armySepolia, Army.abi, signer);
-      await army.buildBarracks(selectedLand.coordinate)
+      await army.buildBarracks(selectedLand.coordinate);
+      setVisibleConfirmation(true);
     } catch (error) {
-      setIsTransactionRejected(true)
+      setIsTransactionRejected(true);
     }
-  }
+  };
+  const claimRev = async (buildingTokenId) => {
+    try {
+      const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
+      await TownInstance.claimRevenue(buildingTokenId);
+      setVisibleConfirmation(true);
+    } catch (error) {
+      setIsTransactionRejected(true);
+    }
+  };
+
+  const upgradeBuilding = async (buildingTokenId) => {
+    try {
+      const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
+      await TownInstance.upgrade(buildingTokenId, selectedLand.coordinate);
+      setVisibleConfirmation(true);
+    } catch (error) {
+      setIsTransactionRejected(true);
+    }
+  };
 
   const recruit = async (typeIndex) => {
     try {
       console.log(typeIndex);
-      console.log("Input value:",inputValue);
+      console.log("Input value:", inputValue);
       const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
-      const goldBal = await lands.getAssetsBal(selectedLand.coordinate)
+      const goldBal = await lands.getAssetsBal(selectedLand.coordinate);
       console.log(goldBal.toString());
       const army = new ethers.Contract(armySepolia, Army.abi, signer);
-      // await army.recruit(selectedLand.coordinate, typeIndex, inputValue)
-      await army.buildWarrior(selectedLand.coordinate, typeIndex, inputValue)
+      await army.recruit(selectedLand.coordinate, typeIndex, inputValue);
+      setVisibleConfirmation(true);
     } catch (error) {
       console.log(error);
-      setIsTransactionRejected(true)
+      setIsTransactionRejected(true);
     }
-  }
-
+  };
 
   useEffect(() => {
+    if (visibleConfirmation) {
+      const timeout = setTimeout(() => {
+        setConfirmed(true);
+        // setVisibleConfirmation(false);
+      }, 6000);
+      // return () => clearTimeout(timeout)
+    }
+    if (visibleConfirmation) {
+      const timeout = setTimeout(() => {
+        setConfirmed(false);
+        setVisibleConfirmation(false);
+      }, 8000);
+      return () => clearTimeout(timeout);
+    }
     const fetchData = async () => {
-      if (signer && address && selectedLand && provider) {
-        if (ownedLands == 0) {
-          setIsFetching(false);
-        }
-        if (ownedLands > 0 && landObj.length > 0) {
-          setIsFetching(false);
-        }
+      if (ownedLands !== undefined && ownedLands == 0) {
+        setIsFetching(false);
+      }
+      if (signer && address && selectedLand !== undefined && provider) {
+        console.log("Useeffect called");
+
         const town = new ethers.Contract(townSepolia, Town.abi, provider);
         const army = new ethers.Contract(armySepolia, Army.abi, provider);
         const ownedBuildings = await town.landBuildings(
@@ -116,6 +148,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const requiredComs = await army.getRequiredCommodities();
         setExistedWarriors(existedWarriors);
         setArmy(landArmy);
+        console.log("Army:",landArmy);
         setBarracksLevel(level);
         setRequiredBarracksCommodities(requiredComs);
         console.log("Existed warriors:", existedWarriors);
@@ -138,7 +171,14 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
       }
     };
     fetchData();
-  }, [provider, ownedLands, address, signer, selectedLand]);
+  }, [
+    provider,
+    ownedLands,
+    address,
+    signer,
+    selectedLand,
+    visibleConfirmation,
+  ]);
 
   return (
     <>
@@ -151,6 +191,41 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
               <button onClick={handleClose}>Close</button>
             </div>
           </div>
+        )}
+        {visibleConfirmation == true ? (
+          <div className="popUpConfirmation">
+            <div
+              style={{
+                display: "block",
+                marginTop: "1%",
+                height: "200px",
+                paddingTop: "15%",
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              {confirmed == false ? (
+                <>
+                  <h4 style={{"color":"black"}} className="defaultH4">Confirming...</h4>
+
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ textAlign: "center", color: "rgb(73, 90, 246)" }}
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner>
+                </>
+              ) : (
+                <>
+                  <h4 style={{"color":"black"}} className="defaultH4">Confirmed.</h4>
+                  <h4 style={{"color":"black"}} className="defaultH4">Please refresh the page.</h4>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          ""
         )}
         {isLandSelected && (
           <div className="overlay">
@@ -175,13 +250,6 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </Button>
                 </Card.Body>
               </Card>
-              {/* <h4>Land</h4>
-              <p>Coordinate</p>
-              <p>Owner:</p>
-              <p>Level:</p>
-              <Button variant="primary" onClick={handleCloseLandWindow}>
-                Close
-              </Button> */}
             </div>
           </div>
         )}
@@ -398,13 +466,21 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           Withdraw
                         </Button>
                       </div>
-                      <div className="landBoxColumn"></div>
+                      <div className="landBoxColumn">
+                        {Array.isArray(existedWarriors) && existedWarriors.length >0 && Array.isArray(army) && army.length > 0 &&
+                        existedWarriors.map((warrior, key) => (
+                          <h5 className="defaultH5" key={key}> {warrior.name} : {army[0][key].toString()}</h5>
+                        ))}
+                        {existedWarriors == undefined && army == undefined && 
+                        <h5 className="defaultH5"> Loading army...</h5>
+                        }
+                      </div>
                     </div>
                   </div>
                 </Col>
               </Row>
               <Row style={{ marginTop: "1rem" }}>
-                {Array.isArray(ownedBuildings) &&
+                {Array.isArray(ownedBuildings) && ownedBuildings.length > 0 ? (
                   ownedBuildings.map((item, key) => (
                     <Col key={key} md={{ span: 6, offset: 0 }}>
                       <div className="listItemInfo">
@@ -418,7 +494,9 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                             <Button
                               variant="outline-light"
                               style={{ marginBottom: "0.5rem" }}
-                              onClick={() => mintBuilding(key)}
+                              onClick={() =>
+                                claimRev(ownedBuildings[key].tokenId)
+                              }
                               size="sm"
                             >
                               Claim
@@ -429,7 +507,9 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                             <Button
                               variant="outline-light"
                               style={{}}
-                              onClick={() => mintBuilding(key)}
+                              onClick={() =>
+                                upgradeBuilding(ownedBuildings[key].tokenId)
+                              }
                               size="sm"
                             >
                               Upgrade
@@ -438,7 +518,56 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         </div>
                       </div>
                     </Col>
-                  ))}
+                  ))
+                ) : (
+                  <>
+                    {ownedBuildings !== undefined &&
+                    ownedBuildings.length == 0 ? (
+                      <Col
+                        md={{ span: 4, offset: 4 }}
+                        style={{ display: "flex", justifyContent: "center" }}
+                      >
+                        <div
+                          style={{
+                            display: "block",
+                            textAlign: "center",
+                            height: "200px",
+                            padding: "10%",
+                          }}
+                        >
+                          <h4 className="defaultH4">
+                            Not Building found for land.
+                          </h4>
+                          <h4 className="defaultH4">
+                            Build your first building through the buildings list
+                            below.
+                          </h4>
+                        </div>
+                      </Col>
+                    ) : (
+                      <div
+                        style={{
+                          display: "block",
+                          marginTop: "1%",
+                          marginBottom: "1%",
+                          height: "200px",
+                          padding: "10%",
+                          width: "100%",
+                          textAlign: "center",
+                        }}
+                      >
+                        <h4 className="defaultH4">Loading buildings...</h4>
+                        <Spinner
+                          animation="border"
+                          role="status"
+                          style={{ textAlign: "center", color: "white" }}
+                        >
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    )}
+                  </>
+                )}
               </Row>
               <Row style={{ marginTop: "1rem" }}>
                 <Accordion>
@@ -722,7 +851,6 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                   <p>HP: {item.hp}</p>
                                 </div>
                                 <div className="InfoColumn">
-                                  
                                   <div className="commodityBalance">
                                     <p>
                                       Price:{" "}
@@ -743,12 +871,13 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                         <Form.Control
                                           placeholder="Enter amount..."
                                           aria-label="Amount (to the nearest dollar)"
-                                          onChange={(e) => setInputValue(e.target.value)} 
-
+                                          onChange={(e) =>
+                                            setInputValue(e.target.value)
+                                          }
                                         />
-                                        <Button 
-                                        onClick={() => recruit(key)}
-                                        >Build</Button>
+                                        <Button onClick={() => recruit(key)}>
+                                          Build
+                                        </Button>
                                       </>
                                     ) : (
                                       <>

@@ -46,9 +46,12 @@ contract Town is Ownable {
     Lands lands;
 
 
+
+    uint8 private constant baseBuildingCapacity = 3;
+    uint8 private constant maxBuildingsCapacity = 12;
     uint256 private tokenIdCounter = 1;
     uint256 private constant baseCapacity = 80 ether;
-    uint256 private constant baseRev = 8 ether;
+    uint256 private constant baseRev = 2 ether; // Revenue per 6 hours
     uint256 private constant defaultLevel = 1;
 
     struct Info {
@@ -127,7 +130,7 @@ contract Town is Ownable {
     modifier timestampLimitation (uint256 tokenId){
         uint256 latestActionTimestamp = tokenIdStatus[tokenId].latestActionTimestamp;
         uint256 period = block.timestamp - latestActionTimestamp;
-        require(period < 1 days, "Sorry, revenue should claim before action");
+        require(period < 6 hours, "Sorry, revenue should claim before action");
         _;
     }
 
@@ -144,6 +147,7 @@ contract Town is Ownable {
 
     function build(uint256 landTokenId, uint8 buildingIndex) external onlyLandOwner(landTokenId){
         require(buildingIndex < buildings.length, "Building is not valid");
+        require(maxBuildingsCapacity > buildedBuildings[landTokenId].length, "Building capacity limit. Upgrade your land");
         Info memory selecteduilding = buildings[buildingIndex];
         require(lands.getAssetsBal(landTokenId)[0] >= selecteduilding.requiredStone &&
         lands.getAssetsBal(landTokenId)[1] >= selecteduilding.requiredWood && 
@@ -240,8 +244,8 @@ contract Town is Ownable {
         Status memory buildingStatus = getStatus(buildingTokenId);
         uint256 latestActionTimestamp = buildingStatus.latestActionTimestamp;
         uint256 period = block.timestamp - latestActionTimestamp;
-        uint256 revenuePerDay = buildingStatus.level * baseRev;
-        uint256 rev = (period / 1 days) * revenuePerDay;
+        uint256 revenuePer6Hours = buildingStatus.level * baseRev;
+        uint256 rev = (period / 6 hours) * revenuePer6Hours;
         if (rev > baseCapacity * buildingStatus.level) {
             rev = baseCapacity * buildingStatus.level;
         }

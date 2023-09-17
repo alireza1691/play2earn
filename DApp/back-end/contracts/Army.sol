@@ -131,6 +131,8 @@ contract Army is Ownable{
     function recruit(uint256 landId, uint256 typeIndex, uint256 amount) external{
         require(msg.sender == lands.ownerOf(landId), "Callerr is not land owner");
         require(typeIndex < types.length, "Type is not valid");
+        (,uint256 currentArmy) = getArmy(landId);
+        require(level[landId] * baseArmyCapacity > currentArmy + amount, "Army > maximum capacity, Upgrade your land");
         require(types[typeIndex].requiredLevel <= level[landId] && level[landId] != 0, "Upgrade barracks needed");
         require(types[typeIndex].price * amount <= lands.getAssetsBal(landId)[3], "Insufficient gold");
         lands.spendCommodities(landId,[0,0,0,types[typeIndex].price * amount,0]);
@@ -184,12 +186,14 @@ contract Army is Ownable{
     //  ******************************************************************************
     //  ******************************************************************************
 
-    function getArmy(uint256 landId) view public returns (uint256[] memory) {
+    function getArmy(uint256 landId) view public returns (uint256[] memory, uint256) {
         uint256[] memory amounts = new uint256[](types.length);
+        uint256 totalArmy;
         for (uint i = 0; i < types.length; i++) {
             amounts[i] = balances[landId][i];
+            totalArmy += balances[landId][i];
         }
-        return amounts;
+        return (amounts, totalArmy);
     }
 
     function getTypes() view public returns (Info[] memory) {
@@ -219,7 +223,7 @@ contract Army is Ownable{
         uint256 defenderPower;
         uint256 defenderHp;
         bool attackSuccess;
-              uint256[] memory defenderWarriorsAmounts = getArmy(targetLandId);
+              (uint256[] memory defenderWarriorsAmounts,) = getArmy(targetLandId);
         // Calculate attacker and defender power
         for (uint256 i = 0; i < types.length; i++) {
             attackerPower += types[i].attackPower * warriorsAmounts[i];

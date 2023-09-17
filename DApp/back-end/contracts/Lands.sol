@@ -51,13 +51,11 @@ contract Lands is ERC721, Ownable {
     IERC20 food ;
 
     address[] private items;
-    uint8 private constant baseCapacity = 6;
     uint256 private transferCost = 3;
     uint256 private constant defaultLandPrice = 20000000 gwei; // Equal 0.02 ether
 
 
     mapping (uint256 => Land) public tokenIdLand;
-    mapping (uint256 => uint256[]) private landBuildings;
     mapping (uint256 => mapping(address => uint256)) private balances;
     mapping (address => uint8) private difficultyCost;
 
@@ -65,9 +63,7 @@ contract Lands is ERC721, Ownable {
     struct Land {
         uint8 coordinateX;
         uint8 coordinateY;
-        uint8 level;
     }
-    Land private defaultLand = Land(100,100,1);
 
 
 
@@ -158,8 +154,9 @@ contract Lands is ERC721, Ownable {
         require(msg.value >= defaultLandPrice, "msg.value less than land price");
         uint256 tokenId = StringUtils.concatenate(x, y);
         _mint(msg.sender, tokenId);
-        tokenIdLand[tokenId] = defaultLand;
+        tokenIdLand[tokenId] = Land(x,y);
     }
+
 
     function testDeposit( uint256 landTokenId) external {
         balances[landTokenId][address(wood)] += 10000 ether;
@@ -191,7 +188,7 @@ contract Lands is ERC721, Ownable {
     }
     function spendCommodities(uint256 landTokenId,
         uint256[5] memory amounts
-        ) external onlyItems{
+        ) public onlyItems{
             // require(amounts.length == 5, "Length does not match");
             for (uint i = 0; i < 5; i++) {
                 balances[landTokenId][convertIndexToAddress(i)] -= amounts[i];
@@ -258,6 +255,10 @@ contract Lands is ERC721, Ownable {
         return tokenIdLand[tokenId];
     }
 
+    function getPrice() view public returns (uint256) {
+        return defaultLandPrice;
+    }
+
 
     function getAssetsBal(uint256 tokenId) view public returns (uint256[5] memory) {
         uint256[5] memory balancesArray;
@@ -289,7 +290,7 @@ contract Lands is ERC721, Ownable {
                     abi.encodePacked(    
                         StringUtils.toString(tokenIdLand[_tokenId].coordinateX) ,
                         StringUtils.toString(tokenIdLand[_tokenId].coordinateY),
-                        StringUtils.toString(tokenIdLand[_tokenId].level) ,
+                        // StringUtils.toString(tokenIdLand[_tokenId].level) ,
                         currentBaseURI
                         // ".json"
                     )
