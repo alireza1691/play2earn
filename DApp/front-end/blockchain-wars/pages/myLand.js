@@ -22,6 +22,7 @@ import Town from "../Blockchain/Town.json";
 import Army from "../Blockchain/Army.json";
 import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
+import { Sepolia, Linea} from "@thirdweb-dev/chains"
 
 const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
@@ -192,7 +193,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
             </div>
           </div>
         )}
-        {visibleConfirmation == true ? (
+        {visibleConfirmation == true && (
           <div className="popUpConfirmation">
             <div
               style={{
@@ -224,8 +225,6 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
               )}
             </div>
           </div>
-        ) : (
-          ""
         )}
         {isLandSelected && (
           <div className="overlay">
@@ -266,7 +265,6 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           <div className="listItemColumn">
                             <h2 className="defaultH2">Land</h2>
                             <p>Token ID: {land.coordinate}</p>
-                            <p>Level: 1</p>
                             <Button
                               variant="primary"
                               onClick={() => setSelectedLand(land)}
@@ -317,28 +315,36 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <div style={{ display: "block", textAlign: "center" }}>
-                      <h4 className="defaultH4">Not land found.</h4>
-                      <h4 className="defaultH4">
-                        To participate in game you need a land.
-                      </h4>
-                      <h4 className="defaultH4">
-                        <span
-                          onClick={() => {
-                            router.push("/lands");
-                          }}
-                          style={{
-                            textDecoration: "underLine",
-                            cursor: "pointer",
-                            color: "white",
-                          }}
-                        >
-                          Explore
-                        </span>{" "}
-                        and mint your land.
-                      </h4>
-                      <h4 className="defaultH4" style={{ marginTop: "2rem" }}>
-                        If you have any land, connect your wallet.
-                      </h4>
+                      {address == undefined ?(
+                        <h4 className="defaultH4">Please <span 
+                        style={{"textDecoration":"underLine","color":"white","fontWeight":"bold",cursor:"pointer"}}
+                        onClick={() =>
+                          connectWithMetamask({
+                            chainId: Sepolia.chainId,
+                          })}>connect</span> your wallet.</h4>
+                      ):(
+                        <>
+                        <h4 className="defaultH4">Not land found.</h4>
+                        <h4 className="defaultH4">
+                          To participate in game you need a land.
+                        </h4>
+                        <h4 className="defaultH4">
+                          <span
+                            onClick={() => {
+                              router.push("/lands");
+                            }}
+                            style={{
+                              textDecoration: "underLine",
+                              cursor: "pointer",
+                              color: "white",
+                            }}
+                          >
+                            Explore
+                          </span>{" "}
+                          and mint your land.
+                        </h4>
+                        </>
+                      )}
                     </div>
                   </Col>
                 </Row>

@@ -3,6 +3,7 @@
   --buttonBlue: #107ec3;
   --buttonBlueHover:#3998d3;
   --titleGradient: linear-gradient(to bottom,#bfa3da, #84309c, #c735b0);
+  --darkBlue: #042032;
 
 }
 html,
@@ -39,8 +40,8 @@ body {
   padding: 0.2rem;
   transform:
   perspective(600px)
-  rotateY(0deg) scale(1.1)
-  rotateX(40deg);
+  rotateY(0deg) scale(1.2)
+  rotateX(30deg);
   transition: 0.6s ease all;
   background-color: khaki;
   border-radius: 10px;
@@ -55,7 +56,7 @@ body {
   transform:
   perspective(600px)
   rotateY(0deg) scale(1.1)
-  rotateX(40deg);
+  rotateX(25deg) rotateZ(10deg);
   transition: 0.6s ease all;
   background-color: khaki;
   border-radius: 10px;
@@ -73,7 +74,7 @@ body {
   height: 99%;
   transition: all 0.3s ease-in-out;
   margin-bottom: 7%;
-  box-shadow: 0 0px 0.2rem rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0px 0.2rem 0.01rem rgba(0, 0, 0, 0.9);
   position: relative;
   cursor: pointer;
 
@@ -86,6 +87,11 @@ body {
 }
 .item img:hover{
   opacity: 0.7;
+}
+.custom-tooltip .tooltip-inner{
+  background-color: rgb(197, 217, 234);
+  box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+  height: 30px !important;
 }
 
 .clickableH4 {
@@ -450,6 +456,9 @@ font-size: 0.9rem;
   height: 10rem !important;
   width: 8rem !important;
 }
+.overlay .card-body{
+  /* padding: 0px !important; */
+}
 @media (max-width: 767px) {
   .balanceHeader {
     /* display: block; */
@@ -485,15 +494,11 @@ font-size: 0.9rem;
     display: block;
   }
 
-  /* .commodityBalance {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-  } */
-
-  /* .commodityBalance p {
-    text-align: center !important;
-  } */
+  .defaultP {
+    font-size: 0.45rem;
+    margin-top: 15%;
+    font-weight: 500;
+  }
 
   .listItemInfo img{
     height: 120px;
@@ -501,6 +506,49 @@ font-size: 0.9rem;
     left: 0;
     justify-self: center;
   }
+  .viewGrid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-gap: 1px;
+    width: 20rem !important;
+    height: 20rem !important;
+    padding: 0.2rem;
+    transform:
+    perspective(600px)
+    rotateY(0deg) scale(1)
+    rotateX(10deg);
+    transition: 0.6s ease all;
+    background-color: khaki;
+    border-radius: 10px;
+  }
+  
+.item {
+  height: fit-content;
+  background-color: greenyellow;
+  border-radius: 3px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0px 0.2rem 0.02rem rgba(0, 0, 0, 0.5);
+}
+.landGrid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  /* grid-gap: 2px; */
+  width: 17rem;
+  height: 17rem;
+  padding: 0.2rem;
+  transform:
+  perspective(300px)
+  rotateY(0deg) scale(1)
+  rotateX(5deg);
+  transition: 0.6s ease all;
+  background-color: khaki;
+  border-radius: 10px;
+}
+.overlay .card {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
 }
 
 
@@ -522,4 +570,33 @@ font-size: 0.9rem;
     min-width: 160px;
     background-color: rgba(255, 255, 255, 0.3);
   }
+
+  .viewGrid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-gap: 1px;
+    width: 25rem !important;
+    height: 25rem !important;
+    padding: 0.2rem;
+    transform:
+    perspective(600px)
+    rotateY(0deg) scale(1.1)
+    rotateX(20deg) rotateZ(-10deg);
+    transition: 0.6s ease all;
+    background-color: khaki;
+    border-radius: 10px;
+  }
+  
+.item {
+  height: fit-content;
+  background-color: greenyellow;
+  border-radius: 3px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0px 0.2rem 0.02rem rgba(0, 0, 0, 0.5);
+}
+.overlay .card {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
 }
