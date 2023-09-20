@@ -16,7 +16,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 
 
-contract Army is Ownable{
+contract Bararcks is Ownable{
 
     //  ******************************************************************************
     //  ******************************************************************************

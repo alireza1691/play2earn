@@ -3,6 +3,8 @@
   --buttonBlue: #107ec3;
   --buttonBlueHover:#3998d3;
   --titleGradient: linear-gradient(to bottom,#bfa3da, #84309c, #c735b0);
+  --blueGradient: linear-gradient(to bottom,#b8bfea, #8996de, #6476da); 
+  --lightTransaprent: rgba(255, 255, 255, 0.3);
   --darkBlue: #042032;
 
 }
@@ -179,13 +181,13 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .defaultH5{
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: rgb(255, 255, 255);
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .defaultH4{
   font-size: 0.9rem;
-  color: rgb(218, 218, 218);
+  color: white;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 .defaultH3{
@@ -256,7 +258,7 @@ body {
   transform: scale(1.1) 
 }
 .defaultCard {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--lightTransaprent);
   max-width: 12rem;
   margin-bottom: 5rem;
   /* color: white; */
@@ -277,7 +279,7 @@ body {
 .myLandBox {
   display: flex;
   padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--lightTransaprent);
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.05);
   min-height: 15rem;
@@ -324,20 +326,23 @@ body {
   margin-right: 10px;
   /* style={{"width":"15px","height":"15px","marginRight":"10px" */
 }
+.weaponIcon{
+  width: 25px;
+  height: 25px;
+}
 .toolTipPopup{
   /* background-color: white !important;
   color: white !important;
   font-weight: lighter; */
 }
 
-.popUpConfirmation{
+/* .popUpConfirmation{
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgb(255, 255, 255);
   padding: 20px;
-  /* border: 1px solid #ccc; */
   opacity: 0.9;
   transition: opacity 0.3s ease;
   z-index: 998;
@@ -345,18 +350,72 @@ body {
   width: 160px;
   border-radius: 0.5rem;
   box-shadow:0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.2);
+} */
+.popUpConfirmation{
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 150px;
+    padding: 1rem;
+    text-align: center;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0.5rem 0.05rem rgba(0, 0, 0, 0.3);
+    /* border: 2px solid white; */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+
 }
 
-.transactionRejectWindow {
+.transactionResultWindow {
+  /* background-color: rgba(255, 255, 255, 0.95); */
   background-color: white;
-  width: 300px;
-  padding: 1rem;
+  width: 320px;
+  padding: 0.5rem;
   text-align: center;
   border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem 0.05rem rgba(0, 0, 0, 0.3);
+  /* border: 2px solid white; */
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
-.transactionRejectWindow p {
-  font-size: 0.85rem;
+.transactionResultWindow p {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 0.75rem;
   color: rgb(62, 62, 62);
+}
+.transactionResultWindow h4 {
+  margin-top: 0.5rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 0.9rem;
+  color: rgb(13, 3, 37);
+}
+.closeButton{
+  padding: 0.2rem;
+  margin-left: auto;
+}
+.closeButton:hover {
+  background-color: rgb(226, 231, 244);
+}
+
+.errorContainer {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: rgb(226, 231, 244);
+  height: 100px; /* Adjust the height as per your requirement */
+  overflow-y: scroll;
+  padding: 0.3rem;
+  border: 1px solid rgb(189, 196, 214);
+  border-radius: 0.3rem;
+  width: 100%;
+}
+.errorContainer p {
+  padding: 1rem;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.closeButtonContainer{
+  display: flex;
+  width: 300px;
+  position: absolute;
+  /* margin-bottom: auto; */
 }
 
 .listItemColumn {
@@ -422,7 +481,7 @@ font-size: 0.9rem;
   height: 100%; 
   width: 100% !important;
   min-width: 200px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--lightTransaprent);
 }
 .buildingCard p{
   font-size: 0.8rem;
@@ -459,6 +518,23 @@ font-size: 0.9rem;
 .overlay .card-body{
   /* padding: 0px !important; */
 }
+.attackContainder {
+  display: flex;
+  min-height: 200px;
+  width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 1rem;
+}
+.selectArmyColumn{
+  display: block;
+  background-color: var(--lightTransaprent);
+  width: 50%;
+  height: fit-content;
+  min-height: 200px;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
 @media (max-width: 767px) {
   .balanceHeader {
     /* display: block; */
@@ -568,7 +644,7 @@ font-size: 0.9rem;
     height: 100%; 
     width: 100%;
     min-width: 160px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: var(--lightTransaprent);
   }
 
   .viewGrid {

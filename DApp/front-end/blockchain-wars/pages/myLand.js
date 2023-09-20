@@ -12,19 +12,16 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 import CloseButton from "react-bootstrap/CloseButton";
-import {
-  landsSepolia,
-  townSepolia,
-  armySepolia,
-} from "../Blockchain/Addresses";
+import { lands, town, barracks } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/Lands.json";
 import Town from "../Blockchain/Town.json";
-import Army from "../Blockchain/Army.json";
+import Barracks from "../Blockchain/Barracks.json";
 import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
-import { Sepolia, Linea} from "@thirdweb-dev/chains"
+import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
+import { useSDK } from "@thirdweb-dev/react";
 
-const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
+const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
@@ -40,14 +37,43 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
     useState();
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [error, setError] = useState();
 
+  const sdk = useSDK();
   const router = useRouter();
   const address = useAddress();
   const signer = useSigner();
   const connectWithMetamask = useMetamask();
 
+  const validChainId = Sepolia.chainId;
+
+  const handleConnectWithMetamask = async () => {
+    try {
+      await connectWithMetamask({
+        chainId: validChainId,
+      });
+      // Connection successful
+    } catch (error) {
+      console.log("Error connecting with MetaMask:", error);
+      // Handle the error gracefully without showing it on the screen
+    }
+  };
+  const handleChangeChainId = async () => {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: ethers.utils.hexValue(validChainId) }],
+      });
+      // Chain ID change request successful
+    } catch (error) {
+      console.log(error);
+      // Handle error
+    }
+  };
+
   const handleClose = () => {
     setIsTransactionRejected(false);
+    setError();
   };
 
   const handleOpenWindow = (item) => {
@@ -61,56 +87,85 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   };
 
   const mintBuilding = async (buildingIndex) => {
-    try {
-      const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
-      await TownInstance.build(selectedLand.coordinate, buildingIndex);
-      setVisibleConfirmation(true);
-    } catch (error) {
-      console.log(error);
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        const TownInstance = new ethers.Contract(town, Town.abi, signer);
+        await TownInstance.build(selectedLand.coordinate, buildingIndex);
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
     }
   };
   const upgradeBarracks = async () => {
-    try {
-      const army = new ethers.Contract(armySepolia, Army.abi, signer);
-      await army.buildBarracks(selectedLand.coordinate);
-      setVisibleConfirmation(true);
-    } catch (error) {
-      setIsTransactionRejected(true);
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        const army = new ethers.Contract(barracks, Barracks.abi, signer);
+        await army.buildBarracks(selectedLand.coordinate);
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
     }
   };
   const claimRev = async (buildingTokenId) => {
-    try {
-      const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
-      await TownInstance.claimRevenue(buildingTokenId);
-      setVisibleConfirmation(true);
-    } catch (error) {
-      setIsTransactionRejected(true);
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        const TownInstance = new ethers.Contract(town, Town.abi, signer);
+        await TownInstance.claimRevenue(buildingTokenId);
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
     }
   };
 
   const upgradeBuilding = async (buildingTokenId) => {
-    try {
-      const TownInstance = new ethers.Contract(townSepolia, Town.abi, signer);
-      await TownInstance.upgrade(buildingTokenId, selectedLand.coordinate);
-      setVisibleConfirmation(true);
-    } catch (error) {
-      setIsTransactionRejected(true);
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        const TownInstance = new ethers.Contract(town, Town.abi, signer);
+        await TownInstance.upgrade(buildingTokenId, selectedLand.coordinate);
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
     }
   };
 
   const recruit = async (typeIndex) => {
-    try {
-      console.log(typeIndex);
-      console.log("Input value:", inputValue);
-      const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
-      const goldBal = await lands.getAssetsBal(selectedLand.coordinate);
-      console.log(goldBal.toString());
-      const army = new ethers.Contract(armySepolia, Army.abi, signer);
-      await army.recruit(selectedLand.coordinate, typeIndex, inputValue);
-      setVisibleConfirmation(true);
-    } catch (error) {
-      console.log(error);
-      setIsTransactionRejected(true);
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId == validChainId) {
+      try {
+        console.log(typeIndex);
+        console.log("Input value:", inputValue);
+        const landsInst = new ethers.Contract(lands, Lands.abi, signer);
+        const goldBal = await landsInst.getAssetsBal(selectedLand.coordinate);
+        console.log(goldBal.toString());
+        const army = new ethers.Contract(barracks, Barracks.abi, signer);
+        await army.recruit(selectedLand.coordinate, typeIndex, inputValue);
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
+    } else {
+      await handleChangeChainId();
     }
   };
 
@@ -118,9 +173,7 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
         setConfirmed(true);
-        // setVisibleConfirmation(false);
       }, 6000);
-      // return () => clearTimeout(timeout)
     }
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
@@ -136,12 +189,12 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
       if (signer && address && selectedLand !== undefined && provider) {
         console.log("Useeffect called");
 
-        const town = new ethers.Contract(townSepolia, Town.abi, provider);
-        const army = new ethers.Contract(armySepolia, Army.abi, provider);
-        const ownedBuildings = await town.landBuildings(
+        const townInst = new ethers.Contract(town, Town.abi, provider);
+        const army = new ethers.Contract(barracks, Barracks.abi, provider);
+        const ownedBuildings = await townInst.landBuildings(
           selectedLand.coordinate
         );
-        const existedBuildings = await town.getBuildings();
+        const existedBuildings = await townInst.getBuildings();
         setBuildings(existedBuildings);
         const existedWarriors = await army.getTypes();
         const landArmy = await army.getArmy(selectedLand.coordinate);
@@ -149,15 +202,17 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const requiredComs = await army.getRequiredCommodities();
         setExistedWarriors(existedWarriors);
         setArmy(landArmy);
-        console.log("Army:",landArmy);
+        console.log("Army:", landArmy);
         setBarracksLevel(level);
         setRequiredBarracksCommodities(requiredComs);
         console.log("Existed warriors:", existedWarriors);
         console.log("Current existed army:", landArmy);
         let ownedBuildingsArray = [];
         for (let index = 0; index < ownedBuildings.length; index++) {
-          const status = await town.getStatus(ownedBuildings[index]);
-          const revenue = await town.getCurrentRevenue(ownedBuildings[index]);
+          const status = await townInst.getStatus(ownedBuildings[index]);
+          const revenue = await townInst.getCurrentRevenue(
+            ownedBuildings[index]
+          );
           ownedBuildingsArray.push({
             imageURL: existedBuildings[index].imageURL,
             name: existedBuildings[index].buildingName,
@@ -186,45 +241,58 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
       <div className="scrollableScreen">
         {isTransactionRejected && (
           <div className="overlay">
-            <div className="transactionRejectWindow">
-              <p>Transaction Rejected</p>
+            <div className="transactionResultWindow">
+              <div className="closeButtonContainer">
+                <CloseButton
+                  className="closeButton"
+                  onClick={handleClose}
+                ></CloseButton>
+              </div>
+              <h4>Transaction Rejected or failed</h4>
+              <div className="errorContainer">
+                {error !== undefined && <p>{error.message}</p>}
+              </div>
               <p>Please try again or contact support.</p>
-              <button onClick={handleClose}>Close</button>
             </div>
           </div>
         )}
         {visibleConfirmation == true && (
-          <div className="popUpConfirmation">
-            <div
-              style={{
-                display: "block",
-                marginTop: "1%",
-                height: "200px",
-                paddingTop: "15%",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              {confirmed == false ? (
-                <>
-                  <h4 style={{"color":"black"}} className="defaultH4">Confirming...</h4>
+          <>
+            {confirmed == false ? (
+              <div
+                className="overlay"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <div className="popUpConfirmation">
+                  <h4 style={{ color: "white" }} className="defaultH4">
+                    Confirming...
+                  </h4>
 
                   <Spinner
                     animation="border"
                     role="status"
-                    style={{ textAlign: "center", color: "rgb(73, 90, 246)" }}
+                    style={{ color: "white" }}
                   >
-                    <span className="visually-hidden">Loading...</span>
+                    <span
+                      style={{ color: "white" }}
+                      className="visually-hidden"
+                    >
+                      Loading...
+                    </span>
                   </Spinner>
-                </>
-              ) : (
-                <>
-                  <h4 style={{"color":"black"}} className="defaultH4">Confirmed.</h4>
-                  <h4 style={{"color":"black"}} className="defaultH4">Please refresh the page.</h4>
-                </>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
+            ) : (
+              <div className="overlay">
+                <div className="transactionResultWindow">
+                  <h4>Confirmed &#x2713;</h4>
+                  <p>
+                    To update your account you may need to refresh the page.
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         )}
         {isLandSelected && (
           <div className="overlay">
@@ -315,34 +383,43 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <div style={{ display: "block", textAlign: "center" }}>
-                      {address == undefined ?(
-                        <h4 className="defaultH4">Please <span 
-                        style={{"textDecoration":"underLine","color":"white","fontWeight":"bold",cursor:"pointer"}}
-                        onClick={() =>
-                          connectWithMetamask({
-                            chainId: Sepolia.chainId,
-                          })}>connect</span> your wallet.</h4>
-                      ):(
-                        <>
-                        <h4 className="defaultH4">Not land found.</h4>
+                      {address == undefined ? (
                         <h4 className="defaultH4">
-                          To participate in game you need a land.
-                        </h4>
-                        <h4 className="defaultH4">
+                          Please{" "}
                           <span
-                            onClick={() => {
-                              router.push("/lands");
-                            }}
                             style={{
                               textDecoration: "underLine",
-                              cursor: "pointer",
                               color: "white",
+                              fontWeight: "bold",
+                              cursor: "pointer",
                             }}
+                            onClick={() => handleConnectWithMetamask()}
                           >
-                            Explore
+                            connect
                           </span>{" "}
-                          and mint your land.
+                          your wallet.
                         </h4>
+                      ) : (
+                        <>
+                          <h4 className="defaultH4">Not land found.</h4>
+                          <h4 className="defaultH4">
+                            To participate in game you need a land.
+                          </h4>
+                          <h4 className="defaultH4">
+                            <span
+                              onClick={() => {
+                                router.push("/map");
+                              }}
+                              style={{
+                                textDecoration: "underLine",
+                                cursor: "pointer",
+                                color: "white",
+                              }}
+                            >
+                              Explore
+                            </span>{" "}
+                            and mint your land.
+                          </h4>
                         </>
                       )}
                     </div>
@@ -473,13 +550,19 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         </Button>
                       </div>
                       <div className="landBoxColumn">
-                        {Array.isArray(existedWarriors) && existedWarriors.length >0 && Array.isArray(army) && army.length > 0 &&
-                        existedWarriors.map((warrior, key) => (
-                          <h5 className="defaultH5" key={key}> {warrior.name} : {army[0][key].toString()}</h5>
-                        ))}
-                        {existedWarriors == undefined && army == undefined && 
-                        <h5 className="defaultH5"> Loading army...</h5>
-                        }
+                        {Array.isArray(existedWarriors) &&
+                          existedWarriors.length > 0 &&
+                          Array.isArray(army) &&
+                          army.length > 0 &&
+                          existedWarriors.map((warrior, key) => (
+                            <h5 className="defaultH5" key={key}>
+                              {" "}
+                              {warrior.name} : {army[0][key].toString()}
+                            </h5>
+                          ))}
+                        {existedWarriors == undefined && army == undefined && (
+                          <h5 className="defaultH5"> Loading army...</h5>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -916,4 +999,4 @@ const lands = ({ provider, landImgUrl, ownedLands, landObj }) => {
   );
 };
 
-export default lands;
+export default myLand;

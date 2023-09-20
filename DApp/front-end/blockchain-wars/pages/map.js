@@ -7,12 +7,12 @@ import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
 import {
-  landsSepolia,
-  armySepolia,
-  townSepolia,
+  lands,
+  barracks,
+  town,
 } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/Lands.json";
-import Army from "../Blockchain/Army.json";
+import Barracks from "../Blockchain/Barracks.json";
 import Town from "../Blockchain/Town.json";
 import { Contract, ethers } from "ethers";
 import {
@@ -26,12 +26,13 @@ import {
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
 import CloseButton from "react-bootstrap/CloseButton";
-import { Sepolia, Linea } from "@thirdweb-dev/chains";
+import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useRouter } from "next/router";
+import { useSDK } from "@thirdweb-dev/react";
 
 const metamaskConfig = metamaskWallet();
 
-const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
+const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
   const [viewLands, setViewLands] = useState();
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -41,10 +42,26 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
   const [confirmed, setConfirmed] = useState(false);
   const [landPrice, setLandPrice] = useState();
   const [landBal, setLandBal] = useState()
+  const [error, setError] = useState()
 
   const connectWithMetamask = useMetamask();
-  const router = useRouter();
 
+  const handleConnectWithMetamask = async () => {
+    try {
+      await connectWithMetamask({
+        chainId: validChainId,
+      });
+      // Connection successful
+    } catch (error) {
+      console.log("Error connecting with MetaMask:", error);
+      // Handle the error gracefully without showing it on the screen
+    }
+  };
+
+  const validChainId = LineaTestnet.chainId;
+
+  const router = useRouter();
+  const sdk = useSDK();
   const connect = useConnect();
   const signer = useSigner();
   const address = useAddress();
@@ -58,7 +75,7 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
     // const army = new ethers.Contract(armySepolia, Army.abi, signer)
     // const armyBalanec = await army.getArmy()
     if (land.isMinted == true && land.isYours == false) {
-      const landInst = new ethers.Contract(landsSepolia, Lands.abi, provider);
+      const landInst = new ethers.Contract(map, Lands.abi, provider);
       const landBalance = await landInst.getAssetsBal(land.tokenId);
       const balObj = {stoneBal : ethers.utils.formatEther(landBalance[0]),
       woodBal : ethers.utils.formatEther(landBalance[1]),
@@ -85,12 +102,17 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
 
   const mintLand = async () => {
     try {
-      const lands = new ethers.Contract(landsSepolia, Lands.abi, signer);
+      const chainId = await sdk.wallet.getChainId();
+      if (chainId !== validChainId) {
+        handleConnectWithMetamask()
+      }
+      const lands = new ethers.Contract(lands, Lands.abi, signer);
       await lands.mintLand(selectedLand.x, selectedLand.y, {
         value: landPrice,
       });
       setVisibleConfirmation(true);
     } catch (error) {
+      setError(error)
       setIsLandSelected(false);
       setIsTransactionRejected(true);
     }
@@ -173,8 +195,8 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-      const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
-      const price = await lands.getPrice();
+      const landsInst = new ethers.Contract(lands, Lands.abi, provider);
+      const price = await landsInst.getPrice();
       setLandPrice(price);
     };
     fetchData();
@@ -183,44 +205,43 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
   return (
     <>
       <div className="scrollableScreen">
-        {visibleConfirmation == true && (
-          <div className="popUpConfirmation">
-            <div
-              style={{
-                display: "block",
-                marginTop: "1%",
-                height: "200px",
-                paddingTop: "15%",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              {confirmed == false ? (
-                <>
-                  <h4 style={{ color: "black" }} className="defaultH4">
+      {visibleConfirmation == true && (
+          <>
+            {confirmed == false ? (
+              <div
+                className="overlay"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <div className="popUpConfirmation">
+                  <h4 style={{ color: "white" }} className="defaultH4">
                     Confirming...
                   </h4>
 
                   <Spinner
                     animation="border"
                     role="status"
-                    style={{ textAlign: "center", color: "rgb(73, 90, 246)" }}
+                    style={{ color: "white" }}
                   >
-                    <span className="visually-hidden">Loading...</span>
+                    <span
+                      style={{ color: "white" }}
+                      className="visually-hidden"
+                    >
+                      Loading...
+                    </span>
                   </Spinner>
-                </>
-              ) : (
-                <>
-                  <h4 style={{ color: "black" }} className="defaultH4">
-                    Confirmed.
-                  </h4>
-                  <h4 style={{ color: "black" }} className="defaultH4">
-                    Please refresh the page.
-                  </h4>
-                </>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
+            ) : (
+              <div className="overlay">
+                <div className="transactionResultWindow">
+                  <h4>Confirmed &#x2713;</h4>
+                  <p>
+                    To update your account you may need to refresh the page.
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         )}
         {!address && closePopUp == false && (
           <div className="overlay">
@@ -258,9 +279,7 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
                       cursor: "pointer",
                     }}
                     onClick={() =>
-                      connectWithMetamask({
-                        chainId: Sepolia.chainId,
-                      })
+                      handleConnectWithMetamask()
                     }
                   >
                     Connect
@@ -268,33 +287,20 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
                   your wallet
                 </Card.Text>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  {/* <Button
-                    variant="outline-secondary"
-                    onClick={handleClosePopUp}
-                    size="sm"
-                  >
-                    Connect
-                  </Button> */}
                 </div>
               </Card.Body>
             </Card>
           </div>
         )}
-        {isTransactionRejected && (
+       {isTransactionRejected && (
           <div className="overlay">
-            <div className="transactionRejectWindow">
-              <p>Transaction rejected or failed</p>
+            <div className="transactionResultWindow">
+              <div className="closeButtonContainer"><CloseButton className="closeButton" onClick={handleClose}></CloseButton></div>
+              <h4>Transaction Rejected or failed</h4>
+              <div className="errorContainer">
+              {error !== undefined && <p>{error.message}</p>}
+              </div>
               <p>Please try again or contact support.</p>
-              <Button
-                variant="outline-secondary"
-                onClick={handleClose}
-                size="sm"
-                style={{ cursor: "pointer" }}
-              >
-                Close
-              </Button>
-
-              {/* <button onClick={handleClose}>Close</button> */}
             </div>
           </div>
         )}
@@ -394,9 +400,7 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
                         signer
                           ? mintLand
                           : () =>
-                              connectWithMetamask({
-                                chainId: Sepolia.chainId,
-                              })
+                          handleConnectWithMetamask()
                       }
                       style={{ marginRight: "20px" }}
                     >
@@ -438,7 +442,7 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
           </Row>
           <Row>
             <Col>
-              {viewLands == undefined && mintedLands.length > 0 ? (
+              {viewLands == undefined && Array.isArray(mintedLands) && mintedLands.length >= 0 ? (
                 <>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div className="viewGrid">
@@ -461,7 +465,7 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
               ) : (
                 <>
                   {Array.isArray(mintedLands) &&
-                  mintedLands.length > 0 &&
+                  mintedLands.length >= 0 &&
                   Array.isArray(viewLands) &&
                   viewLands.length > 0 ? (
                     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -540,4 +544,4 @@ const lands = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
   );
 };
 
-export default lands;
+export default map;

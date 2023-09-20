@@ -9,10 +9,12 @@ import {
   Sepolia,
   Ethereum,
   Arbitrum,
+  Linea,
+  LineaTestnet
 } from "@thirdweb-dev/chains";
 import TestABI from "../Blockchain/Test.json";
 import { useEffect, useState } from "react";
-import { landsSepolia } from "../Blockchain/Addresses";
+import {lands } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/Lands.json";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -31,17 +33,21 @@ require("dotenv").config();
 
 function MyApp({ Component, pageProps }) {
   const apiKey = process.env.SEPOLIA_API_KEY;
+  // const apiKey = process.env.LINEA_API_KEY;
   const infuraApiKey = process.env.INFURA_API_KEY;
 
   const provider = new ethers.providers.JsonRpcProvider(
     `https://sepolia.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
   );
+  // const provider = new ethers.providers.JsonRpcProvider(
+  //   `https://linea-goerli.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
+  // );
 
   const [address, setAddress] = useState();
   const [landImgUrl, setLandImgUrl] = useState();
   const [ownedLands, setOwnedLands] = useState();
   const [landObj, setLandObj] = useState([]);
-  const [mintedLands, setMintedLands] = useState([]);
+  const [mintedLands, setMintedLands] = useState();
   const [response, setResponse] = useState();
 
   const convertAddress = (input) => {
@@ -90,7 +96,8 @@ function MyApp({ Component, pageProps }) {
     let mintedLands = [];
     try {
       const response = await axios.get(
-        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&apikey=${apiKey}`
+        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${lands}&apikey=${apiKey}`
+        // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
       );
       console.log(response);
       setResponse(response);
@@ -132,12 +139,12 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const lands = new ethers.Contract(landsSepolia, Lands.abi, provider);
-      const imgURL = await lands.URI();
+      const landsInst = new ethers.Contract(lands, Lands.abi, provider);
+      const imgURL = await landsInst.URI();
       setLandImgUrl(imgURL);
       if (address) {
         // dataLoad()
-        const landBalance = await lands.balanceOf(address);
+        const landBalance = await landsInst.balanceOf(address);
         setOwnedLands(landBalance);
         // if (landBalance > 0) {
           console.log(`User owned ${landBalance.toString()} land`);
@@ -146,7 +153,7 @@ function MyApp({ Component, pageProps }) {
           try {
             const response = await axios.get(
               // `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
-              `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&apikey=${apiKey}`
+              `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${lands}&apikey=${apiKey}`
             );
             console.log("Fetched events");
             console.log(response);
@@ -159,7 +166,7 @@ function MyApp({ Component, pageProps }) {
                 topics.length === 4 &&
                 topics[2] == convertAddress(address.toLowerCase())
               ) {
-                const commoditiesBalance = await lands.getAssetsBal(
+                const commoditiesBalance = await landsInst.getAssetsBal(
                   parseInt(topics[3], 16)
                 );
 
@@ -219,7 +226,7 @@ function MyApp({ Component, pageProps }) {
       //   activeChain={activeChain}
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
       supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
-      supportedChains={[Sepolia]}
+      supportedChains={[Sepolia, LineaTestnet ]}
       dAppMeta={{
         name: "Blockchain wars",
         description: "Stategic & decentralized play to earn game based on nft",

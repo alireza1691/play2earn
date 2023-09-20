@@ -44,15 +44,10 @@ const Navbar = (
   useEffect(() => {
     const fetchOnchainData = async () => {
       try {
-        // const res = await etherScanApiCall()
-        // console.log("Api called");
-        // setLandsApiResponse(res)
         if (address !== undefined) {
           console.log(address);
           setAddress(address)
         }
-        
-
       } catch (error) {
         console.error(error);
       }
@@ -63,8 +58,6 @@ const Navbar = (
 
   return (
       <MyNav expand="lg" data-bs-theme="dark" bg="transparent" style={{
-        // "boxShadow":"0px 5px 10px #36143f",
-        // "borderBottom":"0.15rem solid #36143f"
         }}>
       <Container fluid>
         <MyNav.Brand href="#" onClick={()=>{router.push('/')}}>Blockchain wars</MyNav.Brand>
@@ -77,8 +70,9 @@ const Navbar = (
           >
              {/* style={{"backgroundColor":"rgba(244, 105, 227, 0.3)","borderRadius":"0.5rem","color":"white"}}  */}
              <Nav.Link href="#action1" onClick={()=>{router.push('/')}}>Home</Nav.Link>
-            <Nav.Link href="#action1" onClick={()=>{router.push('/lands')}}>Explore</Nav.Link>
+            <Nav.Link href="#action1" onClick={()=>{router.push('/map')}}>Explore</Nav.Link>
             <Nav.Link href="#action1" onClick={()=>{router.push('/myLand')}}>My land</Nav.Link>
+            <Nav.Link href="#action1" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
             {/* <Nav.Link href="#action2" onClick={()=>{router.push('/dashboard')}}>Dashboard</Nav.Link>
             <NavDropdown title="More" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">...</NavDropdown.Item>
