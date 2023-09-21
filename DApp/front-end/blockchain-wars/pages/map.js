@@ -32,7 +32,7 @@ import { useSDK } from "@thirdweb-dev/react";
 
 const metamaskConfig = metamaskWallet();
 
-const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
+const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   const [viewLands, setViewLands] = useState();
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -58,7 +58,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
     }
   };
 
-  const validChainId = LineaTestnet.chainId;
+  const validChainId = Sepolia.chainId;
 
   const router = useRouter();
   const sdk = useSDK();
@@ -69,13 +69,18 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
   const handleClose = () => {
     setIsTransactionRejected(false);
   };
+  const handleAttack = () => {
+      setTarget(selectedLand.tokenId)
+      router.push("/attack");
+  }
 
   const handleOpenLandWindow = async (land) => {
     setIsLandSelected(true);
     // const army = new ethers.Contract(armySepolia, Army.abi, signer)
     // const armyBalanec = await army.getArmy()
     if (land.isMinted == true && land.isYours == false) {
-      const landInst = new ethers.Contract(map, Lands.abi, provider);
+      console.log('land already minted');
+      const landInst = new ethers.Contract(lands, Lands.abi, provider);
       const landBalance = await landInst.getAssetsBal(land.tokenId);
       const balObj = {stoneBal : ethers.utils.formatEther(landBalance[0]),
       woodBal : ethers.utils.formatEther(landBalance[1]),
@@ -101,21 +106,24 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
   };
 
   const mintLand = async () => {
-    try {
-      const chainId = await sdk.wallet.getChainId();
-      if (chainId !== validChainId) {
-        handleConnectWithMetamask()
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId == validChainId) {
+      try {
+        const landsInst = new ethers.Contract(lands, Lands.abi, signer);
+        await landsInst.mintLand(selectedLand.x, selectedLand.y, {
+          value: landPrice,
+        });
+        handleCloseLandWindow()
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error)
+        setIsLandSelected(false);
+        setIsTransactionRejected(true);
       }
-      const lands = new ethers.Contract(lands, Lands.abi, signer);
-      await lands.mintLand(selectedLand.x, selectedLand.y, {
-        value: landPrice,
-      });
-      setVisibleConfirmation(true);
-    } catch (error) {
-      setError(error)
-      setIsLandSelected(false);
-      setIsTransactionRejected(true);
+    } else {
+      handleConnectWithMetamask()
     }
+    
   };
 
   const views = () => {
@@ -176,9 +184,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
         lands.push(land);
       }
     }
-    console.log(lands);
     setViewLands(lands);
-    console.log("view set");
   }
   // fillLands(100,100)
   useEffect(() => {
@@ -387,7 +393,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad }) => {
                       <Button
                         style={{ marginRight: "auto" }}
                         variant="outline-primary"
-                        onClick={handleCloseLandWindow}
+                        onClick={handleAttack}
                         size="sm"
                       >
                         Attack

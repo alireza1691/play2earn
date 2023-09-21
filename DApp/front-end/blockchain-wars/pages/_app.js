@@ -49,6 +49,7 @@ function MyApp({ Component, pageProps }) {
   const [landObj, setLandObj] = useState([]);
   const [mintedLands, setMintedLands] = useState();
   const [response, setResponse] = useState();
+  const [target, setTarget] = useState(0)
 
   const convertAddress = (input) => {
     if (input.length > 3) {
@@ -245,7 +246,8 @@ function MyApp({ Component, pageProps }) {
         landObj={landObj}
         mintedLands={mintedLands}
         dataLoad={dataLoad}
-        // connectedAddressLands={connectedAddressLands}
+        target={target}
+        setTarget={setTarget}
       />
     </ThirdwebProvider>
   );

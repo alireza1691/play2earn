@@ -534,6 +534,11 @@ font-size: 0.9rem;
   border-radius: 1rem;
   padding: 1rem;
 }
+.targetInfo {
+  display: block;
+  width: 50%;
+  padding: 1rem;
+}
 
 @media (max-width: 767px) {
   .balanceHeader {
