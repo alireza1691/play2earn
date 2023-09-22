@@ -14,7 +14,7 @@ import {
 } from "@thirdweb-dev/chains";
 import TestABI from "../Blockchain/Test.json";
 import { useEffect, useState } from "react";
-import {lands } from "../Blockchain/Addresses";
+import {barracks, lands, town } from "../Blockchain/Addresses";
 import Lands from "../Blockchain/Lands.json";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -100,6 +100,11 @@ function MyApp({ Component, pageProps }) {
         `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${lands}&apikey=${apiKey}`
         // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
       );
+      const responseTown = await axios.get(
+        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${town}&apikey=${apiKey}`
+        // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
+      );
+      console.log("Barracks res:", responseTown);
       console.log(response);
       setResponse(response);
       events = response.data.result;

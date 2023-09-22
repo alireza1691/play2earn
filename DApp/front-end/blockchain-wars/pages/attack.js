@@ -124,6 +124,9 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
         if (tokenIdOwner == address) {
           setErrorStatus("Target land is yours !!!");
         } else {
+          const barracksInst = new ethers.Contract(barracks, Barracks.abi, provider)
+          const targetArmy = await barracksInst.getArmy(target)
+          console.log("Target army:",targetArmy);
           const bal = await landsInst.getAssetsBal(target);
           const obj = {
             stoneBal: ethers.utils.formatEther(bal[0]),

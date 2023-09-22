@@ -5,6 +5,7 @@ pragma solidity ^0.8.17;
 import "./Lands.sol";
 import "./StringUtils.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
+import { Lands } from "./Lands.sol";
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -17,7 +18,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
 
 
-contract Town is Ownable {
+contract Kingdom is Ownable, Lands {
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
@@ -89,8 +90,7 @@ contract Town is Ownable {
     //    Info ironMine = Info( 100, 100, 100, 0, 25, 8, 80, iron,"Replace this with image url");
     // Info ranchHouse = Info( 250 ether, 50 ether, 0, 0, 100 ether, 10, 100, food,"Replace this with image url");
 
-    constructor(address landsContractAddress)  {
-        lands = Lands(landsContractAddress);
+    constructor(address[5] memory tokenAddresses,address landsContractAddress) Lands(tokenAddresses[0],tokenAddresses[1],tokenAddresses[2],tokenAddresses[3],tokenAddresses[4]) {
         buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o","Stone mine"));
         buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,1,"https://ipfs.io/ipfs/QmU99dxpwMoFAGSoQPLxB6YVAoYSk1iwbDoKj2CuM2pKyB","Lumber mill"));
         buildings.push(Info(100 ether, 100 ether, 100 ether, 0, 25 ether, 2, "Url","Iron mine"));

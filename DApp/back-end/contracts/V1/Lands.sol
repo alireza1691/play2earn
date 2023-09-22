@@ -1,13 +1,118 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { StringUtils } from "./StringUtils.sol";
+
+// import { Town } from "./Town.sol";
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { TransferHelper } from "./TransferHelper.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Town } from "./Town.sol";
-import { Barracks } from "./Barracks.sol";
+
+
+library StringUtils {
+     bytes16 private constant _HEX_SYMBOLS = "0123456789abcdef";
+
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     */
+    function toString(uint256 value) internal pure returns (string memory) {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
+
+        if (value == 0) {
+            return "0";
+        }
+        uint256 temp = value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return string(buffer);
+    }
+
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation.
+     */
+    function toHexString(uint256 value) internal pure returns (string memory) {
+        if (value == 0) {
+            return "0x00";
+        }
+        uint256 temp = value;
+        uint256 length = 0;
+        while (temp != 0) {
+            length++;
+            temp >>= 8;
+        }
+        return toHexString(value, length);
+    }
+
+    /**
+     * @dev Converts a `uint256` to its ASCII `string` hexadecimal representation with fixed length.
+     */
+    function toHexString(
+        uint256 value,
+        uint256 length
+    ) internal pure returns (string memory) {
+        bytes memory buffer = new bytes(2 * length + 2);
+        buffer[0] = "0";
+        buffer[1] = "x";
+        for (uint256 i = 2 * length + 1; i > 1; --i) {
+            buffer[i] = _HEX_SYMBOLS[value & 0xf];
+            value >>= 4;
+        }
+        require(value == 0, "Strings: hex length insufficient");
+        return string(buffer);
+    }
+
+       function concatenate(uint8 x, uint8 y) internal pure returns (uint256) {
+        string memory strX = toString(x);
+        string memory strY = toString(y);
+        string memory concatenated = string(abi.encodePacked(strX, strY));
+        // return concatenated;
+        uint256 concatenatedUint = convertToUint(concatenated);
+        return concatenatedUint;
+    }
+    function convertToUint(string memory str) internal pure returns (uint256) {
+        uint256 result = 0;
+        bytes memory strBytes = bytes(str);
+        
+        for (uint256 i = 0; i < strBytes.length; i++) {
+            uint256 digit = uint256(uint8(strBytes[i])) - 48;
+            result = result * 10 + digit;
+        }
+        
+        return result;
+    }
+
+    function calculateDistanceAndEstimateTime(uint8 coordinate1X, uint8 coordinate1Y, uint8 coordinate2X, uint8 coordinate2Y, uint speed) internal pure returns (uint distance, uint estimatedTime) {
+        // Calculate the Euclidean distance between the two coordinates using the Pythagorean theorem
+        uint deltaX = coordinate2X > coordinate1X ? coordinate2X - coordinate1X : coordinate1X - coordinate2X;
+        uint deltaY = coordinate2Y > coordinate1Y ? coordinate2Y - coordinate1Y : coordinate1Y - coordinate2Y;
+        distance = sqrt(deltaX**2 + deltaY**2);
+
+        // Estimate the time based on the predefined speed (distance / speed)
+        estimatedTime = distance / speed;
+
+        return (distance, estimatedTime);
+    }
+    
+
+    function sqrt(uint x) internal pure returns (uint y) {
+        uint z = (x + 1) / 2;
+        y = x;
+        while (z < y) {
+            y = z;
+            z = (x / z + z) / 2;
+        }
+    }
+
+}
+
 
 
     //  ******************************************************************************
@@ -46,19 +151,8 @@ contract Lands is ERC721, Ownable {
     //  ******************************************************************************
 
 
-    IERC20 stone;
-    IERC20 wood ;
-    IERC20 iron ;
-    IERC20 gold ;
-    IERC20 food ;
-
-    address[] private items;
-    uint256 private transferCost = 3;
     uint256 private constant defaultLandPrice = 20000000 gwei; // Equal 0.02 ether
-
-
     mapping (uint256 => Land) public tokenIdLand;
-    mapping (uint256 => mapping(address => uint256)) private balances;
     mapping (address => uint8) private difficultyCost;
 
 
@@ -80,12 +174,7 @@ contract Lands is ERC721, Ownable {
 
 
 
-    constructor(address _stone, address _wood, address _iron, address _gold, address _food) ERC721("Polygon wars land","PWL"){
-        stone = IERC20(_stone);
-        wood = IERC20(_wood);
-        iron = IERC20(_iron);
-        gold = IERC20(_gold);
-        food = IERC20(_food);
+    constructor() ERC721("Polygon wars land","PWL"){
     }
 
 
@@ -118,28 +207,6 @@ contract Lands is ERC721, Ownable {
         }
         _;
     }
-    modifier isCommodity (address enteredAddress) {
-        require( enteredAddress == address(stone) ||
-        enteredAddress == address(wood) ||
-        enteredAddress == address(iron) ||
-        enteredAddress == address(gold) ||
-        enteredAddress == address(food),
-        "Address is not commodity"
-        );
-        _;
-    }
-    // Making sure if one of added items calls this function.
-    modifier onlyItems() {
-        bool exist = false;
-        for (uint i = 0; i < items.length; i++) {
-            if (msg.sender == items[i]) {
-                exist = true;
-                break;
-            }
-        }
-        require(exist == true, "Address not authorized");
-        _;
-    }
 
 
     //  ******************************************************************************
@@ -160,66 +227,8 @@ contract Lands is ERC721, Ownable {
     }
 
 
-    function testDeposit( uint256 landTokenId) external {
-        balances[landTokenId][address(wood)] += 10000 ether;
-        balances[landTokenId][address(stone)] += 10000 ether;
-        balances[landTokenId][address(iron)] += 10000 ether;
-        balances[landTokenId][address(gold)] += 10000 ether;
-        balances[landTokenId][address(food)] += 10000 ether;
-    }
-
-    function deposit(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
-        require(_ownerOf(landId) != address(0), "Invalid land");
-        TransferHelper.safeTransferFrom(commodityTokenAddress,msg.sender,address(this),amount);
-        // IERC20(commodityTokenAddress).use(msg.sender, amount);
-        balances[landId][commodityTokenAddress] += amount;
-    }
-    function withdraw(address commodityTokenAddress, uint256 amount, uint256 landId) external isCommodity(commodityTokenAddress) landOwner(landId){
-        require(balances[landId][commodityTokenAddress] >= amount, "Insufficient balance");
-        balances[landId][commodityTokenAddress] -= amount;
-        TransferHelper.safeTransfer(commodityTokenAddress, msg.sender, amount);
-        // IERC20(commodityTokenAddress).withdraw(msg.sender, amount);
-    }
-    // function transferCommodities(address[] memory assets, uint256[] memory amounts) external {}
-    function spendAsset(uint256 landTokenId,
-        address assetAddress,
-        uint256 amount
-        ) external onlyItems{
-            balances[landTokenId][assetAddress] -= amount;
-
-    }
-    function spendCommodities(uint256 landTokenId,
-        uint256[5] memory amounts
-        ) public onlyItems{
-            // require(amounts.length == 5, "Length does not match");
-            for (uint i = 0; i < 5; i++) {
-                balances[landTokenId][convertIndexToAddress(i)] -= amounts[i];
-            }
-            // balances[landTokenId][assetAddress] -= amount;
-
-    }
-
-    // Claiming collected amount of an asset
-    function claimAsset(uint256 assetIndex, uint256 amount, uint256 landTokenId) external onlyItems {
-        uint8 difficulty = difficultyCost[convertIndexToAddress(assetIndex)];
-        uint256 netAmount = amount * (100 - difficulty) / 100;
-        balances[landTokenId][convertIndexToAddress(assetIndex)] += netAmount;
-    }
 
 
-    function loot(uint256 attackerLandId, uint256 targetLandId, uint256 lootPercentage) external onlyItems {
-        for (uint i = 0; i < 5; i++) {
-            uint256 lootAmount = balances[targetLandId][convertIndexToAddress(i)] * lootPercentage / 100;
-            balances[targetLandId][convertIndexToAddress(i)] -= lootAmount;
-            balances[attackerLandId][convertIndexToAddress(i)] += lootAmount;
-        }    
-    }
-
-
-    function transferCommodity(uint256 commodityIndex, uint256 amount, uint256 fromId, uint256 toId) external isCommodity(convertIndexToAddress(commodityIndex)) landOwner(fromId){
-        require(getAssetsBal(fromId)[commodityIndex] >= amount, "Insufficient balance");
-        balances[toId][convertIndexToAddress(commodityIndex)] += amount * (100-transferCost) / 100;
-    }
 
 
 
@@ -232,17 +241,7 @@ contract Lands is ERC721, Ownable {
     //  ******************************************************************************
 
 
-    // Add new attachable item to land.
-    function addItem(address newItem)external onlyOwner{
-        items.push(newItem);
-    }
-    // Changing difficulty of commodity extraction. 
-    // Use case of this function is managing tokenomics of commodities.
-    function setDifficulty(uint256 commodityIndex, uint8 newAmount) external onlyOwner{
-        require(commodityIndex < 0, "Invalid index");
-        require(newAmount <= 90 , "Bigger than maximum difficulty");
-        difficultyCost[convertIndexToAddress(commodityIndex)] = newAmount;
-    }
+
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -261,15 +260,6 @@ contract Lands is ERC721, Ownable {
         return defaultLandPrice;
     }
 
-
-    function getAssetsBal(uint256 tokenId) view public returns (uint256[5] memory) {
-        uint256[5] memory balancesArray;
-        for (uint i = 0; i < 5; i++) {
-            uint256 thisIndexBalance = balances[tokenId][convertIndexToAddress(i)];
-            balancesArray[i] = thisIndexBalance;
-        }
-        return balancesArray;
-    }
 
 
     function URI () public view returns (string memory){
@@ -308,30 +298,13 @@ contract Lands is ERC721, Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
 
+    // Claiming collected amount of an asset
+
 
     function _baseURI() internal  view virtual override   returns (string memory) {
         return "https://ipfs.io/ipfs/Qmaz1NiFrfiXS9BckHNySzdmkpq5GTirU2RoTt4Sji8hdm";
     }
 
-
-    function convertIndexToAddress (uint256 commodityIndex) internal view returns(address commodityContractAddress){
-        require(commodityIndex < 5, "Invalid index");
-        if (commodityIndex == 0) {
-            return address(stone);
-        }
-        if (commodityIndex == 1) {
-            return address(wood);
-        }
-        if (commodityIndex == 2) {
-            return address(iron);
-        }
-        if (commodityIndex == 3) {
-            return address(gold);
-        }
-        if (commodityIndex == 4) {
-            return address(food);
-        }
-    } 
 
    
 }
