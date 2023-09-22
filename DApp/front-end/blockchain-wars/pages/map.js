@@ -68,6 +68,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
 
   const handleClose = () => {
     setIsTransactionRejected(false);
+    setError(undefined)
   };
   const handleAttack = () => {
       setTarget(selectedLand.tokenId)

@@ -73,7 +73,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
 
   const handleClose = () => {
     setIsTransactionRejected(false);
-    setError();
+    setError(undefined);
   };
 
   const handleOpenWindow = (item) => {

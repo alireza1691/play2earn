@@ -45,10 +45,12 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   const [confirmed, setConfirmed] = useState(false);
   const [warriorTypes, setWarriorTypes] = useState();
   const [armyAmounts, setArmyAmounts] = useState();
-  const [enteredAmounts, setEnteredAmounts] = useState([]);
+  const [enteredAmounts, setEnteredAmounts] = useState([0,0,0]);
   const [totalEnteredAmount, setTotalEnteredAmount] = useState(0);
   const [disabler, setDisabler] = useState(false);
   const [targetObj, setTargetObj] = useState();
+  const [error, setError] = useState();
+  const [errorStatus, setErrorStatus] = useState();
 
   const connectWithMetamask = useMetamask();
   const router = useRouter();
@@ -78,6 +80,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
 
   const handleClose = () => {
     setIsTransactionRejected(false);
+    setError(undefined);
   };
   const handlSelectLand = async (land) => {
     setSelectedLand(land);
@@ -89,10 +92,11 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   const handleArmyAmount = (index, amount) => {
     const updatedArray = [...enteredAmounts];
     updatedArray[index] = Number(amount);
-    console.log(updatedArray);
+  
 
     let totalAmount = 0;
     setEnteredAmounts(updatedArray);
+    console.log(updatedArray);
     let balLimit = false;
     for (let i = 0; i < updatedArray.length; i++) {
       const bal = Number(armyAmounts[0][i]);
@@ -110,25 +114,60 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
     setDisabler(balLimit);
   };
 
-  const checkTarget = async () =>{
+  const checkTarget = async () => {
+    setErrorStatus();
     const chainId = await sdk.wallet.getChainId();
     if (chainId == validChainId) {
-      const landsInst = new ethers.Contract(lands, Lands.abi, provider)
-      const tokenIdOwner = await landsInst.ownerOf(target)
-      console.log(tokenIdOwner);
-      // const bal = await landsInst.getAssetsBal(target)
+      try {
+        const landsInst = new ethers.Contract(lands, Lands.abi, provider);
+        const tokenIdOwner = await landsInst.ownerOf(target);
+        if (tokenIdOwner == address) {
+          setErrorStatus("Target land is yours !!!");
+        } else {
+          const bal = await landsInst.getAssetsBal(target);
+          const obj = {
+            stoneBal: ethers.utils.formatEther(bal[0]),
+            woodBal: ethers.utils.formatEther(bal[1]),
+            ironBal: ethers.utils.formatEther(bal[2]),
+            goldBal: ethers.utils.formatEther(bal[3]),
+            foodBal: ethers.utils.formatEther(bal[4]),
+          };
+          console.log(bal);
+          setTargetObj(obj);
+        }
+      } catch (error) {
+        if (error.errorArgs[0] == "ERC721: invalid token ID") {
+          setErrorStatus("Land is not minted.");
+          console.log("Land is not minted.");
+        } else {
+          console.log(error.errorArgs);
+          setIsTransactionRejected(true);
+          setError(error);
+        }
+
+        // console.log(error.errorArgs);
+      }
     } else {
       await handleConnectWithMetamask();
     }
-  }
+  };
 
-  const attack = async () => {
-    try {
-      // const barracksInst = new Contract(barracks, Barracks.abi, provider);
-      // await barracksInst.attack()
-      setVisibleConfirmation(true);
-    } catch (error) {
-      setIsTransactionRejected(true);
+  const submitAttack = async () => {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId == validChainId && signer !== undefined) {
+      try {
+        console.log("Attacking...");
+        console.log(enteredAmounts);
+        const barracksInst = new Contract(barracks, Barracks.abi, signer);
+        await barracksInst.attack(enteredAmounts, selectedLand.coordinate, target);
+        setVisibleConfirmation(true);
+      } catch (error) {
+        console.log(error);
+        setError(error)
+        setIsTransactionRejected(true);
+      }
+    } else {
+      await handleConnectWithMetamask();
     }
   };
 
@@ -146,10 +185,13 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-      const barracksInst = new ethers.Contract(barracks, Barracks.abi, provider);
+      const barracksInst = new ethers.Contract(
+        barracks,
+        Barracks.abi,
+        provider
+      );
       const warriorTypes = await barracksInst.getTypes();
       setWarriorTypes(warriorTypes);
-      console.log(target);
     };
     fetchData();
   }, [address, visibleConfirmation, target]);
@@ -216,8 +258,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
 
         <Container>
           <Row>
-            <div className="attackContainder">
-              <div className="selectArmyColumn">
+            <Col className="attackBoxColumn">
                 <h4 className="defaultH4">Land:</h4>
                 <DropdownButton
                   id="dropdown-basic-button"
@@ -272,16 +313,15 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                               handleArmyAmount(key, e.target.value)
                             }
                           />
-                          <h5
+                          <h4
+                            className="defaultH4"
                             style={{
                               fontFamily: "monospace",
-                              fontSize: "0.9rem",
-                              color: "white",
                               padding: "0.5rem",
                             }}
                           >
                             {armyAmounts[0][key].toString()} {warrior.name}
-                          </h5>
+                          </h4>
                         </>
                       ) : (
                         <Form.Control
@@ -305,7 +345,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                     style={{
                       display: "block",
                       marginTop: "1%",
-                      height: "200px",
+                      // height: "200px",
                       paddingTop: "15%",
                       width: "100%",
                       textAlign: "center",
@@ -331,10 +371,12 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                 )}
                 <div style={{ display: "flex", width: "100%" }}>
                   {armyAmounts !== undefined &&
-                  Number(armyAmounts[1]) >= totalEnteredAmount ? (
+                  Number(armyAmounts[1]) >= totalEnteredAmount &&
+                  targetObj !== undefined ? (
                     <Button
                       variant="outline-light"
                       style={{ marginLeft: "auto" }}
+                      onClick={submitAttack}
                     >
                       Attack
                     </Button>
@@ -348,8 +390,11 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                     </Button>
                   )}
                 </div>
-              </div>
-              <div className="targetInfo">
+            </Col>
+            <Col md={{ span: 1, offset: 0 }}>
+            <img className="warImg" src="/War.png"></img>
+            </Col>
+            <Col className="attackBoxColumn">
                 <h4 className="defaultH4">Target:</h4>
                 <Form.Control
                   size="sm"
@@ -360,35 +405,55 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                   onChange={(e) => setTarget(e.target.value)}
                   value={target}
                 />
-                <Button variant="outline-light" style={{ marginLeft: "auto" }} onClick={checkTarget}>
+                <Button
+                  variant="outline-light"
+                  style={{ marginLeft: "auto" }}
+                  onClick={checkTarget}
+                >
                   Check availibility
                 </Button>
                 {targetObj !== undefined && (
-                  <div>
-                    <div className="commodityBalance">
-                      <img src="/Stone.png"></img>
-                      <h6>{landBal.stoneBal}</h6>
+                  <>
+                    <div style={{"marginTop":"1rem"}}>
+                      <div className="commodityBalance">
+                        <img src="/Stone.png"></img>
+                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
+                          {parseFloat(targetObj.stoneBal)}
+                        </h5>
+                      </div>
+                      <div className="commodityBalance">
+                        <img src="/Wood.png"></img>
+                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
+                          {parseFloat(targetObj.woodBal)}
+                        </h5>
+                      </div>
+                      <div className="commodityBalance">
+                        <img src="/Iron.png"></img>
+                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
+                          {parseFloat(targetObj.ironBal)}
+                        </h5>
+                      </div>
+                      <div className="commodityBalance">
+                        <img src="/Gold.png"></img>
+                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
+                          {parseFloat(targetObj.goldBal)}
+                        </h5>
+                      </div>
+                      <div className="commodityBalance">
+                        <img src="/Food.png"></img>
+                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
+                          {parseFloat(targetObj.foodBal)}
+                        </h5>
+                      </div>
                     </div>
-                    <div className="commodityBalance">
-                      <img src="/Wood.png"></img>
-                      <h6>{landBal.woodBal}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                      <img src="/Iron.png"></img>
-                      <h6>{landBal.ironBal}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                      <img src="/Gold.png"></img>
-                      <h6>{landBal.goldBal}</h6>
-                    </div>
-                    <div className="commodityBalance">
-                      <img src="/Food.png"></img>
-                      <h6>{landBal.foodBal}</h6>
-                    </div>
-                  </div>
+                  </>
                 )}
-              </div>
-            </div>
+                {errorStatus !== undefined && (
+                  <h4 style={{ marginTop: "2.5rem" }} className="defaultH4">
+                    {errorStatus}
+                  </h4>
+                )}
+            </Col>
           </Row>
         </Container>
       </div>

@@ -470,7 +470,7 @@ font-size: 0.9rem;
   height: 25px;
   text-align: center;
   width: 100% !important;
-  justify-content: center;
+  justify-content: space-around;
   /* margin-top: 0.5rem; */
 }
 
@@ -518,29 +518,32 @@ font-size: 0.9rem;
 .overlay .card-body{
   /* padding: 0px !important; */
 }
-.attackContainder {
-  display: flex;
-  min-height: 200px;
-  width: 100%;
-  border: 1px solid lightgray;
-  border-radius: 1rem;
-}
-.selectArmyColumn{
+
+.attackBoxColumn{
   display: block;
   background-color: var(--lightTransaprent);
-  width: 50%;
   height: fit-content;
-  min-height: 200px;
+  min-height: 300px;
   border-radius: 1rem;
   padding: 1rem;
+  margin: 1rem;
 }
-.targetInfo {
-  display: block;
-  width: 50%;
-  padding: 1rem;
+.warImg {
+  /* height: 40px; */
+  width: 100%;
+  margin-top: 100px;
+  
 }
 
 @media (max-width: 767px) {
+  .warImg {
+    width: 30%;
+    margin-top: 0px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    
+  }
   .balanceHeader {
     /* display: block; */
     display: flex;
@@ -634,13 +637,14 @@ font-size: 0.9rem;
 
 
 @media (min-width: 768px) and (max-width: 1023px) {
+  .warImg {
+    width: 100%;
+  }
   .buildingCard img {
     height: 160px;
     width: 160px;
     max-width: 200px;
-    /* min-width: 180px; */
     padding: 0px;
-    /* object-fit: cover; */
   }
   .buildingCard {
     display: flex;
