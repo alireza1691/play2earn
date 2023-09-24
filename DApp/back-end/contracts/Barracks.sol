@@ -157,7 +157,7 @@ contract Barracks is Ownable{
             if (balances[targetId][i] > 0) {
                 balances[targetId][i] = (balances[targetId][i]) * (remainedDefenderArmy) / (100) ;
             }
-            if (balances[attackerId][i] > 0) {
+            if (warriorsAmounts[i] > 0) {
                 balances[attackerId][i] += (warriorsAmounts[i]) * (remainedAttackerArmy) / (100);
             }
         }

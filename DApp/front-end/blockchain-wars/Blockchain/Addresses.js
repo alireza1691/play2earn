@@ -8,8 +8,8 @@ export const foodTokenSepolia = "0xA6fC1cbe13E5F3CFF2982B6082BB1C805f946850"
 export const lands = "0x6055279D5e0190d12da5A763735E5fEb235A4c49"
 export const town = "0xAfa6440785A4B0BBDB96580bC88C03A3ae1E6DAc"
 export const barracks = "0x733e338B07064b5CeF211F38226b8B00dE8E2d60"
-export const townV1 = "0xAfa6440785A4B0BBDB96580bC88C03A3ae1E6DAc"
-export const libraryAddress= ""
+export const townV1 = "0xAF53A8750c21106A420A0B9104DC83c34Feb476c"
+export const barracksV1= "0x6801af8978bD942EBF08C879721599a72a437C4c"
 
 // Addresses deployed in linea:
 // export const stoneTokenLinea = "0xB223692473310018eD9Aec48cBAE98f99484a0E4"
