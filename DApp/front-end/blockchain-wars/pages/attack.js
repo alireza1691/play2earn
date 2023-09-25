@@ -7,15 +7,11 @@ import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
 import {
-  landsSepolia,
-  armySepolia,
-  townSepolia,
-  barracks,
-  lands,
+  townV2,
+  landsV2,
 } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/Lands.json";
-import Barracks from "../Blockchain/Barracks.json";
-import Town from "../Blockchain/Town.json";
+import TownV2 from "../Blockchain/TownV2.json";
+import LandsV2 from "../Blockchain/LandsV2.json";
 import { Contract, ethers } from "ethers";
 import {
   useSigner,
@@ -84,8 +80,8 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   };
   const handlSelectLand = async (land) => {
     setSelectedLand(land);
-    const barracksInst = new Contract(barracks, Barracks.abi, provider);
-    const userArmy = await barracksInst.getArmy(land.coordinate);
+    const townInst = new Contract(townV2, TownV2.abi, provider);
+    const userArmy = await townInst.getArmy(land.coordinate);
     setArmyAmounts(userArmy);
     console.log(userArmy);
   };
@@ -119,15 +115,15 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId == validChainId) {
       try {
-        const landsInst = new ethers.Contract(lands, Lands.abi, provider);
+        const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
         const tokenIdOwner = await landsInst.ownerOf(target);
         if (tokenIdOwner == address) {
           setErrorStatus("Target land is yours !!!");
         } else {
-          const barracksInst = new ethers.Contract(barracks, Barracks.abi, provider)
-          const targetArmy = await barracksInst.getArmy(target)
+          const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
+          const targetArmy = await townInst.getArmy(target)
           console.log("Target army:",targetArmy);
-          const bal = await landsInst.getAssetsBal(target);
+          const bal = await townInst.getAssetsBal(target);
           const obj = {
             stoneBal: ethers.utils.formatEther(bal[0]),
             woodBal: ethers.utils.formatEther(bal[1]),
@@ -161,8 +157,8 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
       try {
         console.log("Attacking...");
         console.log(enteredAmounts);
-        const barracksInst = new Contract(barracks, Barracks.abi, signer);
-        await barracksInst.attack(enteredAmounts, selectedLand.coordinate, target);
+        const townInst = new Contract(townV2, TownV2.abi, signer);
+        await townInst.attack(enteredAmounts, selectedLand.coordinate, target);
         setVisibleConfirmation(true);
       } catch (error) {
         console.log(error);
@@ -188,12 +184,12 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-      const barracksInst = new ethers.Contract(
-        barracks,
-        Barracks.abi,
+      const townInst = new ethers.Contract(
+        townV2,
+        TownV2.abi,
         provider
       );
-      const warriorTypes = await barracksInst.getTypes();
+      const warriorTypes = await townInst.getWarriorTypes();
       setWarriorTypes(warriorTypes);
     };
     fetchData();

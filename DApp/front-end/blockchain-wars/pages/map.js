@@ -7,13 +7,11 @@ import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
 import {
-  lands,
-  barracks,
-  town,
+  townV2,
+  landsV2
 } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/Lands.json";
-import Barracks from "../Blockchain/Barracks.json";
-import Town from "../Blockchain/Town.json";
+import LandsV2 from "../Blockchain/LandsV2.json";
+import TownV2 from "../Blockchain/TownV2.json";
 import { Contract, ethers } from "ethers";
 import {
   useSigner,
@@ -81,8 +79,8 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
     // const armyBalanec = await army.getArmy()
     if (land.isMinted == true && land.isYours == false) {
       console.log('land already minted');
-      const landInst = new ethers.Contract(lands, Lands.abi, provider);
-      const landBalance = await landInst.getAssetsBal(land.tokenId);
+      const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
+      const landBalance = await townInst.getAssetsBal(land.tokenId);
       const balObj = {stoneBal : ethers.utils.formatEther(landBalance[0]),
       woodBal : ethers.utils.formatEther(landBalance[1]),
       ironBal : ethers.utils.formatEther(landBalance[2]),
@@ -110,7 +108,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId == validChainId) {
       try {
-        const landsInst = new ethers.Contract(lands, Lands.abi, signer);
+        const landsInst = new ethers.Contract(landsV2, LandsV2.abi, signer);
         await landsInst.mintLand(selectedLand.x, selectedLand.y, {
           value: landPrice,
         });
@@ -202,7 +200,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-      const landsInst = new ethers.Contract(lands, Lands.abi, provider);
+      const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
       const price = await landsInst.getPrice();
       setLandPrice(price);
     };
@@ -220,21 +218,15 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="popUpConfirmation">
-                  <h4 style={{ color: "white" }} className="defaultH4">
+                  <h4 style={{ color: "black" }} className="defaultH4">
                     Confirming...
                   </h4>
 
                   <Spinner
                     animation="border"
                     role="status"
-                    style={{ color: "white" }}
+                    style={{ color: "black" }}
                   >
-                    <span
-                      style={{ color: "white" }}
-                      className="visually-hidden"
-                    >
-                      Loading...
-                    </span>
                   </Spinner>
                 </div>
               </div>

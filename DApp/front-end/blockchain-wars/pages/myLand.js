@@ -12,10 +12,10 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 import CloseButton from "react-bootstrap/CloseButton";
-import { lands, town, barracks } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/Lands.json";
-import Town from "../Blockchain/Town.json";
-import Barracks from "../Blockchain/Barracks.json";
+import { landsV2, townV2, BKTAddress } from "../Blockchain/Addresses";
+import LandsV2 from "../Blockchain/LandsV2.json";
+import TownV2 from "../Blockchain/TownV2.json";
+import BKT from "../Blockchain/BKT.json";
 import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
@@ -24,6 +24,7 @@ import { useSDK } from "@thirdweb-dev/react";
 const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
+  const [enteredAmount, setEnteredAmount] = useState()
   const [selectedItem, setSelectedItem] = useState({});
   const [isFetching, setIsFetching] = useState(true);
   const [buildings, setBuildings] = useState();
@@ -46,6 +47,9 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const connectWithMetamask = useMetamask();
 
   const validChainId = Sepolia.chainId;
+
+  const buildingsImageSources = ["BuildingsIMG/StoneMine.png","BuildingsIMG/LumberMill1.png","BuildingsIMG/IronSmelter.png","BuildingsIMG/SugarFarm.png","BuildingsIMG/StoneMine.png"]
+  const warriorsImageSources = ["Warriors/PersianSpearman.png","Warriors/Swordsman.png","Warriors/Archer.png"]
 
   const handleConnectWithMetamask = async () => {
     try {
@@ -86,13 +90,32 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     setSelectedItem({});
   };
 
+  const deposit = async (isSplitDeposit) => {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        console.log(ethers.utils.parseEther(enteredAmount));
+        const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer)
+        await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount))
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        await TownInstance.splitDeposit(selectedLand.coordinate, ethers.utils.parseEther(enteredAmount));
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
+    }
+  };
+
   const mintBuilding = async (buildingIndex) => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId !== validChainId) {
       await handleChangeChainId();
     } else {
       try {
-        const TownInstance = new ethers.Contract(town, Town.abi, signer);
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.build(selectedLand.coordinate, buildingIndex);
         setVisibleConfirmation(true);
       } catch (error) {
@@ -107,8 +130,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       await handleChangeChainId();
     } else {
       try {
-        const army = new ethers.Contract(barracks, Barracks.abi, signer);
-        await army.buildBarracks(selectedLand.coordinate);
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        await TownInstance.buildBarracks(selectedLand.coordinate);
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -122,7 +145,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       await handleChangeChainId();
     } else {
       try {
-        const TownInstance = new ethers.Contract(town, Town.abi, signer);
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.claimRevenue(buildingTokenId);
         setVisibleConfirmation(true);
       } catch (error) {
@@ -138,7 +161,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       await handleChangeChainId();
     } else {
       try {
-        const TownInstance = new ethers.Contract(town, Town.abi, signer);
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.upgrade(buildingTokenId, selectedLand.coordinate);
         setVisibleConfirmation(true);
       } catch (error) {
@@ -154,11 +177,10 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       try {
         console.log(typeIndex);
         console.log("Input value:", inputValue);
-        const landsInst = new ethers.Contract(lands, Lands.abi, signer);
-        const goldBal = await landsInst.getAssetsBal(selectedLand.coordinate);
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        const goldBal = await TownInstance.getAssetsBal(selectedLand.coordinate);
         console.log(goldBal.toString());
-        const army = new ethers.Contract(barracks, Barracks.abi, signer);
-        await army.recruit(selectedLand.coordinate, typeIndex, inputValue);
+        await TownInstance.recruit(selectedLand.coordinate, typeIndex, inputValue);
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -189,41 +211,49 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       if (signer && address && selectedLand !== undefined && provider) {
         console.log("Useeffect called");
 
-        const townInst = new ethers.Contract(town, Town.abi, provider);
-        const army = new ethers.Contract(barracks, Barracks.abi, provider);
-        const ownedBuildings = await townInst.landBuildings(
+        const townInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        const landData = await townInstance.getLandIdData(
           selectedLand.coordinate
         );
-        const existedBuildings = await townInst.getBuildings();
+        const ownedBuildings_ = landData.buildedBuildings
+        const existedBuildings = await townInstance.getBuildings();
+        console.log(existedBuildings);
         setBuildings(existedBuildings);
-        const existedWarriors = await army.getTypes();
-        const landArmy = await army.getArmy(selectedLand.coordinate);
-        const level = await army.getLevel(selectedLand.coordinate);
-        const requiredComs = await army.getRequiredCommodities();
+        const existedWarriors = await townInstance.getWarriorTypes();
+        const landArmy = await townInstance.getArmy(selectedLand.coordinate);
+        const barracksLvl = landData.barracksLevel
+        const requiredComs = await townInstance.getBarracksRequiredCommodities();
+        console.log("Required barracks coms:", requiredComs);
         setExistedWarriors(existedWarriors);
         setArmy(landArmy);
         console.log("Army:", landArmy);
-        setBarracksLevel(level);
+        setBarracksLevel(barracksLvl); //// Replace and edit this
         setRequiredBarracksCommodities(requiredComs);
         console.log("Existed warriors:", existedWarriors);
         console.log("Current existed army:", landArmy);
-        let ownedBuildingsArray = [];
-        for (let index = 0; index < ownedBuildings.length; index++) {
-          const status = await townInst.getStatus(ownedBuildings[index]);
-          const revenue = await townInst.getCurrentRevenue(
-            ownedBuildings[index]
-          );
-          ownedBuildingsArray.push({
-            imageURL: existedBuildings[index].imageURL,
-            name: existedBuildings[index].buildingName,
-            tokenId: ownedBuildings[index],
-            level: status.level,
-            revenue: revenue,
-          });
+        if (ownedBuildings_.length > 0) {
+          let ownedBuildingsArray = [];
+          for (let index = 0; index < ownedBuildings_.length; index++) {
+            const status = await townInstance.getStatus(ownedBuildings_[index]);
+            const revenue = await townInstance.getCurrentRevenue(
+              ownedBuildings_[index]
+            );
+            ownedBuildingsArray.push({
+              imageURL: buildingsImageSources[status.buildingTypeIndex],
+              name: existedBuildings[index].buildingName,
+              tokenId: ownedBuildings_[index],
+              level: status.level,
+              revenue: revenue,
+            });
+          }
+          setOwnedBuildings(ownedBuildingsArray);
+          console.log("Owned buildings");
+          console.log(ownedBuildingsArray);
+        } else {
+          console.log("User still does not have any buildings");
+          setOwnedBuildings([])
         }
-        setOwnedBuildings(ownedBuildingsArray);
-        console.log("Owned buildings");
-        console.log(ownedBuildingsArray);
+
       }
     };
     fetchData();
@@ -234,6 +264,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     signer,
     selectedLand,
     visibleConfirmation,
+    selectedLand
   ]);
 
   return (
@@ -260,28 +291,22 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
           <>
             {confirmed == false ? (
               <div
-                className="overlay"
-                style={{ backgroundColor: "transparent" }}
-              >
-                <div className="popUpConfirmation">
-                  <h4 style={{ color: "white" }} className="defaultH4">
-                    Confirming...
-                  </h4>
+              className="overlay"
+              style={{ backgroundColor: "transparent" }}
+            >
+              <div className="popUpConfirmation">
+                <h4 style={{ color: "black" }} className="defaultH4">
+                  Confirming...
+                </h4>
 
-                  <Spinner
-                    animation="border"
-                    role="status"
-                    style={{ color: "white" }}
-                  >
-                    <span
-                      style={{ color: "white" }}
-                      className="visually-hidden"
-                    >
-                      Loading...
-                    </span>
-                  </Spinner>
-                </div>
+                <Spinner
+                  animation="border"
+                  role="status"
+                  style={{ color: "black" }}
+                >
+                </Spinner>
               </div>
+            </div>
             ) : (
               <div className="overlay">
                 <div className="transactionResultWindow">
@@ -489,6 +514,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                             placeholder="Enter amount..."
                             aria-label="Amount (to the nearest dollar)"
                             style={{ width: "50%" }}
+                            onChange={(e) => setEnteredAmount(e.target.value)}
                           />
                           <Dropdown>
                             <Dropdown.Toggle
@@ -542,6 +568,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           variant="outline-light"
                           size="sm"
                           style={{ marginRight: "10px" }}
+                          onClick={() => deposit(true)}
                         >
                           Deposit
                         </Button>
@@ -557,7 +584,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           existedWarriors.map((warrior, key) => (
                             <h5 className="defaultH5" key={key}>
                               {" "}
-                              {warrior.name} : {army[0][key].toString()}
+                              {warrior.name} : {army[key].toString()}
                             </h5>
                           ))}
                         {existedWarriors == undefined && army == undefined && (
@@ -670,7 +697,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           buildings.map((item, key) => (
                             <Col key={key}>
                               <div className="listItemInfo">
-                                <img src={item.imageURL}></img>
+                                <img src={buildingsImageSources[key]}></img>
                                 <div className="InfoColumn">
                                   <div style={{ padding: "0.5rem" }}>
                                     <h2 className="defaultH2">
@@ -929,7 +956,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                               <div className="listItemInfo">
                                 <img
                                   className="warriorImage"
-                                  src={item.imageURL}
+                                  src={warriorsImageSources[key]}
                                 ></img>
                                 <div className="InfoColumn">
                                   <div style={{ padding: "0.5rem" }}>

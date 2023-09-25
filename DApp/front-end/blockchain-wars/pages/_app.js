@@ -14,8 +14,9 @@ import {
 } from "@thirdweb-dev/chains";
 import TestABI from "../Blockchain/Test.json";
 import { useEffect, useState } from "react";
-import {barracks, lands, town } from "../Blockchain/Addresses";
-import Lands from "../Blockchain/Lands.json";
+import {barracks, lands, landsV2, town, townV1, townV2 } from "../Blockchain/Addresses";
+import LandsV2 from "../Blockchain/LandsV2.json";
+import TownV2 from "../Blockchain/TownV2.json";
 import axios from "axios";
 import dotenv from "dotenv";
 import {
@@ -97,14 +98,14 @@ function MyApp({ Component, pageProps }) {
     let mintedLands = [];
     try {
       const response = await axios.get(
-        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${lands}&apikey=${apiKey}`
+        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
         // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
       );
-      const responseTown = await axios.get(
-        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${town}&apikey=${apiKey}`
-        // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
-      );
-      console.log("Barracks res:", responseTown);
+      // const responseTown = await axios.get(
+      //   `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${town}&apikey=${apiKey}`
+      //   // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
+      // );
+      // console.log("Barracks res:", responseTown);
       console.log(response);
       setResponse(response);
       events = response.data.result;
@@ -145,7 +146,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const landsInst = new ethers.Contract(lands, Lands.abi, provider);
+      const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
       const imgURL = await landsInst.URI();
       setLandImgUrl(imgURL);
       if (address) {
@@ -159,20 +160,21 @@ function MyApp({ Component, pageProps }) {
           try {
             const response = await axios.get(
               // `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
-              `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${lands}&apikey=${apiKey}`
+              `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
             );
             console.log("Fetched events");
             console.log(response);
             const events = response.data.result;
             for (let index = 0; index < events.length; index++) {
               const topics = events[index].topics;
-
+              // console.log(topics);
               if ( landBalance > 0 &&
                 Array.isArray(topics) &&
                 topics.length === 4 &&
                 topics[2] == convertAddress(address.toLowerCase())
               ) {
-                const commoditiesBalance = await landsInst.getAssetsBal(
+                const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
+                const commoditiesBalance = await townInst.getAssetsBal(
                   parseInt(topics[3], 16)
                 );
 
