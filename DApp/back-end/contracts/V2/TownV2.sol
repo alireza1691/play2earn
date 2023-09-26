@@ -2,7 +2,7 @@
 pragma solidity ^0.8.17;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { Lands } from "./Lands.sol";
+import { LandsV2 } from "./LandsV2.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC721 } from "@openzeppelin/contracts/interfaces/IERC721.sol";
 library TransferHelper {
@@ -312,6 +312,11 @@ contract Barracks is Ownable{
 
 
 }
+
+
+
+contract TownV2 is Ownable, Barracks{
+
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
@@ -332,9 +337,6 @@ contract Barracks is Ownable{
     error TimeLimitation();
     error LevelLessThanMin();
 
-
-
-contract TownV2 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
@@ -345,7 +347,7 @@ contract TownV2 is Ownable, Barracks{
 
     event Build( uint256 buildingTypeIndex, uint256 indexed buildingId, uint256 indexed landTokenId);
     event Upgrade( uint256 indexed buildingId, uint256 level);
-    event Attack (uint256 indexed attackerLandId, uint256 indexed defenderLandId, bool success , uint256[] lootAmounts);
+    event Attack (uint256 indexed attackerLandId, uint256 indexed defenderLandId, bool success , uint256[5] lootAmounts);
 
 
     //  ******************************************************************************
@@ -412,19 +414,19 @@ contract TownV2 is Ownable, Barracks{
 
     constructor(address BlockchainsKingdomToken ,address landsContract){
         BKT = IERC20(BlockchainsKingdomToken);
-        lands = Lands(landsContract);
+        lands = LandsV2(landsContract);
         buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0/*,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o"*/,"Stone mine"));
         buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,1/*,"https://ipfs.io/ipfs/QmU99dxpwMoFAGSoQPLxB6YVAoYSk1iwbDoKj2CuM2pKyB"*/,"Lumber mill"));
         buildings.push(Info(100 ether, 100 ether, 100 ether, 0, 25 ether, 2/*, "Url"*/,"Iron mine"));
         buildings.push(Info( 250 ether, 50 ether, 0, 0, 100 ether, 4/*,"Replace this with image url"*/,"Farm"));
-        buildings.push(Info(2500 ether, 250 ether, 250 ether, 0, 50 ether, 3/*, "Url"*/,"Gold mine"));
+        buildings.push(Info(250 ether, 250 ether, 250 ether, 0, 50 ether, 3/*, "Url"*/,"Gold mine"));
         for (uint i = 0; i<5; i++) 
         {
         landData[101101].commoditiesBalance[i] += 10000 ether;
         landData[109109].commoditiesBalance[i] += 10000 ether;
         }
-        landData[101101].barracksLevel = 2;
-        landData[109109].barracksLevel = 2;
+        landData[101101].barracksLevel = 1;
+        landData[109109].barracksLevel = 1;
     }
 
 
@@ -497,10 +499,9 @@ contract TownV2 is Ownable, Barracks{
         if (maxBuildingsCapacity <= landData[landTokenId].buildedBuildings.length) {
             revert MaxCapacity();
         }
-        // if (block.timestamp - landData[landTokenId].latestBuildTimeStamp < 0) {
-        //     revert TimeLimitation();
-        // }
-        require(block.timestamp - landData[landTokenId].latestBuildTimeStamp >= 0, "Your worker is busy");
+        if (getRemainedTimestamp(landTokenId) != 0) {
+            revert TimeLimitation();
+        }
         Info memory selecteduilding = buildings[buildingIndex];
         require( landData[landTokenId].commoditiesBalance[0] >= selecteduilding.requiredStone && 
         landData[landTokenId].commoditiesBalance[1] >= selecteduilding.requiredWood &&
@@ -525,12 +526,10 @@ contract TownV2 is Ownable, Barracks{
 
 
     function upgrade(uint256 buildingTokenId, uint256 landTokenId) external belongToCaller(buildingTokenId){
-        require(block.timestamp - landData[landTokenId].latestBuildTimeStamp >= 0, "Your worker is busy");
-        // if (block.timestamp - landData[landTokenId].latestBuildTimeStamp < 0) {
-        //     revert TimeLimitation();
-        // }
+        if (getRemainedTimestamp(landTokenId) != 0) {
+            revert TimeLimitation();
+        }
         claimRevenue(buildingTokenId);
-        // require(block.timestamp - latestBuildTimeStamp[landTokenId] > 0, "Worker is busy");
         uint256 typeIndex = tokenIdStatus[buildingTokenId].buildingTypeIndex;
         uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
         Info memory selecteduilding = buildings[typeIndex];
@@ -554,10 +553,9 @@ contract TownV2 is Ownable, Barracks{
     }
 
     function buildBarracks(uint256 landTokenId) public onlyLandOwner(landTokenId) onlyLandOwner(landTokenId){
-        // if (block.timestamp - landData[landTokenId].latestBuildTimeStamp  < 0) {
-        //     revert TimeLimitation();
-        // }
-        require(block.timestamp - landData[landTokenId].latestBuildTimeStamp >= 0, "Your worker is busy");
+        if (getRemainedTimestamp(landTokenId) != 0) {
+            revert TimeLimitation();
+        }
         uint256[5] memory balArray = getAssetsBal(landTokenId);
         require(balArray[0] >= baseBararcksRequiredCommodities[0] &&
         balArray[1] >= baseBararcksRequiredCommodities[1] && 
@@ -574,7 +572,12 @@ contract TownV2 is Ownable, Barracks{
         if (typeIndex >= getWarriorTypes().length) {
             revert InvalidItem();
         }
-        // require(typeIndex < _getWarriorTypes().length, "Type is not valid");
+        if (getWarriorTypes()[typeIndex].requiredLevel > landData[landTokenId].barracksLevel) {
+            revert LevelLessThanMin();
+        }
+        if (getWarriorTypes()[typeIndex].price * amount > getAssetsBal(landTokenId)[4]) {
+            revert InsufficientCommodity();
+        }
         uint256[] memory currentWarriors = getArmy(landTokenId);
         uint256 currentArmy;
         for (uint i = 0; i < currentWarriors.length; i++) {
@@ -583,12 +586,7 @@ contract TownV2 is Ownable, Barracks{
         if (landData[landTokenId].barracksLevel * baseArmyCapacity < currentArmy + amount) {
             revert MaxCapacity();
         }
-        if (getWarriorTypes()[typeIndex].requiredLevel > landData[landTokenId].barracksLevel) {
-            revert LevelLessThanMin();
-        }
-        if (getWarriorTypes()[typeIndex].price * amount > getAssetsBal(landTokenId)[4]) {
-            revert InsufficientCommodity();
-        }
+
         _spendCommodities(landTokenId,[0,0,0,0,getWarriorTypes()[typeIndex].price * amount]);
         _addWarrior(typeIndex, amount, landTokenId);
     }
@@ -606,7 +604,7 @@ contract TownV2 is Ownable, Barracks{
     function attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId) external onlyLandOwner(attackerId) {
         require(lands.ownerOf(targetId) != address(0), "Invalid land");
         (bool success, uint256 winRate) = _attack(warriorsAmounts, attackerId, targetId);
-        uint256 [] memory lootAmounts;
+        uint256 [5] memory lootAmounts;
         if (success) {
             lootAmounts = _loot(attackerId, targetId, winRate);
         }
@@ -655,9 +653,9 @@ contract TownV2 is Ownable, Barracks{
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
         Status memory buildingStatus = getStatus(buildingTokenId);
         uint256 period = block.timestamp - (buildingStatus.latestActionTimestamp);
-        uint256 rev = (period / 3 hours) * buildingStatus.level ;
-        if (rev > baseCapacity * buildingStatus.level * 1 ether) {
-            rev = baseCapacity * buildingStatus.level;
+        uint256 rev = (period / 3 hours) * buildingStatus.level * 1 ether;
+        if (rev > baseCapacity * buildingStatus.level ) {
+            rev = baseCapacity * buildingStatus.level ;
         }
         return rev;
     }
@@ -671,12 +669,16 @@ contract TownV2 is Ownable, Barracks{
     }
 
     function getLandIdData(uint256 landTokenId) external view returns(LandIdData memory) {
-        // convert block.timestamp to remained minutes: and return the rest.
-        LandIdData memory convertedData = landData[landTokenId];
-        convertedData.latestBuildTimeStamp = convertedData.latestBuildTimeStamp / 1 minutes;
-        return convertedData;
+        return (landData[landTokenId]);
     }
 
+    function getRemainedTimestamp(uint256 landTokenId) view public returns (uint256) {
+        uint256 remainedTimestamp;
+        if (landData[landTokenId].latestBuildTimeStamp > block.timestamp ) {
+            remainedTimestamp = (landData[landTokenId].latestBuildTimeStamp - block.timestamp)/ 1 minutes;
+        }
+        return remainedTimestamp;
+    }
     function getAssetsBal(uint256 landTokenId) view public returns (uint256[5] memory) {
         uint256[5] memory balancesArray;
         for (uint i = 0; i < 5; i++) {
@@ -712,13 +714,13 @@ contract TownV2 is Ownable, Barracks{
 
     }
 
-    function _loot(uint256 attackerLandId, uint256 targetLandId, uint256 lootPercentage) internal returns(uint256[] memory lootAmounts) {
+    function _loot(uint256 attackerLandId, uint256 targetLandId, uint256 lootPercentage) internal returns(uint256[5] memory lootAmounts) {
         for (uint i = 0; i < 5; i++) {
             // uint256 lootAmount = commoditiesBalance[targetLandId][_convertIndexToAddress(i)] * lootPercentage / 100;
             uint256 lootAmount = landData[targetLandId].commoditiesBalance[i] * lootPercentage / 100;
             lootAmounts[i] = lootAmount;
             landData[targetLandId].commoditiesBalance[i] -= lootAmount;
-            landData[attackerLandId].commoditiesBalance[i] += lootAmount;
+            landData[attackerLandId].commoditiesBalance[i] += lootAmount * 85 / 100; // We have considered 15% of loot to burn as damage of war in order to resemble real war. On the other hand, keeping the value of the token by burning.
         } 
     }
 

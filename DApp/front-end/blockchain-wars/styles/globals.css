@@ -210,6 +210,7 @@ body {
   overflow-y: auto;
   height: 100vh;
   padding-top: 5%;
+  padding-bottom: 5%;
 }
 .landImg {
   max-width: 100%;

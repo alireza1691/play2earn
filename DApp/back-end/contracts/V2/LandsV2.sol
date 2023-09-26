@@ -117,7 +117,7 @@ error Lands__InvalidCoordinate();
 error Lands__LandAlreadyMinted();
 error Lands__InsufficientPrice();
 
-contract Lands is ERC721, Ownable {
+contract LandsV2 is ERC721, Ownable {
 
     //  ******************************************************************************
     //  ******************************************************************************

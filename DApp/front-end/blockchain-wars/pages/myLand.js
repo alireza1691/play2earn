@@ -12,7 +12,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 import CloseButton from "react-bootstrap/CloseButton";
-import { landsV2, townV2, BKTAddress } from "../Blockchain/Addresses";
+import { landsV2, townV2, BKTAddress, town } from "../Blockchain/Addresses";
 import LandsV2 from "../Blockchain/LandsV2.json";
 import TownV2 from "../Blockchain/TownV2.json";
 import BKT from "../Blockchain/BKT.json";
@@ -22,9 +22,9 @@ import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
 
 const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
-  const [isLandSelected, setIsLandSelected] = useState(false);
+  // const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
-  const [enteredAmount, setEnteredAmount] = useState()
+  const [enteredAmount, setEnteredAmount] = useState();
   const [selectedItem, setSelectedItem] = useState({});
   const [isFetching, setIsFetching] = useState(true);
   const [buildings, setBuildings] = useState();
@@ -39,6 +39,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState();
+  const [workerBusyTime, setWorkerBusyTime] = useState();
 
   const sdk = useSDK();
   const router = useRouter();
@@ -48,8 +49,18 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
 
   const validChainId = Sepolia.chainId;
 
-  const buildingsImageSources = ["BuildingsIMG/StoneMine.png","BuildingsIMG/LumberMill1.png","BuildingsIMG/IronSmelter.png","BuildingsIMG/SugarFarm.png","BuildingsIMG/StoneMine.png"]
-  const warriorsImageSources = ["Warriors/PersianSpearman.png","Warriors/Swordsman.png","Warriors/Archer.png"]
+  const buildingsImageSources = [
+    "BuildingsIMG/StoneMine.png",
+    "BuildingsIMG/LumberMill1.png",
+    "BuildingsIMG/IronSmelter.png",
+    "BuildingsIMG/SugarFarm.png",
+    "BuildingsIMG/GoldMine1.png",
+  ];
+  const warriorsImageSources = [
+    "Warriors/PersianSpearman.png",
+    "Warriors/Swordsman.png",
+    "Warriors/Archer.png",
+  ];
 
   const handleConnectWithMetamask = async () => {
     try {
@@ -81,12 +92,12 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   };
 
   const handleOpenWindow = (item) => {
-    setIsLandSelected(true);
+    // setIsLandSelected(true);
     setSelectedItem("something");
   };
 
   const handleCloseLandWindow = () => {
-    setIsLandSelected(false);
+    // setIsLandSelected(false);
     setSelectedItem({});
   };
 
@@ -97,10 +108,13 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     } else {
       try {
         console.log(ethers.utils.parseEther(enteredAmount));
-        const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer)
-        await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount))
+        const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer);
+        await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
-        await TownInstance.splitDeposit(selectedLand.coordinate, ethers.utils.parseEther(enteredAmount));
+        await TownInstance.splitDeposit(
+          selectedLand.coordinate,
+          ethers.utils.parseEther(enteredAmount)
+        );
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -178,9 +192,15 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         console.log(typeIndex);
         console.log("Input value:", inputValue);
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
-        const goldBal = await TownInstance.getAssetsBal(selectedLand.coordinate);
+        const goldBal = await TownInstance.getAssetsBal(
+          selectedLand.coordinate
+        );
         console.log(goldBal.toString());
-        await TownInstance.recruit(selectedLand.coordinate, typeIndex, inputValue);
+        await TownInstance.recruit(
+          selectedLand.coordinate,
+          typeIndex,
+          inputValue
+        );
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -215,14 +235,15 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const landData = await townInstance.getLandIdData(
           selectedLand.coordinate
         );
-        const ownedBuildings_ = landData.buildedBuildings
+        const ownedBuildings_ = landData.buildedBuildings;
         const existedBuildings = await townInstance.getBuildings();
         console.log(existedBuildings);
         setBuildings(existedBuildings);
         const existedWarriors = await townInstance.getWarriorTypes();
         const landArmy = await townInstance.getArmy(selectedLand.coordinate);
-        const barracksLvl = landData.barracksLevel
-        const requiredComs = await townInstance.getBarracksRequiredCommodities();
+        const barracksLvl = landData.barracksLevel;
+        const requiredComs =
+          await townInstance.getBarracksRequiredCommodities();
         console.log("Required barracks coms:", requiredComs);
         setExistedWarriors(existedWarriors);
         setArmy(landArmy);
@@ -232,6 +253,15 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         console.log("Existed warriors:", existedWarriors);
         console.log("Current existed army:", landArmy);
         if (ownedBuildings_.length > 0) {
+          const busyTime = await townInstance.getRemainedTimestamp(
+            selectedLand.coordinate
+          );
+          console.log(
+            "worket will be bsuy for",
+            busyTime.toString(),
+            "minutes"
+          );
+          setWorkerBusyTime(busyTime);
           let ownedBuildingsArray = [];
           for (let index = 0; index < ownedBuildings_.length; index++) {
             const status = await townInstance.getStatus(ownedBuildings_[index]);
@@ -251,9 +281,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
           console.log(ownedBuildingsArray);
         } else {
           console.log("User still does not have any buildings");
-          setOwnedBuildings([])
+          setOwnedBuildings([]);
         }
-
       }
     };
     fetchData();
@@ -264,7 +293,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     signer,
     selectedLand,
     visibleConfirmation,
-    selectedLand
+    selectedLand,
   ]);
 
   return (
@@ -291,22 +320,21 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
           <>
             {confirmed == false ? (
               <div
-              className="overlay"
-              style={{ backgroundColor: "transparent" }}
-            >
-              <div className="popUpConfirmation">
-                <h4 style={{ color: "black" }} className="defaultH4">
-                  Confirming...
-                </h4>
+                className="overlay"
+                style={{ backgroundColor: "transparent" }}
+              >
+                <div className="popUpConfirmation">
+                  <h4 style={{ color: "black" }} className="defaultH4">
+                    Confirming...
+                  </h4>
 
-                <Spinner
-                  animation="border"
-                  role="status"
-                  style={{ color: "black" }}
-                >
-                </Spinner>
+                  <Spinner
+                    animation="border"
+                    role="status"
+                    style={{ color: "black" }}
+                  ></Spinner>
+                </div>
               </div>
-            </div>
             ) : (
               <div className="overlay">
                 <div className="transactionResultWindow">
@@ -319,32 +347,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
             )}
           </>
         )}
-        {isLandSelected && (
-          <div className="overlay">
-            <div className="selectedLandWindow">
-              <Card className="defaultCard">
-                <Card.Img
-                  variant="top"
-                  src={buildings[0].imageURL}
-                  className="cardImg"
-                />
-                <Card.Body>
-                  <Card.Title>{buildings[0].biuldingName}</Card.Title>
-                  <Card.Text>
-                    Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
-                  </Card.Text>
-                  <Button
-                    variant="primary"
-                    onClick={() => handleCloseLandWindow()}
-                  >
-                    Open
-                  </Button>
-                </Card.Body>
-              </Card>
-            </div>
-          </div>
-        )}
+
         <Container>
           {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
             <>
@@ -462,7 +465,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                       className="clickableH4"
                       onClick={() => setSelectedLand()}
                     >
-                      Back to lands
+                      Back to the lands
                     </h4>
                     <div className="balanceHeader">
                       <div className="commodityBalance">
@@ -596,6 +599,36 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                 </Col>
               </Row>
               <Row style={{ marginTop: "1rem" }}>
+                {workerBusyTime > 0 && workerBusyTime != undefined ? (
+                  <h4 className="defaultH4" style={{ textAlign: "center" }}>
+                    Wroker will be free in{" "}
+                    <span
+                      style={{
+                        // border: "1px solid white",
+                        padding: "0.2rem",
+                        borderRadius: "0.3rem",
+                        textDecoration: "underLine"
+                      }}
+                    >
+                      {workerBusyTime.toString()}
+                    </span>{" "}
+                    minutes.
+                  </h4>
+                ) : (
+                  <>
+                  { workerBusyTime == undefined ? (
+                   ""
+                  ) : (
+                    <h4 className="defaultH4" style={{ textAlign: "center" }}>
+                    Worker is ready.
+                  </h4>
+                  )
+
+                  }
+
+                  </>
+                )}
+                {/* <h3 className="defaultH4" style={{"textAlign":"center"}}> {workerBusyTime > 0 ? `Wroker will be free in ${workerBusyTime.toString()} minutes.` : "Worker is ready."}</h3> */}
                 {Array.isArray(ownedBuildings) && ownedBuildings.length > 0 ? (
                   ownedBuildings.map((item, key) => (
                     <Col key={key} md={{ span: 6, offset: 0 }}>
@@ -620,16 +653,31 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           </div>
                           <h4>level: {item.level.toString()}</h4>
                           <div>
+                          {workerBusyTime !== undefined && workerBusyTime > 0 ?(
                             <Button
-                              variant="outline-light"
-                              style={{}}
-                              onClick={() =>
-                                upgradeBuilding(ownedBuildings[key].tokenId)
-                              }
-                              size="sm"
-                            >
-                              Upgrade
-                            </Button>
+                            variant="outline-light"
+                            style={{}}
+                            size="sm"
+                           disabled
+                            
+                          >
+                            Upgrade
+                          </Button>
+                          ) : (
+                            <Button
+                            variant="outline-light"
+                            style={{}}
+                            onClick={() =>
+                              upgradeBuilding(ownedBuildings[key].tokenId)
+                            }
+                            size="sm"
+                           
+                            
+                          >
+                            Upgrade
+                          </Button>
+                          )}
+
                           </div>
                         </div>
                       </div>
