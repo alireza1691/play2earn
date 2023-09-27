@@ -147,12 +147,14 @@ export default function Home() {
       <h5 style={{"fontFamily":"Courier","color":"white","fontSize":"1.3rem","marginTop":"1rem"}}>To build your kingdom you need a land.</h5>
       <button className="greenButton" style={{"marginTop":"3rem"}}>View lands &#10140;</button>
       </div>
+      {/* <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
+        <img src="/asset_Land.png" height={200}/>
+      </div> */}
+      </Col>
+      <Col md={{span: 6, offset: 6}}>
       <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
         <img src="/asset_Land.png" height={200}/>
       </div>
-      </Col>
-      <Col md={{span: 6, offset: 6}}>
-
       </Col>
       </Row>
       <Row style={{"marginTop":"10rem"}}>

@@ -68,12 +68,14 @@ min-height: 400px;
 
 }
 .nftBox {
+  display: flex;
  /* background-color: rgba(255, 255, 255, 0.01); */
  width: fit-content;
  border-radius: 1rem;
  min-height: 400px;
- border: 1px solid var(--green);
-
+ /* border: 1px solid var(--green); */
+  margin-left: auto;
+  margin-right: auto;
 }
 .nftBox img {
   transition: all 0.15s ease-in-out;
