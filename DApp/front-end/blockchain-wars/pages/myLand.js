@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   // const [isLandSelected, setIsLandSelected] = useState(false);
@@ -40,6 +41,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState();
   const [workerBusyTime, setWorkerBusyTime] = useState();
+  const [commodityIndex, setCommodityIndex] = useState()
 
   const sdk = useSDK();
   const router = useRouter();
@@ -61,6 +63,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     "Warriors/Swordsman.png",
     "Warriors/Archer.png",
   ];
+  const commodityItems = [{name: "Stone",image: "/Stone.png"}, {name: "Wood",image: "/Wood.png"}, {name: "Iron",image: "/Iron.png"}, {name: "Food",image: "/Food.png"}, {name: "Gold",image: "Gold.png"}]
 
   const handleConnectWithMetamask = async () => {
     try {
@@ -109,11 +112,37 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       try {
         console.log(ethers.utils.parseEther(enteredAmount));
         const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer);
+        const balance = await BKTInst.balanceOf(address)
+        console.log(balance.toString());
+        console.log("instance");
         await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
+        console.log("approved");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.splitDeposit(
           selectedLand.coordinate,
           ethers.utils.parseEther(enteredAmount)
+        );
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
+    }
+  };
+  const withdraw = async () => {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        // console.log(ethers.utils.parseEther(enteredAmount));
+        // const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer);
+        // await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        await TownInstance.withdraw(
+          ethers.utils.parseEther(enteredAmount),
+          selectedLand.coordinate,
+          commodityIndex
         );
         setVisibleConfirmation(true);
       } catch (error) {
@@ -270,7 +299,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
             );
             ownedBuildingsArray.push({
               imageURL: buildingsImageSources[status.buildingTypeIndex],
-              name: existedBuildings[index].buildingName,
+              name: existedBuildings[status.buildingTypeIndex].buildingName,
               tokenId: ownedBuildings_[index],
               level: status.level,
               revenue: revenue,
@@ -529,41 +558,15 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                              <Dropdown.Item href="#/action-1">
+                              {commodityItems.map((commodity, key) =>(
+                                <Dropdown.Item href="#/action-1" key={key} onClick={() => setCommodityIndex(key)}>
                                 <img
-                                  src="/Stone.png"
+                                  src={commodity.image}
                                   className="dropdownTokenLogo"
                                 ></img>
-                                Stone
+                                {commodity.name}
                               </Dropdown.Item>
-                              <Dropdown.Item href="#/action-2">
-                                <img
-                                  src="/Wood.png"
-                                  className="dropdownTokenLogo"
-                                ></img>
-                                Wood
-                              </Dropdown.Item>
-                              <Dropdown.Item href="#/action-3">
-                                <img
-                                  src="/Iron.png"
-                                  className="dropdownTokenLogo"
-                                ></img>
-                                Iron
-                              </Dropdown.Item>
-                              <Dropdown.Item href="#/action-4">
-                                <img
-                                  src="/Gold.png"
-                                  className="dropdownTokenLogo"
-                                ></img>
-                                Gold
-                              </Dropdown.Item>
-                              <Dropdown.Item href="#/action-5">
-                                <img
-                                  src="/Food.png"
-                                  className="dropdownTokenLogo"
-                                ></img>
-                                Food
-                              </Dropdown.Item>
+                              ))}
                             </Dropdown.Menu>
                           </Dropdown>
                         </InputGroup>
@@ -575,9 +578,16 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         >
                           Deposit
                         </Button>
-                        <Button variant="outline-light" size="sm">
+                        {commodityIndex !== undefined ? (
+                                                  <Button variant="outline-light" size="sm" onClick={()=> withdraw()}>
+                                                  Withdraw
+                                                </Button>
+                        ) : (
+                          <Button variant="outline-light" size="sm" disabled>
                           Withdraw
                         </Button>
+                        )}
+
                       </div>
                       <div className="landBoxColumn">
                         {Array.isArray(existedWarriors) &&
@@ -664,6 +674,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                             Upgrade
                           </Button>
                           ) : (
+                            
                             <Button
                             variant="outline-light"
                             style={{}}
@@ -839,7 +850,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       ethers.utils.formatEther(
                                         item.requiredFood
                                       )
-                                    ) ? (
+                                    ) || workerBusyTime > 0  ? (
                                     <Button disabled>Build</Button>
                                   ) : (
                                     <Button
@@ -983,7 +994,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       requiredBarracksCommodities[4]
                                     ) *
                                       (Number(barracksLevel) + 1)
-                                  ) ? (
+                                  ) || workerBusyTime > 0  ? (
                                   <Button disabled>Upgrade</Button>
                                 ) : (
                                   <Button

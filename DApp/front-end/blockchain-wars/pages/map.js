@@ -27,6 +27,8 @@ import CloseButton from "react-bootstrap/CloseButton";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useRouter } from "next/router";
 import { useSDK } from "@thirdweb-dev/react";
+import Toast from 'react-bootstrap/Toast';
+
 
 const metamaskConfig = metamaskWallet();
 
@@ -159,10 +161,10 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
         let owner;
         let isYours = false;
         for (let index = 0; index < mintedLands.length; index++) {
-          if (tokenId == mintedLands[index].tokenId) {
+          if (tokenId == mintedLands[index].tokenId ) {
             // img = "/mintedLand.png";
             owner = mintedLands[index].owner;
-            isYours = owner == address.toLocaleLowerCase() ? true : false;
+            address ?  (isYours = owner == address.toLocaleLowerCase() ? true : false):(isYours = false) ;
             img = isYours ? "/myLand.png" : "/mintedLand.png";
           }
         }
@@ -244,7 +246,28 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
         )}
         {!address && closePopUp == false && (
           <div className="overlay">
-            <Card
+            <Toast>
+      <Toast.Header onClick={handleClosePopUp}>
+        <img src="holder.js/20x20?text=%20" className="rounded me-2" alt=""/>
+        <strong className="me-auto">Wallet not detected</strong>
+        <small>Blochchain wars</small>
+      </Toast.Header>
+      <Toast.Body>If you have any land we recommend to{" "}
+                  <span
+                    style={{
+                      textDecoration: "underLine",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                    onClick={() =>
+                      handleConnectWithMetamask()
+                    }
+                  >
+                    Connect
+                  </span>{" "}
+                  your wallet</Toast.Body>
+    </Toast>
+            {/* <Card
               style={{
                 padding: "0.5rem",
                 width: "15rem",
@@ -288,7 +311,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                 </div>
               </Card.Body>
-            </Card>
+            </Card> */}
           </div>
         )}
        {isTransactionRejected && (

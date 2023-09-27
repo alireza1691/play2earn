@@ -72,7 +72,7 @@ const Navbar = (
              <Nav.Link href="#action1" onClick={()=>{router.push('/')}}>Home</Nav.Link>
             <Nav.Link href="#action2" onClick={()=>{router.push('/map')}}>Explore</Nav.Link>
             <Nav.Link href="#action3" onClick={()=>{router.push('/myLand')}}>My land</Nav.Link>
-            <Nav.Link href="/attack" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
+            <Nav.Link href="#action4" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
             {/* <Nav.Link href="#action2" onClick={()=>{router.push('/dashboard')}}>Dashboard</Nav.Link>
             <NavDropdown title="More" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">...</NavDropdown.Item>

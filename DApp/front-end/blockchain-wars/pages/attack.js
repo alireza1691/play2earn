@@ -82,6 +82,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
     setSelectedLand(land);
     const townInst = new Contract(townV2, TownV2.abi, provider);
     const userArmy = await townInst.getArmy(land.coordinate);
+    console.log(land.coordinate);
     setArmyAmounts(userArmy);
     console.log(userArmy);
   };
@@ -206,21 +207,15 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="popUpConfirmation">
-                  <h4 style={{ color: "white" }} className="defaultH4">
+                  <h4 style={{ color: "black" }} className="defaultH4">
                     Confirming...
                   </h4>
 
                   <Spinner
                     animation="border"
                     role="status"
-                    style={{ color: "white" }}
+                    style={{ color: "black" }}
                   >
-                    <span
-                      style={{ color: "white" }}
-                      className="visually-hidden"
-                    >
-                      Loading...
-                    </span>
                   </Spinner>
                 </div>
               </div>
@@ -300,7 +295,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                       {selectedLand !== undefined &&
                       Array.isArray(armyAmounts) &&
                       armyAmounts.length >= 0 &&
-                      armyAmounts[0][key] > 0 ? (
+                      armyAmounts[key] > 0 ? (
                         <>
                           <Form.Control
                             size="sm"
@@ -319,7 +314,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                               padding: "0.5rem",
                             }}
                           >
-                            {armyAmounts[0][key].toString()} {warrior.name}
+                            {armyAmounts[key].toString()} {warrior.name}
                           </h4>
                         </>
                       ) : (
@@ -370,7 +365,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                 )}
                 <div style={{ display: "flex", width: "100%" }}>
                   {armyAmounts !== undefined &&
-                  Number(armyAmounts[1]) >= totalEnteredAmount &&
+                  // Number(armyAmounts) >= totalEnteredAmount &&
                   targetObj !== undefined ? (
                     <Button
                       variant="outline-light"
