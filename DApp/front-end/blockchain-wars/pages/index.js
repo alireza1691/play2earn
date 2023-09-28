@@ -2,7 +2,7 @@ import { ConnectWallet } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { Col, Container, Row } from "react-bootstrap";
-import Carousel from 'react-bootstrap/Carousel';
+import Carousel from "react-bootstrap/Carousel";
 export default function Home() {
   return (
     // <main className={styles.main}>
@@ -103,15 +103,15 @@ export default function Home() {
     //     </div>
     //   </div>
     // </main>
-    <div 
-    className="scrollableScreen" 
-    // style={{"backgroundImage":"url('/townBackground.jpg')","backgroundSize":"cover","backgroundPosition":"center","backgroundColor":"rgba(0, 0, 0, 0.1)","opacity":"20%"}}
+    <div
+      className="scrollableScreen"
+      // style={{"backgroundImage":"url('/townBackground.jpg')","backgroundSize":"cover","backgroundPosition":"center","backgroundColor":"rgba(0, 0, 0, 0.1)","opacity":"20%"}}
     >
       <Container>
-      <Row  >
-        <Col className="indexPageHeader">
-        <h2 >Blockchains's kingdom</h2>
-        {/* <Carousel>
+        <Row>
+          <Col className="indexPageHeader">
+            <h2>Blockchains's kingdom</h2>
+            {/* <Carousel>
       <Carousel.Item>
         <img src="/asset_land.png" height={300} width={360}></img>
         <Carousel.Caption>
@@ -137,42 +137,126 @@ export default function Home() {
       </Carousel.Item>
     </Carousel>
   */}
-        </Col>
-      </Row>
-      <Row>
-      <Col>
-      <div>
-      <h2 style={{"fontFamily":"Courier","color":"white","fontWeight":"bold"}}>Play & Earn</h2>
-      <h5 style={{"fontFamily":"Courier","color":"white","fontSize":"1.3rem"}}>Build your kingdom &#8680; Enjoy the game &#8680; Earn money</h5>
-      <h5 style={{"fontFamily":"Courier","color":"white","fontSize":"1.3rem","marginTop":"1rem"}}>To build your kingdom you need a land.</h5>
-      <button className="greenButton" style={{"marginTop":"3rem"}}>View lands &#10140;</button>
-      </div>
-      {/* <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div className="mainPageTextContainer">
+              <h2>Play & Earn</h2>
+              <h5
+              >
+                Build your kingdom &#8680; Enjoy the game &#8680; Earn money
+              </h5>
+              <h5
+                style={{
+                  marginTop: "1rem",
+                }}
+              >
+                To build your kingdom you need a land.
+              </h5>
+              <button className="greenButton" style={{ marginTop: "3rem" }}>
+                View lands &#10140;
+              </button>
+            </div>
+            <div
+              className="nftBox"
+              // style={{ padding: "1rem", marginTop: "5rem" }}
+            >
+              <img src="/asset_Land.png" height={200} />
+              {/* <img src="/Castle3.png" height={200} /> */}
+            </div>
+            {/* <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
         <img src="/asset_Land.png" height={200}/>
       </div> */}
-      </Col>
-      <Col md={{span: 6, offset: 6}}>
-      <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
-        <img src="/asset_Land.png" height={200}/>
-      </div>
-      </Col>
-      </Row>
-      <Row style={{"marginTop":"10rem"}}>
-        <Col className="textBox">
-        </Col>
-        <Col className="textBox">
-        </Col>
-        <Col className="textBox">
-        </Col>
-      </Row>
-      <Row style={{"marginTop":"20rem"}}>
-      <Col>
-
-      </Col>
-      <Col md={{span: 6, offset: 6}}>
-        <img src="/Warriors/Swordsman.png" height={600}/>
-      </Col>
-      </Row>
+          </Col>
+          <Col>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src="/Warriors/AchaemenidSpearman.png"
+                height={600}
+                style={{ textAlign: "center" }}
+              />
+            </div>
+          </Col>
+        </Row>
+        <Row style={{"marginTop":"20rem"}}>
+          <Col >
+            <img className="townImage" src="/CastleUpView.png" height={300}/>
+          </Col>
+          <Col>
+            <div className="mainPageTextContainer">
+              <h2>Based on digitall assets.</h2>
+              <h5>All assets are token that means anything in game has value.</h5>
+              <h5>Earn money by selling goods.<br></br>To earn goods you can build its relevant building also looting other players.</h5>
+            </div>
+          </Col>
+        </Row>
+        <Row style={{"marginTop":"20rem"}}>
+          <Col>
+          <div>
+          <div className="mainPageTextContainer" >
+              <h2>How to earn money?</h2>
+              <h5>Players can earn money by selling goods.<br></br>To earn goods you can build its relevant building also looting other players.</h5>
+            </div>
+          </div>
+          </Col>
+          <Col><img className="townImage" src="/CastleUpView.png" height={300}/></Col>
+        </Row>
+        <Row>
+          <h3
+            style={{
+              color: "white",
+              marginTop: "10rem",
+              fontFamily: "courier",
+            }}
+          >
+            Roadmap &#10164;
+          </h3>
+        </Row>
+        <Row style={{}}>
+          <Col className="textBox">
+            <h4 style={{ textAlign: "center" }}>2023-Q3</h4>
+            <h4>
+              - Launching game on testnet<br></br>- Attracting community
+            </h4>
+          </Col>
+          <Col className="textBox">
+            <h4 style={{ textAlign: "center" }}>2023-Q4</h4>
+            <h4>
+              - Land presale on mainnet<br></br>- Marketing
+            </h4>
+          </Col>
+          <Col className="textBox">
+            <h4 style={{ textAlign: "center" }}>2024-Q1</h4>
+            <h4>
+              - Launching game on mainnet <br></br>- Partnerships
+            </h4>
+          </Col>
+        </Row>
+        <Row>
+          <Col className="textBox">
+            <h4 style={{ textAlign: "center" }}>2024-Q2 </h4>
+            <h4>
+              - Updating game assets<br></br>- Tournaments{" "}
+            </h4>
+          </Col>
+          <Col className="textBox">
+            <h4 style={{ textAlign: "center" }}>2024-Q3</h4>
+            <h4>
+              - ERC721 Heroes<br></br>- Community challenges
+            </h4>
+          </Col>
+          <Col className="textBox">
+            <h4 style={{ textAlign: "center" }}>2024-Q4</h4>
+            <h4>
+              - Land presale on mainnet<br></br>- Marketing
+            </h4>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "20rem" }}>
+          <Col></Col>
+          <Col md={{ span: 6, offset: 6 }}></Col>
+        </Row>
       </Container>
     </div>
   );
