@@ -155,16 +155,10 @@ export default function Home() {
                 To build your kingdom you need a land.
               </h5>
               <button className="greenButton" style={{ marginTop: "3rem" }}>
-                View lands &#10140;
+                Explore in lands &#10140;
               </button>
             </div>
-            <div
-              className="nftBox"
-              // style={{ padding: "1rem", marginTop: "5rem" }}
-            >
-              <img src="/asset_Land.png" height={200} />
-              {/* <img src="/Castle3.png" height={200} /> */}
-            </div>
+
             {/* <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
         <img src="/asset_Land.png" height={200}/>
       </div> */}
@@ -180,28 +174,49 @@ export default function Home() {
           </Col>
         </Row>
         <Row style={{"marginTop":"20rem"}}>
-          <Col >
-            <img className="townImage" src="/CastleUpView.png" height={300}/>
-          </Col>
-          <Col>
-            <div className="mainPageTextContainer">
-              <h2>Based on digitall assets.</h2>
-              <h5>All assets are token that means anything in game has value.</h5>
-              <h5>Earn money by selling goods.<br></br>To earn goods you can build its relevant building also looting other players.</h5>
-            </div>
-          </Col>
-        </Row>
-        <Row style={{"marginTop":"20rem"}}>
           <Col>
           <div>
           <div className="mainPageTextContainer" >
               <h2>How to earn money?</h2>
-              <h5>Players can earn money by selling goods.<br></br>To earn goods you can build its relevant building also looting other players.</h5>
+              <h5>Earn money by selling goods.<br></br>To earn goods users can build its relevant building of goods. Also users can loot other players.</h5>
             </div>
           </div>
           </Col>
           <Col><img className="townImage" src="/CastleUpView.png" height={300}/></Col>
         </Row>
+                <Row style={{"marginTop":"20rem"}}>
+          <Col >
+          <div
+              className="nftBox"
+              // style={{ padding: "1rem", marginTop: "5rem" }}
+            >
+              <img src="/asset_Land.png" height={200} />
+              {/* <img src="/Castle3.png" height={200} /> */}
+            </div>
+          </Col>
+          <Col>
+            <div className="mainPageTextContainer">
+              <h2>Based on digitall assets.</h2>
+              <h5>All assets are token that means anything in game has value.</h5>
+              <h5>Earn money by selling goods.<br></br>To earn goods you can build its relevant building. Also users can loot other players.</h5>
+            </div>
+          </Col>
+        </Row>
+        <Row style={{"marginTop":"20rem"}}>
+        <Col>
+            <div className="mainPageTextContainer">
+              <h2>Innovative tokenomics</h2>
+              <h5>The common problem that all P2E applications struggle with is tokenomics. Since the token of these applications has not tempting usage, all users want to sell them and supply will become much bigger than demand. We considered innovative tokenomics that will solve this problem.</h5>
+              <h5>Look at tokenomcis through the <span style={{"textDecoration":"underline"}}> documentation</span>.</h5>
+            </div>
+          </Col>
+          <Col>
+            <img className="townImage" src="/CastleUpView.png" height={300}/>
+          </Col>
+
+        </Row>
+
+
         <Row>
           <h3
             style={{
