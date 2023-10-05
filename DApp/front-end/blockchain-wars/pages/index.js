@@ -3,7 +3,10 @@ import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { Col, Container, Row } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
+import { useRouter } from "next/router";
 export default function Home() {
+
+  const router = useRouter()
   return (
     // <main className={styles.main}>
     //   <div className={styles.container}>
@@ -110,7 +113,7 @@ export default function Home() {
       <Container>
         <Row>
           <Col className="indexPageHeader">
-            <h2>Blockchains's kingdom</h2>
+            <h2>Blockchains wars</h2>
             {/* <Carousel>
       <Carousel.Item>
         <img src="/asset_land.png" height={300} width={360}></img>
@@ -173,45 +176,46 @@ export default function Home() {
             </div>
           </Col>
         </Row>
-        <Row style={{"marginTop":"20rem"}}>
+        <Row style={{"marginTop":"30rem"}}>
           <Col>
           <div>
           <div className="mainPageTextContainer" >
               <h2>How to earn money?</h2>
-              <h5>Earn money by selling goods.<br></br>To earn goods users can build its relevant building of goods. Also users can loot other players.</h5>
+              <h5>Earn money by selling goods.<br></br>To earn goods users can build relevant building of goods. Also users can loot other players.</h5>
             </div>
           </div>
           </Col>
-          <Col><img className="townImage" src="/CastleUpView.png" height={300}/></Col>
+          <Col>
+
+          </Col>
+          <Col>          <img  src="/dollar.png" height={100}/></Col>
         </Row>
-                <Row style={{"marginTop":"20rem"}}>
+                <Row style={{"marginTop":"40rem"}}>
           <Col >
-          <div
+          {/* <div
               className="nftBox"
-              // style={{ padding: "1rem", marginTop: "5rem" }}
             >
               <img src="/asset_Land.png" height={200} />
-              {/* <img src="/Castle3.png" height={200} /> */}
-            </div>
+            </div> */}
           </Col>
           <Col>
             <div className="mainPageTextContainer">
               <h2>Based on digitall assets.</h2>
               <h5>All assets are token that means anything in game has value.</h5>
-              <h5>Earn money by selling goods.<br></br>To earn goods you can build its relevant building. Also users can loot other players.</h5>
+              {/* <h5>Earn money by selling goods.<br></br>To earn goods you can build its relevant building. Also users can loot other players.</h5> */}
             </div>
           </Col>
+          <Col></Col>
         </Row>
-        <Row style={{"marginTop":"20rem"}}>
+        <Row style={{"marginTop":"40rem"}}>
+        <Col></Col>
+        <Col></Col>
         <Col>
             <div className="mainPageTextContainer">
               <h2>Innovative tokenomics</h2>
               <h5>The common problem that all P2E applications struggle with is tokenomics. Since the token of these applications has not tempting usage, all users want to sell them and supply will become much bigger than demand. We considered innovative tokenomics that will solve this problem.</h5>
-              <h5>Look at tokenomcis through the <span style={{"textDecoration":"underline"}}> documentation</span>.</h5>
+              <h5>Look at tokenomcis through the <span onClick={() => {router.push("/docs")}} style={{"textDecoration":"underline", cursor:"pointer",fontSize:"1.1rem"}}> documentation</span>.</h5>
             </div>
-          </Col>
-          <Col>
-            <img className="townImage" src="/CastleUpView.png" height={300}/>
           </Col>
 
         </Row>
@@ -221,7 +225,7 @@ export default function Home() {
           <h3
             style={{
               color: "white",
-              marginTop: "10rem",
+              marginTop: "30rem",
               fontFamily: "courier",
             }}
           >

@@ -24,7 +24,7 @@ import {
   coinbaseWallet,
   walletConnect,
 } from "@thirdweb-dev/react";
-
+import Footer from "../components/Footer"
 // dotenv.config();
 require("dotenv").config();
 // This is the chain your dApp will work on.
@@ -256,6 +256,7 @@ function MyApp({ Component, pageProps }) {
         target={target}
         setTarget={setTarget}
       />
+      <Footer/>
     </ThirdwebProvider>
   );
 }

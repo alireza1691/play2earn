@@ -59,7 +59,7 @@ const Navbar = (
   return (
       <MyNav expand="lg" data-bs-theme="dark" bg="transparent" style={{
         }}>
-      <Container fluid>
+      <Container fluid style={{"position":"fixed","paddingTop":"3rem"}}>
         <MyNav.Brand href="#" onClick={()=>{router.push('/')}}>Blockchain wars</MyNav.Brand>
         <MyNav.Toggle aria-controls="navbarScroll" />
         <MyNav.Collapse id="navbarScroll">

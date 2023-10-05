@@ -49,6 +49,7 @@ contract BarracksV1 is Ownable{
         uint8 requiredLevel;
         string name;
         uint256 price;
+        uint256 trainingTime;
     }
 
     WarriorInfo[] warriorTypes;
@@ -65,9 +66,9 @@ contract BarracksV1 is Ownable{
 
 
     constructor(){
-        warriorTypes.push(WarriorInfo( 60, 90, 140, 1,"Spearman",5 ether));
-        warriorTypes.push(WarriorInfo( 90, 70, 200, 2,"Swordsman",8 ether));
-        warriorTypes.push(WarriorInfo( 40, 60, 80, 3,"Archer",10 ether));
+        warriorTypes.push(WarriorInfo( 60, 90, 140, 1,"Spearman",5 ether, 5 minutes));
+        warriorTypes.push(WarriorInfo( 90, 70, 200, 2,"Swordsman",8 ether, 8 minutes));
+        warriorTypes.push(WarriorInfo( 40, 60, 80, 3,"Archer",10 ether, 10 minutes));
     }
 
 
@@ -114,8 +115,8 @@ contract BarracksV1 is Ownable{
         townContract = town;
     }
 
-    function updateWarriorType_(uint8[3] memory physicalInfo,uint8 requiredLevel/*, string memory imageURL*/, string memory name, uint256 price, uint256 typeIndex) public  onlyOwner{
-        warriorTypes[typeIndex] = WarriorInfo( physicalInfo[0], physicalInfo[1], physicalInfo[2], requiredLevel,/* imageURL,*/name,price );
+    function updateWarriorType_(uint8[3] memory physicalInfo,uint8 requiredLevel/*, string memory imageURL*/, string memory name, uint256 price, uint256 typeIndex, uint256 traningTime) public  onlyOwner{
+        warriorTypes[typeIndex] = WarriorInfo( physicalInfo[0], physicalInfo[1], physicalInfo[2], requiredLevel,/* imageURL,*/name, price,  traningTime);
     }
 
     function addWarrior_(uint256 warriorType, uint256 amount, uint256 landId) external  onlyTown {
