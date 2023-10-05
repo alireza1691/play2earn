@@ -32,6 +32,7 @@ body {
   /* background: linear-gradient(to bottom, #005c97, #363795,  #17186e); */
   /* background: linear-gradient(to bottom, #005c97, #0d0f77,  #010216); */
   background: linear-gradient(60deg, #000000, #282a11, #010216,  #010216,#010216,  #010216,  #1b1d0c,#010216,  #010216,   #383b18);
+  /* background: linear-gradient(60deg, #ffffff, #f0f0e7, #ffffff,  #ffffff,#010216,  #010216,  #1b1d0c,#010216,  #bdc9bd,   #e8e9e2); */
   /* min-height: 4096px; */
 }
 
@@ -41,6 +42,27 @@ min-height: 500px;
 background-size: cover;
 background-position: center;
 
+}
+.stepCol{
+  margin: 1rem;
+  color: white;
+  padding: 1rem;
+  background-color:  rgba(170, 252, 87, 0.07);
+  min-height: 5rem;
+  text-align: center;
+  border-radius: 1rem;
+}
+.stepCol h2{
+  font-size: 1.3rem;
+  font-family: monospace;
+}
+.stepCol h3{
+  border-radius: 2rem;
+  border: 2px solid white;
+  width: fit-content;
+  padding: 0.5rem;
+  /* margin-left: auto;
+  margin-right: auto; */
 }
 .carousel {
   height: 600px;
@@ -321,6 +343,7 @@ min-height: 400px;
   /* height: 100vh; */
   padding-top: 5%;
   padding-bottom: 5%;
+  min-height: 1024px;
 }
 .landImg {
   max-width: 100%;

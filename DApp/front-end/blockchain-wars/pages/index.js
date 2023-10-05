@@ -145,7 +145,7 @@ export default function Home() {
         <Row>
           <Col>
             <div className="mainPageTextContainer">
-              <h2>Play & Earn</h2>
+              {/* <h2>Play & Earn</h2>
               <h5
               >
                 Build your kingdom &#8680; Enjoy the game &#8680; Earn money
@@ -156,17 +156,19 @@ export default function Home() {
                 }}
               >
                 To build your kingdom you need a land.
-              </h5>
+              </h5> */}
               <button className="greenButton" style={{ marginTop: "3rem" }}>
                 Explore in lands &#10140;
               </button>
+              <h5 style={{"marginTop":"3rem"}}>Mint your land in presale with <span style={{"color":"greenyellow"}}> 50% </span> of the price</h5>
+              <h5 >Presale is live until the <span style={{"color":"greenyellow"}}> 1/1/2024 </span></h5>
             </div>
 
             {/* <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
         <img src="/asset_Land.png" height={200}/>
       </div> */}
           </Col>
-          <Col>
+          <Col >
             <div style={{ display: "flex", justifyContent: "center" }}>
               <img
                 src="/Warriors/AchaemenidSpearman.png"
@@ -174,6 +176,28 @@ export default function Home() {
                 style={{ textAlign: "center" }}
               />
             </div>
+          </Col>
+        </Row>
+        <Row style={{"marginTop":"5rem"}}>
+          <Col className="stepCol">
+            <h3>1</h3>
+          <h2>Mint your land</h2>
+          <p></p>
+          </Col>
+          <Col className="stepCol">
+          <h3>2</h3>
+          <h2>Build your kingdom in the land</h2>
+          <p></p>
+          </Col>
+          <Col className="stepCol">
+          <h3>3</h3>
+          <h2>Enjoy the game</h2>
+          <p></p>
+          </Col>
+          <Col className="stepCol">
+          <h3>4</h3>
+          <h2>Earn money</h2>
+          <p></p>
           </Col>
         </Row>
         <Row style={{"marginTop":"30rem"}}>
@@ -188,7 +212,7 @@ export default function Home() {
           <Col>
 
           </Col>
-          <Col>          <img  src="/dollar.png" height={100}/></Col>
+          <Col><img  src="/dollar.png" height={100}/></Col>
         </Row>
                 <Row style={{"marginTop":"40rem"}}>
           <Col >

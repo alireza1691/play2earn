@@ -13,7 +13,7 @@ import dotenv from "dotenv";
 require("dotenv").config();
 
 const Navbar = (
-    { connect, landsInstance, setAddress, setLandsApiResponse }
+    { setAddress}
     ) => {
   const [balance, setBalance] = useState();
   const [owner, setOwner] = useState();

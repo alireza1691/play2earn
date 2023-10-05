@@ -47,11 +47,12 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   const [targetObj, setTargetObj] = useState();
   const [error, setError] = useState();
   const [errorStatus, setErrorStatus] = useState();
+  const [chainId, setChainId] = useState()
 
   const connectWithMetamask = useMetamask();
   const router = useRouter();
   const sdk = useSDK();
-  const validChainId = Sepolia.chainId;
+  const validChainId = LineaTestnet.chainId;
   const connect = useConnect();
   const signer = useSigner();
   const address = useAddress();
@@ -148,6 +149,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
         // console.log(error.errorArgs);
       }
     } else {
+      console.log("Wrong network. Sending request to change network");
       await handleConnectWithMetamask();
     }
   };

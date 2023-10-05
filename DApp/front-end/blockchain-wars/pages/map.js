@@ -250,7 +250,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
       <Toast.Header onClick={handleClosePopUp}>
         <img src="holder.js/20x20?text=%20" className="rounded me-2" alt=""/>
         <strong className="me-auto">Wallet not detected</strong>
-        <small>Blochchain wars</small>
+        {/* <small>Blochchain wars</small> */}
       </Toast.Header>
       <Toast.Body>If you have any land we recommend to{" "}
                   <span
@@ -528,33 +528,38 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                       </div>
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        display: "block",
-                        marginTop: "1%",
-                        height: "200px",
-                        paddingTop: "15%",
-                        width: "100%",
-                        textAlign: "center",
-                      }}
-                    >
-                      <h2
-                        style={{
-                          fontFamily: "monospace",
-                          fontSize: "0.9rem",
-                          color: "white",
-                        }}
-                      >
-                        Loading...
-                      </h2>
-                      <Spinner
-                        animation="border"
-                        role="status"
-                        style={{ textAlign: "center", color: "white" }}
-                      >
-                        <span className="visually-hidden">Loading...</span>
-                      </Spinner>
-                    </div>
+                    <>
+                    {closePopUp == true && (
+                                        <div
+                                        style={{
+                                          display: "block",
+                                          marginTop: "1%",
+                                          height: "200px",
+                                          paddingTop: "15%",
+                                          width: "100%",
+                                          textAlign: "center",
+                                        }}
+                                      >
+                                        <h2
+                                          style={{
+                                            fontFamily: "monospace",
+                                            fontSize: "0.9rem",
+                                            color: "white",
+                                          }}
+                                        >
+                                          Loading...
+                                        </h2>
+                                        <Spinner
+                                          animation="border"
+                                          role="status"
+                                          style={{ textAlign: "center", color: "white" }}
+                                        >
+                                          <span className="visually-hidden">Loading...</span>
+                                        </Spinner>
+                                      </div>
+                    )}
+                    </>
+  
                   )}
                 </>
               )}
