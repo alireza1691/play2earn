@@ -145,8 +145,8 @@ export default function Home() {
         <Row>
           <Col>
             <div className="mainPageTextContainer">
-              {/* <h2>Play & Earn</h2>
-              <h5
+               <h2>Presale is <span style={{"color":"greenyellow"}}>live</span></h2>
+              {/*<h5
               >
                 Build your kingdom &#8680; Enjoy the game &#8680; Earn money
               </h5>
@@ -157,17 +157,72 @@ export default function Home() {
               >
                 To build your kingdom you need a land.
               </h5> */}
-              <button className="greenButton" style={{ marginTop: "3rem" }}>
+              <button className="greenButton" style={{ marginTop: "1rem" }}>
                 Explore in lands &#10140;
               </button>
-              <h5 style={{"marginTop":"3rem"}}>Mint your land in presale with <span style={{"color":"greenyellow"}}> 50% </span> of the price</h5>
-              <h5 >Presale is live until the <span style={{"color":"greenyellow"}}> 1/1/2024 </span></h5>
+              <h5 style={{"marginTop":"3rem"}}>Lands are limited and only<span style={{"color":"greenyellow"}}> 10,000</span> land exist</h5>
+              <h5 >Mint your land in presale with <span style={{"color":"greenyellow"}}> 50% </span> of the price</h5>
+              {/* <h5 >Presale is live until the <span style={{"color":"greenyellow"}}> 1/1/2024 </span></h5> */}
             </div>
 
             {/* <div className="nftBox"   style={{"padding":"1rem","marginTop":"5rem"}}>
         <img src="/asset_Land.png" height={200}/>
       </div> */}
           </Col>
+          <Col >
+          <div
+              className="parcelBox"
+            >
+              <img src="/Parcel.png" />
+            </div>
+            {/* <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src="/Warriors/AchaemenidSpearman.png"
+                height={600}
+                style={{ textAlign: "center" }}
+              />
+            </div> */}
+          </Col>
+        </Row>
+        <Row style={{"marginTop":"10rem"}}>
+          <Col className="stepCol">
+            <h3>1</h3>
+          <h2>Mint your land</h2>
+          <p></p>
+          </Col>
+          <Col className="stepCol">
+          <h3>2</h3>
+          <h2>Build your kingdom</h2>
+          <p></p>
+          </Col>
+          <Col className="stepCol">
+          <h3>3</h3>
+          <h2>Earn money</h2>
+          <p></p>
+          </Col>
+          {/* <Col className="stepCol">
+          <h3>4</h3>
+          <h2>Enjoy the game</h2>
+          <p></p>
+          </Col> */}
+        </Row>
+        <Row style={{"marginTop":"20rem"}}>
+          <Col>
+          <div>
+          <div className="mainPageTextContainer" >
+              <h2>How to earn money?</h2>
+              <h5>Earn money by selling goods.<br></br>To earn goods users can build relevant building of goods. Also users can loot the other players.</h5>
+            </div>
+          </div>
+          </Col>
+          <Col>
+
+          </Col>
+          <Col>
+          {/* <img  src="/dollar.png" height={100}/> */}
+          </Col>
+        </Row>
+                <Row style={{"marginTop":"30rem"}}>
           <Col >
             <div style={{ display: "flex", justifyContent: "center" }}>
               <img
@@ -177,61 +232,17 @@ export default function Home() {
               />
             </div>
           </Col>
-        </Row>
-        <Row style={{"marginTop":"5rem"}}>
-          <Col className="stepCol">
-            <h3>1</h3>
-          <h2>Mint your land</h2>
-          <p></p>
-          </Col>
-          <Col className="stepCol">
-          <h3>2</h3>
-          <h2>Build your kingdom in the land</h2>
-          <p></p>
-          </Col>
-          <Col className="stepCol">
-          <h3>3</h3>
-          <h2>Enjoy the game</h2>
-          <p></p>
-          </Col>
-          <Col className="stepCol">
-          <h3>4</h3>
-          <h2>Earn money</h2>
-          <p></p>
-          </Col>
-        </Row>
-        <Row style={{"marginTop":"30rem"}}>
-          <Col>
-          <div>
-          <div className="mainPageTextContainer" >
-              <h2>How to earn money?</h2>
-              <h5>Earn money by selling goods.<br></br>To earn goods users can build relevant building of goods. Also users can loot other players.</h5>
-            </div>
-          </div>
-          </Col>
           <Col>
 
-          </Col>
-          <Col><img  src="/dollar.png" height={100}/></Col>
-        </Row>
-                <Row style={{"marginTop":"40rem"}}>
-          <Col >
-          {/* <div
-              className="nftBox"
-            >
-              <img src="/asset_Land.png" height={200} />
-            </div> */}
-          </Col>
-          <Col>
-            <div className="mainPageTextContainer">
-              <h2>Based on digitall assets.</h2>
-              <h5>All assets are token that means anything in game has value.</h5>
-              {/* <h5>Earn money by selling goods.<br></br>To earn goods you can build its relevant building. Also users can loot other players.</h5> */}
+            <div className="mainPageTextContainer" style={{"marginTop":"25%"}}>
+              <h2>Based on digitall assets</h2>
+              <h5>Game contains ERC20 and ERC721 tokens which are standard tradable tokens</h5>
+              {/* <h5>All assets are token that means anything in game is tradable has value.</h5> */}
             </div>
           </Col>
           <Col></Col>
         </Row>
-        <Row style={{"marginTop":"40rem"}}>
+        <Row style={{"marginTop":"30rem"}}>
         <Col></Col>
         <Col></Col>
         <Col>
@@ -249,7 +260,7 @@ export default function Home() {
           <h3
             style={{
               color: "white",
-              marginTop: "30rem",
+              marginTop: "20rem",
               fontFamily: "courier",
             }}
           >
