@@ -380,24 +380,31 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         )}
 
         <Container>
+         
           {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
             <>
+             <Row><h2 className="defaultH2">Connected address lands:</h2></Row>
               <Row>
                 {selectedLand == undefined &&
                   landObj.map((land, key) => (
                     <React.Fragment key={land.coordinate + key}>
-                      <Col md={{ span: 6, offset: 0 }}>
-                        <div className="listItemInfo">
+                      <Col
+                      //  md={{ span: 3, offset: 0 }}
+                      md="auto"
+                       >
+                        <div className="landCard">
                           <img src={landImgUrl}></img>
-                          <div className="listItemColumn">
+                          <div>
                             <h2 className="defaultH2">Land</h2>
-                            <p>Token ID: {land.coordinate}</p>
-                            <Button
-                              variant="primary"
+                            <p>Coordinate: {land.coordinate}</p>
+                            <button className="greenButton" style={{"padding":"0.3rem","borderRadius":"0.5rem","marginBottom":"1rem","width":"100px"}} onClick={() => setSelectedLand(land)}>Open</button>
+                            {/* <Button
+                            style={{"marginBottom":"1rem"}}
+                              variant="light"
                               onClick={() => setSelectedLand(land)}
                             >
                               Open
-                            </Button>
+                            </Button> */}
                           </div>
                         </div>
                       </Col>
