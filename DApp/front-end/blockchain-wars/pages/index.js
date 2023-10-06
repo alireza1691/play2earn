@@ -145,7 +145,7 @@ export default function Home() {
         <Row>
           <Col>
             <div className="mainPageTextContainer">
-               <h2>Presale is <span style={{"color":"greenyellow"}}>live</span></h2>
+               <h1>Presale is <span style={{"color":"greenyellow"}}>live</span></h1>
               {/*<h5
               >
                 Build your kingdom &#8680; Enjoy the game &#8680; Earn money

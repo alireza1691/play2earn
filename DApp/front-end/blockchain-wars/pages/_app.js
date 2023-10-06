@@ -213,7 +213,6 @@ function MyApp({ Component, pageProps }) {
                   tokenId: parseInt(topics[3], 16).toString(),
                   owner: ownerAddress,
                 });
-                console.log(topics[2]);
               }
             }
           } catch (error) {

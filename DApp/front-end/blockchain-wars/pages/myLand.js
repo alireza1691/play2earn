@@ -49,7 +49,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const signer = useSigner();
   const connectWithMetamask = useMetamask();
 
-  const validChainId = Sepolia.chainId;
+  const validChainId = LineaTestnet.chainId;
 
   const buildingsImageSources = [
     "BuildingsIMG/StoneMine.png",
@@ -260,10 +260,12 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       if (signer && address && selectedLand !== undefined && provider) {
         console.log("Useeffect called");
 
-        const townInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        const townInstance = new ethers.Contract(townV2, TownV2.abi, provider);
         const landData = await townInstance.getLandIdData(
           selectedLand.coordinate
         );
+       
+          console.log(landData);
         const ownedBuildings_ = landData.buildedBuildings;
         const existedBuildings = await townInstance.getBuildings();
         console.log(existedBuildings);
