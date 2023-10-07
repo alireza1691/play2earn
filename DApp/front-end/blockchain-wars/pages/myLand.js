@@ -20,7 +20,8 @@ import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Table from 'react-bootstrap/Table';
 
 const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   // const [isLandSelected, setIsLandSelected] = useState(false);
@@ -41,7 +42,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState();
   const [workerBusyTime, setWorkerBusyTime] = useState();
-  const [commodityIndex, setCommodityIndex] = useState()
+  const [commodityIndex, setCommodityIndex] = useState();
 
   const sdk = useSDK();
   const router = useRouter();
@@ -49,7 +50,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const signer = useSigner();
   const connectWithMetamask = useMetamask();
 
-  const validChainId = LineaTestnet.chainId;
+  const validChainId = Sepolia.chainId;
 
   const buildingsImageSources = [
     "BuildingsIMG/StoneMine.png",
@@ -59,11 +60,17 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     "BuildingsIMG/GoldMine1.png",
   ];
   const warriorsImageSources = [
-    "Warriors/PersianSpearman.png",
+    "Warriors/AchaemenidSpearman.png",
     "Warriors/Swordsman.png",
     "Warriors/Archer.png",
   ];
-  const commodityItems = [{name: "Stone",image: "/Stone.png"}, {name: "Wood",image: "/Wood.png"}, {name: "Iron",image: "/Iron.png"}, {name: "Food",image: "/Food.png"}, {name: "Gold",image: "Gold.png"}]
+  const commodityItems = [
+    { name: "Stone", image: "/Stone.png" },
+    { name: "Wood", image: "/Wood.png" },
+    { name: "Iron", image: "/Iron.png" },
+    { name: "Food", image: "/Food.png" },
+    { name: "Gold", image: "Gold.png" },
+  ];
 
   const handleConnectWithMetamask = async () => {
     try {
@@ -112,7 +119,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       try {
         console.log(ethers.utils.parseEther(enteredAmount));
         const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer);
-        const balance = await BKTInst.balanceOf(address)
+        const balance = await BKTInst.balanceOf(address);
         console.log(balance.toString());
         console.log("instance");
         await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
@@ -220,6 +227,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
       try {
         console.log(typeIndex);
         console.log("Input value:", inputValue);
+        console.log(signer);
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         const goldBal = await TownInstance.getAssetsBal(
           selectedLand.coordinate
@@ -264,8 +272,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const landData = await townInstance.getLandIdData(
           selectedLand.coordinate
         );
-       
-          console.log(landData);
+
+        console.log(landData);
         const ownedBuildings_ = landData.buildedBuildings;
         const existedBuildings = await townInstance.getBuildings();
         console.log(existedBuildings);
@@ -288,7 +296,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
             selectedLand.coordinate
           );
           console.log(
-            "worket will be bsuy for",
+            "worker will be busy for",
             busyTime.toString(),
             "minutes"
           );
@@ -380,24 +388,39 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         )}
 
         <Container>
-         
           {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
             <>
-             <Row><h2 className="defaultH2">Connected address lands:</h2></Row>
+              {selectedLand == undefined && (
+                <Row>
+                  <h2 className="defaultH2">Connected address lands:</h2>
+                </Row>
+              )}
+
               <Row>
                 {selectedLand == undefined &&
                   landObj.map((land, key) => (
                     <React.Fragment key={land.coordinate + key}>
                       <Col
-                      //  md={{ span: 3, offset: 0 }}
-                      md="auto"
-                       >
+                        //  md={{ span: 3, offset: 0 }}
+                        md="auto"
+                      >
                         <div className="landCard">
                           <img src={landImgUrl}></img>
                           <div>
                             <h2 className="defaultH2">Land</h2>
                             <p>Coordinate: {land.coordinate}</p>
-                            <button className="greenButton" style={{"padding":"0.3rem","borderRadius":"0.5rem","marginBottom":"1rem","width":"100px"}} onClick={() => setSelectedLand(land)}>Open</button>
+                            <button
+                              className="sGreenButton"
+                              style={{
+                                // padding: "0.3rem",
+                                // borderRadius: "0.5rem",
+                                marginBottom: "1rem",
+                                // width: "100px",
+                              }}
+                              onClick={() => setSelectedLand(land)}
+                            >
+                              Open
+                            </button>
                             {/* <Button
                             style={{"marginBottom":"1rem"}}
                               variant="light"
@@ -497,7 +520,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
           {selectedLand !== undefined && (
             <>
               <Row>
-                <Col md={{ span: 12, offset: 0 }}>
+                <Col >
                   <div className="myLandColumn">
                     <h4
                       className="clickableH4"
@@ -547,74 +570,103 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         </h6>
                       </div>
                     </div>
+                  </div>
+                </Col>
+              </Row>
+              <Row style={{"marginTop":"3rem"}}>
+                <Col className="transferCol" sm={3}>
+                <InputGroup className="mb-3" size="sm">
+                        <Form.Control
+                          placeholder="Enter amount..."
+                          aria-label="Amount (to the nearest dollar)"
+                          // style={{ width: "50%" }}
+                          onChange={(e) => setEnteredAmount(e.target.value)}
+                        />
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="success"
+                            id="dropdown-basic"
+                            className="selectDropdown"
+                          >
+                            Select
+                          </Dropdown.Toggle>
 
-                    <div className="myLandBox">
-                      <div className="landBoxColumn">
-                        <InputGroup className="mb-3" size="sm">
-                          <Form.Control
-                            placeholder="Enter amount..."
-                            aria-label="Amount (to the nearest dollar)"
-                            style={{ width: "50%" }}
-                            onChange={(e) => setEnteredAmount(e.target.value)}
-                          />
-                          <Dropdown>
-                            <Dropdown.Toggle
-                              variant="success"
-                              id="dropdown-basic"
-                              className="selectDropdown"
-                            >
-                              Select
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                              {commodityItems.map((commodity, key) =>(
-                                <Dropdown.Item href="#/action-1" key={key} onClick={() => setCommodityIndex(key)}>
+                          <Dropdown.Menu>
+                            {commodityItems.map((commodity, key) => (
+                              <Dropdown.Item
+                                href="#/action-1"
+                                key={key}
+                                onClick={() => setCommodityIndex(key)}
+                              >
                                 <img
                                   src={commodity.image}
                                   className="dropdownTokenLogo"
                                 ></img>
                                 {commodity.name}
                               </Dropdown.Item>
-                              ))}
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </InputGroup>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </InputGroup>
+                      <Button
+                        variant="outline-light"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => deposit(true)}
+                      >
+                        Deposit
+                      </Button>
+                      <Button
+                        variant="outline-light"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => deposit(true)}
+                      >
+                        Split deposit
+                      </Button>
+                      {commodityIndex !== undefined ? (
                         <Button
                           variant="outline-light"
                           size="sm"
-                          style={{ marginRight: "10px" }}
-                          onClick={() => deposit(true)}
+                          onClick={() => withdraw()}
                         >
-                          Deposit
-                        </Button>
-                        {commodityIndex !== undefined ? (
-                                                  <Button variant="outline-light" size="sm" onClick={()=> withdraw()}>
-                                                  Withdraw
-                                                </Button>
-                        ) : (
-                          <Button variant="outline-light" size="sm" disabled>
                           Withdraw
                         </Button>
-                        )}
-
-                      </div>
-                      <div className="landBoxColumn">
+                      ) : (
+                        <Button variant="outline-light" size="sm" disabled>
+                          Withdraw
+                        </Button>
+                      )}
+                </Col>
+                <Col className="armyBalCol" sm={3}>
+                <Table striped bordered hover size="sm">
+                        {/* <thead>
+                          <tr>
+        
+                            <th className="tableLine">Warrior</th>
+                            <th className="tableLine">Amount</th>
+                          </tr>
+                        </thead> */}
+                        <tbody>
                         {Array.isArray(existedWarriors) &&
-                          existedWarriors.length > 0 &&
-                          Array.isArray(army) &&
-                          army.length > 0 &&
-                          existedWarriors.map((warrior, key) => (
-                            <h5 className="defaultH5" key={key}>
-                              {" "}
-                              {warrior.name} : {army[key].toString()}
-                            </h5>
-                          ))}
-                        {existedWarriors == undefined && army == undefined && (
-                          <h5 className="defaultH5"> Loading army...</h5>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                        existedWarriors.length > 0 &&
+                        Array.isArray(army) &&
+                        army.length > 0 &&
+                        existedWarriors.map((warrior, key) => (
+                          <tr key={key} >
+                            <td className="tableLine">{warrior.name}</td>
+                            <td className="tableLine">{army[key].toString()}</td>
+                          </tr>
+                        ))}
+                      {existedWarriors == undefined && army == undefined && (
+                        <h5 className="defaultH5"> Loading army...</h5>
+                      )}
+                        
+                        </tbody>
+                </Table>
+                </Col>
+                <Col>
+                
                 </Col>
               </Row>
               <Row style={{ marginTop: "1rem" }}>
@@ -626,7 +678,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         // border: "1px solid white",
                         padding: "0.2rem",
                         borderRadius: "0.3rem",
-                        textDecoration: "underLine"
+                        textDecoration: "underLine",
                       }}
                     >
                       {workerBusyTime.toString()}
@@ -635,16 +687,13 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </h4>
                 ) : (
                   <>
-                  { workerBusyTime == undefined ? (
-                   ""
-                  ) : (
-                    <h4 className="defaultH4" style={{ textAlign: "center" }}>
-                    Worker is ready.
-                  </h4>
-                  )
-
-                  }
-
+                    {workerBusyTime == undefined ? (
+                      ""
+                    ) : (
+                      <h4 className="defaultH4" style={{ textAlign: "center" }}>
+                        Worker is ready.
+                      </h4>
+                    )}
                   </>
                 )}
                 {/* <h3 className="defaultH4" style={{"textAlign":"center"}}> {workerBusyTime > 0 ? `Wroker will be free in ${workerBusyTime.toString()} minutes.` : "Worker is ready."}</h3> */}
@@ -672,32 +721,28 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           </div>
                           <h4>level: {item.level.toString()}</h4>
                           <div>
-                          {workerBusyTime !== undefined && workerBusyTime > 0 ?(
-                            <Button
-                            variant="outline-light"
-                            style={{}}
-                            size="sm"
-                           disabled
-                            
-                          >
-                            Upgrade
-                          </Button>
-                          ) : (
-                            
-                            <Button
-                            variant="outline-light"
-                            style={{}}
-                            onClick={() =>
-                              upgradeBuilding(ownedBuildings[key].tokenId)
-                            }
-                            size="sm"
-                           
-                            
-                          >
-                            Upgrade
-                          </Button>
-                          )}
-
+                            {workerBusyTime !== undefined &&
+                            workerBusyTime > 0 ? (
+                              <Button
+                                variant="outline-light"
+                                style={{}}
+                                size="sm"
+                                disabled
+                              >
+                                Upgrade
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outline-light"
+                                style={{}}
+                                onClick={() =>
+                                  upgradeBuilding(ownedBuildings[key].tokenId)
+                                }
+                                size="sm"
+                              >
+                                Upgrade
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -859,15 +904,18 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       ethers.utils.formatEther(
                                         item.requiredFood
                                       )
-                                    ) || workerBusyTime > 0  ? (
-                                    <Button disabled>Build</Button>
+                                    ) ||
+                                  workerBusyTime > 0 ? (
+                                    <button className="sGreenButton" disabled>Build</button>
+                                    // <Button disabled>Build</Button>
                                   ) : (
-                                    <Button
-                                      style={{ bottom: "0px" }}
-                                      onClick={() => mintBuilding(key)}
-                                    >
-                                      Build
-                                    </Button>
+                                    <button className="sGreenButton" onClick={() => mintBuilding(key)}>Build</button>
+                                    // <Button
+                                    //   style={{ bottom: "0px" }}
+                                    //   onClick={() => mintBuilding(key)}
+                                    // >
+                                    //   Build
+                                    // </Button>
                                   )}
                                 </div>
                               </div>
@@ -1003,7 +1051,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       requiredBarracksCommodities[4]
                                     ) *
                                       (Number(barracksLevel) + 1)
-                                  ) || workerBusyTime > 0  ? (
+                                  ) ||
+                                workerBusyTime > 0 ? (
                                   <Button disabled>Upgrade</Button>
                                 ) : (
                                   <Button

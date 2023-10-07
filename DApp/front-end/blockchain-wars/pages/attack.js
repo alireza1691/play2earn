@@ -52,7 +52,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   const connectWithMetamask = useMetamask();
   const router = useRouter();
   const sdk = useSDK();
-  const validChainId = LineaTestnet.chainId;
+  const validChainId = Sepolia.chainId;
   const connect = useConnect();
   const signer = useSigner();
   const address = useAddress();

@@ -162,7 +162,7 @@ contract LandsV2 is ERC721, Ownable {
 
 
 
-    constructor() ERC721("Polygon wars land","PWL"){
+    constructor() ERC721("Polygon wars land","PWL") Ownable(msg.sender){
     }
 
 
@@ -261,7 +261,7 @@ contract LandsV2 is ERC721, Ownable {
         uint256 _tokenId
     ) public view virtual override returns (string memory) {
         require(
-            _exists(_tokenId),
+            _ownerOf(_tokenId) != address(0),
             "ERC721Metadata: URI query for nonexistent token"
         );
 

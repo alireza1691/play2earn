@@ -7,6 +7,7 @@
   --lightTransaprent: rgba(255, 255, 255, 0.3);
   --darkBlue: #042032;
   --green: rgb(170, 252, 87);
+  --greenTransparent: rgba(170, 252, 87, 0.07)
 }
 html,
 body {
@@ -236,6 +237,37 @@ body {
   border: 2px solid white;
   color: white;
 }
+.sGreenButton {
+  min-width: 60px;
+  padding: 0.3rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(
+    to left,
+    rgb(170, 252, 87),
+    rgb(189, 246, 132),
+    rgb(170, 252, 87),
+    rgb(170, 252, 87)
+  );
+  border: 2px solid rgb(170, 252, 87);
+  font-size: 0.8rem;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+
+}
+.sGreenButton:hover {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+.sGreenButton:disabled {
+/* cursor: none; */
+color: lightgray;
+background: rgb(68, 124, 12) ;
+border-color: rgb(68, 124, 12);
+}
+.sGreenButton:disabled:hover {
+  color: lightgray;
+}
 .textBox {
   min-height: 100px;
   padding: 1.7rem;
@@ -377,9 +409,9 @@ body {
 .defaultH2 {
   font-size: 1.4rem;
   color: white;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   background: linear-gradient(
-    to bottom,
+    to right,
     rgb(175, 175, 175),
     rgb(255, 255, 255),
     rgb(187, 187, 187),
@@ -457,6 +489,13 @@ body {
   border-radius: 0.5rem;
   box-shadow: 0 0px 0.5rem 0.1rem rgba(0, 0, 0, 0.3);
 }
+.transferCol {
+  border: 2px solid rgba(202, 243, 140, 0.3);
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 1rem 0.3rem rgba(202, 243, 140, 0.3);
+}
 
 .myLandColumn {
   display: block;
@@ -465,7 +504,7 @@ body {
 .myLandBox {
   display: flex;
   padding: 1rem;
-  background-color: var(--lightTransaprent);
+  background-color: var(--greenTransparent);
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem 0.1rem rgba(0, 0, 0, 0.05);
   min-height: 15rem;
@@ -701,6 +740,19 @@ body {
   width: 100%;
   margin-top: 100px;
 }
+.armyBalCol{
+ padding: 1rem;
+ margin: 1rem;
+}
+.table {
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.tableLine {
+  background-color: transparent !important;
+  color: white !important;
+}
 
 @media (max-width: 767px) {
   .warImg {
@@ -735,10 +787,7 @@ body {
     text-align: center;
     width: 100%;
   }
-  .defaultH2 {
-    font-size: 1.2rem;
-    padding: 1rem;
-  }
+
   .listItemInfo {
     display: block;
   }
