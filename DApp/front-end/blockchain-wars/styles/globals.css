@@ -7,7 +7,8 @@
   --lightTransaprent: rgba(255, 255, 255, 0.3);
   --darkBlue: #042032;
   --green: rgb(170, 252, 87);
-  --greenTransparent: rgba(170, 252, 87, 0.07)
+  --greenTransparent: rgba(170, 252, 87, 0.07);
+  --darkGreen: rgba(202, 243, 140, 0.3);
 }
 html,
 body {
@@ -192,6 +193,7 @@ body {
   margin-right: auto;
   /* overflow: hidden; */
 }
+
 .landCard img {
   height: 160px;
   width: 100%;
@@ -238,9 +240,10 @@ body {
   color: white;
 }
 .sGreenButton {
+  margin-right: 0.5rem;
   min-width: 60px;
-  padding: 0.3rem;
-  border-radius: 0.5rem;
+  padding: 0.24rem;
+  border-radius: 0.2rem;
   background: linear-gradient(
     to left,
     rgb(170, 252, 87),
@@ -248,25 +251,75 @@ body {
     rgb(170, 252, 87),
     rgb(170, 252, 87)
   );
-  border: 2px solid rgb(170, 252, 87);
-  font-size: 0.8rem;
+  border: 1px solid rgb(170, 252, 87);
+  font-size: 0.9rem;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 
 }
 .sGreenButton:hover {
   background: transparent;
-  border: 2px solid white;
+  border: 1px solid white;
   color: white;
 }
 .sGreenButton:disabled {
 /* cursor: none; */
-color: lightgray;
+color: black;
 background: rgb(68, 124, 12) ;
 border-color: rgb(68, 124, 12);
 }
 .sGreenButton:disabled:hover {
-  color: lightgray;
+  color: black;
+}
+.workerStatusBox{
+  /* background-color: var(--greenTransparent); */
+  text-align: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  /* border: 2px solid var(--darkGreen); */
+  /* box-shadow:  0 0 1rem 0.3rem var(--darkGreen); */
+}
+
+.timer h4{
+  margin-top: 1rem;
+  color: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 1.3rem;
+}
+.timer h3 {
+  margin-top: 1rem;
+  color: white;
+  /* border: 2px solid rgb(170, 252, 87);
+  box-shadow: 0 0rem 0.2rem 0.1rem rgb(170, 252, 87); */
+  background-color: var(--darkGreen);
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5rem;
+}
+.spinner-grow {
+  color: var(--darkGreen)!important;
+}
+/* .btn-outline-light{
+  background-color: white !important;
+} */
+.btn-success{
+  background-color:
+    rgb(170, 252, 87);
+  color: black;
+  border-color: rgb(170, 252, 87);
+}
+.btn-success:hover{
+  background-color: rgb(112, 172, 53);
+  color: black;
+  border-color: rgb(112, 172, 53);
+}
+.btn-success:disabled{
+  background-color: rgb(112, 172, 53);
+  border-color: rgb(112, 172, 53);
+  color: #000000;
 }
 .textBox {
   min-height: 100px;
@@ -490,11 +543,12 @@ border-color: rgb(68, 124, 12);
   box-shadow: 0 0px 0.5rem 0.1rem rgba(0, 0, 0, 0.3);
 }
 .transferCol {
-  border: 2px solid rgba(202, 243, 140, 0.3);
+  /* border: 2px solid var(--darkGreen); */
   padding: 1rem;
-  margin: 1rem;
+  /* margin: 1rem; */
   border-radius: 1rem;
-  box-shadow: 0 0 1rem 0.3rem rgba(202, 243, 140, 0.3);
+  /* box-shadow: 0 0 0.5rem 0.1rem var(--darkGreen); */
+  background-color: var(--greenTransparent);
 }
 
 .myLandColumn {
@@ -535,15 +589,17 @@ border-color: rgb(68, 124, 12);
   padding: 0.2rem;
   border-radius: 0.3rem;
 }
+
 .selectDropdown {
   width: fit-content !important;
-  background-color: white !important;
-  color: black !important;
-  border: none;
-  border-left: 2px solid grey;
+  background-color: var(--darkGreen) !important;
+  border-color: darkolivegreen!important;
+  color: white !important;
 }
 .selectDropdown:hover {
-  color: #000000;
+  border-color: white !important;
+  /* border: none; */
+  border-left: 2px solid grey;
 }
 .dropdownTokenLogo {
   width: 15px;
@@ -551,6 +607,10 @@ border-color: rgb(68, 124, 12);
   margin-right: 10px;
   /* style={{"width":"15px","height":"15px","marginRight":"10px" */
 }
+.dropdown-menu {
+  background-color: rgb(190, 197, 180);
+}
+
 .weaponIcon {
   width: 25px;
   height: 25px;
@@ -704,20 +764,30 @@ border-color: rgb(68, 124, 12);
   display: flex;
   justify-content: space-between;
 }
-.accordionBackground {
-  background-color: rgba(170, 252, 87, 0.01) !important;
+
+.accordion {
+  background-color: transparent;
 }
-/* .accordion :{
-  color: #000000;
-  background-color: #000000;
-} */
-/* .accordion .accordion-item {
-  background-color:  rgba(170, 252, 87, 0.07) !important;
+.accordion-item {
+  background-color: transparent;
   color: rgba(170, 252, 87, 0.07)!important;
-} */
-.accordion :first-child {
   border: none;
 }
+.accordion-button {
+  background-color: var(--darkGreen) !important;
+  color: white !important;
+}
+.accordion-header {
+  background-color: black;
+}
+.accordion-collapse {
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(170, 252, 87, 0.07);
+}
+.accordion-body{
+  background-color: transparent;
+}
+
 .warriorImage {
   height: 10rem !important;
   width: 8rem !important;
@@ -742,7 +812,7 @@ border-color: rgb(68, 124, 12);
 }
 .armyBalCol{
  padding: 1rem;
- margin: 1rem;
+ /* margin: 1rem; */
 }
 .table {
   background-color: transparent !important;
@@ -752,6 +822,27 @@ border-color: rgb(68, 124, 12);
 .tableLine {
   background-color: transparent !important;
   color: white !important;
+}
+.warHistoryCol{
+  height: 300px;
+}
+.warHistoryCol h2{
+  color: white;
+  font-style: italic;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  text-align: center;
+  font-size: 1.8rem;
+}
+.warHistory {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  background-color: rgb(226, 231, 244);
+  height: 200px; /* Adjust the height as per your requirement */
+  overflow-y: scroll;
+  padding: 0.3rem;
+  border: 1px solid rgb(189, 196, 214);
+  border-radius: 0.3rem;
+  /* width: 100%; */
 }
 
 @media (max-width: 767px) {

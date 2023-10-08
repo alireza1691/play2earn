@@ -573,13 +573,13 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                   </div>
                 </Col>
               </Row>
-              <Row style={{"marginTop":"3rem"}}>
+              <Row style={{"marginTop":"3rem","minHeight":"300px"}}>
                 <Col className="transferCol" sm={3}>
                 <InputGroup className="mb-3" size="sm">
                         <Form.Control
                           placeholder="Enter amount..."
                           aria-label="Amount (to the nearest dollar)"
-                          // style={{ width: "50%" }}
+      
                           onChange={(e) => setEnteredAmount(e.target.value)}
                         />
                         <Dropdown>
@@ -608,16 +608,18 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           </Dropdown.Menu>
                         </Dropdown>
                       </InputGroup>
+                      {/* <button className="sGreenButton">Deposit</button> */}
                       <Button
-                        variant="outline-light"
+                        variant="success"
                         size="sm"
                         style={{ marginRight: "10px" }}
                         onClick={() => deposit(true)}
                       >
                         Deposit
                       </Button>
+                      {/* <button className="sGreenButton">Split deposit</button> */}
                       <Button
-                        variant="outline-light"
+                        variant="success"
                         size="sm"
                         style={{ marginRight: "10px" }}
                         onClick={() => deposit(true)}
@@ -625,77 +627,82 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                         Split deposit
                       </Button>
                       {commodityIndex !== undefined ? (
+                        // <button className="sGreenButton">Withdraw</button>
                         <Button
-                          variant="outline-light"
+                          variant="success"
                           size="sm"
                           onClick={() => withdraw()}
                         >
                           Withdraw
                         </Button>
                       ) : (
-                        <Button variant="outline-light" size="sm" disabled>
+                        // <button className="sGreenButton" disabled>Withdraw</button>
+                        <Button variant="success" size="sm" disabled>
                           Withdraw
                         </Button>
                       )}
                 </Col>
                 <Col className="armyBalCol" sm={3}>
-                <Table striped bordered hover size="sm">
-                        {/* <thead>
-                          <tr>
-        
-                            <th className="tableLine">Warrior</th>
-                            <th className="tableLine">Amount</th>
-                          </tr>
-                        </thead> */}
-                        <tbody>
+
                         {Array.isArray(existedWarriors) &&
                         existedWarriors.length > 0 &&
                         Array.isArray(army) &&
                         army.length > 0 &&
-                        existedWarriors.map((warrior, key) => (
-                          <tr key={key} >
-                            <td className="tableLine">{warrior.name}</td>
-                            <td className="tableLine">{army[key].toString()}</td>
-                          </tr>
-                        ))}
+                        <Table striped bordered hover size="sm" >
+                          <tbody >
+                            {existedWarriors.map((warrior, key) => (
+                              <tr key={key}>
+                                <td className="tableLine">{warrior.name}</td>
+                                <td className="tableLine">{army[key].toString()}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </Table>
+  
+                        }
                       {existedWarriors == undefined && army == undefined && (
-                        <h5 className="defaultH5"> Loading army...</h5>
+                        <h5 className="defaultH5" style={{"textAlign":"center"}}> Loading army...</h5>
                       )}
                         
-                        </tbody>
-                </Table>
+                    
+      
                 </Col>
-                <Col>
-                
-                </Col>
-              </Row>
-              <Row style={{ marginTop: "1rem" }}>
+                <Col className="workerStatusBox" sm={3}> 
                 {workerBusyTime > 0 && workerBusyTime != undefined ? (
-                  <h4 className="defaultH4" style={{ textAlign: "center" }}>
-                    Wroker will be free in{" "}
-                    <span
-                      style={{
-                        // border: "1px solid white",
-                        padding: "0.2rem",
-                        borderRadius: "0.3rem",
-                        textDecoration: "underLine",
-                      }}
-                    >
-                      {workerBusyTime.toString()}
-                    </span>{" "}
-                    minutes.
-                  </h4>
+                  <div className="timer">
+                  <Spinner animation="grow" variant="success" />
+                  <h4>
+                    Wroker is busy.
+                    </h4>
+                    <h3 >
+    
+                      {`${Math.floor(workerBusyTime / 60 )} hours ${workerBusyTime % 60} minutes`}
+      
+                  </h3>
+                  </div>
                 ) : (
                   <>
                     {workerBusyTime == undefined ? (
                       ""
                     ) : (
-                      <h4 className="defaultH4" style={{ textAlign: "center" }}>
+                      <h4>
                         Worker is ready.
                       </h4>
                     )}
                   </>
                 )}
+                </Col>
+                <Col sm={3} className="warHistoryCol">
+                  <h2>War history</h2>
+                  <div className="warHistory">
+                  <p>something</p>
+                  </div>
+
+                </Col>
+              </Row>
+ 
+              <Row style={{ marginTop: "1rem" }}>
+           
                 {/* <h3 className="defaultH4" style={{"textAlign":"center"}}> {workerBusyTime > 0 ? `Wroker will be free in ${workerBusyTime.toString()} minutes.` : "Worker is ready."}</h3> */}
                 {Array.isArray(ownedBuildings) && ownedBuildings.length > 0 ? (
                   ownedBuildings.map((item, key) => (
@@ -709,14 +716,14 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                           </h4>
                           <div>
                             <Button
-                              variant="outline-light"
+                              variant="success"
                               style={{ marginBottom: "0.5rem" }}
                               onClick={() =>
                                 claimRev(ownedBuildings[key].tokenId)
                               }
                               size="sm"
                             >
-                              Claim
+                              Earn
                             </Button>
                           </div>
                           <h4>level: {item.level.toString()}</h4>
@@ -724,7 +731,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                             {workerBusyTime !== undefined &&
                             workerBusyTime > 0 ? (
                               <Button
-                                variant="outline-light"
+                                variant="success"
                                 style={{}}
                                 size="sm"
                                 disabled
@@ -733,7 +740,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                               </Button>
                             ) : (
                               <Button
-                                variant="outline-light"
+                                variant="success"
                                 style={{}}
                                 onClick={() =>
                                   upgradeBuilding(ownedBuildings[key].tokenId)
@@ -800,8 +807,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
               </Row>
               <Row style={{ marginTop: "1rem" }}>
                 <Accordion>
-                  <Accordion.Item eventKey="0" className="accordionBackground">
-                    <Accordion.Header className="accordion">
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header >
                       Buildings
                     </Accordion.Header>
                     <Accordion.Body>
@@ -906,16 +913,17 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       )
                                     ) ||
                                   workerBusyTime > 0 ? (
-                                    <button className="sGreenButton" disabled>Build</button>
-                                    // <Button disabled>Build</Button>
+                                    // <button className="sGreenButton" disabled>Build</button>
+                                    <Button variant="success" disabled>Build</Button>
                                   ) : (
-                                    <button className="sGreenButton" onClick={() => mintBuilding(key)}>Build</button>
-                                    // <Button
-                                    //   style={{ bottom: "0px" }}
-                                    //   onClick={() => mintBuilding(key)}
-                                    // >
-                                    //   Build
-                                    // </Button>
+                                    // <button className="sGreenButton" onClick={() => mintBuilding(key)}>Build</button>
+                                    <Button
+                                      style={{ bottom: "0px" }}
+                                      onClick={() => mintBuilding(key)}
+                                    variant="success"
+                                    >
+                                      Build
+                                    </Button>
                                   )}
                                 </div>
                               </div>
@@ -1053,10 +1061,12 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       (Number(barracksLevel) + 1)
                                   ) ||
                                 workerBusyTime > 0 ? (
-                                  <Button disabled>Upgrade</Button>
+                                  <Button variant="success" disabled>Upgrade</Button>
                                 ) : (
+                                  // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
                                   <Button
                                     style={{ bottom: "0px" }}
+                                    variant="success"
                                     onClick={() => upgradeBarracks()}
                                   >
                                     Upgrade
@@ -1108,8 +1118,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                             setInputValue(e.target.value)
                                           }
                                         />
-                                        <Button onClick={() => recruit(key)}>
-                                          Build
+                                        <Button variant="success" onClick={() => recruit(key)}>
+                                          Train
                                         </Button>
                                       </>
                                     ) : (
@@ -1119,7 +1129,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                           aria-label="Amount (to the nearest dollar)"
                                           disabled
                                         />
-                                        <Button disabled>Build</Button>
+                                        <Button variant="success" disabled>Train</Button>
                                       </>
                                     )}
                                   </InputGroup>
