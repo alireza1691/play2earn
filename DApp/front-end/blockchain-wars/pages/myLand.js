@@ -570,11 +570,12 @@ const myLand = ({
                     />
                     <Dropdown>
                       <Dropdown.Toggle
-                        variant="success"
+                        variant="light"
                         id="dropdown-basic"
                         className="selectDropdown"
+                        style={{"minWidth":"80px"}}
                       >
-                        Select
+                        {commodityIndex == undefined ? "Select" : commodityItems[commodityIndex].name}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>

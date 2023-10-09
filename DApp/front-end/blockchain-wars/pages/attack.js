@@ -34,12 +34,11 @@ import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 
 const metamaskConfig = metamaskWallet();
 
-const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
+const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWarriors}) => {
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState();
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-  const [warriorTypes, setWarriorTypes] = useState();
   const [armyAmounts, setArmyAmounts] = useState();
   const [enteredAmounts, setEnteredAmounts] = useState([0,0,0]);
   const [totalEnteredAmount, setTotalEnteredAmount] = useState(0);
@@ -47,7 +46,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   const [targetObj, setTargetObj] = useState();
   const [error, setError] = useState();
   const [errorStatus, setErrorStatus] = useState();
-  const [chainId, setChainId] = useState()
+  const [targetArmy, setTargetArmy] = useState()
 
   const connectWithMetamask = useMetamask();
   const router = useRouter();
@@ -62,7 +61,11 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
     "/weapon/Sword.png",
     "/weapon/Archery.png",
   ];
-
+  const warriorsImageSources = [
+    "Warriors/AchaemenidSpearman.png",
+    "Warriors/PersianAncientWarrior.png",
+    "Warriors/PersianArcher.png",
+  ];
   const handleConnectWithMetamask = async () => {
     try {
       await connectWithMetamask({
@@ -81,11 +84,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
   };
   const handlSelectLand = async (land) => {
     setSelectedLand(land);
-    const townInst = new Contract(townV2, TownV2.abi, provider);
-    const userArmy = await townInst.getArmy(land.coordinate);
-    console.log(land.coordinate);
-    setArmyAmounts(userArmy);
-    console.log(userArmy);
+    setArmyAmounts(land.armyBal);
   };
   const handleArmyAmount = (index, amount) => {
     const updatedArray = [...enteredAmounts];
@@ -114,8 +113,9 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
 
   const checkTarget = async () => {
     setErrorStatus();
-    const chainId = await sdk.wallet.getChainId();
-    if (chainId == validChainId) {
+    setTargetArmy();
+    // const chainId = await sdk.wallet.getChainId();
+    // if (chainId == validChainId) {
       try {
         const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
         const tokenIdOwner = await landsInst.ownerOf(target);
@@ -124,6 +124,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
         } else {
           const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
           const targetArmy = await townInst.getArmy(target)
+          setTargetArmy(targetArmy)
           console.log("Target army:",targetArmy);
           const bal = await townInst.getAssetsBal(target);
           const obj = {
@@ -148,10 +149,10 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
 
         // console.log(error.errorArgs);
       }
-    } else {
-      console.log("Wrong network. Sending request to change network");
-      await handleConnectWithMetamask();
-    }
+    // } else {
+    //   console.log("Wrong network. Sending request to change network");
+    //   await handleConnectWithMetamask();
+    // }
   };
 
   const submitAttack = async () => {
@@ -187,20 +188,20 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-      const townInst = new ethers.Contract(
-        townV2,
-        TownV2.abi,
-        provider
-      );
-      const warriorTypes = await townInst.getWarriorTypes();
-      setWarriorTypes(warriorTypes);
+      // const townInst = new ethers.Contract(
+      //   townV2,
+      //   TownV2.abi,
+      //   provider
+      // );
+      // const warriorTypes = await townInst.getWarriorTypes();
+      // setWarriorTypes(warriorTypes);
     };
     fetchData();
   }, [address, visibleConfirmation, target]);
 
   return (
-    <>
-      <div className="scrollableScreen">
+    <div>
+      <div className="scrollableScreen" >
         {visibleConfirmation == true && (
           <>
             {confirmed == false ? (
@@ -251,8 +252,9 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
             </div>
           </div>
         )}
-
-        <Container>
+  {/* style={{"backgroundImage":"url(/War4.png)","backgroundSize":"cover","width":"100vw","height":"100vh","borderRadius":"2rem"}} */}
+        <Container >
+          {/* <Row className="warHeader"><img src="/War4.png"></img></Row> */}
           <Row>
             <Col className="attackBoxColumn">
                 <h4 className="defaultH4">Land:</h4>
@@ -290,8 +292,8 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                 <h4 className="defaultH4" style={{ marginTop: "15px" }}>
                   Army:
                 </h4>
-                {Array.isArray(warriorTypes) && warriorTypes.length >= 0 ? (
-                  warriorTypes.map((warrior, key) => (
+                {Array.isArray(existedWarriors) && existedWarriors.length >= 0 ? (
+                  existedWarriors.map((warrior, key) => (
                     <div key={key} style={{ display: "flex" }}>
                       {/* <h4 className="defaultH5">{warrior.name}</h4> */}
                       {selectedLand !== undefined &&
@@ -410,6 +412,8 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                 </Button>
                 {targetObj !== undefined && (
                   <>
+                  <div>
+                    <h2 className="defaultH2">Land balance:</h2>
                     <div style={{"marginTop":"1rem"}}>
                       <div className="commodityBalance">
                         <img src="/Stone.png"></img>
@@ -442,6 +446,7 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                         </h5>
                       </div>
                     </div>
+                  </div>
                   </>
                 )}
                 {errorStatus !== undefined && (
@@ -451,9 +456,20 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget }) => {
                 )}
             </Col>
           </Row>
+          <Row style={{"marginTop":"2rem"}}>
+            <h2 className="defaultH2" style={{"marginBottom":"2rem"}}>Target army:</h2>
+            {warriorsImageSources.map((warrior,key)=>(
+            <Col key={key} sm={3} className="warriorCol">
+            <img src={warrior}></img>
+            { Array.isArray(existedWarriors) && Array.isArray(targetArmy) ?  <h3><span>{targetArmy[key].toString()}</span>{existedWarriors[key].name}</h3> : <h3>Enter target</h3>}
+   
+            </Col>
+            ))}
+
+          </Row>
         </Container>
       </div>
-    </>
+    </div>
   );
 };
 
