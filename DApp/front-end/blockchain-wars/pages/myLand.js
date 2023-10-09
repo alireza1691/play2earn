@@ -21,9 +21,15 @@ import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Table from 'react-bootstrap/Table';
+import Table from "react-bootstrap/Table";
 
-const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
+const myLand = ({
+  provider,
+  landImgUrl,
+  ownedLands,
+  landObj,
+  existedWarriors,
+}) => {
   // const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [enteredAmount, setEnteredAmount] = useState();
@@ -32,8 +38,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   const [buildings, setBuildings] = useState();
   const [selectedLand, setSelectedLand] = useState();
   const [ownedBuildings, setOwnedBuildings] = useState();
-  const [existedWarriors, setExistedWarriors] = useState();
-  const [army, setArmy] = useState();
+  // const [existedWarriors, setExistedWarriors] = useState();
+  // const [army, setArmy] = useState();
   const [barracksLevel, setBarracksLevel] = useState();
   const [inputValue, setInputValue] = useState(""); // State variable to store the input value
   const [requiredBarracksCommodities, setRequiredBarracksCommodities] =
@@ -61,8 +67,8 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
   ];
   const warriorsImageSources = [
     "Warriors/AchaemenidSpearman.png",
-    "Warriors/Swordsman.png",
-    "Warriors/Archer.png",
+    "Warriors/PersianAncientWarrior.png",
+    "Warriors/PersianArcher.png",
   ];
   const commodityItems = [
     { name: "Stone", image: "/Stone.png" },
@@ -110,7 +116,15 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
     // setIsLandSelected(false);
     setSelectedItem({});
   };
-
+  const balArray = () => {
+    return [
+      selectedLand.stone,
+      selectedLand.wood,
+      selectedLand.iron,
+      selectedLand.gold,
+      selectedLand.food,
+    ];
+  };
   const deposit = async (isSplitDeposit) => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId !== validChainId) {
@@ -278,19 +292,19 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
         const existedBuildings = await townInstance.getBuildings();
         console.log(existedBuildings);
         setBuildings(existedBuildings);
-        const existedWarriors = await townInstance.getWarriorTypes();
-        const landArmy = await townInstance.getArmy(selectedLand.coordinate);
+        // const existedWarriors = await townInstance.getWarriorTypes();
+        // const landArmy = await townInstance.getArmy(selectedLand.coordinate);
         const barracksLvl = landData.barracksLevel;
         const requiredComs =
           await townInstance.getBarracksRequiredCommodities();
         console.log("Required barracks coms:", requiredComs);
-        setExistedWarriors(existedWarriors);
-        setArmy(landArmy);
-        console.log("Army:", landArmy);
+        // setExistedWarriors(existedWarriors);
+        // setArmy(landArmy);
+        // console.log("Army:", landArmy);
         setBarracksLevel(barracksLvl); //// Replace and edit this
         setRequiredBarracksCommodities(requiredComs);
         console.log("Existed warriors:", existedWarriors);
-        console.log("Current existed army:", landArmy);
+        // console.log("Current existed army:", landArmy);
         if (ownedBuildings_.length > 0) {
           const busyTime = await townInstance.getRemainedTimestamp(
             selectedLand.coordinate
@@ -520,189 +534,213 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
           {selectedLand !== undefined && (
             <>
               <Row>
-                <Col >
-                  <div className="myLandColumn">
+                <Col>
+                  <div className="myLandHeader">
                     <h4
-                      className="clickableH4"
+                      className="textButton"
                       onClick={() => setSelectedLand()}
                     >
-                      Back to the lands
+                      &lt; Back
                     </h4>
-                    <div className="balanceHeader">
-                      <div className="commodityBalance">
-                        <img src="/Stone.png"></img>
-                        <h6>
-                          {selectedLand.stone !== undefined
-                            ? selectedLand.stone
-                            : "0"}
-                        </h6>
-                      </div>
-                      <div className="commodityBalance">
-                        <img src="/Wood.png"></img>
-                        <h6>
-                          {selectedLand.wood !== undefined
-                            ? selectedLand.wood
-                            : "0"}
-                        </h6>
-                      </div>
-                      <div className="commodityBalance">
-                        <img src="/Iron.png"></img>
-                        <h6>
-                          {selectedLand.iron !== undefined
-                            ? selectedLand.iron
-                            : "0"}
-                        </h6>
-                      </div>
-                      <div className="commodityBalance">
-                        <img src="/Gold.png"></img>
-                        <h6>
-                          {selectedLand.gold !== undefined
-                            ? selectedLand.gold
-                            : "0"}
-                        </h6>
-                      </div>
-                      <div className="commodityBalance">
-                        <img src="/Food.png"></img>
-                        <h6>
-                          {selectedLand.food !== undefined
-                            ? selectedLand.food
-                            : "0"}
-                        </h6>
-                      </div>
+                    {/* <Button variant="outline-light">Attack</Button> */}
+                    <div
+                      className="attackRouteButton"
+                      onClick={() => {
+                        router.push("/attack");
+                      }}
+                    >
+                      <h4
+
+                      // style={{"padding":"0.5rem","border":"2px solid white","borderRadius":"0.4rem"}}
+                      >
+                        Attack
+                      </h4>
+                      <img src="War.png"></img>
                     </div>
                   </div>
                 </Col>
               </Row>
-              <Row style={{"marginTop":"3rem","minHeight":"300px"}}>
+              <Row style={{ marginTop: "3rem", minHeight: "300px" }}>
                 <Col className="transferCol" sm={3}>
-                <InputGroup className="mb-3" size="sm">
-                        <Form.Control
-                          placeholder="Enter amount..."
-                          aria-label="Amount (to the nearest dollar)"
-      
-                          onChange={(e) => setEnteredAmount(e.target.value)}
-                        />
-                        <Dropdown>
-                          <Dropdown.Toggle
-                            variant="success"
-                            id="dropdown-basic"
-                            className="selectDropdown"
+                  <InputGroup className="mb-3" size="sm">
+                    <Form.Control
+                      placeholder="Enter amount..."
+                      aria-label="Amount (to the nearest dollar)"
+                      onChange={(e) => setEnteredAmount(e.target.value)}
+                    />
+                    <Dropdown>
+                      <Dropdown.Toggle
+                        variant="success"
+                        id="dropdown-basic"
+                        className="selectDropdown"
+                      >
+                        Select
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        {commodityItems.map((commodity, key) => (
+                          <Dropdown.Item
+                            href="#/action-1"
+                            key={key}
+                            onClick={() => setCommodityIndex(key)}
                           >
-                            Select
-                          </Dropdown.Toggle>
-
-                          <Dropdown.Menu>
-                            {commodityItems.map((commodity, key) => (
-                              <Dropdown.Item
-                                href="#/action-1"
-                                key={key}
-                                onClick={() => setCommodityIndex(key)}
-                              >
-                                <img
-                                  src={commodity.image}
-                                  className="dropdownTokenLogo"
-                                ></img>
-                                {commodity.name}
-                              </Dropdown.Item>
-                            ))}
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </InputGroup>
-                      {/* <button className="sGreenButton">Deposit</button> */}
-                      <Button
-                        variant="success"
-                        size="sm"
-                        style={{ marginRight: "10px" }}
-                        onClick={() => deposit(true)}
-                      >
-                        Deposit
-                      </Button>
-                      {/* <button className="sGreenButton">Split deposit</button> */}
-                      <Button
-                        variant="success"
-                        size="sm"
-                        style={{ marginRight: "10px" }}
-                        onClick={() => deposit(true)}
-                      >
-                        Split deposit
-                      </Button>
-                      {commodityIndex !== undefined ? (
-                        // <button className="sGreenButton">Withdraw</button>
-                        <Button
-                          variant="success"
-                          size="sm"
-                          onClick={() => withdraw()}
-                        >
-                          Withdraw
-                        </Button>
-                      ) : (
-                        // <button className="sGreenButton" disabled>Withdraw</button>
-                        <Button variant="success" size="sm" disabled>
-                          Withdraw
-                        </Button>
-                      )}
+                            <img
+                              src={commodity.image}
+                              className="dropdownTokenLogo"
+                            ></img>
+                            {commodity.name}
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </InputGroup>
+                  {/* <button className="sGreenButton">Deposit</button> */}
+                  <Button
+                    variant="success"
+                    size="sm"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => deposit(true)}
+                  >
+                    Deposit
+                  </Button>
+                  {/* <button className="sGreenButton">Split deposit</button> */}
+                  <Button
+                    variant="success"
+                    size="sm"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => deposit(true)}
+                  >
+                    Split deposit
+                  </Button>
+                  {commodityIndex !== undefined ? (
+                    // <button className="sGreenButton">Withdraw</button>
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={() => withdraw()}
+                    >
+                      Withdraw
+                    </Button>
+                  ) : (
+                    // <button className="sGreenButton" disabled>Withdraw</button>
+                    <Button variant="success" size="sm" disabled>
+                      Withdraw
+                    </Button>
+                  )}
                 </Col>
-                <Col className="armyBalCol" sm={3}>
-
-                        {Array.isArray(existedWarriors) &&
-                        existedWarriors.length > 0 &&
-                        Array.isArray(army) &&
-                        army.length > 0 &&
-                        <Table striped bordered hover size="sm" >
-                          <tbody >
-                            {existedWarriors.map((warrior, key) => (
-                              <tr key={key}>
-                                <td className="tableLine">{warrior.name}</td>
-                                <td className="tableLine">{army[key].toString()}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </Table>
-  
-                        }
-                      {existedWarriors == undefined && army == undefined && (
-                        <h5 className="defaultH5" style={{"textAlign":"center"}}> Loading army...</h5>
-                      )}
-                        
-                    
-      
+                <Col className="BalTableCol" sm={3}>
+                  <Table striped bordered hover size="sm">
+                    <tbody>
+                      <tr>
+                        <td className="tableLine">
+                          <img src="/Stone.png" />
+                        </td>
+                        <td className="tableLine">
+                          {selectedLand.stone !== undefined
+                            ? selectedLand.stone
+                            : "0"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="tableLine">
+                          <img src="/Wood.png" />
+                        </td>
+                        <td className="tableLine">
+                          {selectedLand.wood !== undefined
+                            ? selectedLand.wood
+                            : "0"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="tableLine">
+                          <img src="/Iron.png" />
+                        </td>
+                        <td className="tableLine">
+                          {selectedLand.iron !== undefined
+                            ? selectedLand.iron
+                            : "0"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="tableLine">
+                          <img src="/Gold.png" />
+                        </td>
+                        <td className="tableLine">
+                          {selectedLand.gold !== undefined
+                            ? selectedLand.gold
+                            : "0"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="tableLine">
+                          <img src="/Food.png" />
+                        </td>
+                        <td className="tableLine">
+                          {selectedLand.food !== undefined
+                            ? selectedLand.food
+                            : "0"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </Table>
                 </Col>
-                <Col className="workerStatusBox" sm={3}> 
-                {workerBusyTime > 0 && workerBusyTime != undefined ? (
-                  <div className="timer">
-                  <Spinner animation="grow" variant="success" />
-                  <h4>
-                    Wroker is busy.
-                    </h4>
-                    <h3 >
-    
-                      {`${Math.floor(workerBusyTime / 60 )} hours ${workerBusyTime % 60} minutes`}
-      
-                  </h3>
-                  </div>
-                ) : (
-                  <>
-                    {workerBusyTime == undefined ? (
-                      ""
-                    ) : (
-                      <h4>
-                        Worker is ready.
-                      </h4>
+                <Col className="BalTableCol" sm={3}>
+                  {Array.isArray(existedWarriors) &&
+                    existedWarriors.length > 0 &&
+                    Array.isArray(selectedLand.armyBal) &&
+                    selectedLand.armyBal.length > 0 && (
+                      <Table striped bordered hover size="sm">
+                        <tbody>
+                          {existedWarriors.map((warrior, key) => (
+                            <tr key={key}>
+                              <td className="tableLine">{warrior.name}</td>
+                              <td className="tableLine">
+                                {selectedLand.armyBal[key].toString()}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
                     )}
-                  </>
-                )}
+                  {existedWarriors == undefined &&
+                    selectedLand.armyBal == undefined && (
+                      <h5 className="defaultH5" style={{ textAlign: "center" }}>
+                        {" "}
+                        Loading army...
+                      </h5>
+                    )}
                 </Col>
-                <Col sm={3} className="warHistoryCol">
+                <Col className="workerStatusBox" sm={3}>
+                  {workerBusyTime > 0 && workerBusyTime != undefined ? (
+                    <div className="timer">
+                      <Spinner animation="grow" variant="success" />
+                      <h4>Wroker is busy.</h4>
+                      <h3>
+                        {`${Math.floor(workerBusyTime / 60)} hours ${
+                          workerBusyTime % 60
+                        } minutes`}
+                      </h3>
+                    </div>
+                  ) : (
+                    <>
+                      {workerBusyTime == undefined ? (
+                        ""
+                      ) : (
+                        <h4>Worker is ready.</h4>
+                      )}
+                    </>
+                  )}
+                </Col>
+                {/* <Col sm={3} className="warHistoryCol">
                   <h2>War history</h2>
                   <div className="warHistory">
                   <p>something</p>
                   </div>
 
-                </Col>
+                </Col> */}
               </Row>
- 
+
               <Row style={{ marginTop: "1rem" }}>
-           
                 {/* <h3 className="defaultH4" style={{"textAlign":"center"}}> {workerBusyTime > 0 ? `Wroker will be free in ${workerBusyTime.toString()} minutes.` : "Worker is ready."}</h3> */}
                 {Array.isArray(ownedBuildings) && ownedBuildings.length > 0 ? (
                   ownedBuildings.map((item, key) => (
@@ -808,9 +846,7 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
               <Row style={{ marginTop: "1rem" }}>
                 <Accordion>
                   <Accordion.Item eventKey="0">
-                    <Accordion.Header >
-                      Buildings
-                    </Accordion.Header>
+                    <Accordion.Header>Buildings</Accordion.Header>
                     <Accordion.Body>
                       <div className="listItemColumn">
                         {Array.isArray(buildings) &&
@@ -914,13 +950,15 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                     ) ||
                                   workerBusyTime > 0 ? (
                                     // <button className="sGreenButton" disabled>Build</button>
-                                    <Button variant="success" disabled>Build</Button>
+                                    <Button variant="success" disabled>
+                                      Build
+                                    </Button>
                                   ) : (
                                     // <button className="sGreenButton" onClick={() => mintBuilding(key)}>Build</button>
                                     <Button
                                       style={{ bottom: "0px" }}
                                       onClick={() => mintBuilding(key)}
-                                    variant="success"
+                                      variant="success"
                                     >
                                       Build
                                     </Button>
@@ -1061,7 +1099,9 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                       (Number(barracksLevel) + 1)
                                   ) ||
                                 workerBusyTime > 0 ? (
-                                  <Button variant="success" disabled>Upgrade</Button>
+                                  <Button variant="success" disabled>
+                                    Upgrade
+                                  </Button>
                                 ) : (
                                   // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
                                   <Button
@@ -1118,7 +1158,10 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                             setInputValue(e.target.value)
                                           }
                                         />
-                                        <Button variant="success" onClick={() => recruit(key)}>
+                                        <Button
+                                          variant="success"
+                                          onClick={() => recruit(key)}
+                                        >
                                           Train
                                         </Button>
                                       </>
@@ -1129,7 +1172,9 @@ const myLand = ({ provider, landImgUrl, ownedLands, landObj }) => {
                                           aria-label="Amount (to the nearest dollar)"
                                           disabled
                                         />
-                                        <Button variant="success" disabled>Train</Button>
+                                        <Button variant="success" disabled>
+                                          Train
+                                        </Button>
                                       </>
                                     )}
                                   </InputGroup>

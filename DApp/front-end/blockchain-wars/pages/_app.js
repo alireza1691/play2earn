@@ -51,6 +51,7 @@ function MyApp({ Component, pageProps }) {
   const [mintedLands, setMintedLands] = useState();
   const [response, setResponse] = useState();
   const [target, setTarget] = useState(0)
+  const [existedWarriors, setExistedWarriors] = useState()
 
   const convertAddress = (input) => {
     if (input.length > 3) {
@@ -147,7 +148,10 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     const fetchData = async () => {
       const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
+      const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
       const imgURL = await landsInst.URI();
+      const existedWarriorTypes = await townInst.getWarriorTypes()
+      setExistedWarriors(existedWarriorTypes)
       setLandImgUrl(imgURL);
       if (address) {
         // dataLoad()
@@ -173,12 +177,12 @@ function MyApp({ Component, pageProps }) {
                 topics.length === 4 &&
                 topics[2] == convertAddress(address.toLowerCase())
               ) {
-                const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
+
                 const commoditiesBalance = await townInst.getAssetsBal(
                   parseInt(topics[3], 16)
                 );
-
-                const landInfo = {
+                const armyBal = await townInst.getArmy(parseInt(topics[3], 16))
+                const landInfo = {armyBal,
                   stone: ethers.utils.formatEther(
                     commoditiesBalance[0].toString()
                   ),
@@ -196,6 +200,7 @@ function MyApp({ Component, pageProps }) {
                   ),
                   coordinate: parseInt(topics[3], 16),
                 };
+                console.log(landInfo);
                 landObject.push(landInfo);
               }
               if (
@@ -254,6 +259,7 @@ function MyApp({ Component, pageProps }) {
         dataLoad={dataLoad}
         target={target}
         setTarget={setTarget}
+        existedWarriors={existedWarriors}
       />
       <Footer/>
     </ThirdwebProvider>
