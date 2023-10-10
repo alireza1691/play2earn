@@ -31,6 +31,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
+import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
+
 
 const metamaskConfig = metamaskWallet();
 
@@ -56,16 +58,11 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
   const signer = useSigner();
   const address = useAddress();
 
-  const weaponsArray = [
-    "/weapon/Spear.png",
-    "/weapon/Sword.png",
-    "/weapon/Archery.png",
-  ];
-  const warriorsImageSources = [
-    "Warriors/AchaemenidSpearman.png",
-    "Warriors/PersianAncientWarrior.png",
-    "Warriors/PersianArcher.png",
-  ];
+  // const warriorsImageSources = [
+  //   "Warriors/AchaemenidSpearman.png",
+  //   "Warriors/PersianAncientWarrior.png",
+  //   "Warriors/PersianArcher.png",
+  // ];
   const handleConnectWithMetamask = async () => {
     try {
       await connectWithMetamask({

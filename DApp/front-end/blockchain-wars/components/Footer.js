@@ -20,18 +20,23 @@ const Navbar = (
   }, []);
 
   return (
-    <Container>
-        <Row style={{"marginBottom":"10rem"}}>
-            <Col>
-            <p style={{"color":"white"}}>add something to footer</p>
-            
+    <Container className="footer">
+        <Row >
+            <Col sm={3}>
+            <p >About us</p>
             </Col>
-            <Col>
-            <p style={{"color":"white"}}>add something to footer</p>
+            <Col sm={3}>
+            <p >FAQ</p>
             </Col>
-            <Col>
-            <p style={{"color":"white"}}>add something to footer</p>
+            <Col sm={3}>
+            <p >Privacy policy</p>
             </Col>
+            <Col sm={3}>
+            <p >Terms of use</p>
+            </Col>
+        </Row>
+        <Row >
+          <h4>© 2023 Blockchain wars foundation. All rights reserved.</h4>
         </Row>
     </Container>
   );

@@ -22,6 +22,7 @@ import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
+import { buildingsImageSources, warriorsImageSources, commodityItems } from "../Images/ImagesSource";
 
 const myLand = ({
   provider,
@@ -58,25 +59,25 @@ const myLand = ({
 
   const validChainId = Sepolia.chainId;
 
-  const buildingsImageSources = [
-    "BuildingsIMG/StoneMine.png",
-    "BuildingsIMG/LumberMill1.png",
-    "BuildingsIMG/IronSmelter.png",
-    "BuildingsIMG/SugarFarm.png",
-    "BuildingsIMG/GoldMine1.png",
-  ];
-  const warriorsImageSources = [
-    "Warriors/AchaemenidSpearman.png",
-    "Warriors/PersianAncientWarrior.png",
-    "Warriors/PersianArcher.png",
-  ];
-  const commodityItems = [
-    { name: "Stone", image: "/Stone.png" },
-    { name: "Wood", image: "/Wood.png" },
-    { name: "Iron", image: "/Iron.png" },
-    { name: "Food", image: "/Food.png" },
-    { name: "Gold", image: "Gold.png" },
-  ];
+  // const buildingsImageSources = [
+  //   "BuildingsIMG/StoneMine.png",
+  //   "BuildingsIMG/LumberMill1.png",
+  //   "BuildingsIMG/IronSmelter.png",
+  //   "BuildingsIMG/SugarFarm.png",
+  //   "BuildingsIMG/GoldMine1.png",
+  // ];
+  // const warriorsImageSources = [
+  //   "Warriors/AchaemenidSpearman.png",
+  //   "Warriors/PersianAncientWarrior.png",
+  //   "Warriors/PersianArcher.png",
+  // ];
+  // const commodityItems = [
+  //   { name: "Stone", image: "/Stone.png" },
+  //   { name: "Wood", image: "/Wood.png" },
+  //   { name: "Iron", image: "/Iron.png" },
+  //   { name: "Food", image: "/Food.png" },
+  //   { name: "Gold", image: "Gold.png" },
+  // ];
 
   const handleConnectWithMetamask = async () => {
     try {
@@ -573,9 +574,11 @@ const myLand = ({
                         variant="light"
                         id="dropdown-basic"
                         className="selectDropdown"
-                        style={{"minWidth":"80px"}}
+                        style={{ minWidth: "80px" }}
                       >
-                        {commodityIndex == undefined ? "Select" : commodityItems[commodityIndex].name}
+                        {commodityIndex == undefined
+                          ? "Select"
+                          : commodityItems[commodityIndex].name}
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu>
@@ -1188,11 +1191,63 @@ const myLand = ({
                   </Accordion.Item>
                 </Accordion>
               </Row>
+              <Row style={{"marginTop":"3rem"}}>
+                {Array.isArray(existedWarriors) &&
+                  existedWarriors.map((warrior, key) => (
+                    <Col className="warriorCard" key={key} sm={2}>
+                      <img
+                        src={warriorsImageSources[key]}
+                      />
+                      <div className="warriorInfoBox">
+                                  <div style={{ padding: "0.5rem" }}>
+                                    <h2>{warrior.name}</h2>
+                                  </div>
+                                  <p>Attack power: {warrior.attackPower}</p>
+                                  <p>Defence power: {warrior.defPower}</p>
+                                  <p>HP: {warrior.hp}</p>
+                                  <div>
+                                  <p>
+                                      Price:{" "}
+                                      <span>{ethers.utils.formatEther(warrior.price)}    <img
+                                      src="/Gold.png"
+                                      className="commodityLogo"
+                                    /></span>
+                                  </p>
+                                    </div>
+                                    {barracksLevel >= warrior.requiredLevel ? (
+                                      <>
+                                        <Form.Control
+                                          placeholder="Enter amount..."
+                                          aria-label="Amount (to the nearest dollar)"
+                                          onChange={(e) =>
+                                            setInputValue(e.target.value)
+                                          }
+                                        />
+                                        <Button
+                                          variant="success"
+                                          onClick={() => recruit(key)}
+                                        >
+                                          Train
+                                        </Button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Form.Control
+                                          placeholder={`Requires barracks level ${warrior.requiredLevel.toString()}`}
+                                          aria-label="Amount (to the nearest dollar)"
+                                          disabled
+                                        />
+                                        <Button variant="success" disabled>
+                                          Train
+                                        </Button>
+                                      </>
+                                    )}
+                                </div>
+                    </Col>
+                  ))}
+              </Row>
             </>
           )}
-          <Row>
-            <Col></Col>
-          </Row>
         </Container>
       </div>
     </>

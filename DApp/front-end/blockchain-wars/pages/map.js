@@ -451,13 +451,14 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
               <div style={{ display: "flex", justifyContent: "center" }}>
                 {Array.isArray(viewLands) && viewLands.length > 0 ? (
                   <h4
-                    className="clickableH4"
+                    className="textButton"
                     onClick={() => setViewLands(undefined)}
+                    // style={{"border":"2px solid white","padding":"0.2rem","borderRadius":"0.4rem"}}
                   >
                     Back
                   </h4>
                 ) : (
-                  <h3 className="h3Text">Choose a parcel</h3>
+                  <h3 className="h3Text">Choose parcel</h3>
                 )}
               </div>
             </Col>
