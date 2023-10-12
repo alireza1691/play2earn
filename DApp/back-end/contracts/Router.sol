@@ -11,7 +11,7 @@ import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { TransferHelper } from "./TransferHelper.sol";
 
-contract StableDex is Ownable{
+contract Router is Ownable{
 
     AggregatorV3Interface internal nativeCoinPriceFeed;
 
@@ -22,7 +22,7 @@ contract StableDex is Ownable{
 
     IERC20[] commodities ;
 
-    constructor( address priceFeedAddress) {
+    constructor( address priceFeedAddress) Ownable(msg.sender) {
         nativeCoinPriceFeed = AggregatorV3Interface(priceFeedAddress);
     }
 

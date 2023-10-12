@@ -64,7 +64,7 @@ contract BarracksV1 is Ownable{
     //  ******************************************************************************
 
 
-    constructor(){
+    constructor() Ownable(msg.sender){
         warriorTypes.push(WarriorInfo( 60, 90, 140, 1,"Spearman",5 ether));
         warriorTypes.push(WarriorInfo( 90, 70, 200, 2,"Swordsman",8 ether));
         warriorTypes.push(WarriorInfo( 40, 60, 80, 3,"Archer",10 ether));

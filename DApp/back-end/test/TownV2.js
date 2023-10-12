@@ -150,7 +150,7 @@ const {
         await town.recruit(101101, 1, 15)
         await town.connect(otherAccount).recruit(109109, 0, 10)
         // If target is a land that has not been minted
-        await expect(town.attack([10,0,0],101101,102102)).to.be.revertedWith("ERC721: invalid token ID")
+        await expect(town.attack([10,0,0],101101,102102)).to.be.rejectedWith(`ERC721NonexistentToken(${102102})`)
         console.log("success");
         // If enter warrior amount bigger than number of warriors
         await expect(town.attack([11,0,0],101101,109109)).to.be.revertedWith("Insufficient army")

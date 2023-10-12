@@ -10,7 +10,7 @@ contract BKT is ERC20, Ownable {
     // address private authorizedAdd;
     address private landsContractAddress;
 
-    constructor() ERC20 ("BKC", "Blockchain's kingdom token")  {
+    constructor() ERC20 ("BKC", "Blockchain's kingdom token") Ownable(msg.sender) {
         _mint(msg.sender, 10000000 ether);
         // authorizedAdd = authorizedAddress;
     }

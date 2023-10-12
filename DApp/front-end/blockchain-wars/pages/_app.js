@@ -33,9 +33,9 @@ require("dotenv").config();
 // const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }) {
-  const apiKey = process.env.SEPOLIA_API_KEY;
+  const apiKey = process.env.ETHERSCA_SEPOLIA_API_KEY;
   // const apiKey = process.env.LINEA_API_KEY;
-  const infuraApiKey = process.env.INFURA_API_KEY;
+  // const infuraApiKey = process.env.INFURA_API_KEY;
 
   const provider = new ethers.providers.JsonRpcProvider(
     `https://sepolia.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`

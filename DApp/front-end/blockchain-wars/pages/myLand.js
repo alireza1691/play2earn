@@ -22,7 +22,11 @@ import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
-import { buildingsImageSources, warriorsImageSources, commodityItems } from "../Images/ImagesSource";
+import {
+  buildingsImageSources,
+  warriorsImageSources,
+  commodityItems,
+} from "../Images/ImagesSource";
 
 const myLand = ({
   provider,
@@ -59,26 +63,11 @@ const myLand = ({
 
   const validChainId = Sepolia.chainId;
 
-  // const buildingsImageSources = [
-  //   "BuildingsIMG/StoneMine.png",
-  //   "BuildingsIMG/LumberMill1.png",
-  //   "BuildingsIMG/IronSmelter.png",
-  //   "BuildingsIMG/SugarFarm.png",
-  //   "BuildingsIMG/GoldMine1.png",
-  // ];
-  // const warriorsImageSources = [
-  //   "Warriors/AchaemenidSpearman.png",
-  //   "Warriors/PersianAncientWarrior.png",
-  //   "Warriors/PersianArcher.png",
-  // ];
-  // const commodityItems = [
-  //   { name: "Stone", image: "/Stone.png" },
-  //   { name: "Wood", image: "/Wood.png" },
-  //   { name: "Iron", image: "/Iron.png" },
-  //   { name: "Food", image: "/Food.png" },
-  //   { name: "Gold", image: "Gold.png" },
-  // ];
-
+  const convertedCommodityAmount = (amount) => {
+    return (
+      Number(ethers.utils.formatEther(amount))
+    );
+  };
   const handleConnectWithMetamask = async () => {
     try {
       await connectWithMetamask({
@@ -180,8 +169,12 @@ const myLand = ({
       await handleChangeChainId();
     } else {
       try {
+        console.log("Minting building...");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        console.log(TownInstance);
+        console.log(selectedLand.coordinate, buildingIndex);
         await TownInstance.build(selectedLand.coordinate, buildingIndex);
+        console.log("Confirming tx...");
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -296,15 +289,13 @@ const myLand = ({
         // const existedWarriors = await townInstance.getWarriorTypes();
         // const landArmy = await townInstance.getArmy(selectedLand.coordinate);
         const barracksLvl = landData.barracksLevel;
-        const requiredComs =
-          await townInstance.getBarracksRequiredCommodities();
-        console.log("Required barracks coms:", requiredComs);
-        // setExistedWarriors(existedWarriors);
-        // setArmy(landArmy);
-        // console.log("Army:", landArmy);
+    
         setBarracksLevel(barracksLvl); //// Replace and edit this
-        setRequiredBarracksCommodities(requiredComs);
         console.log("Existed warriors:", existedWarriors);
+        const requiredComs =
+        await townInstance.getBarracksRequiredCommodities(selectedLand.coordinate);
+        console.log("Required barracks coms:", requiredComs);
+        setRequiredBarracksCommodities(requiredComs);
         // console.log("Current existed army:", landArmy);
         if (ownedBuildings_.length > 0) {
           const busyTime = await townInstance.getRemainedTimestamp(
@@ -316,8 +307,10 @@ const myLand = ({
             "minutes"
           );
           setWorkerBusyTime(busyTime);
+
           let ownedBuildingsArray = [];
           for (let index = 0; index < ownedBuildings_.length; index++) {
+ 
             const status = await townInstance.getStatus(ownedBuildings_[index]);
             const revenue = await townInstance.getCurrentRevenue(
               ownedBuildings_[index]
@@ -853,6 +846,99 @@ const myLand = ({
                     <Accordion.Header>Buildings</Accordion.Header>
                     <Accordion.Body>
                       <div className="listItemColumn">
+                      {Array.isArray(requiredBarracksCommodities) && (
+                          <Col>
+                            <div
+                              className="listItemInfo"
+                              style={{ backgroundColor: "transparent" }}
+                            >
+                              <img src={"Barracks.png"}></img>
+                              <div className="InfoColumn">
+                                <div style={{ padding: "0.5rem" }}>
+                                  <h2 className="defaultH2">
+                                    Barracks{" "}
+                                    {barracksLevel !== undefined &&
+                                      ` (level: ${barracksLevel.toString()})`}
+                                  </h2>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Stone.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                  {convertedCommodityAmount(requiredBarracksCommodities[0])}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Wood.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                  {convertedCommodityAmount(requiredBarracksCommodities[1])}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Iron.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                  {convertedCommodityAmount(requiredBarracksCommodities[2])}
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Gold.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                  {convertedCommodityAmount(requiredBarracksCommodities[3])}
+                       
+                                  </p>
+                                </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Food.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                  {convertedCommodityAmount(requiredBarracksCommodities[4])}
+                       
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="InfoColumn">
+                                {Number(selectedLand.stone) <=
+                                  convertedCommodityAmount(requiredBarracksCommodities[0])  ||
+                                Number(selectedLand.wood) <=
+                                  convertedCommodityAmount(requiredBarracksCommodities[1])  ||
+                                Number(selectedLand.iron) <=
+                                  convertedCommodityAmount(requiredBarracksCommodities[2])  ||
+                                Number(selectedLand.gold) <=
+                                  convertedCommodityAmount(requiredBarracksCommodities[3])  ||
+                                Number(selectedLand.food) <=
+                                  convertedCommodityAmount(requiredBarracksCommodities[4])  ||
+                                workerBusyTime > 0 ? (
+                                  <Button variant="success" disabled>
+                                    Upgrade
+                                  </Button>
+                                ) : (
+                                  // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
+                                  <Button
+                                  // size="sm"
+                                    style={{ bottom: "0px" }}
+                                    variant="success"
+                                    onClick={() => upgradeBarracks()}
+                                  >
+                                    Upgrade
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          </Col>
+                        )}
                         {Array.isArray(buildings) &&
                           buildings.map((item, key) => (
                             <Col key={key}>
@@ -974,152 +1060,13 @@ const myLand = ({
                       </div>
                     </Accordion.Body>
                   </Accordion.Item>
-                  <Accordion.Item eventKey="1" className="accordionBackground">
+                  {/* <Accordion.Item eventKey="1" className="accordionBackground">
                     <Accordion.Header className="accordion">
                       Barracks{" "}
                     </Accordion.Header>
                     <Accordion.Body>
                       <div className="listItemColumn">
-                        {Array.isArray(requiredBarracksCommodities) && (
-                          <Col>
-                            <div
-                              className="listItemInfo"
-                              style={{ backgroundColor: "transparent" }}
-                            >
-                              <img src={"Barracks.png"}></img>
-                              <div className="InfoColumn">
-                                <div style={{ padding: "0.5rem" }}>
-                                  <h2 className="defaultH2">
-                                    Barracks{" "}
-                                    {barracksLevel !== undefined &&
-                                      ` (level: ${barracksLevel.toString()})`}
-                                  </h2>
-                                </div>
-                                <div className="commodityBalance">
-                                  <img
-                                    src="/Stone.png"
-                                    className="commodityLogo"
-                                  ></img>
-                                  <p>
-                                    {Number(
-                                      ethers.utils.formatEther(
-                                        requiredBarracksCommodities[0]
-                                      )
-                                    ) *
-                                      (Number(barracksLevel) + 1)}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <img
-                                    src="/Wood.png"
-                                    className="commodityLogo"
-                                  ></img>
-                                  <p>
-                                    {Number(
-                                      ethers.utils.formatEther(
-                                        requiredBarracksCommodities[1]
-                                      )
-                                    ) *
-                                      (Number(barracksLevel) + 1)}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <img
-                                    src="/Iron.png"
-                                    className="commodityLogo"
-                                  ></img>
-                                  <p>
-                                    {Number(
-                                      ethers.utils.formatEther(
-                                        requiredBarracksCommodities[2]
-                                      )
-                                    ) *
-                                      (Number(barracksLevel) + 1)}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <img
-                                    src="/Gold.png"
-                                    className="commodityLogo"
-                                  ></img>
-                                  <p>
-                                    {Number(
-                                      ethers.utils.formatEther(
-                                        requiredBarracksCommodities[3]
-                                      )
-                                    ) *
-                                      (Number(barracksLevel) + 1)}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <img
-                                    src="/Food.png"
-                                    className="commodityLogo"
-                                  ></img>
-                                  <p>
-                                    {Number(
-                                      ethers.utils.formatEther(
-                                        requiredBarracksCommodities[4]
-                                      )
-                                    ) *
-                                      (Number(barracksLevel) + 1)}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="InfoColumn">
-                                {Number(selectedLand.stone) <=
-                                  Number(
-                                    ethers.utils.formatEther(
-                                      requiredBarracksCommodities[0]
-                                    ) *
-                                      (Number(barracksLevel) + 1)
-                                  ) ||
-                                Number(selectedLand.wood) <=
-                                  Number(
-                                    ethers.utils.formatEther(
-                                      requiredBarracksCommodities[1]
-                                    ) *
-                                      (Number(barracksLevel) + 1)
-                                  ) ||
-                                Number(selectedLand.iron) <=
-                                  Number(
-                                    ethers.utils.formatEther(
-                                      requiredBarracksCommodities[2]
-                                    ) *
-                                      (Number(barracksLevel) + 1)
-                                  ) ||
-                                Number(selectedLand.gold) <=
-                                  Number(
-                                    ethers.utils.formatEther(
-                                      requiredBarracksCommodities[3]
-                                    ) *
-                                      (Number(barracksLevel) + 1)
-                                  ) ||
-                                Number(selectedLand.food) <=
-                                  Number(
-                                    ethers.utils.formatEther(
-                                      requiredBarracksCommodities[4]
-                                    ) *
-                                      (Number(barracksLevel) + 1)
-                                  ) ||
-                                workerBusyTime > 0 ? (
-                                  <Button variant="success" disabled>
-                                    Upgrade
-                                  </Button>
-                                ) : (
-                                  // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
-                                  <Button
-                                    style={{ bottom: "0px" }}
-                                    variant="success"
-                                    onClick={() => upgradeBarracks()}
-                                  >
-                                    Upgrade
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          </Col>
-                        )}
+
 
                         {Array.isArray(existedWarriors) &&
                           existedWarriors.map((item, key) => (
@@ -1188,61 +1135,61 @@ const myLand = ({
                           ))}
                       </div>
                     </Accordion.Body>
-                  </Accordion.Item>
+                  </Accordion.Item> */}
                 </Accordion>
               </Row>
-              <Row style={{"marginTop":"3rem"}}>
+              <Row style={{ marginTop: "3rem" }}>
                 {Array.isArray(existedWarriors) &&
                   existedWarriors.map((warrior, key) => (
                     <Col className="warriorCard" key={key} sm={2}>
-                      <img
-                        src={warriorsImageSources[key]}
-                      />
+                      <img src={warriorsImageSources[key]} />
                       <div className="warriorInfoBox">
-                                  <div style={{ padding: "0.5rem" }}>
-                                    <h2>{warrior.name}</h2>
-                                  </div>
-                                  <p>Attack power: {warrior.attackPower}</p>
-                                  <p>Defence power: {warrior.defPower}</p>
-                                  <p>HP: {warrior.hp}</p>
-                                  <div>
-                                  <p>
-                                      Price:{" "}
-                                      <span>{ethers.utils.formatEther(warrior.price)}    <img
-                                      src="/Gold.png"
-                                      className="commodityLogo"
-                                    /></span>
-                                  </p>
-                                    </div>
-                                    {barracksLevel >= warrior.requiredLevel ? (
-                                      <>
-                                        <Form.Control
-                                          placeholder="Enter amount..."
-                                          aria-label="Amount (to the nearest dollar)"
-                                          onChange={(e) =>
-                                            setInputValue(e.target.value)
-                                          }
-                                        />
-                                        <Button
-                                          variant="success"
-                                          onClick={() => recruit(key)}
-                                        >
-                                          Train
-                                        </Button>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Form.Control
-                                          placeholder={`Requires barracks level ${warrior.requiredLevel.toString()}`}
-                                          aria-label="Amount (to the nearest dollar)"
-                                          disabled
-                                        />
-                                        <Button variant="success" disabled>
-                                          Train
-                                        </Button>
-                                      </>
-                                    )}
-                                </div>
+                        <div style={{ padding: "0.5rem" }}>
+                          <h2>{warrior.name}</h2>
+                        </div>
+                        <p>Attack power: {warrior.attackPower}</p>
+                        <p>Defence power: {warrior.defPower}</p>
+                        <p>HP: {warrior.hp}</p>
+                        <div>
+                          <p>
+                            Price:{" "}
+                            <span>
+                              {ethers.utils.formatEther(warrior.price)}{" "}
+                              <img src="/Gold.png" className="commodityLogo" />
+                            </span>
+                          </p>
+                        </div>
+                        {barracksLevel >= warrior.requiredLevel ? (
+                          <>
+                            <InputGroup size="sm">
+                              <Form.Control
+                                placeholder="Enter amount..."
+                                aria-label="Amount (to the nearest dollar)"
+                                onChange={(e) => setInputValue(e.target.value)}
+                              />
+                              <Button
+                                variant="outline-light"
+                                onClick={() => recruit(key)}
+                              >
+                                Train
+                              </Button>
+                            </InputGroup>
+                          </>
+                        ) : (
+                          <>
+                            <InputGroup size="sm">
+                              <Form.Control
+                                placeholder={`Barracks level ${warrior.requiredLevel.toString()}`}
+                                aria-label="Amount (to the nearest dollar)"
+                                disabled
+                              />
+                              <Button variant="outline-light" disabled>
+                                Train
+                              </Button>
+                            </InputGroup>
+                          </>
+                        )}
+                      </div>
                     </Col>
                   ))}
               </Row>

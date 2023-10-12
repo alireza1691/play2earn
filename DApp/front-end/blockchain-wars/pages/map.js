@@ -157,7 +157,7 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
     for (let y = yStartingPoint; y < yStartingPoint + 10; y++) {
       for (let x = xStartingPoint; x < xStartingPoint + 10; x++) {
         const tokenId = x.toString() + y.toString();
-        let img = "/emptyLandImg.png";
+        let img = "/Land/land-parcel-2.jpeg";
         let owner;
         let isYours = false;
         for (let index = 0; index < mintedLands.length; index++) {

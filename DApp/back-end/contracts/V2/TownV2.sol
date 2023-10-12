@@ -1,10 +1,16 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.20;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { LandsV2 } from "./LandsV2.sol";
+// import { LandsV2 } from "./LandsV2.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC721 } from "@openzeppelin/contracts/interfaces/IERC721.sol";
+interface ILands is IERC721 {
+    function mintLand(uint8 x, uint8 y) external ;
+    function getPrice() pure external returns (uint256); 
+    function URI() pure external returns (uint256); 
+    function tokenURI(uint256 _tokenId) pure external returns (uint256); 
+}   
 library TransferHelper {
     /// @notice Transfers tokens from the targeted address to the given destination
     /// @notice Errors with 'STF' if transfer fails
@@ -357,7 +363,7 @@ contract TownV2 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
-    IERC721 lands;
+    ILands lands;
     IERC20 BKT;
 
 
@@ -414,7 +420,7 @@ contract TownV2 is Ownable, Barracks{
 
     constructor(address BlockchainsKingdomToken ,address landsContract){
         BKT = IERC20(BlockchainsKingdomToken);
-        lands = LandsV2(landsContract);
+        lands = ILands(landsContract);
         buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0/*,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o"*/,"Stone mine"));
         buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,1/*,"https://ipfs.io/ipfs/QmU99dxpwMoFAGSoQPLxB6YVAoYSk1iwbDoKj2CuM2pKyB"*/,"Lumber mill"));
         buildings.push(Info(100 ether, 100 ether, 100 ether, 0, 25 ether, 2/*, "Url"*/,"Iron mine"));
@@ -552,16 +558,17 @@ contract TownV2 is Ownable, Barracks{
         emit Upgrade(buildingTokenId, currentLevel+1);
     }
 
-    function buildBarracks(uint256 landTokenId) public onlyLandOwner(landTokenId) onlyLandOwner(landTokenId){
+    function buildBarracks(uint256 landTokenId) public onlyLandOwner(landTokenId) {
         if (getRemainedTimestamp(landTokenId) != 0) {
             revert TimeLimitation();
         }
+        uint256 currentLevel = landData[landTokenId].barracksLevel;
         uint256[5] memory balArray = getAssetsBal(landTokenId);
         require(balArray[0] >= baseBararcksRequiredCommodities[0] &&
-        balArray[1] >= baseBararcksRequiredCommodities[1] && 
-        balArray[2] >= baseBararcksRequiredCommodities[2] &&
-        balArray[3] >= baseBararcksRequiredCommodities[3] &&
-        balArray[4] >= baseBararcksRequiredCommodities[4] 
+        balArray[1] >= baseBararcksRequiredCommodities[1] * (currentLevel+1) && 
+        balArray[2] >= baseBararcksRequiredCommodities[2] * (currentLevel+1) &&
+        balArray[3] >= baseBararcksRequiredCommodities[3] * (currentLevel+1) &&
+        balArray[4] >= baseBararcksRequiredCommodities[4] * (currentLevel+1)
         , "Insufficient commodities");
         _spendCommodities(landTokenId,baseBararcksRequiredCommodities);
         landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (landData[landTokenId].barracksLevel+1));
@@ -602,7 +609,8 @@ contract TownV2 is Ownable, Barracks{
     }
 
     function attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId) external onlyLandOwner(attackerId) {
-        require(lands.ownerOf(targetId) != address(0), "Invalid land");
+
+        require(lands.ownerOf(targetId) != address(0), "");
         (bool success, uint256 winRate) = _attack(warriorsAmounts, attackerId, targetId);
         uint256 [5] memory lootAmounts;
         if (success) {
@@ -690,8 +698,13 @@ contract TownV2 is Ownable, Barracks{
 
 
 
-    function getBarracksRequiredCommodities() view public returns (uint256[5] memory) {
-        return baseBararcksRequiredCommodities;
+    function getBarracksRequiredCommodities(uint256 landId) view public returns (uint256[5] memory) {
+        uint256[5] memory requiredComs;
+        for (uint i = 0; i < baseBararcksRequiredCommodities.length; i++) 
+        {
+           requiredComs[i] = baseBararcksRequiredCommodities[i] * (landData[landId].barracksLevel + 1);
+        }
+        return requiredComs ;
     }
 
 
