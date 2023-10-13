@@ -26,6 +26,7 @@ import {
   buildingsImageSources,
   warriorsImageSources,
   commodityItems,
+  barracksImg
 } from "../Images/ImagesSource";
 
 const myLand = ({
@@ -852,7 +853,7 @@ const myLand = ({
                               className="listItemInfo"
                               style={{ backgroundColor: "transparent" }}
                             >
-                              <img src={"Barracks.png"}></img>
+                              <img src={barracksImg}></img>
                               <div className="InfoColumn">
                                 <div style={{ padding: "0.5rem" }}>
                                   <h2 className="defaultH2">

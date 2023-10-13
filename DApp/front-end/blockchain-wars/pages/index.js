@@ -109,6 +109,28 @@ export default function Home() {
           <p></p>
           </Col> */}
         </Row>
+        <Row style={{"marginTop":"10rem"}}>
+          <Col >
+            {/* <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                // src="/Warriors/AchaemenidSpearman.png"
+                src="/kingdomParcel/kingdom10.png"
+                // height={400}
+                style={{ textAlign: "center" ,width:"100%"}}
+              />
+            </div> */}
+          </Col>
+          <Col>
+
+            <div className="mainPageTextContainer" style={{"marginTop":"1%"}}>
+            <h3>Don't miss the chance to earn from the exciting game</h3>
+              {/* <h2>Based on digitall assets</h2> */}
+              {/* <h5>Game contains ERC20 and ERC721 tokens which are standard tradable tokens</h5> */}
+              {/* <h5>All assets are token that means anything in game is tradable has value.</h5> */}
+            </div>
+          </Col>
+          <Col></Col>
+        </Row>
         <Row style={{"marginTop":"20rem"}}>
           <Col>
           <div>
@@ -119,40 +141,26 @@ export default function Home() {
           </div>
           </Col>
           <Col>
-
+ 
           </Col>
           <Col>
+          <img src="/earn3.png" width={400}/>
           {/* <img  src="/dollar.png" height={100}/> */}
           </Col>
         </Row>
-                <Row style={{"marginTop":"30rem"}}>
-          <Col >
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <img
-                src="/Warriors/AchaemenidSpearman.png"
-                height={600}
-                style={{ textAlign: "center" }}
-              />
-            </div>
-          </Col>
-          <Col>
 
-            <div className="mainPageTextContainer" style={{"marginTop":"25%"}}>
-              <h2>Based on digitall assets</h2>
-              <h5>Game contains ERC20 and ERC721 tokens which are standard tradable tokens</h5>
-              {/* <h5>All assets are token that means anything in game is tradable has value.</h5> */}
-            </div>
+        <Row style={{"marginTop":"20rem"}}>
+        <Col >
+          <div className="tokenomicsImg" >
+          <img src="/tokenomics/tokenomics.jpeg"/>
+          </div>
           </Col>
-          <Col></Col>
-        </Row>
-        <Row style={{"marginTop":"30rem"}}>
-        <Col></Col>
-        <Col></Col>
-        <Col>
+        <Col ></Col>
+        <Col >
             <div className="mainPageTextContainer">
               <h2>Innovative tokenomics</h2>
               <h5>The common problem that all P2E applications struggle with is tokenomics. Since the token of these applications has not tempting usage, all users want to sell them and supply will become much bigger than demand. We considered innovative tokenomics that will solve this problem.</h5>
-              <h5>Look at tokenomcis through the <span onClick={() => {router.push("/docs")}} style={{"textDecoration":"underline", cursor:"pointer",fontSize:"1.1rem"}}> documentation</span>.</h5>
+              <h5>Look at tokenomcis through the <span onClick={() => {router.push("/documentation")}} style={{"textDecoration":"underline", cursor:"pointer",fontSize:"1.1rem"}}> documentation</span>.</h5>
             </div>
           </Col>
 

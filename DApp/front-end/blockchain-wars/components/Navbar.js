@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import { Navbar as MyNav } from 'react-bootstrap';
+import { Button, Navbar as MyNav } from 'react-bootstrap';
 import { useRouter } from "next/router";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useAddress } from "@thirdweb-dev/react";
@@ -74,27 +74,9 @@ const Navbar = (
              <Nav.Link href="#action1" onClick={()=>{router.push('/')}}>Home</Nav.Link>
             <Nav.Link href="#action2" onClick={()=>{router.push('/map')}}>Explore</Nav.Link>
             <Nav.Link href="#action3" onClick={()=>{router.push('/myLand')}}>My land</Nav.Link>
-            <Nav.Link href="#action4" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
-            {/* <Nav.Link href="#action2" onClick={()=>{router.push('/dashboard')}}>Dashboard</Nav.Link>
-            <NavDropdown title="More" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">...</NavDropdown.Item>
-              <NavDropdown.Item href="#action4" onClick={()=>{router.push('/about')}}>
-                About
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5" onClick={()=>{router.push('/terms')}}>
-                Terms of use
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action5" onClick={()=>{router.push('/privacy_docs')}}>
-                Privacy policy
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action5" onClick={()=>{router.push('/Contact')}}>
-                Contact us
-              </NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link href="#" onClick={()=>{router.push('/token')}}>
-              Token
-            </Nav.Link>  */}
+            <Nav.Link variant="outline-secondary" href="#action4" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
+            <Nav.Link href="#action4" onClick={()=>{router.push('/documentation')}}>Documentation</Nav.Link>
+
           </Nav>
           <ConnectWallet
               auth={{ loginOptional: false }}

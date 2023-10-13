@@ -1,9 +1,9 @@
 export const buildingsImageSources = [
-    "BuildingsIMG/StoneMine.png",
-    "BuildingsIMG/LumberMill1.png",
-    "BuildingsIMG/IronSmelter.png",
-    "BuildingsIMG/SugarFarm.png",
-    "BuildingsIMG/GoldMine1.png",
+    "Buildings/stone-mine-3.png",
+    "Buildings/lumber-mill-2.png",
+    "Buildings/iron-mine-2.png",
+    "Buildings/farm-3.png",
+    "Buildings/gold-mine-2.png",
   ];
 export const warriorsImageSources = [
     "Warriors/AchaemenidSpearman.png",
@@ -17,3 +17,4 @@ export const commodityItems = [
     { name: "Food", image: "/Food.png" },
     { name: "Gold", image: "Gold.png" },
   ];
+export const barracksImg = "/buildings/barracks.png"
