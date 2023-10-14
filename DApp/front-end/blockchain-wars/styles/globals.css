@@ -54,30 +54,7 @@ body {
   background-size: cover;
   background-position: center;
 }
-.stepCol {
-  margin: 1rem;
-  color: white;
-  padding: 1rem;
-  background-color: rgba(170, 252, 87, 0.07);
-  min-height: 5rem;
-  text-align: center;
-  border-radius: 1rem;
-}
-.stepCol h2 {
-  font-size: 1.3rem;
-  font-family: monospace;
-}
-.stepCol h3 {
-  border-radius: 2rem;
-  border: 2px solid white;
-  width: fit-content;
-  padding: 0.5rem;
-  font-size: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
+
 .carousel {
   height: 600px;
   align-items: center;
@@ -129,7 +106,7 @@ body {
   /* transform: rotateY(180); */
 }
 .parcelBox img:hover {
-  scale: 1.3;
+  scale: 1.2;
   transform: translateY(-20px);
 }
 .nftBox {
@@ -165,11 +142,11 @@ body {
   font-weight: bold;
   font-size: 2.5rem;
   font-style: italic;
-  text-shadow: 0.1rem 0.2rem 0.3rem rgba(255, 255, 255, 0.2);
+  /* text-shadow: 0.1rem 0.2rem 0.3rem rgba(255, 255, 255, 0.2); */
 }
 .mainPageTextContainer h3{
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   font-weight: bold;
   background: linear-gradient(
     to left,
@@ -182,9 +159,28 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-style: italic;
+  text-align: center;
+  width: 100%;
+}
+
+.mainPageTextContainer h4 {
+  font-size: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  background: linear-gradient(
+    to left,
+    rgb(242, 244, 221),
+    rgb(226, 229, 190),
+    rgb(241, 242, 233),
+    rgb(239, 242, 206),
+    rgb(225, 227, 207)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .mainPageTextContainer h5 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin-top: 1rem;
 }
 
@@ -997,16 +993,18 @@ font-size: 1.5rem;
 }
 .tokenomicsImg {
   /* display: flex; */
-  width: 100%;
+  width: 90%;
   position: relative;
   overflow: hidden;
   border-radius: 15rem;
-  /* box-shadow: 0 0rem 10rem 2rem rgba(236, 255, 178, 0.2); */
-  box-shadow: -3rem 3rem 10rem 0.5rem rgba(142, 142, 96, 0.7);
+  box-shadow: 0 0rem 2rem 0.2rem rgba(236, 255, 178, 0.2);
+  /* box-shadow: -3rem 3rem 10rem 0.5rem rgba(142, 142, 96, 0.7); */
   border: 1px solid rgb(85, 88, 64);
 /* width: 10rem; */
 /* width: fit-content; */
 transition: transform 0.25s ease;
+margin-left: auto;
+margin-right: auto;
 }
 .tokenomicsImg:hover {
   transform: translateY(-10px) translateX(10px);
@@ -1052,6 +1050,53 @@ margin-bottom: 3rem;
 }
 .sidebarContent{
 
+}
+.mainPageCard {
+ border-radius: 1rem;
+ background: linear-gradient(
+  170deg,
+  #d0dab4,
+  #969d83,
+  #707561,
+  #595d4d,
+  #4c5141,
+  #4c5141
+
+);
+margin-inline: 2rem;
+text-align: center;
+max-width: 300px;
+}
+.mainPageCard img {
+  margin-top: 1rem;
+  width: 99%;
+  /* padding: 1rem; */
+  /* background-color: #0a0b08; */
+  border-radius: 1rem;
+  margin-bottom: 5rem;
+
+}
+.infoRow {
+ display: flex;
+ /* background-color: rgba(202, 243, 140, 0.1); */
+ background-color: var(--greenTransparent);
+ border-radius: 2rem;
+ overflow: hidden;
+}
+.infoRowImg {
+  width: 20%;
+
+}
+.infoRowImg img {
+
+  /* border-radius: 1rem; */
+  width: 100%;
+  border-right: 2px solid rgb(61, 61, 60);
+  /* box-shadow: 0.2rem 0rem 2rem 0.1rem rgb(100, 101, 99,0.5); */
+}
+.infoRow .mainPageTextContainer {
+  width: 80%;
+  padding: 1rem;
 }
 @media (max-width: 767px) {
   .warImg {
