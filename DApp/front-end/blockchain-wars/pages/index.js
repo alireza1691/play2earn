@@ -12,7 +12,7 @@ export default function Home() {
       // style={{"backgroundImage":"url('/townBackground.jpg')","backgroundSize":"cover","backgroundPosition":"center","backgroundColor":"rgba(0, 0, 0, 0.1)","opacity":"20%"}}
     >
       <Container>
-        <Row>
+        <Row style={{"marginBottom":"15rem"}}>
           <Col className="indexPageHeader">
             <h2>Blockdom</h2>
           </Col>
@@ -84,7 +84,7 @@ export default function Home() {
               <div className="mainPageTextContainer">
                 <h2>Mint your land</h2>
                 <h5>
-                  Participating in game requires a land to build your town.
+                  Participating in the game requires a land to build your town.
                   <br></br>Each land is a NFT and there are only 10000 lands.
                   <br></br>Visit{" "}
                   <span
@@ -116,7 +116,7 @@ export default function Home() {
         <Row style={{ marginTop: "20rem" }}>
           <Col sm={4}>
             <div className="parcelBox">
-              <img src="/kingdomParcel/kingdom7.png" />
+              <img src="/kingdomParcel/kingdom12.png" />
             </div>
           </Col>
           <Col sm={4}></Col>
@@ -172,13 +172,31 @@ export default function Home() {
             </div>
           </Col>
         </Row>
+        <Row style={{"marginTop":"20rem","minHeight":"300px"}}>
+          <Col>
+              <div className="warriorsContainer">
+              <img src="warrior/swordsman.png" className="manImg"/>
+            <img src="warrior/archerWoman6.png" className="womanImg"/>
+   
+              </div>
+          </Col>
 
-        <Row style={{ marginTop: "20rem" }}>
+          <Col >
+          <div className="warriorsContainer">
+
+          <img src="warrior/swordsman2.png" className="manImg"/>
+          <img src="warrior/archerWoman3.png" className="womanImg" style={{"marginLeft":"14rem"}}/>
+          </div>
+          </Col>
+  
+        </Row>
+
+        {/* <Row style={{ marginTop: "20rem" }}>
           <div className="mainPageTextContainer">
             <h1>Why Blockdom?</h1>
           </div>
-        </Row>
-        <Row style={{ marginTop: "5rem" }}>
+        </Row> */}
+        <Row style={{ marginTop: "15rem" }}>
           <Col >
             <div className="infoRow">
             <div className="infoRowImg">
@@ -191,14 +209,15 @@ export default function Home() {
               {" "}
               <h4>Deflationary tokenomics</h4>
               <h5>
-                The main advantage of our platform among the other P2E (play to
+                The main advantage of Blockdom among the other P2E (play to
                 earn) applications is Tokenomics.
                 <br></br>
                 It is the same obstacle that almost all P2E applications
-                struggle with. Since the token of P2E applications has not any
+                struggle with. Since the token of the P2E applications has not any
                 tempting usage, all users tend to sell their earned tokens.
                 thereby becoming supply much bigger than demand. We considered
-                innovative tokenomics that will solve this problem.
+                innovative tokenomics that will solve this problem.<br></br>
+                To read more about the tokenomics go to the <span style={{"textDecoration":"underline","color":"yellowgreen","cursor":"pointer"}}>Docs</span>
               </h5>
             </div>
             </div>

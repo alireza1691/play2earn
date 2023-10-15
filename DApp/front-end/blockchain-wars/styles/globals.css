@@ -50,7 +50,7 @@ body {
 }
 
 .indexPageHeader {
-  min-height: 500px;
+  /* min-height: 500px; */
   background-size: cover;
   background-position: center;
 }
@@ -1097,6 +1097,23 @@ max-width: 300px;
 .infoRow .mainPageTextContainer {
   width: 80%;
   padding: 1rem;
+}
+
+.manImg{
+  /* display: flex; */
+  position: absolute;
+  width: 20rem;
+  margin-left: 5rem;
+  left: 0;
+  right: 0;
+}
+.womanImg{
+  /* position: absolute; */
+  width: 17rem;
+}
+.warriorsContainer{
+  position: relative;
+width: 100%;
 }
 @media (max-width: 767px) {
   .warImg {
