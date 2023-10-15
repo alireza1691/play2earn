@@ -71,11 +71,12 @@ const Navbar = (
             navbarScroll
           >
              {/* style={{"backgroundColor":"rgba(244, 105, 227, 0.3)","borderRadius":"0.5rem","color":"white"}}  */}
-             <Nav.Link href="#action1" onClick={()=>{router.push('/')}}>Home</Nav.Link>
+             
             <Nav.Link href="#action2" onClick={()=>{router.push('/map')}}>Explore</Nav.Link>
             <Nav.Link href="#action3" onClick={()=>{router.push('/myLand')}}>My land</Nav.Link>
-            <Nav.Link variant="outline-secondary" href="#action4" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
-            <Nav.Link href="#action4" onClick={()=>{router.push('/documentation')}}>Documentation</Nav.Link>
+            <Nav.Link href="#action4" onClick={()=>{router.push('/attack')}}>Attack</Nav.Link>
+            <Nav.Link href="#action5" onClick={()=>{router.push('/documentation')}}>Documentation</Nav.Link>
+            <Nav.Link href="#action6" onClick={()=>{router.push('/faucet')}} style={{"color":"lightgray"}} >Faucet</Nav.Link>
 
           </Nav>
           <ConnectWallet
