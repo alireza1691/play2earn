@@ -1088,7 +1088,18 @@ body {
   min-height: 20rem;
 }
 .faucetBox {
-  
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: white;
+  background-color: var(--greenTransparent);
+  padding: 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 0 2rem 0.5rem rgba(202, 243, 140, 0.3);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+.faucetBox h2 {
+  font-style: italic;
 }
 @media (max-width: 767px) {
   .textBox {

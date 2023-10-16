@@ -10,7 +10,9 @@ export const town = "0xAfa6440785A4B0BBDB96580bC88C03A3ae1E6DAc"
 export const barracks = "0x733e338B07064b5CeF211F38226b8B00dE8E2d60"
 export const townV2 = "0x0122AEAF3c3b42C7171f0AAFD2CB7078de1B7E7b"
 export const landsV2= "0xF8b825649a191F8780aC934c68DC32F2B731e1ff"
-export const BKTAddress= "0xEC2F90b8C1E3eAF3113305422E22Ce11373B10FE"
+export const BMTAddress= "0x7bb1F28c07D232D027b4f3b02d80B6DdfA4e08D1"
+export const Faucet= "0x479cBB06f7B3E0b7cd555dB5cc70dE40d4507c29"
+export const townProxy = ""
 
 
 // Addresses deployed in linea:

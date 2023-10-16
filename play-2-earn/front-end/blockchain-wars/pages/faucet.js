@@ -126,9 +126,15 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
           </div>
         )}
         <Container >
-            <Row>
+            <Row style={{"marginTop":"10rem"}}>
                 <Col>
-                <div className="faucetBox"></div>
+                <div className="faucetBox">
+                    <h2>Testnet BMT</h2>
+                    <p>BDT is Blockdom token which is convertible to the game goods</p>
+                    <p style={{"marginBottom":"0px"}}>100 BMT/day</p>
+                    <Button style={{"marginBottom":"1rem"}} variant="success" >Claim</Button>
+                    <p>To cover transactions fee and paying land price you need ETH.<br></br> Claim SEPOLIA ETH from <span style={{"textDecoration":"underline","color":"yellowgreen","cursor":"pointer"}}> Alchemy</span> .</p>
+                </div>
                 </Col>
             </Row>
         </Container>
