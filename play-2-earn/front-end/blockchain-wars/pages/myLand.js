@@ -29,7 +29,7 @@ import {
   barracksImg
 } from "../Images/ImagesSource";
 
-const myLand = ({
+const MyLand = ({
   provider,
   landImgUrl,
   ownedLands,
@@ -1202,4 +1202,4 @@ const myLand = ({
   );
 };
 
-export default myLand;
+export default MyLand;

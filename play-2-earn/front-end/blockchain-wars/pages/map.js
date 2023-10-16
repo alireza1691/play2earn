@@ -32,7 +32,7 @@ import Toast from 'react-bootstrap/Toast';
 
 const metamaskConfig = metamaskWallet();
 
-const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
+const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   const [viewLands, setViewLands] = useState();
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -572,4 +572,4 @@ const map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   );
 };
 
-export default map;
+export default Map;

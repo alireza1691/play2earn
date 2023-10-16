@@ -9,6 +9,7 @@ import { Card } from "react-bootstrap";
 import {
   townV2,
   landsV2,
+  faucet
 } from "../Blockchain/Addresses";
 import TownV2 from "../Blockchain/TownV2.json";
 import LandsV2 from "../Blockchain/LandsV2.json";
@@ -32,11 +33,12 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
+import { abi } from "../Blockchain/Faucet.json";
 
 
 const metamaskConfig = metamaskWallet();
 
-const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWarriors}) => {
+const Faucet = ({ provider, mintedLands, landObj, target, setTarget ,  existedWarriors}) => {
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -50,6 +52,36 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
   const connect = useConnect();
   const signer = useSigner();
   const address = useAddress();
+
+  const handleConnectWithMetamask = async () => {
+    try {
+      await connectWithMetamask({
+        chainId: validChainId,
+      });
+      // Connection successful
+    } catch (error) {
+      console.log("Error connecting with MetaMask:", error);
+      // Handle the error gracefully without showing it on the screen
+    }
+  };
+
+
+  const faucetReq = async () => {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId == validChainId && signer != undefined) {
+      try {
+        const faucetInst = new ethers.Contract(faucet, abi, signer)
+        await faucetInst.faucetReq()
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error)
+        setIsTransactionRejected(true);
+      }
+    } else {
+      handleConnectWithMetamask()
+    }
+
+  }
 
 
 
@@ -132,8 +164,8 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
                     <h2>Testnet BMT</h2>
                     <p>BDT is Blockdom token which is convertible to the game goods</p>
                     <p style={{"marginBottom":"0px"}}>100 BMT/day</p>
-                    <Button style={{"marginBottom":"1rem"}} variant="success" >Claim</Button>
-                    <p>To cover transactions fee and paying land price you need ETH.<br></br> Claim SEPOLIA ETH from <span style={{"textDecoration":"underline","color":"yellowgreen","cursor":"pointer"}}> Alchemy</span> .</p>
+                    <Button style={{"marginBottom":"1rem"}} variant="success" onClick={()=> faucetReq()}>Claim</Button>
+                    <p>To cover transactions fee and paying land price you need ETH.<br></br> Claim SEPOLIA ETH from <span  onClick={()=>{window.open('https://sepoliafaucet.com/')}} style={{"textDecoration":"underline","color":"yellowgreen","cursor":"pointer"}}> Alchemy</span> .</p>
                 </div>
                 </Col>
             </Row>
@@ -143,4 +175,4 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
   );
 };
 
-export default attack;
+export default Faucet;

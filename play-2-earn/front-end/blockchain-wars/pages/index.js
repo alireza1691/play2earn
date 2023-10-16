@@ -52,7 +52,7 @@ export default function Home() {
 
           <Col>
             <div className="mainPageTextContainer" style={{ marginTop: "1%" }}>
-              <h3>Don't miss the chance to earn from the exciting game</h3>
+              <h3>Do not miss the chance to earn from the exciting game</h3>
             </div>
           </Col>
 

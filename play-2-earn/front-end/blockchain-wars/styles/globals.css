@@ -1092,7 +1092,7 @@ body {
   color: white;
   background-color: var(--greenTransparent);
   padding: 2rem;
-  border-radius: 2rem;
+  border-radius: 1rem;
   box-shadow: 0 0 2rem 0.5rem rgba(202, 243, 140, 0.3);
   width: fit-content;
   margin-left: auto;

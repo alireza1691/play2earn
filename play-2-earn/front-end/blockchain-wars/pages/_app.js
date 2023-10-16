@@ -231,7 +231,7 @@ function MyApp({ Component, pageProps }) {
       }
     };
     fetchData();
-  }, [address]);
+  }, [address, apiKey, provider]);
 
   return (
     <ThirdwebProvider

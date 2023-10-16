@@ -36,7 +36,7 @@ import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
 
 const metamaskConfig = metamaskWallet();
 
-const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWarriors}) => {
+const Attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWarriors}) => {
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState();
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
@@ -470,4 +470,4 @@ const attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
   );
 };
 
-export default attack;
+export default Attack;

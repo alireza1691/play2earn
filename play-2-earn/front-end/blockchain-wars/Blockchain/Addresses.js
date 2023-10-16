@@ -11,7 +11,7 @@ export const barracks = "0x733e338B07064b5CeF211F38226b8B00dE8E2d60"
 export const townV2 = "0xEeDd3E5739eDde2a84c92aA191A0dbA91F70f1Ee"
 export const landsV2= "0xF8b825649a191F8780aC934c68DC32F2B731e1ff"
 export const BMTAddress= "0x7bb1F28c07D232D027b4f3b02d80B6DdfA4e08D1"
-export const Faucet= "0x479cBB06f7B3E0b7cd555dB5cc70dE40d4507c29"
+export const faucet= "0x479cBB06f7B3E0b7cd555dB5cc70dE40d4507c29"
 export const townProxy = ""
 export const landsProxy =""
 
