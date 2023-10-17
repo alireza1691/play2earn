@@ -63,7 +63,7 @@ const Navbar = (
       <Container fluid 
       // style={{"position":"fixed","paddingTop":"3rem"}}
       >
-        <MyNav.Brand href="#" onClick={()=>{router.push('/')}}><Image src="/favicon.ico" width={60} height={60}></Image></MyNav.Brand>
+        <MyNav.Brand href="#" onClick={()=>{router.push('/')}}><Image src="/BlockdomLogo.ico" width={60} height={60}></Image></MyNav.Brand>
         <MyNav.Toggle aria-controls="navbarScroll" />
         <MyNav.Collapse id="navbarScroll">
           <Nav

@@ -250,7 +250,7 @@ function MyApp({ Component, pageProps }) {
       }}
     >
             <Head>
-  <link rel="icon" href="/blockdomLogo.png" />
+  <link rel="icon" href="/BlockdomLogo.ico" />
 </Head>
       <Navbar setAddress={setAddress} />
 
