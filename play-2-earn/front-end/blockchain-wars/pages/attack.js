@@ -32,6 +32,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
+import Image from "next/image";
 
 
 const metamaskConfig = metamaskWallet();
@@ -457,7 +458,8 @@ const Attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
             <h2 className="defaultH2" style={{"marginBottom":"2rem"}}>Target army:</h2>
             {warriorsImageSources.map((warrior,key)=>(
             <Col key={key} sm={3} className="warriorCol">
-            <img src={warrior}></img>
+            {/* <Image src={warrior} height={200} width={200}></Image> */}
+            <Image src={warrior} height={200} width={200}></Image>
             { Array.isArray(existedWarriors) && Array.isArray(targetArmy) ?  <h3><span>{targetArmy[key].toString()}</span>{existedWarriors[key].name}</h3> : <h3>Enter target</h3>}
    
             </Col>

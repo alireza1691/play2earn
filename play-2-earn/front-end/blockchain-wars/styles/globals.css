@@ -906,7 +906,8 @@ body {
   padding: 1rem;
 }
 .warriorCol img {
-  width: 100%;
+  width: 100% !important;
+  height: auto !important;
   /* box-shadow: 0 0 3rem 0.5rem rgba(112, 172, 53,0.4); */
   background-color: var(--greenTransparent);
   border-radius: 10rem;
