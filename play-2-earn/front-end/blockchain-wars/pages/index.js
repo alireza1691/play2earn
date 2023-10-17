@@ -149,7 +149,7 @@ export default function Home() {
           <Col sm={4}></Col>
           <Col sm={4}>
             <div className="imgBox">
-              <img src="/earn3.png" />
+              <img src="/earn.png" />
             </div>
           </Col>
         </Row>
