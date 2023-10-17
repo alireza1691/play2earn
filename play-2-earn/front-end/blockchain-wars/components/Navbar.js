@@ -9,7 +9,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import { landsSepolia } from "../Blockchain/Addresses";
 import axios from "axios";
 import dotenv from "dotenv";
-import Image from "next"
+import Image from "next/image"
 // dotenv.config();
 require("dotenv").config();
 
@@ -63,7 +63,7 @@ const Navbar = (
       <Container fluid 
       // style={{"position":"fixed","paddingTop":"3rem"}}
       >
-        <MyNav.Brand href="#" onClick={()=>{router.push('/')}}><img src="/blockdomLogo.png" width={60}></img></MyNav.Brand>
+        <MyNav.Brand href="#" onClick={()=>{router.push('/')}}><Image src="/blockdomLogo.png" width={60} height={60}></Image></MyNav.Brand>
         <MyNav.Toggle aria-controls="navbarScroll" />
         <MyNav.Collapse id="navbarScroll">
           <Nav
