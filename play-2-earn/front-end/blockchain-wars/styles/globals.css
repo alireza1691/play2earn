@@ -362,19 +362,19 @@ body {
   transform: perspective(600px) rotateY(0deg) scale(1.1) rotateX(25deg)
     rotateZ(10deg);
   transition: 0.6s ease all;
-  /* background-color: khaki; */
-  background-image: url("../public/map/map2.jpg");
+  background-color: khaki;
+  /* background-image: url("../public/map/map2.jpg"); */
   object-fit: fill;
   border-radius: 10px;
 }
 
 .item {
-  color: transparent;
+  /* color: transparent; */
   display: block;
   justify-content: center;
   height: fit-content;
   font-weight: bold;
-  /* background-color: greenyellow; */
+  background-color: greenyellow;
   border-radius: 2px;
   overflow: hidden;
   width: 99%;

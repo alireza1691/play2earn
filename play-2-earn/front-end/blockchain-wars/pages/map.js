@@ -267,51 +267,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                   </span>{" "}
                   your wallet</Toast.Body>
     </Toast>
-            {/* <Card
-              style={{
-                padding: "0.5rem",
-                width: "15rem",
-                backgroundColor: "rgba(255,255,255,0.9)",
-                boxShadow: "0px 0.1rem 1rem 0.01rem rgba(0, 0, 0, 0.2)",
-              }}
-              className="card"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  width: "100%",
-                  justifyContent: "end",
-                }}
-              >
-                <CloseButton onClick={handleClosePopUp}></CloseButton>
-              </div>
-              <Card.Body style={{ textAlign: "justify" }}>
-                <Card.Text
-                  style={{
-                    fontSize: "0.9rem",
-                    textAlign: "center",
-                    fontFamily: "verdana",
-                  }}
-                >
-                  If you have any land we recommend to{" "}
-                  <span
-                    style={{
-                      textDecoration: "underLine",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                    }}
-                    onClick={() =>
-                      handleConnectWithMetamask()
-                    }
-                  >
-                    Connect
-                  </span>{" "}
-                  your wallet
-                </Card.Text>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                </div>
-              </Card.Body>
-            </Card> */}
+
           </div>
         )}
        {isTransactionRejected && (
