@@ -19,7 +19,7 @@ export default function Home() {
           <Col sm={6}>
             <div className="mainPageTextContainer">
               <h1>
-                Presale is <span style={{ color: "greenyellow" }}>live</span>
+                Pre-sale is <span style={{ color: "greenyellow" }}>live</span>
               </h1>
 
               <button

@@ -2,6 +2,8 @@ import { ThirdwebProvider, useAddress, useSigner } from "@thirdweb-dev/react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/globals.css";
 import Navbar from "../components/Navbar";
+import Head from 'next/head';
+
 import { ethers } from "ethers";
 import {
   Mumbai,
@@ -247,7 +249,11 @@ function MyApp({ Component, pageProps }) {
         isDarkMode: false,
       }}
     >
+            <Head>
+  <link rel="icon" href="/blockdomLogo.png" />
+</Head>
       <Navbar setAddress={setAddress} />
+
       <Component
         {...pageProps}
         // connectReq={connectReq}

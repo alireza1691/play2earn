@@ -224,6 +224,7 @@ body {
   font-size: 0.8rem;
 }
 .greenButton {
+  color: black !important;
   padding: 1rem;
   border-radius: 1.3rem;
   background: linear-gradient(
@@ -1153,6 +1154,7 @@ body {
     display: block;
   }
   .greenButton {
+    color: black !important;
     padding: 0.5rem;
     border-radius: 0.4rem;
     width: 100%;
