@@ -97,7 +97,7 @@ export default function Home() {
         <Row className="mainRow">
           <Col sm={4}>
             <div className="imgBox">
-              <img src="/kingdomParcel/kingdom12.png" />
+              <img src="/kingdomParcel/kingdomCard.png" />
             </div>
           </Col>
           <Col sm={4}></Col>

@@ -6,9 +6,9 @@ export const buildingsImageSources = [
     "Buildings/gold-mine-2.png",
   ];
 export const warriorsImageSources = [
-    "Warriors/AchaemenidSpearman.png",
-    "Warriors/PersianAncientWarrior.png",
-    "Warriors/PersianArcher.png",
+    "warrior/spearman.png",
+    "warrior/swordsman5.png",
+    "warrior/archerWoman4.png",
   ];
 export const commodityItems = [
     { name: "Stone", image: "/Stone.png" },
