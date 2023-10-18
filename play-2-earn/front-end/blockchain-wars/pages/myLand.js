@@ -35,6 +35,7 @@ const MyLand = ({
   ownedLands,
   landObj,
   existedWarriors,
+  defaultLand
 }) => {
   // const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -55,6 +56,7 @@ const MyLand = ({
   const [error, setError] = useState();
   const [workerBusyTime, setWorkerBusyTime] = useState();
   const [commodityIndex, setCommodityIndex] = useState();
+  const [selectedLandIndex ,setSelectedLandIndex] = useState(0)
 
   const sdk = useSDK();
   const router = useRouter();
@@ -340,16 +342,17 @@ const MyLand = ({
       }, 12000);
       return () => clearTimeout(timeout);
     }
+
     const fetchData = async () => {
       if (ownedLands !== undefined && ownedLands == 0) {
         setIsFetching(false);
       }
-      if (signer && address && selectedLand !== undefined && provider) {
+      if (signer && address && landObj[selectedLandIndex] !== undefined && provider) {
         console.log("Useeffect called");
 
         const townInstance = new ethers.Contract(townV2, TownV2.abi, provider);
         const landData = await townInstance.getLandIdData(
-          selectedLand.coordinate
+          landObj[selectedLandIndex].coordinate
         );
 
         console.log(landData);
@@ -364,14 +367,14 @@ const MyLand = ({
         setBarracksLevel(barracksLvl); //// Replace and edit this
         console.log("Existed warriors:", existedWarriors);
         const requiredComs = await townInstance.getBarracksRequiredCommodities(
-          selectedLand.coordinate
+          landObj[selectedLandIndex].coordinate
         );
         console.log("Required barracks coms:", requiredComs);
         setRequiredBarracksCommodities(requiredComs);
         // console.log("Current existed army:", landArmy);
         if (ownedBuildings_.length > 0) {
           const busyTime = await townInstance.getRemainedTimestamp(
-            selectedLand.coordinate
+            landObj[selectedLandIndex].coordinate
           );
           console.log(
             "worker will be busy for",
@@ -410,9 +413,8 @@ const MyLand = ({
     ownedLands,
     address,
     signer,
-    selectedLand,
     visibleConfirmation,
-    selectedLand,
+    landObj
   ]);
 
   return (
@@ -468,7 +470,7 @@ const MyLand = ({
         )}
 
         <Container>
-          {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
+          {/* {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
             <>
               {selectedLand == undefined && (
                 <Row>
@@ -481,7 +483,7 @@ const MyLand = ({
                   landObj.map((land, key) => (
                     <React.Fragment key={land.coordinate + key}>
                       <Col
-                        //  md={{ span: 3, offset: 0 }}
+  
                         md="auto"
                       >
                         <div className="landCard">
@@ -492,22 +494,14 @@ const MyLand = ({
                             <button
                               className="sGreenButton"
                               style={{
-                                // padding: "0.3rem",
-                                // borderRadius: "0.5rem",
+            
                                 marginBottom: "1rem",
-                                // width: "100px",
                               }}
                               onClick={() => setSelectedLand(land)}
                             >
                               Open
                             </button>
-                            {/* <Button
-                            style={{"marginBottom":"1rem"}}
-                              variant="light"
-                              onClick={() => setSelectedLand(land)}
-                            >
-                              Open
-                            </Button> */}
+  
                           </div>
                         </div>
                       </Col>
@@ -516,7 +510,7 @@ const MyLand = ({
               </Row>
             </>
           ) : (
-            <>
+            <> */}
               {address != undefined && isFetching ? (
                 <div
                   style={{
@@ -595,9 +589,9 @@ const MyLand = ({
                   </Col>
                 </Row>
               )}
-            </>
-          )}
-          {selectedLand !== undefined && (
+            {/* </>
+          )} */}
+          { Array.isArray(landObj) && landObj.length > 0 && (
             <>
               <Row>
                 <Col>
@@ -640,6 +634,17 @@ const MyLand = ({
                 </Col>
               </Row>
               <Row style={{ marginTop: "3rem", minHeight: "300px" }}>
+              {/* <Col
+                        md="auto"
+                      >
+                        <div className="landCard">
+                          <img src={landImgUrl}></img>
+                          <div>
+                            <h2 className="defaultH2">Land</h2>
+                            <p>Coordinate: {selectedLand.coordinate}</p>
+                          </div>
+                        </div>
+                      </Col> */}
                 <Col className="transferCol" sm={3}>
                   <InputGroup className="mb-3" size="sm">
                     <Form.Control
@@ -744,8 +749,8 @@ const MyLand = ({
                           <img src="/Stone.png" />
                         </td>
                         <td className="tableLine">
-                          {selectedLand.stone !== undefined
-                            ? selectedLand.stone
+                          {landObj[selectedLandIndex].stone !== undefined
+                            ? landObj[selectedLandIndex].stone
                             : "0"}
                         </td>
                       </tr>
@@ -754,8 +759,8 @@ const MyLand = ({
                           <img src="/Wood.png" />
                         </td>
                         <td className="tableLine">
-                          {selectedLand.wood !== undefined
-                            ? selectedLand.wood
+                          {landObj[selectedLandIndex].wood !== undefined
+                            ? landObj[selectedLandIndex].wood
                             : "0"}
                         </td>
                       </tr>
@@ -764,8 +769,8 @@ const MyLand = ({
                           <img src="/Iron.png" />
                         </td>
                         <td className="tableLine">
-                          {selectedLand.iron !== undefined
-                            ? selectedLand.iron
+                          {landObj[selectedLandIndex].iron !== undefined
+                            ? landObj[selectedLandIndex].iron
                             : "0"}
                         </td>
                       </tr>
@@ -774,8 +779,8 @@ const MyLand = ({
                           <img src="/Food.png" />
                         </td>
                         <td className="tableLine">
-                          {selectedLand.food !== undefined
-                            ? selectedLand.food
+                          {landObj[selectedLandIndex].food !== undefined
+                            ? landObj[selectedLandIndex].food
                             : "0"}
                         </td>
                       </tr>
@@ -784,8 +789,8 @@ const MyLand = ({
                           <img src="/Gold.png" />
                         </td>
                         <td className="tableLine">
-                          {selectedLand.gold !== undefined
-                            ? selectedLand.gold
+                          {landObj[selectedLandIndex].gold !== undefined
+                            ? landObj[selectedLandIndex].gold
                             : "0"}
                         </td>
                       </tr>
@@ -795,15 +800,15 @@ const MyLand = ({
                 <Col className="BalTableCol" sm={3}>
                   {Array.isArray(existedWarriors) &&
                     existedWarriors.length > 0 &&
-                    Array.isArray(selectedLand.armyBal) &&
-                    selectedLand.armyBal.length > 0 && (
+                    Array.isArray(landObj[selectedLandIndex].armyBal) &&
+                    landObj[selectedLandIndex].armyBal.length > 0 && (
                       <Table striped bordered hover size="sm">
                         <tbody>
                           {existedWarriors.map((warrior, key) => (
                             <tr key={key}>
                               <td className="tableLine">{warrior.name}</td>
                               <td className="tableLine">
-                                {selectedLand.armyBal[key].toString()}
+                                {landObj[selectedLandIndex].armyBal[key].toString()}
                               </td>
                             </tr>
                           ))}
@@ -811,7 +816,7 @@ const MyLand = ({
                       </Table>
                     )}
                   {existedWarriors == undefined &&
-                    selectedLand.armyBal == undefined && (
+                    landObj[selectedLandIndex].armyBal == undefined && (
                       <h5 className="defaultH5" style={{ textAlign: "center" }}>
                         {" "}
                         Loading army...
@@ -1030,24 +1035,24 @@ const MyLand = ({
                      
                               </div>
                               <div className="InfoColumn">
-                                {Number(selectedLand.stone) <=
+                                {Number(landObj[selectedLandIndex].stone) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[0]
                                   ) ||
-                                Number(selectedLand.wood) <=
+                                Number(landObj[selectedLandIndex].wood) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[1]
                                   ) ||
-                                Number(selectedLand.iron) <=
+                                Number(landObj[selectedLandIndex].iron) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[2]
                                   ) ||
                    
-                                Number(selectedLand.food) <=
+                                Number(landObj[selectedLandIndex].food) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[4]
                                   ) ||
-                                  Number(selectedLand.gold) <=
+                                  Number(landObj[selectedLandIndex].gold) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[3]
                                   ) ||
@@ -1140,31 +1145,31 @@ const MyLand = ({
                                 </div>
                                 <div className="InfoColumn">
                                   <p>Difficulty: 0%</p>
-                                  {Number(selectedLand.stone) <=
+                                  {Number(landObj[selectedLandIndex].stone) <=
                                     Number(
                                       ethers.utils.formatEther(
                                         item.requiredStone
                                       )
                                     ) ||
-                                  Number(selectedLand.wood) <=
+                                  Number(landObj[selectedLandIndex].wood) <=
                                     Number(
                                       ethers.utils.formatEther(
                                         item.requiredWood
                                       )
                                     ) ||
-                                  Number(selectedLand.iron) <=
+                                  Number(landObj[selectedLandIndex].iron) <=
                                     Number(
                                       ethers.utils.formatEther(
                                         item.requiredIron
                                       )
                                     ) ||
-                                  Number(selectedLand.gold) <=
+                                  Number(landObj[selectedLandIndex].gold) <=
                                     Number(
                                       ethers.utils.formatEther(
                                         item.requiredGold
                                       )
                                     ) ||
-                                  Number(selectedLand.food) <=
+                                  Number(landObj[selectedLandIndex].food) <=
                                     Number(
                                       ethers.utils.formatEther(
                                         item.requiredFood
