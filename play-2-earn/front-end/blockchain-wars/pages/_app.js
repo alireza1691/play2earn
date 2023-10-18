@@ -20,22 +20,25 @@ import {barracks, lands, landsV2, town, townV1, townV2 } from "../Blockchain/Add
 import LandsV2 from "../Blockchain/LandsV2.json";
 import TownV2 from "../Blockchain/TownV2.json";
 import axios from "axios";
-import dotenv from "dotenv";
+import { config } from 'dotenv';
+config();
+
 import {
   metamaskWallet,
   coinbaseWallet,
   walletConnect,
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
+// require("dotenv").config()
 // dotenv.config();
-require("dotenv").config();
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
 // const activeChain = "ethereum";
 
 function MyApp({ Component, pageProps }) {
-  const apiKey = process.env.ETHERSCA_SEPOLIA_API_KEY;
+  // const apiKey = process.env.ETHERSCAN_SEPOLIA_API_KEY;
+  const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T"
   // const apiKey = process.env.LINEA_API_KEY;
   // const infuraApiKey = process.env.INFURA_API_KEY;
 
@@ -148,6 +151,10 @@ function MyApp({ Component, pageProps }) {
   }
 
   useEffect(() => {
+    if (apiKey ==! undefined) {
+      console.log("api key:");
+      console.log(apiKey);
+    }
     const fetchData = async () => {
       const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
       const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
@@ -170,6 +177,7 @@ function MyApp({ Component, pageProps }) {
             );
             console.log("Fetched events");
             console.log(response);
+            setResponse(response)
             const events = response.data.result;
             for (let index = 0; index < events.length; index++) {
               const topics = events[index].topics;
@@ -230,10 +238,16 @@ function MyApp({ Component, pageProps }) {
           console.log("Here is minted lands:", mintedLands);
           console.log("Connected address owned these lands:", landObject);
         // }
+      } else {
+        console.log("Address not connected!");
+        if (response == undefined) {
+          dataLoad()
+          console.log("API called");
+        }
       }
     };
     fetchData();
-  }, [address]);
+  }, [address, apiKey]);
 
   return (
     <ThirdwebProvider

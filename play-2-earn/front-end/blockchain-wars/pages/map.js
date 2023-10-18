@@ -33,7 +33,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState({});
-  const [closePopUp, setClosePopUp] = useState(false);
+  // const [closePopUp, setClosePopUp] = useState(false);
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [landPrice, setLandPrice] = useState();
@@ -99,10 +99,10 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
     setLandBal();
   };
 
-  const handleClosePopUp = () => {
-    setClosePopUp(true);
-    dataLoad();
-  };
+  // const handleClosePopUp = () => {
+  //   setClosePopUp(true);
+  //   dataLoad();
+  // };
 
   const mintLand = async () => {
     const chainId = await sdk.wallet.getChainId();
@@ -242,7 +242,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
             )}
           </>
         )}
-        {!address && closePopUp == false && (
+        {/* {!address && closePopUp == false && (
           <div className="overlay">
             <Toast>
               <Toast.Header onClick={handleClosePopUp}>
@@ -252,7 +252,6 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                   alt=""
                 />
                 <strong className="me-auto">Wallet not detected</strong>
-                {/* <small>Blochchain wars</small> */}
               </Toast.Header>
               <Toast.Body>
                 If you have any land we recommend to{" "}
@@ -270,7 +269,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
               </Toast.Body>
             </Toast>
           </div>
-        )}
+        )} */}
         {isTransactionRejected && (
           <div className="overlay">
             <div className="transactionResultWindow">
@@ -491,7 +490,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                     </div>
                   ) : (
                     <>
-                      {closePopUp == true && (
+          
                         <div
                           style={{
                             display: "block",
@@ -519,7 +518,6 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                             <span className="visually-hidden">Loading...</span>
                           </Spinner>
                         </div>
-                      )}
                     </>
                   )}
                 </>

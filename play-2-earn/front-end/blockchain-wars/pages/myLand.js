@@ -327,6 +327,7 @@ const MyLand = ({
   };
 
   useEffect(() => {
+
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
         setConfirmed(true);
@@ -403,6 +404,7 @@ const MyLand = ({
       }
     };
     fetchData();
+
   }, [
     provider,
     ownedLands,
@@ -600,12 +602,25 @@ const MyLand = ({
               <Row>
                 <Col>
                   <div className="myLandHeader">
-                    <h4
+                  <h2 className="defaultH2">Lands :</h2>
+                    {
+                  landObj.map((land, key) => (
+                    <React.Fragment key={land.coordinate + key}>
+                          <div className="myLandsContainer" >
+                        
+                            <p>Land {land.coordinate}</p>
+          
+                          </div>
+       
+              
+                    </React.Fragment>
+                  ))}
+                    {/* <h4
                       className="textButton"
                       onClick={() => setSelectedLand()}
                     >
                       &lt; Back
-                    </h4>
+                    </h4> */}
                     {/* <Button variant="outline-light">Attack</Button> */}
                     <div
                       className="attackRouteButton"
