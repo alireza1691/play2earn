@@ -305,19 +305,21 @@ body {
   background-color: white !important;
 } */
 .btn-success {
-  background-color: rgb(170, 252, 87);
-  color: black;
-  border-color: rgb(170, 252, 87);
+  background-color: rgb(170, 252, 87) !important;
+  color: black !important;
+  border-color: rgb(170, 252, 87) !important;
+  margin-bottom: 0.5rem;
+  min-width: 80px;
 }
 .btn-success:hover {
-  background-color: rgb(112, 172, 53);
-  color: black;
-  border-color: rgb(112, 172, 53);
+  background-color: rgb(112, 172, 53) !important;
+  color: black !important;
+  border-color: rgb(112, 172, 53) !important;
 }
 .btn-success:disabled {
-  background-color: rgb(112, 172, 53);
-  border-color: rgb(112, 172, 53);
-  color: #000000;
+  background-color: rgb(112, 172, 53) !important;
+  border-color: rgb(112, 172, 53) !important;
+  color: #000000 !important;
 }
 .textBox {
   min-height: 100px;
@@ -628,36 +630,44 @@ body {
 }
 
 .popUpConfirmation {
-  background-color: white;
-  width: 150px;
+  background-color: black;
+  color: rgb(237, 255, 211) !important;
+  width: 250px;
   padding: 1rem;
   text-align: center;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 0.5rem 0.05rem rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  /* box-shadow: 0 0 1rem 0.2rem rgba(198, 248, 169, 0.3); */
   white-space: pre-wrap;
   word-wrap: break-word;
+  border: 2px solid rgba(94, 110, 85, 0.3);
+}
+.popUpConfirmation .defaultH3{
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: rgb(237, 255, 211) !important;
+  font-size: 1.7rem;
 }
 
 .transactionResultWindow {
-  background-color: white;
-  width: 320px;
-  padding: 0.5rem;
+  background-color: black;
+  color: rgb(237, 255, 211) ;
+  /* width: 400px; */
+  padding: 1rem;
   text-align: center;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   box-shadow: 0 0 0.5rem 0.05rem rgba(0, 0, 0, 0.3);
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 .transactionResultWindow p {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 0.75rem;
-  color: rgb(62, 62, 62);
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 1.3rem;
+
 }
 .transactionResultWindow h4 {
   margin-top: 0.5rem;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 0.9rem;
-  color: rgb(13, 3, 37);
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
 }
 .closeButton {
   padding: 0.2rem;
@@ -1104,6 +1114,25 @@ body {
   font-style: italic;
 }
 @media (max-width: 767px) {
+  .popUpConfirmation {
+    background-color: #000000;
+    box-shadow: none;
+    width: fit-content;
+  }
+  .popUpConfirmation h3{
+    font-size: 1.2rem !important;
+  }
+  .transactionResultWindow {
+    padding: 0.5rem;
+    max-width: 60%;
+  }
+  .transactionResultWindow h4{
+    font-size: 1.2rem;
+    margin-bottom: 0.7rem;
+  }
+  .transactionResultWindow p{
+    font-size: 0.9rem;
+  }
   .textBox {
     width: 90%;
     border-radius: 2rem;
@@ -1265,6 +1294,25 @@ body {
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
+  .popUpConfirmation {
+    /* background-color: #000000; */
+    box-shadow: none;
+    width: 200px;
+  }
+  .popUpConfirmation h3{
+    font-size: 1.3rem !important;
+  }
+  .transactionResultWindow {
+    padding: 0.5rem;
+    max-width: 50%;
+  }
+  .transactionResultWindow h4{
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+  }
+  .transactionResultWindow p{
+    font-size: 1rem;
+  }
   .mainPageTextContainer h1 {
     font-size: 3rem !important;
   }

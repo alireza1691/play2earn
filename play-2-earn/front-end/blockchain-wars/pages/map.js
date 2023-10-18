@@ -6,10 +6,7 @@ import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import { Card } from "react-bootstrap";
-import {
-  townV2,
-  landsV2
-} from "../Blockchain/Addresses";
+import { townV2, landsV2 } from "../Blockchain/Addresses";
 import LandsV2 from "../Blockchain/LandsV2.json";
 import TownV2 from "../Blockchain/TownV2.json";
 import { Contract, ethers } from "ethers";
@@ -27,8 +24,7 @@ import CloseButton from "react-bootstrap/CloseButton";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useRouter } from "next/router";
 import { useSDK } from "@thirdweb-dev/react";
-import Toast from 'react-bootstrap/Toast';
-
+import Toast from "react-bootstrap/Toast";
 
 const metamaskConfig = metamaskWallet();
 
@@ -41,8 +37,8 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [landPrice, setLandPrice] = useState();
-  const [landBal, setLandBal] = useState()
-  const [error, setError] = useState()
+  const [landBal, setLandBal] = useState();
+  const [error, setError] = useState();
 
   const connectWithMetamask = useMetamask();
 
@@ -68,27 +64,29 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
 
   const handleClose = () => {
     setIsTransactionRejected(false);
-    setError(undefined)
+    setError(undefined);
   };
   const handleAttack = () => {
-      setTarget(selectedLand.tokenId)
-      router.push("/attack");
-  }
+    setTarget(selectedLand.tokenId);
+    router.push("/attack");
+  };
 
   const handleOpenLandWindow = async (land) => {
     setIsLandSelected(true);
     // const army = new ethers.Contract(armySepolia, Army.abi, signer)
     // const armyBalanec = await army.getArmy()
     if (land.isMinted == true && land.isYours == false) {
-      console.log('land already minted');
+      console.log("land already minted");
       const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
       const landBalance = await townInst.getAssetsBal(land.tokenId);
-      const balObj = {stoneBal : ethers.utils.formatEther(landBalance[0]),
-      woodBal : ethers.utils.formatEther(landBalance[1]),
-      ironBal : ethers.utils.formatEther(landBalance[2]),
-      goldBal : ethers.utils.formatEther(landBalance[3]),
-      foodBal : ethers.utils.formatEther(landBalance[4])}
-      setLandBal(balObj)
+      const balObj = {
+        stoneBal: ethers.utils.formatEther(landBalance[0]),
+        woodBal: ethers.utils.formatEther(landBalance[1]),
+        ironBal: ethers.utils.formatEther(landBalance[2]),
+        foodBal: ethers.utils.formatEther(landBalance[3]),
+        goldBal: ethers.utils.formatEther(landBalance[4]),
+      };
+      setLandBal(balObj);
       console.log(balObj);
     }
     setSelectedLand(land);
@@ -98,7 +96,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   const handleCloseLandWindow = () => {
     setIsLandSelected(false);
     setSelectedLand({});
-    setLandBal()
+    setLandBal();
   };
 
   const handleClosePopUp = () => {
@@ -114,17 +112,16 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
         await landsInst.mintLand(selectedLand.x, selectedLand.y, {
           value: landPrice,
         });
-        handleCloseLandWindow()
+        handleCloseLandWindow();
         setVisibleConfirmation(true);
       } catch (error) {
-        setError(error)
+        setError(error);
         setIsLandSelected(false);
         setIsTransactionRejected(true);
       }
     } else {
-      handleConnectWithMetamask()
+      handleConnectWithMetamask();
     }
-    
   };
 
   const views = () => {
@@ -161,10 +158,12 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
         let owner;
         let isYours = false;
         for (let index = 0; index < mintedLands.length; index++) {
-          if (tokenId == mintedLands[index].tokenId ) {
+          if (tokenId == mintedLands[index].tokenId) {
             // img = "/mintedLand.png";
             owner = mintedLands[index].owner;
-            address ?  (isYours = owner == address.toLocaleLowerCase() ? true : false):(isYours = false) ;
+            address
+              ? (isYours = owner == address.toLocaleLowerCase() ? true : false)
+              : (isYours = false);
             img = isYours ? "/myLand.png" : "/mintedLand.png";
           }
         }
@@ -212,7 +211,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   return (
     <>
       <div className="scrollableScreen">
-      {visibleConfirmation == true && (
+        {visibleConfirmation == true && (
           <>
             {confirmed == false ? (
               <div
@@ -228,8 +227,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                     animation="border"
                     role="status"
                     style={{ color: "black" }}
-                  >
-                  </Spinner>
+                  ></Spinner>
                 </div>
               </div>
             ) : (
@@ -247,36 +245,44 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
         {!address && closePopUp == false && (
           <div className="overlay">
             <Toast>
-      <Toast.Header onClick={handleClosePopUp}>
-        <img src="holder.js/20x20?text=%20" className="rounded me-2" alt=""/>
-        <strong className="me-auto">Wallet not detected</strong>
-        {/* <small>Blochchain wars</small> */}
-      </Toast.Header>
-      <Toast.Body>If you have any land we recommend to{" "}
-                  <span
-                    style={{
-                      textDecoration: "underLine",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                    }}
-                    onClick={() =>
-                      handleConnectWithMetamask()
-                    }
-                  >
-                    Connect
-                  </span>{" "}
-                  your wallet</Toast.Body>
-    </Toast>
-
+              <Toast.Header onClick={handleClosePopUp}>
+                <img
+                  src="holder.js/20x20?text=%20"
+                  className="rounded me-2"
+                  alt=""
+                />
+                <strong className="me-auto">Wallet not detected</strong>
+                {/* <small>Blochchain wars</small> */}
+              </Toast.Header>
+              <Toast.Body>
+                If you have any land we recommend to{" "}
+                <span
+                  style={{
+                    textDecoration: "underLine",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleConnectWithMetamask()}
+                >
+                  Connect
+                </span>{" "}
+                your wallet
+              </Toast.Body>
+            </Toast>
           </div>
         )}
-       {isTransactionRejected && (
+        {isTransactionRejected && (
           <div className="overlay">
             <div className="transactionResultWindow">
-              <div className="closeButtonContainer"><CloseButton className="closeButton" onClick={handleClose}></CloseButton></div>
+              <div className="closeButtonContainer">
+                <CloseButton
+                  className="closeButton"
+                  onClick={handleClose}
+                ></CloseButton>
+              </div>
               <h4>Transaction Rejected or failed</h4>
               <div className="errorContainer">
-              {error !== undefined && <p>{error.message}</p>}
+                {error !== undefined && <p>{error.message}</p>}
               </div>
               <p>Please try again or contact support.</p>
             </div>
@@ -341,12 +347,12 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                           <h6>{landBal.ironBal}</h6>
                         </div>
                         <div className="commodityBalance">
-                          <img src="/Gold.png"></img>
-                          <h6>{landBal.goldBal}</h6>
-                        </div>
-                        <div className="commodityBalance">
                           <img src="/Food.png"></img>
                           <h6>{landBal.foodBal}</h6>
+                        </div>
+                        <div className="commodityBalance">
+                          <img src="/Gold.png"></img>
+                          <h6>{landBal.goldBal}</h6>
                         </div>
                       </div>
                     )}
@@ -375,10 +381,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                     <Button
                       variant="primary"
                       onClick={
-                        signer
-                          ? mintLand
-                          : () =>
-                          handleConnectWithMetamask()
+                        signer ? mintLand : () => handleConnectWithMetamask()
                       }
                       style={{ marginRight: "20px" }}
                     >
@@ -421,7 +424,9 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
           </Row>
           <Row>
             <Col>
-              {viewLands == undefined && Array.isArray(mintedLands) && mintedLands.length >= 0 ? (
+              {viewLands == undefined &&
+              Array.isArray(mintedLands) &&
+              mintedLands.length >= 0 ? (
                 <>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div className="viewGrid">
@@ -486,37 +491,36 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                     </div>
                   ) : (
                     <>
-                    {closePopUp == true && (
-                                        <div
-                                        style={{
-                                          display: "block",
-                                          marginTop: "1%",
-                                          height: "200px",
-                                          paddingTop: "15%",
-                                          width: "100%",
-                                          textAlign: "center",
-                                        }}
-                                      >
-                                        <h2
-                                          style={{
-                                            fontFamily: "monospace",
-                                            fontSize: "0.9rem",
-                                            color: "white",
-                                          }}
-                                        >
-                                          Loading...
-                                        </h2>
-                                        <Spinner
-                                          animation="border"
-                                          role="status"
-                                          style={{ textAlign: "center", color: "white" }}
-                                        >
-                                          <span className="visually-hidden">Loading...</span>
-                                        </Spinner>
-                                      </div>
-                    )}
+                      {closePopUp == true && (
+                        <div
+                          style={{
+                            display: "block",
+                            marginTop: "1%",
+                            height: "200px",
+                            paddingTop: "15%",
+                            width: "100%",
+                            textAlign: "center",
+                          }}
+                        >
+                          <h2
+                            style={{
+                              fontFamily: "monospace",
+                              fontSize: "0.9rem",
+                              color: "white",
+                            }}
+                          >
+                            Loading...
+                          </h2>
+                          <Spinner
+                            animation="border"
+                            role="status"
+                            style={{ textAlign: "center", color: "white" }}
+                          >
+                            <span className="visually-hidden">Loading...</span>
+                          </Spinner>
+                        </div>
+                      )}
                     </>
-  
                   )}
                 </>
               )}

@@ -11,61 +11,61 @@ interface ILands is IERC721 {
     function URI() pure external returns (uint256); 
     function tokenURI(uint256 _tokenId) pure external returns (uint256); 
 }   
-// library TransferHelper {
-//     /// @notice Transfers tokens from the targeted address to the given destination
-//     /// @notice Errors with 'STF' if transfer fails
-//     /// @param token The contract address of the token to be transferred
-//     /// @param from The originating address from which the tokens will be transferred
-//     /// @param to The destination address of the transfer
-//     /// @param value The amount to be transferred
-//     function safeTransferFrom(
-//         address token,
-//         address from,
-//         address to,
-//         uint256 value
-//     ) internal {
-//         (bool success, bytes memory data) =
-//             token.call(abi.encodeWithSelector(IERC20.transferFrom.selector, from, to, value));
-//         require(success && (data.length == 0 || abi.decode(data, (bool))), 'STF');
-//     }
+library TransferHelper {
+    /// @notice Transfers tokens from the targeted address to the given destination
+    /// @notice Errors with 'STF' if transfer fails
+    /// @param token The contract address of the token to be transferred
+    /// @param from The originating address from which the tokens will be transferred
+    /// @param to The destination address of the transfer
+    /// @param value The amount to be transferred
+    function safeTransferFrom(
+        address token,
+        address from,
+        address to,
+        uint256 value
+    ) internal {
+        (bool success, bytes memory data) =
+            token.call(abi.encodeWithSelector(IERC20.transferFrom.selector, from, to, value));
+        require(success && (data.length == 0 || abi.decode(data, (bool))), 'STF');
+    }
 
-//     /// @notice Transfers tokens from msg.sender to a recipient
-//     /// @dev Errors with ST if transfer fails
-//     /// @param token The contract address of the token which will be transferred
-//     /// @param to The recipient of the transfer
-//     /// @param value The value of the transfer
-//     function safeTransfer(
-//         address token,
-//         address to,
-//         uint256 value
-//     ) internal {
-//         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(IERC20.transfer.selector, to, value));
-//         require(success && (data.length == 0 || abi.decode(data, (bool))), 'ST');
-//     }
+    /// @notice Transfers tokens from msg.sender to a recipient
+    /// @dev Errors with ST if transfer fails
+    /// @param token The contract address of the token which will be transferred
+    /// @param to The recipient of the transfer
+    /// @param value The value of the transfer
+    function safeTransfer(
+        address token,
+        address to,
+        uint256 value
+    ) internal {
+        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(IERC20.transfer.selector, to, value));
+        require(success && (data.length == 0 || abi.decode(data, (bool))), 'ST');
+    }
 
-//     /// @notice Approves the stipulated contract to spend the given allowance in the given token
-//     /// @dev Errors with 'SA' if transfer fails
-//     /// @param token The contract address of the token to be approved
-//     /// @param to The target of the approval
-//     /// @param value The amount of the given token the target will be allowed to spend
-//     function safeApprove(
-//         address token,
-//         address to,
-//         uint256 value
-//     ) internal {
-//         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(IERC20.approve.selector, to, value));
-//         require(success && (data.length == 0 || abi.decode(data, (bool))), 'SA');
-//     }
+    /// @notice Approves the stipulated contract to spend the given allowance in the given token
+    /// @dev Errors with 'SA' if transfer fails
+    /// @param token The contract address of the token to be approved
+    /// @param to The target of the approval
+    /// @param value The amount of the given token the target will be allowed to spend
+    function safeApprove(
+        address token,
+        address to,
+        uint256 value
+    ) internal {
+        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(IERC20.approve.selector, to, value));
+        require(success && (data.length == 0 || abi.decode(data, (bool))), 'SA');
+    }
 
-//     /// @notice Transfers ETH to the recipient address
-//     /// @dev Fails with `STE`
-//     /// @param to The destination of the transfer
-//     /// @param value The value to be transferred
-//     function safeTransferETH(address to, uint256 value) internal {
-//         (bool success, ) = to.call{value: value}(new bytes(0));
-//         require(success, 'STE');
-//     }
-// }
+    /// @notice Transfers ETH to the recipient address
+    /// @dev Fails with `STE`
+    /// @param to The destination of the transfer
+    /// @param value The value to be transferred
+    function safeTransferETH(address to, uint256 value) internal {
+        (bool success, ) = to.call{value: value}(new bytes(0));
+        require(success, 'STE');
+    }
+}
 
 contract Barracks is Ownable{
 
@@ -321,7 +321,7 @@ contract Barracks is Ownable{
 
 
 
-contract TownV2 is Ownable, Barracks{
+contract TownV3 is Ownable, Barracks{
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -342,6 +342,7 @@ contract TownV2 is Ownable, Barracks{
     error MaxCapacity();
     error TimeLimitation();
     error LevelLessThanMin();
+    error AlreadyFinished();
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -479,11 +480,11 @@ contract TownV2 is Ownable, Barracks{
     }
 
     function deposit( uint256 landTokenId, uint256 amount, uint256 commodityIndex) external onlyLandOwner(landTokenId){
-        BKT.transferFrom(msg.sender,address(this),amount);
+        TransferHelper.safeTransferFrom(address(BKT),msg.sender,address(this),amount);
         landData[landTokenId].commoditiesBalance[commodityIndex] += amount;
     }
     function splitDeposit(uint256 landTokenId, uint256 amount) external {
-        BKT.transferFrom(msg.sender,address(this),amount);
+        TransferHelper.safeTransferFrom(address(BKT),msg.sender,address(this),amount);
         for (uint i = 0; i < landData[landTokenId].commoditiesBalance.length; i++) {
             landData[landTokenId].commoditiesBalance[i] += amount/5;
         }
@@ -493,7 +494,7 @@ contract TownV2 is Ownable, Barracks{
             revert InsufficientCommodity();
         }
         landData[landTokenId].commoditiesBalance[commodityIndex] -= amount;
-        BKT.transfer( msg.sender, amount * 95 /100); // Including 5% withdrawal burn
+        TransferHelper.safeTransfer(address(BKT), msg.sender, amount * 95 /100); // Including 5% withdrawal burn
     }
 
 
@@ -573,6 +574,22 @@ contract TownV2 is Ownable, Barracks{
         _spendCommodities(landTokenId,baseBararcksRequiredCommodities);
         landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (landData[landTokenId].barracksLevel+1));
         landData[landTokenId].barracksLevel ++;
+    }
+
+    function finishNow(uint256 landTokenId) external {
+        if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
+            uint256 remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
+            uint256 requiredConst = (remainedTimestamp / 1 hours) * 10 ether;
+            if (landData[landTokenId].commoditiesBalance[4] >= requiredConst) {
+                landData[landTokenId].commoditiesBalance[4] - requiredConst;
+                landData[landTokenId].latestBuildTimeStamp = block.timestamp - 1 minutes;
+            } else {
+                revert InsufficientCommodity(); 
+            }
+        } else {
+            revert AlreadyFinished();
+        }
+
     }
 
     function recruit(uint256 landTokenId, uint256 typeIndex, uint256 amount) external onlyLandOwner(landTokenId){

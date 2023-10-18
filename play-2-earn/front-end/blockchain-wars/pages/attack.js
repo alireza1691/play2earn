@@ -129,8 +129,8 @@ const Attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
             stoneBal: ethers.utils.formatEther(bal[0]),
             woodBal: ethers.utils.formatEther(bal[1]),
             ironBal: ethers.utils.formatEther(bal[2]),
-            goldBal: ethers.utils.formatEther(bal[3]),
-            foodBal: ethers.utils.formatEther(bal[4]),
+            foodBal: ethers.utils.formatEther(bal[3]),
+            goldBal: ethers.utils.formatEther(bal[4])
           };
           console.log(bal);
           setTargetObj(obj);
@@ -432,17 +432,18 @@ const Attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
                         </h5>
                       </div>
                       <div className="commodityBalance">
-                        <img src="/Gold.png"></img>
-                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
-                          {parseFloat(targetObj.goldBal)}
-                        </h5>
-                      </div>
-                      <div className="commodityBalance">
                         <img src="/Food.png"></img>
                         <h5 style={{"padding":"0.3rem"}} className="defaultH5">
                           {parseFloat(targetObj.foodBal)}
                         </h5>
                       </div>
+                      <div className="commodityBalance">
+                        <img src="/Gold.png"></img>
+                        <h5 style={{"padding":"0.3rem"}} className="defaultH5">
+                          {parseFloat(targetObj.goldBal)}
+                        </h5>
+                      </div>
+                      
                     </div>
                   </div>
                   </>

@@ -194,10 +194,10 @@ function MyApp({ Component, pageProps }) {
                   iron: ethers.utils.formatEther(
                     commoditiesBalance[2].toString()
                   ),
-                  gold: ethers.utils.formatEther(
+                  food: ethers.utils.formatEther(
                     commoditiesBalance[3].toString()
                   ),
-                  food: ethers.utils.formatEther(
+                  gold: ethers.utils.formatEther(
                     commoditiesBalance[4].toString()
                   ),
                   coordinate: parseInt(topics[3], 16),

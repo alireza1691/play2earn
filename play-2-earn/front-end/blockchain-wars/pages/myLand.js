@@ -12,10 +12,10 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 import CloseButton from "react-bootstrap/CloseButton";
-import { landsV2, townV2, BKTAddress, town } from "../Blockchain/Addresses";
+import { landsV2, townV2, BMTAddress, town } from "../Blockchain/Addresses";
 import LandsV2 from "../Blockchain/LandsV2.json";
 import TownV2 from "../Blockchain/TownV2.json";
-import BKT from "../Blockchain/BKT.json";
+import BMT from "../Blockchain/BMT.json";
 import { useRouter } from "next/router";
 import { useAddress, useSigner, useMetamask } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
@@ -26,7 +26,7 @@ import {
   buildingsImageSources,
   warriorsImageSources,
   commodityItems,
-  barracksImg
+  barracksImg,
 } from "../Images/ImagesSource";
 
 const MyLand = ({
@@ -44,7 +44,7 @@ const MyLand = ({
   const [buildings, setBuildings] = useState();
   const [selectedLand, setSelectedLand] = useState();
   const [ownedBuildings, setOwnedBuildings] = useState();
-  // const [existedWarriors, setExistedWarriors] = useState();
+  const [isValidAmount, setIsValidAmount] = useState(false);
   // const [army, setArmy] = useState();
   const [barracksLevel, setBarracksLevel] = useState();
   const [inputValue, setInputValue] = useState(""); // State variable to store the input value
@@ -65,9 +65,7 @@ const MyLand = ({
   const validChainId = Sepolia.chainId;
 
   const convertedCommodityAmount = (amount) => {
-    return (
-      Number(ethers.utils.formatEther(amount))
-    );
+    return Number(ethers.utils.formatEther(amount));
   };
   const handleConnectWithMetamask = async () => {
     try {
@@ -92,6 +90,30 @@ const MyLand = ({
       // Handle error
     }
   };
+  const handleEnteredAmount = (amount) => {
+    setEnteredAmount(amount)
+      if (Number(amount) <= Number(balArray()[commodityIndex])) {
+        setIsValidAmount(true)
+        console.log("true");
+      } else {
+        setIsValidAmount(false)
+        console.log("false");
+      }
+      console.log(Number(amount));
+      console.log(Number(balArray[commodityIndex]));
+
+  }
+  const handleCommodityIndex = (seletedIndex) => {
+    setCommodityIndex(seletedIndex)
+    if (Number(enteredAmount) <= Number(balArray()[seletedIndex])) {
+      setIsValidAmount(true)
+      console.log("true");
+    } else {
+      setIsValidAmount(false)
+      console.log("false");
+    }
+
+  }
 
   const handleClose = () => {
     setIsTransactionRejected(false);
@@ -112,24 +134,71 @@ const MyLand = ({
       selectedLand.stone,
       selectedLand.wood,
       selectedLand.iron,
-      selectedLand.gold,
       selectedLand.food,
+      selectedLand.gold,
     ];
   };
-  const deposit = async (isSplitDeposit) => {
+
+  const approve = async () => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId !== validChainId) {
       await handleChangeChainId();
     } else {
       try {
         console.log(ethers.utils.parseEther(enteredAmount));
-        const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer);
-        const balance = await BKTInst.balanceOf(address);
+        const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
+        const balance = await BMTInst.balanceOf(address);
         console.log(balance.toString());
-        console.log("instance");
-        await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
-        console.log("approved");
+        console.log("Instance loaded");
+        await BMTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
+        console.log("Approved");
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
+    }
+  }
+  const deposit = async () => {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        // console.log(ethers.utils.parseEther(enteredAmount));
+        // const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
+        // const balance = await BMTInst.balanceOf(address);
+        // console.log(balance.toString());
+        // console.log("instance");
+        // await BMTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
+        // console.log("approved");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        await TownInstance.deposit(
+          selectedLand.coordinate,
+          ethers.utils.parseEther(enteredAmount)
+        );
+        setVisibleConfirmation(true);
+      } catch (error) {
+        setError(error);
+        setIsTransactionRejected(true);
+      }
+    }
+  };
+  const splitDeposit = async () => {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId !== validChainId) {
+      await handleChangeChainId();
+    } else {
+      try {
+        // console.log(ethers.utils.parseEther(enteredAmount));
+        // const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
+        // const balance = await BMTInst.balanceOf(address);
+        // console.log(balance.toString());
+        // console.log("instance");
+        // await BMTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
+        // console.log("approved");
+        const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
+        console.log(TownInstance);
         await TownInstance.splitDeposit(
           selectedLand.coordinate,
           ethers.utils.parseEther(enteredAmount)
@@ -261,13 +330,13 @@ const MyLand = ({
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
         setConfirmed(true);
-      }, 6000);
+      }, 10000);
     }
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
         setConfirmed(false);
         setVisibleConfirmation(false);
-      }, 8000);
+      }, 12000);
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
@@ -290,11 +359,12 @@ const MyLand = ({
         // const existedWarriors = await townInstance.getWarriorTypes();
         // const landArmy = await townInstance.getArmy(selectedLand.coordinate);
         const barracksLvl = landData.barracksLevel;
-    
+
         setBarracksLevel(barracksLvl); //// Replace and edit this
         console.log("Existed warriors:", existedWarriors);
-        const requiredComs =
-        await townInstance.getBarracksRequiredCommodities(selectedLand.coordinate);
+        const requiredComs = await townInstance.getBarracksRequiredCommodities(
+          selectedLand.coordinate
+        );
         console.log("Required barracks coms:", requiredComs);
         setRequiredBarracksCommodities(requiredComs);
         // console.log("Current existed army:", landArmy);
@@ -311,7 +381,6 @@ const MyLand = ({
 
           let ownedBuildingsArray = [];
           for (let index = 0; index < ownedBuildings_.length; index++) {
- 
             const status = await townInstance.getStatus(ownedBuildings_[index]);
             const revenue = await townInstance.getCurrentRevenue(
               ownedBuildings_[index]
@@ -372,14 +441,14 @@ const MyLand = ({
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="popUpConfirmation">
-                  <h4 style={{ color: "black" }} className="defaultH4">
+                  <h3 className="defaultH3">
                     Confirming...
-                  </h4>
+                  </h3>
 
                   <Spinner
                     animation="border"
                     role="status"
-                    style={{ color: "black" }}
+ 
                   ></Spinner>
                 </div>
               </div>
@@ -561,7 +630,7 @@ const MyLand = ({
                     <Form.Control
                       placeholder="Enter amount..."
                       aria-label="Amount (to the nearest dollar)"
-                      onChange={(e) => setEnteredAmount(e.target.value)}
+                      onChange={(e) => handleEnteredAmount(e.target.value)}
                     />
                     <Dropdown>
                       <Dropdown.Toggle
@@ -580,7 +649,7 @@ const MyLand = ({
                           <Dropdown.Item
                             href="#/action-1"
                             key={key}
-                            onClick={() => setCommodityIndex(key)}
+                            onClick={() => handleCommodityIndex(key)}
                           >
                             <img
                               src={commodity.image}
@@ -593,37 +662,63 @@ const MyLand = ({
                     </Dropdown>
                   </InputGroup>
                   {/* <button className="sGreenButton">Deposit</button> */}
-                  <Button
-                    variant="success"
-                    size="sm"
-                    style={{ marginRight: "10px" }}
-                    onClick={() => deposit(true)}
-                  >
-                    Deposit
-                  </Button>
+
                   {/* <button className="sGreenButton">Split deposit</button> */}
                   <Button
                     variant="success"
                     size="sm"
                     style={{ marginRight: "10px" }}
-                    onClick={() => deposit(true)}
+                    onClick={() => approve()}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    variant="success"
+                    size="sm"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => splitDeposit()}
                   >
                     Split deposit
                   </Button>
+
                   {commodityIndex !== undefined ? (
                     // <button className="sGreenButton">Withdraw</button>
-                    <Button
-                      variant="success"
-                      size="sm"
-                      onClick={() => withdraw()}
-                    >
-                      Withdraw
-                    </Button>
+                    <>
+                      <Button
+                        variant="success"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => deposit()}
+                      >
+                        Deposit
+                      </Button>
+                      {isValidAmount == true ? (                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => withdraw()}
+                      >
+                        Withdraw
+                      </Button>) :(
+                        <Button variant="success" size="sm" disabled>
+                        Withdraw
+                      </Button>
+                      ) }
+
+                    </>
                   ) : (
-                    // <button className="sGreenButton" disabled>Withdraw</button>
-                    <Button variant="success" size="sm" disabled>
-                      Withdraw
-                    </Button>
+                    <>
+                      <Button
+                        variant="success"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                        disabled
+                      >
+                        Deposit
+                      </Button>
+                      <Button variant="success" size="sm" disabled>
+                        Withdraw
+                      </Button>
+                    </>
                   )}
                 </Col>
                 <Col className="BalTableCol" sm={3}>
@@ -661,21 +756,21 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <img src="/Gold.png" />
-                        </td>
-                        <td className="tableLine">
-                          {selectedLand.gold !== undefined
-                            ? selectedLand.gold
-                            : "0"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tableLine">
                           <img src="/Food.png" />
                         </td>
                         <td className="tableLine">
                           {selectedLand.food !== undefined
                             ? selectedLand.food
+                            : "0"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="tableLine">
+                          <img src="/Gold.png" />
+                        </td>
+                        <td className="tableLine">
+                          {selectedLand.gold !== undefined
+                            ? selectedLand.gold
                             : "0"}
                         </td>
                       </tr>
@@ -847,7 +942,7 @@ const MyLand = ({
                     <Accordion.Header>Buildings</Accordion.Header>
                     <Accordion.Body>
                       <div className="listItemColumn">
-                      {Array.isArray(requiredBarracksCommodities) && (
+                        {Array.isArray(requiredBarracksCommodities) && (
                           <Col>
                             <div
                               className="listItemInfo"
@@ -868,7 +963,9 @@ const MyLand = ({
                                     className="commodityLogo"
                                   ></img>
                                   <p>
-                                  {convertedCommodityAmount(requiredBarracksCommodities[0])}
+                                    {convertedCommodityAmount(
+                                      requiredBarracksCommodities[0]
+                                    )}
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
@@ -877,7 +974,9 @@ const MyLand = ({
                                     className="commodityLogo"
                                   ></img>
                                   <p>
-                                  {convertedCommodityAmount(requiredBarracksCommodities[1])}
+                                    {convertedCommodityAmount(
+                                      requiredBarracksCommodities[1]
+                                    )}
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
@@ -886,17 +985,9 @@ const MyLand = ({
                                     className="commodityLogo"
                                   ></img>
                                   <p>
-                                  {convertedCommodityAmount(requiredBarracksCommodities[2])}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <img
-                                    src="/Gold.png"
-                                    className="commodityLogo"
-                                  ></img>
-                                  <p>
-                                  {convertedCommodityAmount(requiredBarracksCommodities[3])}
-                       
+                                    {convertedCommodityAmount(
+                                      requiredBarracksCommodities[2]
+                                    )}
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
@@ -905,22 +996,46 @@ const MyLand = ({
                                     className="commodityLogo"
                                   ></img>
                                   <p>
-                                  {convertedCommodityAmount(requiredBarracksCommodities[4])}
-                       
+                                    {convertedCommodityAmount(
+                                      requiredBarracksCommodities[4]
+                                    )}
                                   </p>
                                 </div>
+                                <div className="commodityBalance">
+                                  <img
+                                    src="/Gold.png"
+                                    className="commodityLogo"
+                                  ></img>
+                                  <p>
+                                    {convertedCommodityAmount(
+                                      requiredBarracksCommodities[3]
+                                    )}
+                                  </p>
+                                </div>
+                     
                               </div>
                               <div className="InfoColumn">
                                 {Number(selectedLand.stone) <=
-                                  convertedCommodityAmount(requiredBarracksCommodities[0])  ||
+                                  convertedCommodityAmount(
+                                    requiredBarracksCommodities[0]
+                                  ) ||
                                 Number(selectedLand.wood) <=
-                                  convertedCommodityAmount(requiredBarracksCommodities[1])  ||
+                                  convertedCommodityAmount(
+                                    requiredBarracksCommodities[1]
+                                  ) ||
                                 Number(selectedLand.iron) <=
-                                  convertedCommodityAmount(requiredBarracksCommodities[2])  ||
-                                Number(selectedLand.gold) <=
-                                  convertedCommodityAmount(requiredBarracksCommodities[3])  ||
+                                  convertedCommodityAmount(
+                                    requiredBarracksCommodities[2]
+                                  ) ||
+                   
                                 Number(selectedLand.food) <=
-                                  convertedCommodityAmount(requiredBarracksCommodities[4])  ||
+                                  convertedCommodityAmount(
+                                    requiredBarracksCommodities[4]
+                                  ) ||
+                                  Number(selectedLand.gold) <=
+                                  convertedCommodityAmount(
+                                    requiredBarracksCommodities[3]
+                                  ) ||
                                 workerBusyTime > 0 ? (
                                   <Button variant="success" disabled>
                                     Upgrade
@@ -928,7 +1043,7 @@ const MyLand = ({
                                 ) : (
                                   // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
                                   <Button
-                                  // size="sm"
+                                    // size="sm"
                                     style={{ bottom: "0px" }}
                                     variant="success"
                                     onClick={() => upgradeBarracks()}
@@ -984,17 +1099,7 @@ const MyLand = ({
                                       )}
                                     </p>
                                   </div>
-                                  <div className="commodityBalance">
-                                    <img
-                                      src="/Gold.png"
-                                      className="commodityLogo"
-                                    ></img>
-                                    <p>
-                                      {ethers.utils.formatEther(
-                                        item.requiredGold
-                                      )}
-                                    </p>
-                                  </div>
+                     
                                   <div className="commodityBalance">
                                     <img
                                       src="/Food.png"
@@ -1003,6 +1108,17 @@ const MyLand = ({
                                     <p>
                                       {ethers.utils.formatEther(
                                         item.requiredFood
+                                      )}
+                                    </p>
+                                  </div>
+                                  <div className="commodityBalance">
+                                    <img
+                                      src="/Gold.png"
+                                      className="commodityLogo"
+                                    ></img>
+                                    <p>
+                                      {ethers.utils.formatEther(
+                                        item.requiredGold
                                       )}
                                     </p>
                                   </div>
