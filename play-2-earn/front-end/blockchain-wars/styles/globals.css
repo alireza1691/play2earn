@@ -400,13 +400,15 @@ body {
 }
 
 .custom-tooltip .tooltip-inner {
-  background-color: rgb(255, 255, 255) !important;
-  box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+  /* background-color: rgb(255, 255, 255) !important;
+  box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.3); */
+  color: white !important;
   height: 30px !important;
+  z-index: 989;
 }
 .custom-tooltip {
-  background-color: white !important;
-  z-index: 989;
+  /* background-color: white !important; */
+
 }
 .textButton {
   text-align: center;

@@ -464,8 +464,8 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                                 <div>
                                   <p
                                     style={{
-                                      color: "#042032",
-                                      fontFamily: "sans-serif",
+                                      // color: "#042032",
+                                      fontFamily: "monospace",
                                       fontSize: "0.8rem",
                                       fontWeight: "bold",
                                     }}
