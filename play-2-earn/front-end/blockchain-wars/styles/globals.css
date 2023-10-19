@@ -406,6 +406,7 @@ body {
 }
 .custom-tooltip {
   background-color: white !important;
+  z-index: 989;
 }
 .textButton {
   text-align: center;
@@ -1313,9 +1314,12 @@ justify-content: flex-start;
     background-color: khaki;
     border-radius: 10px;
   }
-  .overlay .card {
+  /* .overlay .card {
     background-color: rgba(255, 255, 255, 0.6) !important;
-  }
+  } */
+  /* .card {
+    background: white !important;
+  } */
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

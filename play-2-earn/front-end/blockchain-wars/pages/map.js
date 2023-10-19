@@ -292,7 +292,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
             <Card
               style={{
                 width: "18rem",
-                backgroundColor: "white",
+                // backgroundColor: "white",
                 boxShadow: "0px 0.1rem 1rem 0.1rem rgba(0, 0, 0, 0.5)",
               }}
               className="card"
