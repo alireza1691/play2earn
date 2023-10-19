@@ -666,8 +666,11 @@ padding: 0.2rem;
 }
 
 .transactionResultWindow {
+  position: relative;
   background-color: black !important;
   color: rgb(237, 255, 211) !important;
+  width: fit-content;
+  width: 25rem;
   /* width: 400px; */
   padding: 1rem;
   text-align: center;
@@ -678,13 +681,13 @@ padding: 0.2rem;
 }
 .transactionResultWindow p {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
 
 }
 .transactionResultWindow h4 {
   margin-top: 0.5rem;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-bottom: 2rem;
 }
 .closeButton {
@@ -696,25 +699,22 @@ padding: 0.2rem;
 }
 
 .errorContainer {
+  
   margin-top: 1rem;
   margin-bottom: 1rem;
-  background-color: rgb(226, 231, 244);
+  background-color: rgb(53, 53, 53);
   height: 100px; /* Adjust the height as per your requirement */
   overflow-y: scroll;
   padding: 0.3rem;
-  border: 1px solid rgb(189, 196, 214);
+  border: 1px solid rgb(40, 40, 40);
   border-radius: 0.3rem;
   width: 100%;
+  min-height: 10rem;
 }
 .errorContainer p {
   padding: 1rem;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
-.closeButtonContainer {
-  display: flex;
-  width: 300px;
-  position: absolute;
+  font-size: 0.9rem;
 }
 
 .listItemColumn {

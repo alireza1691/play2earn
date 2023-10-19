@@ -424,17 +424,13 @@ const MyLand = ({
         {isTransactionRejected && (
           <div className="overlay">
             <div className="transactionResultWindow">
-              <div className="closeButtonContainer">
-                <CloseButton
-                  className="closeButton"
-                  onClick={handleClose}
-                ></CloseButton>
-              </div>
+
               <h4>Transaction Rejected or failed</h4>
               <div className="errorContainer">
                 {error !== undefined && <p>{error.message}</p>}
               </div>
               <p>Please try again or contact support.</p>
+              <Button variant="outline-light" onClick={handleClose}>Close</Button>
             </div>
           </div>
         )}
