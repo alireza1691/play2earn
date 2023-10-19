@@ -349,7 +349,7 @@ const MyLand = ({
       }
       if (signer && address && landObj[selectedLandIndex] !== undefined && provider) {
         console.log("Useeffect called");
-
+        setIsFetching(false)
         const townInstance = new ethers.Contract(townV2, TownV2.abi, provider);
         const landData = await townInstance.getLandIdData(
           landObj[selectedLandIndex].coordinate
@@ -398,6 +398,7 @@ const MyLand = ({
             });
           }
           setOwnedBuildings(ownedBuildingsArray);
+ 
           console.log("Owned buildings");
           console.log(ownedBuildingsArray);
         } else {

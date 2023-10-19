@@ -648,7 +648,7 @@ padding: 0.2rem;
 }
 
 .popUpConfirmation {
-  background-color: black;
+  background-color: black !important;
   color: rgb(237, 255, 211) !important;
   width: 250px;
   padding: 1rem;
@@ -666,8 +666,8 @@ padding: 0.2rem;
 }
 
 .transactionResultWindow {
-  background-color: black;
-  color: rgb(237, 255, 211) ;
+  background-color: black !important;
+  color: rgb(237, 255, 211) !important;
   /* width: 400px; */
   padding: 1rem;
   text-align: center;
