@@ -430,7 +430,7 @@ const MyLand = ({
                 {error !== undefined && <p>{error.message}</p>}
               </div>
               <p>Please try again or contact support.</p>
-              <Button variant="outline-light" onClick={handleClose}>Close</Button>
+              {/* <Button variant="outline-light" onClick={handleClose}>Close</Button> */}
             </div>
           </div>
         )}
@@ -460,6 +460,7 @@ const MyLand = ({
                   <p>
                     To update your account you may need to refresh the page.
                   </p>
+                  <Button variant="outline-dark" onClick={()=>handleClose()} >Close</Button>
                 </div>
               </div>
             )}

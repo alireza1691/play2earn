@@ -658,34 +658,38 @@ justify-content: flex-start;
 }
 
 .popUpConfirmation {
-  background-color: black !important;
-  color: rgb(237, 255, 211) !important;
+  /* background-color: black !important; */
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  color: black !important;
+  /* color: rgb(237, 255, 211) !important; */
   width: 250px;
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   /* box-shadow: 0 0 1rem 0.2rem rgba(198, 248, 169, 0.3); */
+  box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.9) !important;
   white-space: pre-wrap;
   word-wrap: break-word;
-  border: 2px solid rgba(94, 110, 85, 0.3);
+  border: 1px solid rgba(94, 110, 85, 0.3);
 }
 .popUpConfirmation .defaultH3{
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  color: rgb(237, 255, 211) !important;
-  font-size: 1.7rem;
+  /* color: rgb(237, 255, 211) !important; */
+  color: #000000;
+  font-size: 1.2rem;
 }
 
 .transactionResultWindow {
   position: relative;
-  background-color: black !important;
-  color: rgb(237, 255, 211) !important;
+  background-color: rgba(255, 255, 255, 1) !important;
+  color: black !important;
   width: fit-content;
   width: 25rem;
   /* width: 400px; */
   padding: 1rem;
   text-align: center;
   border-radius: 1rem;
-  box-shadow: 0 0 0.5rem 0.05rem rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.4);
   white-space: pre-wrap;
   word-wrap: break-word;
 }
