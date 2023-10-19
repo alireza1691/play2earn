@@ -133,11 +133,11 @@ const MyLand = ({
   };
   const balArray = () => {
     return [
-      selectedLand.stone,
-      selectedLand.wood,
-      selectedLand.iron,
-      selectedLand.food,
-      selectedLand.gold,
+      landObj[selectedLandIndex].stone,
+      landObj[selectedLandIndex].wood,
+      landObj[selectedLandIndex].iron,
+      landObj[selectedLandIndex].food,
+      landObj[selectedLandIndex].gold,
     ];
   };
 
@@ -176,7 +176,7 @@ const MyLand = ({
         // console.log("approved");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.deposit(
-          selectedLand.coordinate,
+          landObj[selectedLandIndex].coordinate,
           ethers.utils.parseEther(enteredAmount)
         );
         setVisibleConfirmation(true);
@@ -202,7 +202,7 @@ const MyLand = ({
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         console.log(TownInstance);
         await TownInstance.splitDeposit(
-          selectedLand.coordinate,
+          landObj[selectedLandIndex].coordinate,
           ethers.utils.parseEther(enteredAmount)
         );
         setVisibleConfirmation(true);
@@ -224,7 +224,7 @@ const MyLand = ({
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.withdraw(
           ethers.utils.parseEther(enteredAmount),
-          selectedLand.coordinate,
+          landObj[selectedLandIndex].coordinate,
           commodityIndex
         );
         setVisibleConfirmation(true);
@@ -244,8 +244,8 @@ const MyLand = ({
         console.log("Minting building...");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         console.log(TownInstance);
-        console.log(selectedLand.coordinate, buildingIndex);
-        await TownInstance.build(selectedLand.coordinate, buildingIndex);
+        console.log(landObj[selectedLandIndex].coordinate, buildingIndex);
+        await TownInstance.build(landObj[selectedLandIndex].coordinate, buildingIndex);
         console.log("Confirming tx...");
         setVisibleConfirmation(true);
       } catch (error) {
@@ -261,7 +261,7 @@ const MyLand = ({
     } else {
       try {
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
-        await TownInstance.buildBarracks(selectedLand.coordinate);
+        await TownInstance.buildBarracks(landObj[selectedLandIndex].coordinate);
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -292,7 +292,7 @@ const MyLand = ({
     } else {
       try {
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
-        await TownInstance.upgrade(buildingTokenId, selectedLand.coordinate);
+        await TownInstance.upgrade(buildingTokenId, landObj[selectedLandIndex].coordinate);
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -310,11 +310,11 @@ const MyLand = ({
         console.log(signer);
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         const goldBal = await TownInstance.getAssetsBal(
-          selectedLand.coordinate
+          landObj[selectedLandIndex].coordinate
         );
         console.log(goldBal.toString());
         await TownInstance.recruit(
-          selectedLand.coordinate,
+          landObj[selectedLandIndex].coordinate,
           typeIndex,
           inputValue
         );
@@ -561,6 +561,8 @@ const MyLand = ({
                         </h4>
                       ) : (
                         <>
+                        {Array.isArray(landObj) && landObj.length == 0 &&
+                        <>
                           <h4 className="defaultH4">Not land found.</h4>
                           <h4 className="defaultH4">
                             To participate in game you need a land.
@@ -580,7 +582,10 @@ const MyLand = ({
                             </span>{" "}
                             and mint your land.
                           </h4>
+                          </>
+                            }
                         </>
+                    
                       )}
                     </div>
                   </Col>
@@ -594,25 +599,20 @@ const MyLand = ({
                 <Col>
                   <div className="myLandHeader">
                   <h2 className="defaultH2">Lands :</h2>
+                  <div className="myLandsContainer" >
                     {
                   landObj.map((land, key) => (
                     <React.Fragment key={land.coordinate + key}>
-                          <div className="myLandsContainer" >
-                        
-                            <p>Land {land.coordinate}</p>
+                 
+                        {key == selectedLandIndex ? <p className="selectedLandP">Land {land.coordinate}</p> :<p onClick={() => setSelectedLandIndex(key)}>Land {land.coordinate}</p>}
+                            
           
-                          </div>
+                         
        
               
                     </React.Fragment>
                   ))}
-                    {/* <h4
-                      className="textButton"
-                      onClick={() => setSelectedLand()}
-                    >
-                      &lt; Back
-                    </h4> */}
-                    {/* <Button variant="outline-light">Attack</Button> */}
+     </div>
                     <div
                       className="attackRouteButton"
                       onClick={() => {
