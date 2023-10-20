@@ -717,11 +717,11 @@ justify-content: flex-start;
   
   margin-top: 1rem;
   margin-bottom: 1rem;
-  background-color: rgb(53, 53, 53);
+  background-color: rgb(232, 232, 232);
   height: 100px; /* Adjust the height as per your requirement */
   overflow-y: scroll;
   padding: 0.3rem;
-  border: 1px solid rgb(40, 40, 40);
+  border: 2px solid rgb(182, 182, 182);
   border-radius: 0.3rem;
   width: 100%;
   min-height: 10rem;

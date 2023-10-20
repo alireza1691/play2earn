@@ -431,7 +431,7 @@ const MyLand = ({
                 {error !== undefined && <p>{error.message}</p>}
               </div>
               <p>Please try again or contact support.</p>
-              {/* <Button variant="outline-light" onClick={handleClose}>Close</Button> */}
+              <Button variant="outline-dark" size="sm" onClick={handleClose}>Close</Button>
             </div>
           </div>
         )}
