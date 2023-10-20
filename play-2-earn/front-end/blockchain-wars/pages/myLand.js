@@ -22,6 +22,7 @@ import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
+import Image from "next/image"
 import {
   buildingsImageSources,
   warriorsImageSources,
@@ -468,47 +469,7 @@ const MyLand = ({
         )}
 
         <Container>
-          {/* {Array.isArray(landObj) && landObj.length > 0 && landImgUrl ? (
-            <>
-              {selectedLand == undefined && (
-                <Row>
-                  <h2 className="defaultH2">Connected address lands:</h2>
-                </Row>
-              )}
-
-              <Row>
-                {selectedLand == undefined &&
-                  landObj.map((land, key) => (
-                    <React.Fragment key={land.coordinate + key}>
-                      <Col
-  
-                        md="auto"
-                      >
-                        <div className="landCard">
-                          <img src={landImgUrl}></img>
-                          <div>
-                            <h2 className="defaultH2">Land</h2>
-                            <p>Coordinate: {land.coordinate}</p>
-                            <button
-                              className="sGreenButton"
-                              style={{
-            
-                                marginBottom: "1rem",
-                              }}
-                              onClick={() => setSelectedLand(land)}
-                            >
-                              Open
-                            </button>
-  
-                          </div>
-                        </div>
-                      </Col>
-                    </React.Fragment>
-                  ))}
-              </Row>
-            </>
-          ) : (
-            <> */}
+       
               {address != undefined && isFetching ? (
                 <div
                   style={{
@@ -626,7 +587,7 @@ const MyLand = ({
                       >
                         Attack
                       </h4>
-                      <img src="War.png"></img>
+                      <Image src="/War.png" width={50} height={40} ></Image>
                     </div>
                   </div>
                 </Col>
@@ -744,7 +705,7 @@ const MyLand = ({
                     <tbody>
                       <tr>
                         <td className="tableLine">
-                          <img src="/Stone.png" />
+                          <Image src="/Stone.png" width={25} height={25}/>
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].stone !== undefined
@@ -754,7 +715,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <img src="/Wood.png" />
+                          <Image src="/Wood.png" width={25} height={25}/>
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].wood !== undefined
@@ -764,7 +725,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <img src="/Iron.png" />
+                          <Image src="/Iron.png" width={25} height={25}/>
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].iron !== undefined
@@ -774,7 +735,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <img src="/Food.png" />
+                          <Image src="/Food.png" width={25} height={25}/>
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].food !== undefined
@@ -784,7 +745,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <img src="/Gold.png" />
+                          <Image src="/Gold.png" width={25} height={25}/>
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].gold !== undefined
@@ -857,7 +818,7 @@ const MyLand = ({
                   ownedBuildings.map((item, key) => (
                     <Col key={key} md={{ span: 6, offset: 0 }}>
                       <div className="listItemInfo">
-                        <img src={item.imageURL}></img>
+                        <Image src={item.imageURL} height={160} width={200}/>
                         <div className="infoColumn">
                           <h2 className="defaultH2">{item.name}</h2>
                           <h4>
@@ -966,7 +927,7 @@ const MyLand = ({
                               className="listItemInfo"
                               style={{ backgroundColor: "transparent" }}
                             >
-                              <img src={barracksImg}></img>
+                              <Image src={barracksImg} width={200} height={160} />
                               <div className="InfoColumn">
                                 <div style={{ padding: "0.5rem" }}>
                                   <h2 className="defaultH2">
@@ -976,10 +937,12 @@ const MyLand = ({
                                   </h2>
                                 </div>
                                 <div className="commodityBalance">
-                                  <img
+                                  <Image
                                     src="/Stone.png"
                                     className="commodityLogo"
-                                  ></img>
+                                    height={25}
+                                    width={25}
+                                  />
                                   <p>
                                     {convertedCommodityAmount(
                                       requiredBarracksCommodities[0]
@@ -987,10 +950,12 @@ const MyLand = ({
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
-                                  <img
+                                  <Image
                                     src="/Wood.png"
                                     className="commodityLogo"
-                                  ></img>
+                                    height={25}
+                                    width={25}
+                                  />
                                   <p>
                                     {convertedCommodityAmount(
                                       requiredBarracksCommodities[1]
@@ -998,10 +963,12 @@ const MyLand = ({
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
-                                  <img
+                                  <Image
                                     src="/Iron.png"
                                     className="commodityLogo"
-                                  ></img>
+                                    height={25}
+                                    width={25}
+                                  />
                                   <p>
                                     {convertedCommodityAmount(
                                       requiredBarracksCommodities[2]
@@ -1009,10 +976,12 @@ const MyLand = ({
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
-                                  <img
+                                  <Image
                                     src="/Food.png"
                                     className="commodityLogo"
-                                  ></img>
+                                    height={25}
+                                    width={25}
+                                  />
                                   <p>
                                     {convertedCommodityAmount(
                                       requiredBarracksCommodities[4]
@@ -1020,10 +989,12 @@ const MyLand = ({
                                   </p>
                                 </div>
                                 <div className="commodityBalance">
-                                  <img
+                                  <Image
                                     src="/Gold.png"
                                     className="commodityLogo"
-                                  ></img>
+                                    height={25}
+                                    width={25}
+                                  />
                                   <p>
                                     {convertedCommodityAmount(
                                       requiredBarracksCommodities[3]
@@ -1077,7 +1048,10 @@ const MyLand = ({
                           buildings.map((item, key) => (
                             <Col key={key}>
                               <div className="listItemInfo">
-                                <img src={buildingsImageSources[key]}></img>
+                                <Image src={buildingsImageSources[key]} 
+                                height={160}
+                                width={200}
+                                />
                                 <div className="InfoColumn">
                                   <div style={{ padding: "0.5rem" }}>
                                     <h2 className="defaultH2">
@@ -1085,10 +1059,12 @@ const MyLand = ({
                                     </h2>
                                   </div>
                                   <div className="commodityBalance">
-                                    <img
+                                    <Image
                                       src="/Stone.png"
                                       className="commodityLogo"
-                                    ></img>
+                                      height={25}
+                                      width={25}
+                                    />
                                     <p>
                                       {ethers.utils.formatEther(
                                         item.requiredStone
@@ -1096,10 +1072,12 @@ const MyLand = ({
                                     </p>
                                   </div>
                                   <div className="commodityBalance">
-                                    <img
+                                    <Image
                                       src="/Wood.png"
                                       className="commodityLogo"
-                                    ></img>
+                                      height={25}
+                                      width={25}
+                                    />
                                     <p>
                                       {ethers.utils.formatEther(
                                         item.requiredWood
@@ -1107,10 +1085,12 @@ const MyLand = ({
                                     </p>
                                   </div>
                                   <div className="commodityBalance">
-                                    <img
+                                    <Image
                                       src="/Iron.png"
                                       className="commodityLogo"
-                                    ></img>
+                                      height={25}
+                                      width={25}
+                                    />
                                     <p>
                                       {ethers.utils.formatEther(
                                         item.requiredIron
@@ -1119,10 +1099,12 @@ const MyLand = ({
                                   </div>
                      
                                   <div className="commodityBalance">
-                                    <img
+                                    <Image
                                       src="/Food.png"
                                       className="commodityLogo"
-                                    ></img>
+                                      height={25}
+                                      width={25}
+                                    />
                                     <p>
                                       {ethers.utils.formatEther(
                                         item.requiredFood
@@ -1130,10 +1112,12 @@ const MyLand = ({
                                     </p>
                                   </div>
                                   <div className="commodityBalance">
-                                    <img
+                                    <Image
                                       src="/Gold.png"
                                       className="commodityLogo"
-                                    ></img>
+                                      height={25}
+                                      width={25}
+                                    />
                                     <p>
                                       {ethers.utils.formatEther(
                                         item.requiredGold
@@ -1277,7 +1261,7 @@ const MyLand = ({
                 {Array.isArray(existedWarriors) &&
                   existedWarriors.map((warrior, key) => (
                     <Col className="warriorCard" key={key} sm={2}>
-                      <img src={warriorsImageSources[key]} />
+                      <Image src={warriorsImageSources[key]} width={200} height={300} />
                       <div className="warriorInfoBox">
                         <div style={{ padding: "0.5rem" }}>
                           <h2>{warrior.name}</h2>
@@ -1290,7 +1274,7 @@ const MyLand = ({
                             Price:{" "}
                             <span>
                               {ethers.utils.formatEther(warrior.price)}{" "}
-                              <img src="/Gold.png" className="commodityLogo" />
+                              <Image src="/Gold.png" className="commodityLogo" width={25} height={25} />
                             </span>
                           </p>
                         </div>

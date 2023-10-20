@@ -433,11 +433,12 @@ body {
   font-style: italic;
   cursor: pointer;
   display: flex;
+  /* max-width: 60px; */
   /* border: 2px solid white; */
   background-color: rgba(88, 88, 88, 0.5);
 }
 .attackRouteButton img {
-  width: 40px;
+  width: 40px !important;
 }
 .attackRouteButton:hover {
   background-color: rgb(88, 88, 88);
@@ -982,11 +983,17 @@ justify-content: flex-start;
   border-radius: 0.3rem;
 }
 .warriorCard img {
-  width: 100%;
+  width: 100% !important;
+  height: auto !important;
   background-color: var(--greenTransparent);
   border-radius: 10rem;
   overflow: visible;
   transition: transform 0.15s ease;
+}
+.warriorCard .commodityLogo {
+  width: 25px !important;
+  height: 25px !important;
+  background-color: transparent !important;
 }
 
 .warriorInfoBox {
@@ -1146,6 +1153,26 @@ justify-content: flex-start;
   font-style: italic;
 }
 @media (max-width: 767px) {
+  .myLandHeader{
+    display: block;
+  }
+  .attackRouteButton {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+  }
+  .myLandsContainer {
+    display: block;
+  }
+  .myLandsContainer p{
+    text-align: center !important;
+    margin-left: 0px !important;
+
+  }
   .popUpConfirmation {
     background-color: #000000;
     box-shadow: none;

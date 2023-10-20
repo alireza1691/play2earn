@@ -1,9 +1,9 @@
 export const buildingsImageSources = [
-    "/Buildings/stone-mine-3.png",
-    "/Buildings/lumber-mill-2.png",
-    "/Buildings/iron-mine-2.png",
-    "/Buildings/farm-3.png",
-    "/Buildings/gold-mine-2.png",
+    "/buildings/stone-mine-3.png",
+    "/buildings/lumber-mill-2.png",
+    "/buildings/iron-mine-2.png",
+    "/buildings/farm-3.png",
+    "/buildings/gold-mine-2.png",
   ];
 export const warriorsImageSources = [
     "/warrior/spearman.png",
