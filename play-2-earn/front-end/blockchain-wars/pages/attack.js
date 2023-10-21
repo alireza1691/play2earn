@@ -33,6 +33,8 @@ import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
 import Image from "next/image";
+import dynamic from "next/dynamic"
+const DynamicImage = dynamic(() => import('next/image'), { loading: 'lazy' });
 
 
 const metamaskConfig = metamaskWallet();
@@ -460,7 +462,7 @@ const Attack = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
             {warriorsImageSources.map((warrior,key)=>(
             <Col key={key} sm={3} className="warriorCol">
             {/* <Image src={warrior} height={200} width={200}></Image> */}
-            <Image src={warrior} height={200} width={200}  loading="lazy"></Image>
+            <DynamicImage src={warrior} height={200} width={200}  />
             { Array.isArray(existedWarriors) && Array.isArray(targetArmy) ?  <h3><span>{targetArmy[key].toString()}</span>{existedWarriors[key].name}</h3> : <h3>Enter target</h3>}
    
             </Col>
