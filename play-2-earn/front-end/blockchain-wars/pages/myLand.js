@@ -29,6 +29,8 @@ import {
   commodityItems,
   barracksImg,
 } from "../Images/ImagesSource";
+import dynamic from "next/dynamic"
+const DynamicImage = dynamic(() => import('next/image'), { loading: 'lazy' });
 
 const MyLand = ({
   provider,
@@ -587,7 +589,7 @@ const MyLand = ({
                       >
                         Attack
                       </h4>
-                      <Image src="/War.png" width={50} height={40}   loading="lazy"  ></Image>
+                      <DynamicImage src="/War.png" width={50} height={40}   />
                     </div>
                   </div>
                 </Col>
@@ -705,7 +707,7 @@ const MyLand = ({
                     <tbody>
                       <tr>
                         <td className="tableLine">
-                          <Image src="/Stone.png" width={25} height={25}  loading="lazy"/>
+                          <Image src="/Stone.png" width={25} height={25} />
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].stone !== undefined
@@ -715,7 +717,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <Image src="/Wood.png" width={25} height={25}  loading="lazy"/>
+                          <Image src="/Wood.png" width={25} height={25} />
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].wood !== undefined
@@ -725,7 +727,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <Image src="/Iron.png" width={25} height={25}  loading="lazy"/>
+                          <Image src="/Iron.png" width={25} height={25} />
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].iron !== undefined
@@ -735,7 +737,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <Image src="/Food.png" width={25} height={25}  loading="lazy"/>
+                          <Image src="/Food.png" width={25} height={25} />
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].food !== undefined
@@ -745,7 +747,7 @@ const MyLand = ({
                       </tr>
                       <tr>
                         <td className="tableLine">
-                          <Image src="/Gold.png" width={25} height={25}  loading="lazy"/>
+                          <Image src="/Gold.png" width={25} height={25} />
                         </td>
                         <td className="tableLine">
                           {landObj[selectedLandIndex].gold !== undefined
@@ -818,7 +820,7 @@ const MyLand = ({
                   ownedBuildings.map((item, key) => (
                     <Col key={key} md={{ span: 6, offset: 0 }}>
                       <div className="listItemInfo">
-                        <Image src={item.imageURL} height={160} width={200}  loading="lazy"/>
+                        <DynamicImage src={item.imageURL} height={160} width={200} />
                         <div className="infoColumn">
                           <h2 className="defaultH2">{item.name}</h2>
                           <h4>
@@ -927,7 +929,7 @@ const MyLand = ({
                               className="listItemInfo"
                               style={{ backgroundColor: "transparent" }}
                             >
-                              <Image src={barracksImg} width={200} height={160}  loading="lazy" />
+                              <DynamicImage src={barracksImg} width={200} height={160} />
                               <div className="InfoColumn">
                                 <div style={{ padding: "0.5rem" }}>
                                   <h2 className="defaultH2">
@@ -1049,10 +1051,9 @@ const MyLand = ({
                           buildings.map((item, key) => (
                             <Col key={key}>
                               <div className="listItemInfo">
-                                <Image src={buildingsImageSources[key]} 
+                                <DynamicImage src={buildingsImageSources[key]} 
                                 height={160}
                                 width={200}
-                                loading="lazy"
                                 />
                                 <div className="InfoColumn">
                                   <div style={{ padding: "0.5rem" }}>
@@ -1263,7 +1264,7 @@ const MyLand = ({
                 {Array.isArray(existedWarriors) &&
                   existedWarriors.map((warrior, key) => (
                     <Col className="warriorCard" key={key} sm={2}>
-                      <Image src={warriorsImageSources[key]} width={200} height={300}  loading="lazy"/>
+                      <DynamicImage src={warriorsImageSources[key]} width={200} height={300} />
                       <div className="warriorInfoBox">
                         <div style={{ padding: "0.5rem" }}>
                           <h2>{warrior.name}</h2>
