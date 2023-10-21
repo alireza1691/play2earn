@@ -12,7 +12,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Spinner from "react-bootstrap/Spinner";
 import Accordion from "react-bootstrap/Accordion";
 import CloseButton from "react-bootstrap/CloseButton";
-import { landsV2, townV2, BMTAddress, town } from "../Blockchain/Addresses";
+import { landsV2, townV2, BMTAddress } from "../Blockchain/Addresses";
 import LandsV2 from "../Blockchain/LandsV2.json";
 import TownV2 from "../Blockchain/TownV2.json";
 import BMT from "../Blockchain/BMT.json";
@@ -29,8 +29,7 @@ import {
   commodityItems,
   barracksImg,
 } from "../Images/ImagesSource";
-import dynamic from "next/dynamic"
-const DynamicImage = dynamic(() => import('next/image'), { loading: 'lazy' });
+
 
 const MyLand = ({
   provider,
@@ -60,6 +59,7 @@ const MyLand = ({
   const [workerBusyTime, setWorkerBusyTime] = useState();
   const [commodityIndex, setCommodityIndex] = useState();
   const [selectedLandIndex ,setSelectedLandIndex] = useState(0)
+  const [isApproved, setIsApproved] = useState(false)
 
   const sdk = useSDK();
   const router = useRouter();
@@ -180,9 +180,11 @@ const MyLand = ({
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.deposit(
           landObj[selectedLandIndex].coordinate,
-          ethers.utils.parseEther(enteredAmount)
+          ethers.utils.parseEther(enteredAmount),
+          commodityIndex
         );
         setVisibleConfirmation(true);
+        setIsApproved(false)
       } catch (error) {
         setError(error);
         setIsTransactionRejected(true);
@@ -202,6 +204,8 @@ const MyLand = ({
         // console.log("instance");
         // await BMTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
         // console.log("approved");
+        console.log(     landObj[selectedLandIndex].coordinate,
+          ethers.utils.parseEther(enteredAmount).toString());
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         console.log(TownInstance);
         await TownInstance.splitDeposit(
@@ -209,6 +213,7 @@ const MyLand = ({
           ethers.utils.parseEther(enteredAmount)
         );
         setVisibleConfirmation(true);
+        setIsApproved(false)
       } catch (error) {
         setError(error);
         setIsTransactionRejected(true);
@@ -374,6 +379,13 @@ const MyLand = ({
         );
         console.log("Required barracks coms:", requiredComs);
         setRequiredBarracksCommodities(requiredComs);
+        const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
+        const approvedAmount = await BMTInst.allowance(address,townV2);
+        console.log("Approved amount:",approvedAmount.toString());
+        if (approvedAmount >= ethers.utils.parseEther("1")) {
+    
+          setIsApproved(true)
+        }
         // console.log("Current existed army:", landArmy);
         if (ownedBuildings_.length > 0) {
           const busyTime = await townInstance.getRemainedTimestamp(
@@ -589,7 +601,7 @@ const MyLand = ({
                       >
                         Attack
                       </h4>
-                      <DynamicImage src="/War.png" width={50} height={40}   />
+                      <Image src="/War.png" width={50} height={40}   />
                     </div>
                   </div>
                 </Col>
@@ -653,26 +665,51 @@ const MyLand = ({
                   >
                     Approve
                   </Button>
-                  <Button
+                  { isApproved == true ? (                 <Button
                     variant="success"
                     size="sm"
                     style={{ marginRight: "10px" }}
                     onClick={() => splitDeposit()}
                   >
                     Split deposit
-                  </Button>
+                  </Button>) : (            <Button
+                    variant="success"
+                    size="sm"
+                    style={{ marginRight: "10px" }}
+                    disabled
+                  >
+                    Split deposit
+                  </Button>)}
+                  {/* <Button
+                    variant="success"
+                    size="sm"
+                    style={{ marginRight: "10px" }}
+                    onClick={() => splitDeposit()}
+                  >
+                    Split deposit
+                  </Button> */}
 
                   {commodityIndex !== undefined ? (
                     // <button className="sGreenButton">Withdraw</button>
                     <>
-                      <Button
+                    {isApproved == true ? (                <Button
                         variant="success"
                         size="sm"
                         style={{ marginRight: "10px" }}
                         onClick={() => deposit()}
                       >
                         Deposit
+                      </Button>) : (
+                        <Button
+                        variant="success"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                        disabled
+                      >
+                        Deposit
                       </Button>
+                      )}
+      
                       {isValidAmount == true ? (                      <Button
                         variant="success"
                         size="sm"
@@ -820,7 +857,7 @@ const MyLand = ({
                   ownedBuildings.map((item, key) => (
                     <Col key={key} md={{ span: 6, offset: 0 }}>
                       <div className="listItemInfo">
-                        <DynamicImage src={item.imageURL} height={160} width={200} />
+                        <Image src={item.imageURL} height={160} width={200} />
                         <div className="infoColumn">
                           <h2 className="defaultH2">{item.name}</h2>
                           <h4>
@@ -929,7 +966,7 @@ const MyLand = ({
                               className="listItemInfo"
                               style={{ backgroundColor: "transparent" }}
                             >
-                              <DynamicImage src={barracksImg} width={200} height={160} />
+                              <Image src={barracksImg} width={200} height={160} />
                               <div className="InfoColumn">
                                 <div style={{ padding: "0.5rem" }}>
                                   <h2 className="defaultH2">
@@ -1051,7 +1088,7 @@ const MyLand = ({
                           buildings.map((item, key) => (
                             <Col key={key}>
                               <div className="listItemInfo">
-                                <DynamicImage src={buildingsImageSources[key]} 
+                                <Image src={buildingsImageSources[key]} 
                                 height={160}
                                 width={200}
                                 />
@@ -1264,7 +1301,7 @@ const MyLand = ({
                 {Array.isArray(existedWarriors) &&
                   existedWarriors.map((warrior, key) => (
                     <Col className="warriorCard" key={key} sm={2}>
-                      <DynamicImage src={warriorsImageSources[key]} width={200} height={300} />
+                      <Image src={warriorsImageSources[key]} width={200} height={300} />
                       <div className="warriorInfoBox">
                         <div style={{ padding: "0.5rem" }}>
                           <h2>{warrior.name}</h2>

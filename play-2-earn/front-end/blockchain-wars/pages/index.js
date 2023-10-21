@@ -4,8 +4,6 @@ import Image from "next/image";
 import { Col, Container, Row, Carousel } from "react-bootstrap";
 // import { Image } from "next/image";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic"
-const DynamicImage = dynamic(() => import('next/image'), { loading: 'lazy' });
 
 export default function Home() {
   const router = useRouter();
@@ -45,7 +43,7 @@ export default function Home() {
           </Col>
           <Col sm={6}>
             <div className="parcelBox">
-              <DynamicImage
+              <Image
                 src="/kingdomParcel/kingdom18.png"
                 width={500}
                 height={800}
@@ -93,7 +91,7 @@ export default function Home() {
           <Col sm={4}></Col>
           <Col sm={4}>
             <div className="imgBox">
-              <DynamicImage
+              <Image
                 src="/mint-nft2.png"
                 width={500}
                 height={800}
@@ -106,7 +104,7 @@ export default function Home() {
         <Row className="mainRow">
           <Col sm={4}>
             <div className="imgBox">
-              <DynamicImage
+              <Image
                 src="/kingdomParcel/kingdomCard.png"
                 width={500}
                 height={800}
@@ -164,7 +162,7 @@ export default function Home() {
           <Col sm={4}></Col>
           <Col sm={4}>
             <div className="imgBox">
-              <DynamicImage src="/earn.png" 
+              <Image src="/earn.png" 
                           width={500}
                           height={800}
                           layout="responsive"
@@ -177,7 +175,7 @@ export default function Home() {
         <Row className="mainRow">
           <Col>
             <div className="warriorsContainer">
-              <DynamicImage src="/warrior/swordsman.png" className="manImg"             width={500}
+              <Image src="/warrior/swordsman.png" className="manImg"             width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain" />
@@ -223,7 +221,7 @@ export default function Home() {
 
           <Col>
             <div className="warriorsContainer">
-              <DynamicImage src="/warrior/swordsman2.png" className="manImg"      width={500}
+              <Image src="/warrior/swordsman2.png" className="manImg"      width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain"/>

@@ -1162,6 +1162,9 @@ justify-content: flex-start;
   font-style: italic;
 }
 @media (max-width: 767px) {
+  .warriorCard {
+    margin-top: 1rem;
+  }
   .myLandHeader{
     display: block;
   }
