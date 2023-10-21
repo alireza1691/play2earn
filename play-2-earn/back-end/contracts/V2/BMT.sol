@@ -7,7 +7,7 @@ import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 contract BMT is ERC20, Ownable {
 
 
-    constructor() ERC20 ("BMT", "Blockdom token") Ownable(msg.sender) {
+    constructor() ERC20 ("BMT", "BM token") Ownable(msg.sender) {
         _mint(msg.sender, 1000000000 ether);
     }
 }

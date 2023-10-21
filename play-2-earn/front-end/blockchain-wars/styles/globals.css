@@ -669,7 +669,7 @@ justify-content: flex-start;
   text-align: center;
   border-radius: 0.5rem;
   /* box-shadow: 0 0 1rem 0.2rem rgba(198, 248, 169, 0.3); */
-  box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.9) !important;
+  box-shadow: 0 0 2rem 0.5rem rgba(0, 0, 0, 0.2) !important;
   white-space: pre-wrap;
   word-wrap: break-word;
   border: 1px solid rgba(94, 110, 85, 0.3);
@@ -691,7 +691,7 @@ justify-content: flex-start;
   padding: 1rem;
   text-align: center;
   border-radius: 1rem;
-  box-shadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 1.5rem 0.5rem rgba(0, 0, 0, 0.2);
   white-space: pre-wrap;
   word-wrap: break-word;
 }

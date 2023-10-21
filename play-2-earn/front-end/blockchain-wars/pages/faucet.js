@@ -107,6 +107,20 @@ const Faucet = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
   return (
     <div>
       <div className="scrollableScreen" >
+      {isTransactionRejected && (
+          <div className="overlay">
+            <div className="transactionResultWindow">
+              <h4>Transaction Rejected or failed</h4>
+              <div className="errorContainer">
+                {error !== undefined && <p>{error.message}</p>}
+              </div>
+              <p>Please try again or contact support.</p>
+              <Button variant="outline-dark" size="sm" onClick={handleClose}>
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
         {visibleConfirmation == true && (
           <>
             {confirmed == false ? (
@@ -115,16 +129,9 @@ const Faucet = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="popUpConfirmation">
-                  <h4 style={{ color: "black" }} className="defaultH4">
-                    Confirming...
-                  </h4>
+                  <h3 className="defaultH3">Confirming...</h3>
 
-                  <Spinner
-                    animation="border"
-                    role="status"
-                    style={{ color: "black" }}
-                  >
-                  </Spinner>
+                  <Spinner animation="border" role="status"></Spinner>
                 </div>
               </div>
             ) : (
@@ -134,29 +141,15 @@ const Faucet = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
                   <p>
                     To update your account you may need to refresh the page.
                   </p>
+                  <Button variant="outline-dark" onClick={() => handleClose()}>
+                    Close
+                  </Button>
                 </div>
               </div>
             )}
           </>
         )}
 
-        {isTransactionRejected && (
-          <div className="overlay">
-            <div className="transactionResultWindow">
-              <div className="closeButtonContainer">
-                <CloseButton
-                  className="closeButton"
-                  onClick={handleClose}
-                ></CloseButton>
-              </div>
-              <h4>Transaction Rejected or failed</h4>
-              <div className="errorContainer">
-                {error !== undefined && <p>{error.message}</p>}
-              </div>
-              <p>Please try again or contact support.</p>
-            </div>
-          </div>
-        )}
         <Container >
             <Row style={{"marginTop":"10rem"}}>
                 <Col>

@@ -22,7 +22,7 @@ import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useSDK } from "@thirdweb-dev/react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Table from "react-bootstrap/Table";
-import Image from "next/image"
+import Image from "next/image";
 import {
   buildingsImageSources,
   warriorsImageSources,
@@ -30,14 +30,13 @@ import {
   barracksImg,
 } from "../Images/ImagesSource";
 
-
 const MyLand = ({
   provider,
   landImgUrl,
   ownedLands,
   landObj,
   existedWarriors,
-  defaultLand
+  defaultLand,
 }) => {
   // const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -58,8 +57,9 @@ const MyLand = ({
   const [error, setError] = useState();
   const [workerBusyTime, setWorkerBusyTime] = useState();
   const [commodityIndex, setCommodityIndex] = useState();
-  const [selectedLandIndex ,setSelectedLandIndex] = useState(0)
-  const [isApproved, setIsApproved] = useState(false)
+  const [selectedLandIndex, setSelectedLandIndex] = useState(0);
+  const [isApproved, setIsApproved] = useState(false);
+  const [approvedAm, setApprovedAm] = useState();
 
   const sdk = useSDK();
   const router = useRouter();
@@ -96,44 +96,31 @@ const MyLand = ({
     }
   };
   const handleEnteredAmount = (amount) => {
-    setEnteredAmount(amount)
-      if (Number(amount) <= Number(balArray()[commodityIndex])) {
-        setIsValidAmount(true)
-        console.log("true");
-      } else {
-        setIsValidAmount(false)
-        console.log("false");
-      }
-      console.log(Number(amount));
-      console.log(Number(balArray[commodityIndex]));
-
-  }
-  const handleCommodityIndex = (seletedIndex) => {
-    setCommodityIndex(seletedIndex)
-    if (Number(enteredAmount) <= Number(balArray()[seletedIndex])) {
-      setIsValidAmount(true)
+    setEnteredAmount(amount);
+    if (Number(amount) <= Number(balArray()[commodityIndex])) {
+      setIsValidAmount(true);
       console.log("true");
     } else {
-      setIsValidAmount(false)
+      setIsValidAmount(false);
       console.log("false");
     }
-
-  }
+  };
+  const handleCommodityIndex = (seletedIndex) => {
+    setCommodityIndex(seletedIndex);
+    if (Number(enteredAmount) <= Number(balArray()[seletedIndex])) {
+      setIsValidAmount(true);
+      console.log("true");
+    } else {
+      setIsValidAmount(false);
+      console.log("false");
+    }
+  };
 
   const handleClose = () => {
     setIsTransactionRejected(false);
     setError(undefined);
   };
 
-  const handleOpenWindow = (item) => {
-    // setIsLandSelected(true);
-    setSelectedItem("something");
-  };
-
-  const handleCloseLandWindow = () => {
-    // setIsLandSelected(false);
-    setSelectedItem({});
-  };
   const balArray = () => {
     return [
       landObj[selectedLandIndex].stone,
@@ -163,20 +150,13 @@ const MyLand = ({
         setIsTransactionRejected(true);
       }
     }
-  }
+  };
   const deposit = async () => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId !== validChainId) {
       await handleChangeChainId();
     } else {
       try {
-        // console.log(ethers.utils.parseEther(enteredAmount));
-        // const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
-        // const balance = await BMTInst.balanceOf(address);
-        // console.log(balance.toString());
-        // console.log("instance");
-        // await BMTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
-        // console.log("approved");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.deposit(
           landObj[selectedLandIndex].coordinate,
@@ -184,7 +164,7 @@ const MyLand = ({
           commodityIndex
         );
         setVisibleConfirmation(true);
-        setIsApproved(false)
+        setIsApproved(false);
       } catch (error) {
         setError(error);
         setIsTransactionRejected(true);
@@ -197,15 +177,10 @@ const MyLand = ({
       await handleChangeChainId();
     } else {
       try {
-        // console.log(ethers.utils.parseEther(enteredAmount));
-        // const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
-        // const balance = await BMTInst.balanceOf(address);
-        // console.log(balance.toString());
-        // console.log("instance");
-        // await BMTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
-        // console.log("approved");
-        console.log(     landObj[selectedLandIndex].coordinate,
-          ethers.utils.parseEther(enteredAmount).toString());
+        console.log(
+          landObj[selectedLandIndex].coordinate,
+          ethers.utils.parseEther(enteredAmount).toString()
+        );
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         console.log(TownInstance);
         await TownInstance.splitDeposit(
@@ -213,7 +188,7 @@ const MyLand = ({
           ethers.utils.parseEther(enteredAmount)
         );
         setVisibleConfirmation(true);
-        setIsApproved(false)
+        setIsApproved(false);
       } catch (error) {
         setError(error);
         setIsTransactionRejected(true);
@@ -226,9 +201,7 @@ const MyLand = ({
       await handleChangeChainId();
     } else {
       try {
-        // console.log(ethers.utils.parseEther(enteredAmount));
-        // const BKTInst = new ethers.Contract(BKTAddress, BKT.abi, signer);
-        // await BKTInst.approve(townV2, ethers.utils.parseEther(enteredAmount));
+        console.log("withdrawing..");
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         await TownInstance.withdraw(
           ethers.utils.parseEther(enteredAmount),
@@ -253,7 +226,10 @@ const MyLand = ({
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
         console.log(TownInstance);
         console.log(landObj[selectedLandIndex].coordinate, buildingIndex);
-        await TownInstance.build(landObj[selectedLandIndex].coordinate, buildingIndex);
+        await TownInstance.build(
+          landObj[selectedLandIndex].coordinate,
+          buildingIndex
+        );
         console.log("Confirming tx...");
         setVisibleConfirmation(true);
       } catch (error) {
@@ -300,7 +276,10 @@ const MyLand = ({
     } else {
       try {
         const TownInstance = new ethers.Contract(townV2, TownV2.abi, signer);
-        await TownInstance.upgrade(buildingTokenId, landObj[selectedLandIndex].coordinate);
+        await TownInstance.upgrade(
+          buildingTokenId,
+          landObj[selectedLandIndex].coordinate
+        );
         setVisibleConfirmation(true);
       } catch (error) {
         setError(error);
@@ -337,7 +316,6 @@ const MyLand = ({
   };
 
   useEffect(() => {
-
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
         setConfirmed(true);
@@ -355,9 +333,14 @@ const MyLand = ({
       if (ownedLands !== undefined && ownedLands == 0) {
         setIsFetching(false);
       }
-      if (signer && address && landObj[selectedLandIndex] !== undefined && provider) {
+      if (
+        signer &&
+        address &&
+        landObj[selectedLandIndex] !== undefined &&
+        provider
+      ) {
         console.log("Useeffect called");
-        setIsFetching(false)
+        setIsFetching(false);
         const townInstance = new ethers.Contract(townV2, TownV2.abi, provider);
         const landData = await townInstance.getLandIdData(
           landObj[selectedLandIndex].coordinate
@@ -380,11 +363,12 @@ const MyLand = ({
         console.log("Required barracks coms:", requiredComs);
         setRequiredBarracksCommodities(requiredComs);
         const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
-        const approvedAmount = await BMTInst.allowance(address,townV2);
-        console.log("Approved amount:",approvedAmount.toString());
+        const approvedAmount = await BMTInst.allowance(address, townV2);
+        console.log("Approved amount:", approvedAmount.toString());
+        setApprovedAm(approvedAmount);
+        setEnteredAmount(ethers.utils.formatEther(approvedAmount))
         if (approvedAmount >= ethers.utils.parseEther("1")) {
-    
-          setIsApproved(true)
+          setIsApproved(true);
         }
         // console.log("Current existed army:", landArmy);
         if (ownedBuildings_.length > 0) {
@@ -413,7 +397,7 @@ const MyLand = ({
             });
           }
           setOwnedBuildings(ownedBuildingsArray);
- 
+
           console.log("Owned buildings");
           console.log(ownedBuildingsArray);
         } else {
@@ -423,15 +407,7 @@ const MyLand = ({
       }
     };
     fetchData();
-
-  }, [
-    provider,
-    ownedLands,
-    address,
-    signer,
-    visibleConfirmation,
-    landObj
-  ]);
+  }, [provider, ownedLands, address, signer, visibleConfirmation, landObj]);
 
   return (
     <>
@@ -439,13 +415,14 @@ const MyLand = ({
         {isTransactionRejected && (
           <div className="overlay">
             <div className="transactionResultWindow">
-
               <h4>Transaction Rejected or failed</h4>
               <div className="errorContainer">
                 {error !== undefined && <p>{error.message}</p>}
               </div>
               <p>Please try again or contact support.</p>
-              <Button variant="outline-dark" size="sm" onClick={handleClose}>Close</Button>
+              <Button variant="outline-dark" size="sm" onClick={handleClose}>
+                Close
+              </Button>
             </div>
           </div>
         )}
@@ -457,15 +434,9 @@ const MyLand = ({
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="popUpConfirmation">
-                  <h3 className="defaultH3">
-                    Confirming...
-                  </h3>
+                  <h3 className="defaultH3">Confirming...</h3>
 
-                  <Spinner
-                    animation="border"
-                    role="status"
- 
-                  ></Spinner>
+                  <Spinner animation="border" role="status"></Spinner>
                 </div>
               </div>
             ) : (
@@ -475,7 +446,9 @@ const MyLand = ({
                   <p>
                     To update your account you may need to refresh the page.
                   </p>
-                  <Button variant="outline-dark" onClick={()=>handleClose()} >Close</Button>
+                  <Button variant="outline-dark" onClick={() => handleClose()}>
+                    Close
+                  </Button>
                 </div>
               </div>
             )}
@@ -483,61 +456,60 @@ const MyLand = ({
         )}
 
         <Container>
-       
-              {address != undefined && isFetching ? (
-                <div
-                  style={{
-                    display: "block",
-                    marginTop: "1%",
-                    height: "200px",
-                    paddingTop: "15%",
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  <h2
-                    style={{
-                      fontFamily: "monospace",
-                      fontSize: "0.9rem",
-                      color: "white",
-                    }}
-                  >
-                    Loading...
-                  </h2>
-                  <Spinner
-                    animation="border"
-                    role="status"
-                    style={{ textAlign: "center", color: "white" }}
-                  >
-                    <span className="visually-hidden">Loading...</span>
-                  </Spinner>
-                </div>
-              ) : (
-                <Row>
-                  <Col
-                    md={{ span: 4, offset: 4 }}
-                    style={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <div style={{ display: "block", textAlign: "center" }}>
-                      {address == undefined ? (
-                        <h4 className="defaultH4">
-                          Please{" "}
-                          <span
-                            style={{
-                              textDecoration: "underLine",
-                              color: "white",
-                              fontWeight: "bold",
-                              cursor: "pointer",
-                            }}
-                            onClick={() => handleConnectWithMetamask()}
-                          >
-                            connect
-                          </span>{" "}
-                          your wallet.
-                        </h4>
-                      ) : (
-                        <>
-                        {Array.isArray(landObj) && landObj.length == 0 &&
+          {address != undefined && isFetching ? (
+            <div
+              style={{
+                display: "block",
+                marginTop: "1%",
+                height: "200px",
+                paddingTop: "15%",
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              <h2
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: "0.9rem",
+                  color: "white",
+                }}
+              >
+                Loading...
+              </h2>
+              <Spinner
+                animation="border"
+                role="status"
+                style={{ textAlign: "center", color: "white" }}
+              >
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <Row>
+              <Col
+                md={{ span: 4, offset: 4 }}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                <div style={{ display: "block", textAlign: "center" }}>
+                  {address == undefined ? (
+                    <h4 className="defaultH4">
+                      Please{" "}
+                      <span
+                        style={{
+                          textDecoration: "underLine",
+                          color: "white",
+                          fontWeight: "bold",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => handleConnectWithMetamask()}
+                      >
+                        connect
+                      </span>{" "}
+                      your wallet.
+                    </h4>
+                  ) : (
+                    <>
+                      {Array.isArray(landObj) && landObj.length == 0 && (
                         <>
                           <h4 className="defaultH4">Not land found.</h4>
                           <h4 className="defaultH4">
@@ -558,56 +530,51 @@ const MyLand = ({
                             </span>{" "}
                             and mint your land.
                           </h4>
-                          </>
-                            }
                         </>
-                    
                       )}
-                    </div>
-                  </Col>
-                </Row>
-              )}
-            {/* </>
+                    </>
+                  )}
+                </div>
+              </Col>
+            </Row>
+          )}
+          {/* </>
           )} */}
-          { Array.isArray(landObj) && landObj.length > 0 && (
+          {Array.isArray(landObj) && landObj.length > 0 && (
             <>
               <Row>
                 <Col>
                   <div className="myLandHeader">
-                  <h2 className="defaultH2">Lands :</h2>
-                  <div className="myLandsContainer" >
-                    {
-                  landObj.map((land, key) => (
-                    <React.Fragment key={land.coordinate + key}>
-                 
-                        {key == selectedLandIndex ? <p className="selectedLandP">Land {land.coordinate}</p> :<p onClick={() => setSelectedLandIndex(key)}>Land {land.coordinate}</p>}
-                            
-          
-                         
-       
-              
-                    </React.Fragment>
-                  ))}
-     </div>
+                    <h2 className="defaultH2">Lands :</h2>
+                    <div className="myLandsContainer">
+                      {landObj.map((land, key) => (
+                        <React.Fragment key={land.coordinate + key}>
+                          {key == selectedLandIndex ? (
+                            <p className="selectedLandP">
+                              Land {land.coordinate}
+                            </p>
+                          ) : (
+                            <p onClick={() => setSelectedLandIndex(key)}>
+                              Land {land.coordinate}
+                            </p>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </div>
                     <div
                       className="attackRouteButton"
                       onClick={() => {
                         router.push("/attack");
                       }}
                     >
-                      <h4
-
-                      // style={{"padding":"0.5rem","border":"2px solid white","borderRadius":"0.4rem"}}
-                      >
-                        Attack
-                      </h4>
-                      <Image src="/War.png" width={50} height={40}   />
+                      <h4>Attack</h4>
+                      <Image src="/War.png" width={50} height={40} />
                     </div>
                   </div>
                 </Col>
               </Row>
               <Row style={{ marginTop: "3rem", minHeight: "300px" }}>
-              {/* <Col
+                {/* <Col
                         md="auto"
                       >
                         <div className="landCard">
@@ -620,11 +587,19 @@ const MyLand = ({
                       </Col> */}
                 <Col className="transferCol" sm={3}>
                   <InputGroup className="mb-3" size="sm">
+  
+                    {approvedAm > 0 ? 
                     <Form.Control
-                      placeholder="Enter amount..."
-                      aria-label="Amount (to the nearest dollar)"
-                      onChange={(e) => handleEnteredAmount(e.target.value)}
-                    />
+                    placeholder="Enter amount..."
+                    aria-label="Amount (to the nearest dollar)"
+                      defaultValue={ethers.utils.formatEther(approvedAm)}
+                      disabled
+                  /> :                   <Form.Control
+                  placeholder="Enter amount..."
+                  aria-label="Amount (to the nearest dollar)"
+                  onChange={(e) => handleEnteredAmount(e.target.value)}
+
+                />}
                     <Dropdown>
                       <Dropdown.Toggle
                         variant="light"
@@ -657,7 +632,68 @@ const MyLand = ({
                   {/* <button className="sGreenButton">Deposit</button> */}
 
                   {/* <button className="sGreenButton">Split deposit</button> */}
-                  <Button
+                  {approvedAm !== undefined && approvedAm == 0 ? 
+                    <Button
+                      variant="success"
+                      size="sm"
+                      style={{ marginRight: "10px" }}
+                      onClick={() => approve()}
+                    >
+                      Approve
+                    </Button> : <Button
+                      variant="success"
+                      size="sm"
+                      style={{ marginRight: "10px" }}
+                      disabled
+                    >
+                      Approved
+                    </Button>
+                  }
+                  {approvedAm !== undefined && approvedAm > 0 && (
+                    <>
+                      <Button
+                        variant="success"
+                        size="sm"
+                        style={{ marginRight: "10px" }}
+                        onClick={() => splitDeposit()}
+                      >
+                        Split deposit
+                      </Button>
+                      {commodityIndex !== undefined ? (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          style={{ marginRight: "10px" }}
+                          onClick={() => deposit()}
+                        >
+                          Deposit
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          style={{ marginRight: "10px" }}
+                          disabled
+                        >
+                          Deposit
+                        </Button>
+                      )}
+                    </>
+                  )}
+                       {isValidAmount == true ? (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() => withdraw()}
+                        >
+                          Withdraw
+                        </Button>
+                      ) : (
+                        <Button variant="success" size="sm" disabled>
+                          Withdraw
+                        </Button>
+                      )}
+                  {/* <Button
                     variant="success"
                     size="sm"
                     style={{ marginRight: "10px" }}
@@ -665,63 +701,62 @@ const MyLand = ({
                   >
                     Approve
                   </Button>
-                  { isApproved == true ? (                 <Button
-                    variant="success"
-                    size="sm"
-                    style={{ marginRight: "10px" }}
-                    onClick={() => splitDeposit()}
-                  >
-                    Split deposit
-                  </Button>) : (            <Button
-                    variant="success"
-                    size="sm"
-                    style={{ marginRight: "10px" }}
-                    disabled
-                  >
-                    Split deposit
-                  </Button>)}
-                  {/* <Button
-                    variant="success"
-                    size="sm"
-                    style={{ marginRight: "10px" }}
-                    onClick={() => splitDeposit()}
-                  >
-                    Split deposit
-                  </Button> */}
+                  {isApproved == true ? (
+                    <Button
+                      variant="success"
+                      size="sm"
+                      style={{ marginRight: "10px" }}
+                      onClick={() => splitDeposit()}
+                    >
+                      Split deposit
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="success"
+                      size="sm"
+                      style={{ marginRight: "10px" }}
+                      disabled
+                    >
+                      Split deposit
+                    </Button>
+                  )}
 
                   {commodityIndex !== undefined ? (
                     // <button className="sGreenButton">Withdraw</button>
                     <>
-                    {isApproved == true ? (                <Button
-                        variant="success"
-                        size="sm"
-                        style={{ marginRight: "10px" }}
-                        onClick={() => deposit()}
-                      >
-                        Deposit
-                      </Button>) : (
+                      {isApproved == true ? (
                         <Button
-                        variant="success"
-                        size="sm"
-                        style={{ marginRight: "10px" }}
-                        disabled
-                      >
-                        Deposit
-                      </Button>
+                          variant="success"
+                          size="sm"
+                          style={{ marginRight: "10px" }}
+                          onClick={() => deposit()}
+                        >
+                          Deposit
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          style={{ marginRight: "10px" }}
+                          disabled
+                        >
+                          Deposit
+                        </Button>
                       )}
-      
-                      {isValidAmount == true ? (                      <Button
-                        variant="success"
-                        size="sm"
-                        onClick={() => withdraw()}
-                      >
-                        Withdraw
-                      </Button>) :(
-                        <Button variant="success" size="sm" disabled>
-                        Withdraw
-                      </Button>
-                      ) }
 
+                      {isValidAmount == true ? (
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() => withdraw()}
+                        >
+                          Withdraw
+                        </Button>
+                      ) : (
+                        <Button variant="success" size="sm" disabled>
+                          Withdraw
+                        </Button>
+                      )}
                     </>
                   ) : (
                     <>
@@ -737,7 +772,7 @@ const MyLand = ({
                         Withdraw
                       </Button>
                     </>
-                  )}
+                  )} */}
                 </Col>
                 <Col className="BalTableCol" sm={3}>
                   <Table striped bordered hover size="sm">
@@ -806,7 +841,9 @@ const MyLand = ({
                             <tr key={key}>
                               <td className="tableLine">{warrior.name}</td>
                               <td className="tableLine">
-                                {landObj[selectedLandIndex].armyBal[key].toString()}
+                                {landObj[selectedLandIndex].armyBal[
+                                  key
+                                ].toString()}
                               </td>
                             </tr>
                           ))}
@@ -966,7 +1003,11 @@ const MyLand = ({
                               className="listItemInfo"
                               style={{ backgroundColor: "transparent" }}
                             >
-                              <Image src={barracksImg} width={200} height={160} />
+                              <Image
+                                src={barracksImg}
+                                width={200}
+                                height={160}
+                              />
                               <div className="InfoColumn">
                                 <div style={{ padding: "0.5rem" }}>
                                   <h2 className="defaultH2">
@@ -981,7 +1022,6 @@ const MyLand = ({
                                     className="commodityLogo"
                                     height={25}
                                     width={25}
-        
                                   />
                                   <p>
                                     {convertedCommodityAmount(
@@ -1041,7 +1081,6 @@ const MyLand = ({
                                     )}
                                   </p>
                                 </div>
-                     
                               </div>
                               <div className="InfoColumn">
                                 {Number(landObj[selectedLandIndex].stone) <=
@@ -1056,12 +1095,11 @@ const MyLand = ({
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[2]
                                   ) ||
-                   
                                 Number(landObj[selectedLandIndex].food) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[4]
                                   ) ||
-                                  Number(landObj[selectedLandIndex].gold) <=
+                                Number(landObj[selectedLandIndex].gold) <=
                                   convertedCommodityAmount(
                                     requiredBarracksCommodities[3]
                                   ) ||
@@ -1088,9 +1126,10 @@ const MyLand = ({
                           buildings.map((item, key) => (
                             <Col key={key}>
                               <div className="listItemInfo">
-                                <Image src={buildingsImageSources[key]} 
-                                height={160}
-                                width={200}
+                                <Image
+                                  src={buildingsImageSources[key]}
+                                  height={160}
+                                  width={200}
                                 />
                                 <div className="InfoColumn">
                                   <div style={{ padding: "0.5rem" }}>
@@ -1137,7 +1176,7 @@ const MyLand = ({
                                       )}
                                     </p>
                                   </div>
-                     
+
                                   <div className="commodityBalance">
                                     <Image
                                       src="/Food.png"
@@ -1301,7 +1340,11 @@ const MyLand = ({
                 {Array.isArray(existedWarriors) &&
                   existedWarriors.map((warrior, key) => (
                     <Col className="warriorCard" key={key} sm={2}>
-                      <Image src={warriorsImageSources[key]} width={200} height={300} />
+                      <Image
+                        src={warriorsImageSources[key]}
+                        width={200}
+                        height={300}
+                      />
                       <div className="warriorInfoBox">
                         <div style={{ padding: "0.5rem" }}>
                           <h2>{warrior.name}</h2>
@@ -1314,7 +1357,12 @@ const MyLand = ({
                             Price:{" "}
                             <span>
                               {ethers.utils.formatEther(warrior.price)}{" "}
-                              <Image src="/Gold.png" className="commodityLogo" width={25} height={25} />
+                              <Image
+                                src="/Gold.png"
+                                className="commodityLogo"
+                                width={25}
+                                height={25}
+                              />
                             </span>
                           </p>
                         </div>

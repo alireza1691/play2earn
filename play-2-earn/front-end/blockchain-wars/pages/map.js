@@ -211,6 +211,20 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
   return (
     <>
       <div className="scrollableScreen">
+      {isTransactionRejected && (
+          <div className="overlay">
+            <div className="transactionResultWindow">
+              <h4>Transaction Rejected or failed</h4>
+              <div className="errorContainer">
+                {error !== undefined && <p>{error.message}</p>}
+              </div>
+              <p>Please try again or contact support.</p>
+              <Button variant="outline-dark" size="sm" onClick={handleClose}>
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
         {visibleConfirmation == true && (
           <>
             {confirmed == false ? (
@@ -219,15 +233,9 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                 style={{ backgroundColor: "transparent" }}
               >
                 <div className="popUpConfirmation">
-                  <h4 style={{ color: "black" }} className="defaultH4">
-                    Confirming...
-                  </h4>
+                  <h3 className="defaultH3">Confirming...</h3>
 
-                  <Spinner
-                    animation="border"
-                    role="status"
-                    style={{ color: "black" }}
-                  ></Spinner>
+                  <Spinner animation="border" role="status"></Spinner>
                 </div>
               </div>
             ) : (
@@ -237,56 +245,16 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                   <p>
                     To update your account you may need to refresh the page.
                   </p>
+                  <Button variant="outline-dark" onClick={() => handleClose()}>
+                    Close
+                  </Button>
                 </div>
               </div>
             )}
           </>
         )}
-        {/* {!address && closePopUp == false && (
-          <div className="overlay">
-            <Toast>
-              <Toast.Header onClick={handleClosePopUp}>
-                <img
-                  src="holder.js/20x20?text=%20"
-                  className="rounded me-2"
-                  alt=""
-                />
-                <strong className="me-auto">Wallet not detected</strong>
-              </Toast.Header>
-              <Toast.Body>
-                If you have any land we recommend to{" "}
-                <span
-                  style={{
-                    textDecoration: "underLine",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleConnectWithMetamask()}
-                >
-                  Connect
-                </span>{" "}
-                your wallet
-              </Toast.Body>
-            </Toast>
-          </div>
-        )} */}
-        {isTransactionRejected && (
-          <div className="overlay">
-            <div className="transactionResultWindow">
-              <div className="closeButtonContainer">
-                <CloseButton
-                  className="closeButton"
-                  onClick={handleClose}
-                ></CloseButton>
-              </div>
-              <h4>Transaction Rejected or failed</h4>
-              <div className="errorContainer">
-                {error !== undefined && <p>{error.message}</p>}
-              </div>
-              <p>Please try again or contact support.</p>
-            </div>
-          </div>
-        )}
+
+ 
         {isLandSelected && selectedLand && landImgUrl !== undefined && (
           <div className="overlay">
             <Card

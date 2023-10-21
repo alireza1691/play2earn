@@ -135,7 +135,7 @@ contract Faucet {
     error AlreadyClaimed();
 
     address constant tokenAdd = 0x7bb1F28c07D232D027b4f3b02d80B6DdfA4e08D1; //Replace this address
-    uint256 constant reqAmount = 100 ether;
+    uint256 constant reqAmount = 1000 ether;
 
     mapping (address => uint256) private  latestReq;
     modifier checkTimestamp {
