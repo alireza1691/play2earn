@@ -48,6 +48,7 @@ export default function Home() {
                 height={800}
                 layout="responsive"
                 objectFit="contain"
+                loading="lazy"
               />
             </div>
           </Col>
@@ -96,6 +97,7 @@ export default function Home() {
                 height={800}
                 layout="responsive"
                 objectFit="contain"
+                loading="lazy"
               />
             </div>
           </Col>
@@ -109,6 +111,7 @@ export default function Home() {
                 height={800}
                 layout="responsive"
                 objectFit="contain"
+                loading="lazy"
               />
             </div>
           </Col>
@@ -166,6 +169,7 @@ export default function Home() {
                           height={800}
                           layout="responsive"
                           objectFit="contain"
+                          loading="lazy"
               />
             </div>
           </Col>
@@ -178,6 +182,7 @@ export default function Home() {
                 height={800}
                 layout="responsive"
                 objectFit="contain" />
+                 loading="lazy"
               {/* <img src="warrior/archerWoman6.png" className="womanImg"/> */}
             </div>
           </Col>
@@ -224,6 +229,7 @@ export default function Home() {
                 height={800}
                 layout="responsive"
                 objectFit="contain"/>
+                 loading="lazy"
               {/* <img src="warrior/archerWoman3.png" className="womanImg" /> */}
             </div>
           </Col>
