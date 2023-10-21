@@ -45,13 +45,12 @@ export default function Home() {
           </Col>
           <Col sm={6}>
             <div className="parcelBox">
-              <Image
+              <DynamicImage
                 src="/kingdomParcel/kingdom18.png"
                 width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain"
-                loading="lazy"
               />
             </div>
           </Col>
@@ -94,13 +93,12 @@ export default function Home() {
           <Col sm={4}></Col>
           <Col sm={4}>
             <div className="imgBox">
-              <Image
+              <DynamicImage
                 src="/mint-nft2.png"
                 width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain"
-                loading="lazy"
               />
             </div>
           </Col>
@@ -108,13 +106,12 @@ export default function Home() {
         <Row className="mainRow">
           <Col sm={4}>
             <div className="imgBox">
-              <Image
+              <DynamicImage
                 src="/kingdomParcel/kingdomCard.png"
                 width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain"
-                loading="lazy"
               />
             </div>
           </Col>
@@ -167,12 +164,11 @@ export default function Home() {
           <Col sm={4}></Col>
           <Col sm={4}>
             <div className="imgBox">
-              <Image src="/earn.png" 
+              <DynamicImage src="/earn.png" 
                           width={500}
                           height={800}
                           layout="responsive"
                           objectFit="contain"
-                          loading="lazy"
               />
             </div>
           </Col>
@@ -181,11 +177,10 @@ export default function Home() {
         <Row className="mainRow">
           <Col>
             <div className="warriorsContainer">
-              <Image src="/warrior/swordsman.png" className="manImg"             width={500}
+              <DynamicImage src="/warrior/swordsman.png" className="manImg"             width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain" />
-                 loading="lazy"
               {/* <img src="warrior/archerWoman6.png" className="womanImg"/> */}
             </div>
           </Col>
@@ -228,11 +223,10 @@ export default function Home() {
 
           <Col>
             <div className="warriorsContainer">
-              <Image src="/warrior/swordsman2.png" className="manImg"      width={500}
+              <DynamicImage src="/warrior/swordsman2.png" className="manImg"      width={500}
                 height={800}
                 layout="responsive"
                 objectFit="contain"/>
-                 loading="lazy"
               {/* <img src="warrior/archerWoman3.png" className="womanImg" /> */}
             </div>
           </Col>
