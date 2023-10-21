@@ -817,18 +817,23 @@ justify-content: flex-start;
 .accordion {
   background-color: transparent !important;
   background: none !important;
+
 }
 .accordion-item {
   background-color: transparent !important;
   color: rgba(170, 252, 87, 0.07) !important;
-  border: none;
+  border: none !important;
 }
 .accordion-button {
   background-color: var(--darkGreen) !important;
   color: white !important;
+
+  
+  
 }
 .accordion-button:focus {
   box-shadow: none;
+
 }
 /* .accordion-header {
   background-color: black;
@@ -840,6 +845,7 @@ justify-content: flex-start;
 }
 .accordion-body {
   background-color: transparent !important;
+
 }
 
 .warriorImage {
