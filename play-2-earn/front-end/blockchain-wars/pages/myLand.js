@@ -489,10 +489,10 @@ const MyLand = ({
             <Row>
               <Col
                 md={{ span: 4, offset: 4 }}
-                style={{ display: "flex", justifyContent: "center" }}
+                style={{ display: "flex", justifyContent: "center" ,minHeight: "500px" }}
               >
                 <div className="notResultBox">
-                  <div style={{ minHeight: "500px" }}>
+                  <div >
                     <h4>No wallet detected</h4>
                     <h5>To access your land you need to connect your wallet</h5>
                     <Button
