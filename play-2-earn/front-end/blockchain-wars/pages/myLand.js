@@ -366,7 +366,7 @@ const MyLand = ({
         const approvedAmount = await BMTInst.allowance(address, townV2);
         console.log("Approved amount:", approvedAmount.toString());
         setApprovedAm(approvedAmount);
-        setEnteredAmount(ethers.utils.formatEther(approvedAmount))
+        setEnteredAmount(ethers.utils.formatEther(approvedAmount));
         if (approvedAmount >= ethers.utils.parseEther("1")) {
           setIsApproved(true);
         }
@@ -446,9 +446,7 @@ const MyLand = ({
                   <p>
                     To update your account you may need to refresh the page.
                   </p>
-                  <Button variant="outline-dark" onClick={() => handleClose()}>
-                    Close
-                  </Button>
+                  \
                 </div>
               </div>
             )}
@@ -456,125 +454,122 @@ const MyLand = ({
         )}
 
         <Container>
-          {address != undefined && isFetching ? (
-            <div
-              style={{
-                display: "block",
-                marginTop: "1%",
-                height: "200px",
-                paddingTop: "15%",
-                width: "100%",
-                textAlign: "center",
-              }}
-            >
-              <h2
+          {address !== undefined && isFetching == true && (
+            <Col>
+              <div
                 style={{
-                  fontFamily: "monospace",
-                  fontSize: "0.9rem",
-                  color: "white",
+                  display: "block",
+                  marginTop: "1%",
+                  height: "200px",
+                  paddingTop: "15%",
+                  width: "100%",
+                  textAlign: "center",
                 }}
               >
-                Loading...
-              </h2>
-              <Spinner
-                animation="border"
-                role="status"
-                style={{ textAlign: "center", color: "white" }}
-              >
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-            </div>
-          ) : (
+                <h2
+                  style={{
+                    fontFamily: "monospace",
+                    fontSize: "0.9rem",
+                    color: "white",
+                  }}
+                >
+                  Loading...
+                </h2>
+                <Spinner
+                  animation="border"
+                  role="status"
+                  style={{ textAlign: "center", color: "white" }}
+                >
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              </div>
+            </Col>
+          )}
+          {address == undefined && isFetching == false && (
             <Row>
               <Col
                 md={{ span: 4, offset: 4 }}
                 style={{ display: "flex", justifyContent: "center" }}
               >
-                <div style={{ display: "block", textAlign: "center" }}>
-                  {address == undefined ? (
-                    <h4 className="defaultH4">
-                      Please{" "}
-                      <span
-                        style={{
-                          textDecoration: "underLine",
-                          color: "white",
-                          fontWeight: "bold",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => handleConnectWithMetamask()}
-                      >
-                        connect
-                      </span>{" "}
-                      your wallet.
-                    </h4>
-                  ) : (
-                    <>
-                      {Array.isArray(landObj) && landObj.length == 0 && (
-                        <>
-                          <h4 className="defaultH4">Not land found.</h4>
-                          <h4 className="defaultH4">
-                            To participate in game you need a land.
-                          </h4>
-                          <h4 className="defaultH4">
-                            <span
-                              onClick={() => {
-                                router.push("/map");
-                              }}
-                              style={{
-                                textDecoration: "underLine",
-                                cursor: "pointer",
-                                color: "white",
-                              }}
-                            >
-                              Explore
-                            </span>{" "}
-                            and mint your land.
-                          </h4>
-                        </>
-                      )}
-                    </>
-                  )}
+                <div className="notResultBox">
+                  <div style={{ minHeight: "500px" }}>
+                    <h4>No wallet detected</h4>
+                    <h5>To access your land you need to connect your wallet</h5>
+                    <Button
+                      variant="outline-light"
+                      onClick={() => handleConnectWithMetamask()}
+                    >
+                      Connect
+                    </Button>
+                  </div>
                 </div>
               </Col>
             </Row>
           )}
-          {/* </>
-          )} */}
-          {Array.isArray(landObj) && landObj.length > 0 && (
+          {isFetching == false &&
+          address !== undefined &&
+          Array.isArray(landObj) &&
+          landObj.length == 0 ? (
+            <Row>
+              <Col
+                md={{ span: 4, offset: 4 }}
+                style={{ display: "flex", justifyContent: "center" ,minHeight:"500px"}}
+              >
+                <div className="notResultBox">
+                <h4 >Not land found</h4>
+                <h5 >
+                  To participate in game you need a land.
+                </h5>
+                <h5 >
+                  <span
+                    onClick={() => {
+                      router.push("/map");
+                    }}
+                  >
+                    Explore
+                  </span>{" "}
+                  in map and mint your land.
+                </h5>
+                </div>
+              </Col>
+            </Row>
+          ) : (
             <>
-              <Row>
-                <Col>
-                  <div className="myLandHeader">
-                    <h2 className="defaultH2">Lands :</h2>
-                    <div className="myLandsContainer">
-                      {landObj.map((land, key) => (
-                        <React.Fragment key={land.coordinate + key}>
-                          {key == selectedLandIndex ? (
-                            <p className="selectedLandP">
-                              Land {land.coordinate}
-                            </p>
-                          ) : (
-                            <p onClick={() => setSelectedLandIndex(key)}>
-                              Land {land.coordinate}
-                            </p>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                    <div
-                      className="attackRouteButton"
-                      onClick={() => {
-                        router.push("/attack");
-                      }}
-                    >
-                      <h4>Attack</h4>
-                      <Image src="/War.png" width={50} height={40} />
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-              <Row style={{ marginTop: "3rem", minHeight: "300px" }}>
-                {/* <Col
+              {Array.isArray(landObj) && landObj.length > 0 && (
+                <>
+                  <Row>
+                    <Col>
+                      <div className="myLandHeader">
+                        <h2 className="defaultH2">Lands :</h2>
+                        <div className="myLandsContainer">
+                          {landObj.map((land, key) => (
+                            <React.Fragment key={land.coordinate + key}>
+                              {key == selectedLandIndex ? (
+                                <p className="selectedLandP">
+                                  Land {land.coordinate}
+                                </p>
+                              ) : (
+                                <p onClick={() => setSelectedLandIndex(key)}>
+                                  Land {land.coordinate}
+                                </p>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                        <div
+                          className="attackRouteButton"
+                          onClick={() => {
+                            router.push("/attack");
+                          }}
+                        >
+                          <h4>Attack</h4>
+                          <Image src="/War.png" width={50} height={40} />
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row style={{ marginTop: "3rem", minHeight: "300px" }}>
+                    {/* <Col
                         md="auto"
                       >
                         <div className="landCard">
@@ -585,88 +580,64 @@ const MyLand = ({
                           </div>
                         </div>
                       </Col> */}
-                <Col className="transferCol" sm={3}>
-                  <InputGroup className="mb-3" size="sm">
-  
-                    {approvedAm > 0 ? 
-                    <Form.Control
-                    placeholder="Enter amount..."
-                    aria-label="Amount (to the nearest dollar)"
-                      defaultValue={ethers.utils.formatEther(approvedAm)}
-                      disabled
-                  /> :                   <Form.Control
-                  placeholder="Enter amount..."
-                  aria-label="Amount (to the nearest dollar)"
-                  onChange={(e) => handleEnteredAmount(e.target.value)}
-
-                />}
-                    <Dropdown>
-                      <Dropdown.Toggle
-                        variant="light"
-                        id="dropdown-basic"
-                        className="selectDropdown"
-                        style={{ minWidth: "80px" }}
-                      >
-                        {commodityIndex == undefined
-                          ? "Select"
-                          : commodityItems[commodityIndex].name}
-                      </Dropdown.Toggle>
-
-                      <Dropdown.Menu>
-                        {commodityItems.map((commodity, key) => (
-                          <Dropdown.Item
-                            href="#/action-1"
-                            key={key}
-                            onClick={() => handleCommodityIndex(key)}
+                    <Col className="transferCol" sm={3}>
+                      <InputGroup className="mb-3" size="sm">
+                        {approvedAm > 0 ? (
+                          <Form.Control
+                            placeholder="Enter amount..."
+                            aria-label="Amount (to the nearest dollar)"
+                            defaultValue={ethers.utils.formatEther(approvedAm)}
+                            disabled
+                          />
+                        ) : (
+                          <Form.Control
+                            placeholder="Enter amount..."
+                            aria-label="Amount (to the nearest dollar)"
+                            onChange={(e) =>
+                              handleEnteredAmount(e.target.value)
+                            }
+                          />
+                        )}
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="light"
+                            id="dropdown-basic"
+                            className="selectDropdown"
+                            style={{ minWidth: "80px" }}
                           >
-                            <img
-                              src={commodity.image}
-                              className="dropdownTokenLogo"
-                            ></img>
-                            {commodity.name}
-                          </Dropdown.Item>
-                        ))}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </InputGroup>
-                  {/* <button className="sGreenButton">Deposit</button> */}
+                            {commodityIndex == undefined
+                              ? "Select"
+                              : commodityItems[commodityIndex].name}
+                          </Dropdown.Toggle>
 
-                  {/* <button className="sGreenButton">Split deposit</button> */}
-                  {approvedAm !== undefined && approvedAm == 0 ? 
-                    <Button
-                      variant="success"
-                      size="sm"
-                      style={{ marginRight: "10px" }}
-                      onClick={() => approve()}
-                    >
-                      Approve
-                    </Button> : <Button
-                      variant="success"
-                      size="sm"
-                      style={{ marginRight: "10px" }}
-                      disabled
-                    >
-                      Approved
-                    </Button>
-                  }
-                  {approvedAm !== undefined && approvedAm > 0 && (
-                    <>
-                      <Button
-                        variant="success"
-                        size="sm"
-                        style={{ marginRight: "10px" }}
-                        onClick={() => splitDeposit()}
-                      >
-                        Split deposit
-                      </Button>
-                      {commodityIndex !== undefined ? (
+                          <Dropdown.Menu>
+                            {commodityItems.map((commodity, key) => (
+                              <Dropdown.Item
+                                href="#/action-1"
+                                key={key}
+                                onClick={() => handleCommodityIndex(key)}
+                              >
+                                <img
+                                  src={commodity.image}
+                                  className="dropdownTokenLogo"
+                                ></img>
+                                {commodity.name}
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </InputGroup>
+                      {/* <button className="sGreenButton">Deposit</button> */}
+
+                      {/* <button className="sGreenButton">Split deposit</button> */}
+                      {approvedAm !== undefined && approvedAm == 0 ? (
                         <Button
                           variant="success"
                           size="sm"
                           style={{ marginRight: "10px" }}
-                          onClick={() => deposit()}
+                          onClick={() => approve()}
                         >
-                          Deposit
+                          Approve
                         </Button>
                       ) : (
                         <Button
@@ -675,12 +646,41 @@ const MyLand = ({
                           style={{ marginRight: "10px" }}
                           disabled
                         >
-                          Deposit
+                          Approved
                         </Button>
                       )}
-                    </>
-                  )}
-                       {isValidAmount == true ? (
+                      {approvedAm !== undefined && approvedAm > 0 && (
+                        <>
+                          <Button
+                            variant="success"
+                            size="sm"
+                            style={{ marginRight: "10px" }}
+                            onClick={() => splitDeposit()}
+                          >
+                            Split deposit
+                          </Button>
+                          {commodityIndex !== undefined ? (
+                            <Button
+                              variant="success"
+                              size="sm"
+                              style={{ marginRight: "10px" }}
+                              onClick={() => deposit()}
+                            >
+                              Deposit
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="success"
+                              size="sm"
+                              style={{ marginRight: "10px" }}
+                              disabled
+                            >
+                              Deposit
+                            </Button>
+                          )}
+                        </>
+                      )}
+                      {isValidAmount == true ? (
                         <Button
                           variant="success"
                           size="sm"
@@ -693,7 +693,7 @@ const MyLand = ({
                           Withdraw
                         </Button>
                       )}
-                  {/* <Button
+                      {/* <Button
                     variant="success"
                     size="sm"
                     style={{ marginRight: "10px" }}
@@ -773,492 +773,510 @@ const MyLand = ({
                       </Button>
                     </>
                   )} */}
-                </Col>
-                <Col className="BalTableCol" sm={3}>
-                  <Table striped bordered hover size="sm">
-                    <tbody>
-                      <tr>
-                        <td className="tableLine">
-                          <Image src="/Stone.png" width={25} height={25} />
-                        </td>
-                        <td className="tableLine">
-                          {landObj[selectedLandIndex].stone !== undefined
-                            ? landObj[selectedLandIndex].stone
-                            : "0"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tableLine">
-                          <Image src="/Wood.png" width={25} height={25} />
-                        </td>
-                        <td className="tableLine">
-                          {landObj[selectedLandIndex].wood !== undefined
-                            ? landObj[selectedLandIndex].wood
-                            : "0"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tableLine">
-                          <Image src="/Iron.png" width={25} height={25} />
-                        </td>
-                        <td className="tableLine">
-                          {landObj[selectedLandIndex].iron !== undefined
-                            ? landObj[selectedLandIndex].iron
-                            : "0"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tableLine">
-                          <Image src="/Food.png" width={25} height={25} />
-                        </td>
-                        <td className="tableLine">
-                          {landObj[selectedLandIndex].food !== undefined
-                            ? landObj[selectedLandIndex].food
-                            : "0"}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tableLine">
-                          <Image src="/Gold.png" width={25} height={25} />
-                        </td>
-                        <td className="tableLine">
-                          {landObj[selectedLandIndex].gold !== undefined
-                            ? landObj[selectedLandIndex].gold
-                            : "0"}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </Table>
-                </Col>
-                <Col className="BalTableCol" sm={3}>
-                  {Array.isArray(existedWarriors) &&
-                    existedWarriors.length > 0 &&
-                    Array.isArray(landObj[selectedLandIndex].armyBal) &&
-                    landObj[selectedLandIndex].armyBal.length > 0 && (
+                    </Col>
+                    <Col className="BalTableCol" sm={3}>
                       <Table striped bordered hover size="sm">
                         <tbody>
-                          {existedWarriors.map((warrior, key) => (
-                            <tr key={key}>
-                              <td className="tableLine">{warrior.name}</td>
-                              <td className="tableLine">
-                                {landObj[selectedLandIndex].armyBal[
-                                  key
-                                ].toString()}
-                              </td>
-                            </tr>
-                          ))}
+                          <tr>
+                            <td className="tableLine">
+                              <Image src="/Stone.png" width={25} height={25} />
+                            </td>
+                            <td className="tableLine">
+                              {landObj[selectedLandIndex].stone !== undefined
+                                ? landObj[selectedLandIndex].stone
+                                : "0"}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="tableLine">
+                              <Image src="/Wood.png" width={25} height={25} />
+                            </td>
+                            <td className="tableLine">
+                              {landObj[selectedLandIndex].wood !== undefined
+                                ? landObj[selectedLandIndex].wood
+                                : "0"}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="tableLine">
+                              <Image src="/Iron.png" width={25} height={25} />
+                            </td>
+                            <td className="tableLine">
+                              {landObj[selectedLandIndex].iron !== undefined
+                                ? landObj[selectedLandIndex].iron
+                                : "0"}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="tableLine">
+                              <Image src="/Food.png" width={25} height={25} />
+                            </td>
+                            <td className="tableLine">
+                              {landObj[selectedLandIndex].food !== undefined
+                                ? landObj[selectedLandIndex].food
+                                : "0"}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="tableLine">
+                              <Image src="/Gold.png" width={25} height={25} />
+                            </td>
+                            <td className="tableLine">
+                              {landObj[selectedLandIndex].gold !== undefined
+                                ? landObj[selectedLandIndex].gold
+                                : "0"}
+                            </td>
+                          </tr>
                         </tbody>
                       </Table>
-                    )}
-                  {existedWarriors == undefined &&
-                    landObj[selectedLandIndex].armyBal == undefined && (
-                      <h5 className="defaultH5" style={{ textAlign: "center" }}>
-                        {" "}
-                        Loading army...
-                      </h5>
-                    )}
-                </Col>
-                <Col className="workerStatusBox" sm={3}>
-                  {workerBusyTime > 0 && workerBusyTime != undefined ? (
-                    <div className="timer">
-                      <Spinner animation="grow" variant="success" />
-                      <h4>Wroker is busy.</h4>
-                      <h3>
-                        {`${Math.floor(workerBusyTime / 60)} hours ${
-                          workerBusyTime % 60
-                        } minutes`}
-                      </h3>
-                    </div>
-                  ) : (
-                    <>
-                      {workerBusyTime == undefined ? (
-                        ""
+                    </Col>
+                    <Col className="BalTableCol" sm={3}>
+                      {Array.isArray(existedWarriors) &&
+                        existedWarriors.length > 0 &&
+                        Array.isArray(landObj[selectedLandIndex].armyBal) &&
+                        landObj[selectedLandIndex].armyBal.length > 0 && (
+                          <Table striped bordered hover size="sm">
+                            <tbody>
+                              {existedWarriors.map((warrior, key) => (
+                                <tr key={key}>
+                                  <td className="tableLine">{warrior.name}</td>
+                                  <td className="tableLine">
+                                    {landObj[selectedLandIndex].armyBal[
+                                      key
+                                    ].toString()}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        )}
+                      {existedWarriors == undefined &&
+                        landObj[selectedLandIndex].armyBal == undefined && (
+                          <h5
+                            className="defaultH5"
+                            style={{ textAlign: "center" }}
+                          >
+                            {" "}
+                            Loading army...
+                          </h5>
+                        )}
+                    </Col>
+                    <Col className="workerStatusBox" sm={3}>
+                      {workerBusyTime > 0 && workerBusyTime != undefined ? (
+                        <div className="timer">
+                          <Spinner animation="grow" variant="success" />
+                          <h4>Wroker is busy.</h4>
+                          <h3>
+                            {`${Math.floor(workerBusyTime / 60)} hours ${
+                              workerBusyTime % 60
+                            } minutes`}
+                          </h3>
+                        </div>
                       ) : (
-                        <h4>Worker is ready.</h4>
+                        <>
+                          {workerBusyTime == undefined ? (
+                            ""
+                          ) : (
+                            <h4>Worker is ready.</h4>
+                          )}
+                        </>
                       )}
-                    </>
-                  )}
-                </Col>
-                {/* <Col sm={3} className="warHistoryCol">
+                    </Col>
+                    {/* <Col sm={3} className="warHistoryCol">
                   <h2>War history</h2>
                   <div className="warHistory">
                   <p>something</p>
                   </div>
 
                 </Col> */}
-              </Row>
+                  </Row>
 
-              <Row style={{ marginTop: "1rem" }}>
-                {/* <h3 className="defaultH4" style={{"textAlign":"center"}}> {workerBusyTime > 0 ? `Wroker will be free in ${workerBusyTime.toString()} minutes.` : "Worker is ready."}</h3> */}
-                {Array.isArray(ownedBuildings) && ownedBuildings.length > 0 ? (
-                  ownedBuildings.map((item, key) => (
-                    <Col key={key} md={{ span: 6, offset: 0 }}>
-                      <div className="listItemInfo">
-                        <Image src={item.imageURL} height={160} width={200} />
-                        <div className="infoColumn">
-                          <h2 className="defaultH2">{item.name}</h2>
-                          <h4>
-                            Revenue: {ethers.utils.formatEther(item.revenue)}
-                          </h4>
-                          <div>
-                            <Button
-                              variant="success"
-                              style={{ marginBottom: "0.5rem" }}
-                              onClick={() =>
-                                claimRev(ownedBuildings[key].tokenId)
-                              }
-                              size="sm"
-                            >
-                              Earn
-                            </Button>
-                          </div>
-                          <h4>level: {item.level.toString()}</h4>
-                          <div>
-                            {workerBusyTime !== undefined &&
-                            workerBusyTime > 0 ? (
-                              <Button
-                                variant="success"
-                                style={{}}
-                                size="sm"
-                                disabled
-                              >
-                                Upgrade
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="success"
-                                style={{}}
-                                onClick={() =>
-                                  upgradeBuilding(ownedBuildings[key].tokenId)
-                                }
-                                size="sm"
-                              >
-                                Upgrade
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  ))
-                ) : (
-                  <>
-                    {ownedBuildings !== undefined &&
-                    ownedBuildings.length == 0 ? (
-                      <Col
-                        md={{ span: 4, offset: 4 }}
-                        style={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <div
-                          style={{
-                            display: "block",
-                            textAlign: "center",
-                            height: "200px",
-                            padding: "10%",
-                          }}
-                        >
-                          <h4 className="defaultH4">
-                            Not Building found for land.
-                          </h4>
-                          <h4 className="defaultH4">
-                            Build your first building through the buildings list
-                            below.
-                          </h4>
-                        </div>
-                      </Col>
-                    ) : (
-                      <div
-                        style={{
-                          display: "block",
-                          marginTop: "1%",
-                          marginBottom: "1%",
-                          height: "200px",
-                          padding: "10%",
-                          width: "100%",
-                          textAlign: "center",
-                        }}
-                      >
-                        <h4 className="defaultH4">Loading buildings...</h4>
-                        <Spinner
-                          animation="border"
-                          role="status"
-                          style={{ textAlign: "center", color: "white" }}
-                        >
-                          <span className="visually-hidden">Loading...</span>
-                        </Spinner>
-                      </div>
-                    )}
-                  </>
-                )}
-              </Row>
-              <Row style={{ marginTop: "1rem" }}>
-                <Accordion>
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>Buildings</Accordion.Header>
-                    <Accordion.Body>
-                      <div className="listItemColumn">
-                        {Array.isArray(requiredBarracksCommodities) && (
-                          <Col>
-                            <div
-                              className="listItemInfo"
-                              style={{ backgroundColor: "transparent" }}
-                            >
-                              <Image
-                                src={barracksImg}
-                                width={200}
-                                height={160}
-                              />
-                              <div className="InfoColumn">
-                                <div style={{ padding: "0.5rem" }}>
-                                  <h2 className="defaultH2">
-                                    Barracks{" "}
-                                    {barracksLevel !== undefined &&
-                                      ` (level: ${barracksLevel.toString()})`}
-                                  </h2>
-                                </div>
-                                <div className="commodityBalance">
-                                  <Image
-                                    src="/Stone.png"
-                                    className="commodityLogo"
-                                    height={25}
-                                    width={25}
-                                  />
-                                  <p>
-                                    {convertedCommodityAmount(
-                                      requiredBarracksCommodities[0]
-                                    )}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <Image
-                                    src="/Wood.png"
-                                    className="commodityLogo"
-                                    height={25}
-                                    width={25}
-                                  />
-                                  <p>
-                                    {convertedCommodityAmount(
-                                      requiredBarracksCommodities[1]
-                                    )}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <Image
-                                    src="/Iron.png"
-                                    className="commodityLogo"
-                                    height={25}
-                                    width={25}
-                                  />
-                                  <p>
-                                    {convertedCommodityAmount(
-                                      requiredBarracksCommodities[2]
-                                    )}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <Image
-                                    src="/Food.png"
-                                    className="commodityLogo"
-                                    height={25}
-                                    width={25}
-                                  />
-                                  <p>
-                                    {convertedCommodityAmount(
-                                      requiredBarracksCommodities[4]
-                                    )}
-                                  </p>
-                                </div>
-                                <div className="commodityBalance">
-                                  <Image
-                                    src="/Gold.png"
-                                    className="commodityLogo"
-                                    height={25}
-                                    width={25}
-                                  />
-                                  <p>
-                                    {convertedCommodityAmount(
-                                      requiredBarracksCommodities[3]
-                                    )}
-                                  </p>
-                                </div>
+                  <Row style={{ marginTop: "1rem" }}>
+                    {/* <h3 className="defaultH4" style={{"textAlign":"center"}}> {workerBusyTime > 0 ? `Wroker will be free in ${workerBusyTime.toString()} minutes.` : "Worker is ready."}</h3> */}
+                    {Array.isArray(ownedBuildings) &&
+                    ownedBuildings.length > 0 ? (
+                      ownedBuildings.map((item, key) => (
+                        <Col key={key} md={{ span: 6, offset: 0 }}>
+                          <div className="listItemInfo">
+                            <Image
+                              src={item.imageURL}
+                              height={160}
+                              width={200}
+                            />
+                            <div className="infoColumn">
+                              <h2 className="defaultH2">{item.name}</h2>
+                              <h4>
+                                Revenue:{" "}
+                                {ethers.utils.formatEther(item.revenue)}
+                              </h4>
+                              <div>
+                                <Button
+                                  variant="success"
+                                  style={{ marginBottom: "0.5rem" }}
+                                  onClick={() =>
+                                    claimRev(ownedBuildings[key].tokenId)
+                                  }
+                                  size="sm"
+                                >
+                                  Earn
+                                </Button>
                               </div>
-                              <div className="InfoColumn">
-                                {Number(landObj[selectedLandIndex].stone) <=
-                                  convertedCommodityAmount(
-                                    requiredBarracksCommodities[0]
-                                  ) ||
-                                Number(landObj[selectedLandIndex].wood) <=
-                                  convertedCommodityAmount(
-                                    requiredBarracksCommodities[1]
-                                  ) ||
-                                Number(landObj[selectedLandIndex].iron) <=
-                                  convertedCommodityAmount(
-                                    requiredBarracksCommodities[2]
-                                  ) ||
-                                Number(landObj[selectedLandIndex].food) <=
-                                  convertedCommodityAmount(
-                                    requiredBarracksCommodities[4]
-                                  ) ||
-                                Number(landObj[selectedLandIndex].gold) <=
-                                  convertedCommodityAmount(
-                                    requiredBarracksCommodities[3]
-                                  ) ||
+                              <h4>level: {item.level.toString()}</h4>
+                              <div>
+                                {workerBusyTime !== undefined &&
                                 workerBusyTime > 0 ? (
-                                  <Button variant="success" disabled>
+                                  <Button
+                                    variant="success"
+                                    style={{}}
+                                    size="sm"
+                                    disabled
+                                  >
                                     Upgrade
                                   </Button>
                                 ) : (
-                                  // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
                                   <Button
-                                    // size="sm"
-                                    style={{ bottom: "0px" }}
                                     variant="success"
-                                    onClick={() => upgradeBarracks()}
+                                    style={{}}
+                                    onClick={() =>
+                                      upgradeBuilding(
+                                        ownedBuildings[key].tokenId
+                                      )
+                                    }
+                                    size="sm"
                                   >
                                     Upgrade
                                   </Button>
                                 )}
                               </div>
                             </div>
+                          </div>
+                        </Col>
+                      ))
+                    ) : (
+                      <>
+                        {ownedBuildings !== undefined &&
+                        ownedBuildings.length == 0 ? (
+                          <Col
+                            md={{ span: 4, offset: 4 }}
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "block",
+                                textAlign: "center",
+                                height: "200px",
+                                padding: "10%",
+                              }}
+                            >
+                              <h4 className="defaultH4">
+                                Not Building found for land.
+                              </h4>
+                              <h4 className="defaultH4">
+                                Build your first building through the buildings
+                                list below.
+                              </h4>
+                            </div>
                           </Col>
+                        ) : (
+                          <div
+                            style={{
+                              display: "block",
+                              marginTop: "1%",
+                              marginBottom: "1%",
+                              height: "200px",
+                              padding: "10%",
+                              width: "100%",
+                              textAlign: "center",
+                            }}
+                          >
+                            <h4 className="defaultH4">Loading buildings...</h4>
+                            <Spinner
+                              animation="border"
+                              role="status"
+                              style={{ textAlign: "center", color: "white" }}
+                            >
+                              <span className="visually-hidden">
+                                Loading...
+                              </span>
+                            </Spinner>
+                          </div>
                         )}
-                        {Array.isArray(buildings) &&
-                          buildings.map((item, key) => (
-                            <Col key={key}>
-                              <div className="listItemInfo">
-                                <Image
-                                  src={buildingsImageSources[key]}
-                                  height={160}
-                                  width={200}
-                                />
-                                <div className="InfoColumn">
-                                  <div style={{ padding: "0.5rem" }}>
-                                    <h2 className="defaultH2">
-                                      {item.buildingName}
-                                    </h2>
+                      </>
+                    )}
+                  </Row>
+                  <Row style={{ marginTop: "1rem" }}>
+                    <Accordion>
+                      <Accordion.Item eventKey="0">
+                        <Accordion.Header>Buildings</Accordion.Header>
+                        <Accordion.Body>
+                          <div className="listItemColumn">
+                            {Array.isArray(requiredBarracksCommodities) && (
+                              <Col>
+                                <div
+                                  className="listItemInfo"
+                                  style={{ backgroundColor: "transparent" }}
+                                >
+                                  <Image
+                                    src={barracksImg}
+                                    width={200}
+                                    height={160}
+                                  />
+                                  <div className="InfoColumn">
+                                    <div style={{ padding: "0.5rem" }}>
+                                      <h2 className="defaultH2">
+                                        Barracks{" "}
+                                        {barracksLevel !== undefined &&
+                                          ` (level: ${barracksLevel.toString()})`}
+                                      </h2>
+                                    </div>
+                                    <div className="commodityBalance">
+                                      <Image
+                                        src="/Stone.png"
+                                        className="commodityLogo"
+                                        height={25}
+                                        width={25}
+                                      />
+                                      <p>
+                                        {convertedCommodityAmount(
+                                          requiredBarracksCommodities[0]
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div className="commodityBalance">
+                                      <Image
+                                        src="/Wood.png"
+                                        className="commodityLogo"
+                                        height={25}
+                                        width={25}
+                                      />
+                                      <p>
+                                        {convertedCommodityAmount(
+                                          requiredBarracksCommodities[1]
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div className="commodityBalance">
+                                      <Image
+                                        src="/Iron.png"
+                                        className="commodityLogo"
+                                        height={25}
+                                        width={25}
+                                      />
+                                      <p>
+                                        {convertedCommodityAmount(
+                                          requiredBarracksCommodities[2]
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div className="commodityBalance">
+                                      <Image
+                                        src="/Food.png"
+                                        className="commodityLogo"
+                                        height={25}
+                                        width={25}
+                                      />
+                                      <p>
+                                        {convertedCommodityAmount(
+                                          requiredBarracksCommodities[4]
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div className="commodityBalance">
+                                      <Image
+                                        src="/Gold.png"
+                                        className="commodityLogo"
+                                        height={25}
+                                        width={25}
+                                      />
+                                      <p>
+                                        {convertedCommodityAmount(
+                                          requiredBarracksCommodities[3]
+                                        )}
+                                      </p>
+                                    </div>
                                   </div>
-                                  <div className="commodityBalance">
+                                  <div className="InfoColumn">
+                                    {Number(landObj[selectedLandIndex].stone) <=
+                                      convertedCommodityAmount(
+                                        requiredBarracksCommodities[0]
+                                      ) ||
+                                    Number(landObj[selectedLandIndex].wood) <=
+                                      convertedCommodityAmount(
+                                        requiredBarracksCommodities[1]
+                                      ) ||
+                                    Number(landObj[selectedLandIndex].iron) <=
+                                      convertedCommodityAmount(
+                                        requiredBarracksCommodities[2]
+                                      ) ||
+                                    Number(landObj[selectedLandIndex].food) <=
+                                      convertedCommodityAmount(
+                                        requiredBarracksCommodities[4]
+                                      ) ||
+                                    Number(landObj[selectedLandIndex].gold) <=
+                                      convertedCommodityAmount(
+                                        requiredBarracksCommodities[3]
+                                      ) ||
+                                    workerBusyTime > 0 ? (
+                                      <Button variant="success" disabled>
+                                        Upgrade
+                                      </Button>
+                                    ) : (
+                                      // <button className="sGreenButton" onClick={() => upgradeBarracks(key)}>Build</button>
+                                      <Button
+                                        // size="sm"
+                                        style={{ bottom: "0px" }}
+                                        variant="success"
+                                        onClick={() => upgradeBarracks()}
+                                      >
+                                        Upgrade
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              </Col>
+                            )}
+                            {Array.isArray(buildings) &&
+                              buildings.map((item, key) => (
+                                <Col key={key}>
+                                  <div className="listItemInfo">
                                     <Image
-                                      src="/Stone.png"
-                                      className="commodityLogo"
-                                      height={25}
-                                      width={25}
+                                      src={buildingsImageSources[key]}
+                                      height={160}
+                                      width={200}
                                     />
-                                    <p>
-                                      {ethers.utils.formatEther(
-                                        item.requiredStone
-                                      )}
-                                    </p>
-                                  </div>
-                                  <div className="commodityBalance">
-                                    <Image
-                                      src="/Wood.png"
-                                      className="commodityLogo"
-                                      height={25}
-                                      width={25}
-                                    />
-                                    <p>
-                                      {ethers.utils.formatEther(
-                                        item.requiredWood
-                                      )}
-                                    </p>
-                                  </div>
-                                  <div className="commodityBalance">
-                                    <Image
-                                      src="/Iron.png"
-                                      className="commodityLogo"
-                                      height={25}
-                                      width={25}
-                                    />
-                                    <p>
-                                      {ethers.utils.formatEther(
-                                        item.requiredIron
-                                      )}
-                                    </p>
-                                  </div>
+                                    <div className="InfoColumn">
+                                      <div style={{ padding: "0.5rem" }}>
+                                        <h2 className="defaultH2">
+                                          {item.buildingName}
+                                        </h2>
+                                      </div>
+                                      <div className="commodityBalance">
+                                        <Image
+                                          src="/Stone.png"
+                                          className="commodityLogo"
+                                          height={25}
+                                          width={25}
+                                        />
+                                        <p>
+                                          {ethers.utils.formatEther(
+                                            item.requiredStone
+                                          )}
+                                        </p>
+                                      </div>
+                                      <div className="commodityBalance">
+                                        <Image
+                                          src="/Wood.png"
+                                          className="commodityLogo"
+                                          height={25}
+                                          width={25}
+                                        />
+                                        <p>
+                                          {ethers.utils.formatEther(
+                                            item.requiredWood
+                                          )}
+                                        </p>
+                                      </div>
+                                      <div className="commodityBalance">
+                                        <Image
+                                          src="/Iron.png"
+                                          className="commodityLogo"
+                                          height={25}
+                                          width={25}
+                                        />
+                                        <p>
+                                          {ethers.utils.formatEther(
+                                            item.requiredIron
+                                          )}
+                                        </p>
+                                      </div>
 
-                                  <div className="commodityBalance">
-                                    <Image
-                                      src="/Food.png"
-                                      className="commodityLogo"
-                                      height={25}
-                                      width={25}
-                                    />
-                                    <p>
-                                      {ethers.utils.formatEther(
-                                        item.requiredFood
+                                      <div className="commodityBalance">
+                                        <Image
+                                          src="/Food.png"
+                                          className="commodityLogo"
+                                          height={25}
+                                          width={25}
+                                        />
+                                        <p>
+                                          {ethers.utils.formatEther(
+                                            item.requiredFood
+                                          )}
+                                        </p>
+                                      </div>
+                                      <div className="commodityBalance">
+                                        <Image
+                                          src="/Gold.png"
+                                          className="commodityLogo"
+                                          height={25}
+                                          width={25}
+                                        />
+                                        <p>
+                                          {ethers.utils.formatEther(
+                                            item.requiredGold
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="InfoColumn">
+                                      <p>Difficulty: 0%</p>
+                                      {Number(
+                                        landObj[selectedLandIndex].stone
+                                      ) <=
+                                        Number(
+                                          ethers.utils.formatEther(
+                                            item.requiredStone
+                                          )
+                                        ) ||
+                                      Number(landObj[selectedLandIndex].wood) <=
+                                        Number(
+                                          ethers.utils.formatEther(
+                                            item.requiredWood
+                                          )
+                                        ) ||
+                                      Number(landObj[selectedLandIndex].iron) <=
+                                        Number(
+                                          ethers.utils.formatEther(
+                                            item.requiredIron
+                                          )
+                                        ) ||
+                                      Number(landObj[selectedLandIndex].gold) <=
+                                        Number(
+                                          ethers.utils.formatEther(
+                                            item.requiredGold
+                                          )
+                                        ) ||
+                                      Number(landObj[selectedLandIndex].food) <=
+                                        Number(
+                                          ethers.utils.formatEther(
+                                            item.requiredFood
+                                          )
+                                        ) ||
+                                      workerBusyTime > 0 ? (
+                                        // <button className="sGreenButton" disabled>Build</button>
+                                        <Button variant="success" disabled>
+                                          Build
+                                        </Button>
+                                      ) : (
+                                        // <button className="sGreenButton" onClick={() => mintBuilding(key)}>Build</button>
+                                        <Button
+                                          style={{ bottom: "0px" }}
+                                          onClick={() => mintBuilding(key)}
+                                          variant="success"
+                                        >
+                                          Build
+                                        </Button>
                                       )}
-                                    </p>
+                                    </div>
                                   </div>
-                                  <div className="commodityBalance">
-                                    <Image
-                                      src="/Gold.png"
-                                      className="commodityLogo"
-                                      height={25}
-                                      width={25}
-                                    />
-                                    <p>
-                                      {ethers.utils.formatEther(
-                                        item.requiredGold
-                                      )}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="InfoColumn">
-                                  <p>Difficulty: 0%</p>
-                                  {Number(landObj[selectedLandIndex].stone) <=
-                                    Number(
-                                      ethers.utils.formatEther(
-                                        item.requiredStone
-                                      )
-                                    ) ||
-                                  Number(landObj[selectedLandIndex].wood) <=
-                                    Number(
-                                      ethers.utils.formatEther(
-                                        item.requiredWood
-                                      )
-                                    ) ||
-                                  Number(landObj[selectedLandIndex].iron) <=
-                                    Number(
-                                      ethers.utils.formatEther(
-                                        item.requiredIron
-                                      )
-                                    ) ||
-                                  Number(landObj[selectedLandIndex].gold) <=
-                                    Number(
-                                      ethers.utils.formatEther(
-                                        item.requiredGold
-                                      )
-                                    ) ||
-                                  Number(landObj[selectedLandIndex].food) <=
-                                    Number(
-                                      ethers.utils.formatEther(
-                                        item.requiredFood
-                                      )
-                                    ) ||
-                                  workerBusyTime > 0 ? (
-                                    // <button className="sGreenButton" disabled>Build</button>
-                                    <Button variant="success" disabled>
-                                      Build
-                                    </Button>
-                                  ) : (
-                                    // <button className="sGreenButton" onClick={() => mintBuilding(key)}>Build</button>
-                                    <Button
-                                      style={{ bottom: "0px" }}
-                                      onClick={() => mintBuilding(key)}
-                                      variant="success"
-                                    >
-                                      Build
-                                    </Button>
-                                  )}
-                                </div>
-                              </div>
-                            </Col>
-                          ))}
-                      </div>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                  {/* <Accordion.Item eventKey="1" className="accordionBackground">
+                                </Col>
+                              ))}
+                          </div>
+                        </Accordion.Body>
+                      </Accordion.Item>
+                      {/* <Accordion.Item eventKey="1" className="accordionBackground">
                     <Accordion.Header className="accordion">
                       Barracks{" "}
                     </Accordion.Header>
@@ -1334,72 +1352,76 @@ const MyLand = ({
                       </div>
                     </Accordion.Body>
                   </Accordion.Item> */}
-                </Accordion>
-              </Row>
-              <Row style={{ marginTop: "3rem" }}>
-                {Array.isArray(existedWarriors) &&
-                  existedWarriors.map((warrior, key) => (
-                    <Col className="warriorCard" key={key} sm={2}>
-                      <Image
-                        src={warriorsImageSources[key]}
-                        width={200}
-                        height={300}
-                      />
-                      <div className="warriorInfoBox">
-                        <div style={{ padding: "0.5rem" }}>
-                          <h2>{warrior.name}</h2>
-                        </div>
-                        <p>Attack power: {warrior.attackPower}</p>
-                        <p>Defence power: {warrior.defPower}</p>
-                        <p>HP: {warrior.hp}</p>
-                        <div>
-                          <p>
-                            Price:{" "}
-                            <span>
-                              {ethers.utils.formatEther(warrior.price)}{" "}
-                              <Image
-                                src="/Gold.png"
-                                className="commodityLogo"
-                                width={25}
-                                height={25}
-                              />
-                            </span>
-                          </p>
-                        </div>
-                        {barracksLevel >= warrior.requiredLevel ? (
-                          <>
-                            <InputGroup size="sm">
-                              <Form.Control
-                                placeholder="Enter amount..."
-                                aria-label="Amount (to the nearest dollar)"
-                                onChange={(e) => setInputValue(e.target.value)}
-                              />
-                              <Button
-                                variant="outline-light"
-                                onClick={() => recruit(key)}
-                              >
-                                Train
-                              </Button>
-                            </InputGroup>
-                          </>
-                        ) : (
-                          <>
-                            <InputGroup size="sm">
-                              <Form.Control
-                                placeholder={`Barracks level ${warrior.requiredLevel.toString()}`}
-                                aria-label="Amount (to the nearest dollar)"
-                                disabled
-                              />
-                              <Button variant="outline-light" disabled>
-                                Train
-                              </Button>
-                            </InputGroup>
-                          </>
-                        )}
-                      </div>
-                    </Col>
-                  ))}
-              </Row>
+                    </Accordion>
+                  </Row>
+                  <Row style={{ marginTop: "3rem" }}>
+                    {Array.isArray(existedWarriors) &&
+                      existedWarriors.map((warrior, key) => (
+                        <Col className="warriorCard" key={key} sm={2}>
+                          <Image
+                            src={warriorsImageSources[key]}
+                            width={200}
+                            height={300}
+                          />
+                          <div className="warriorInfoBox">
+                            <div style={{ padding: "0.5rem" }}>
+                              <h2>{warrior.name}</h2>
+                            </div>
+                            <p>Attack power: {warrior.attackPower}</p>
+                            <p>Defence power: {warrior.defPower}</p>
+                            <p>HP: {warrior.hp}</p>
+                            <div>
+                              <p>
+                                Price:{" "}
+                                <span>
+                                  {ethers.utils.formatEther(warrior.price)}{" "}
+                                  <Image
+                                    src="/Gold.png"
+                                    className="commodityLogo"
+                                    width={25}
+                                    height={25}
+                                  />
+                                </span>
+                              </p>
+                            </div>
+                            {barracksLevel >= warrior.requiredLevel ? (
+                              <>
+                                <InputGroup size="sm">
+                                  <Form.Control
+                                    placeholder="Enter amount..."
+                                    aria-label="Amount (to the nearest dollar)"
+                                    onChange={(e) =>
+                                      setInputValue(e.target.value)
+                                    }
+                                  />
+                                  <Button
+                                    variant="outline-light"
+                                    onClick={() => recruit(key)}
+                                  >
+                                    Train
+                                  </Button>
+                                </InputGroup>
+                              </>
+                            ) : (
+                              <>
+                                <InputGroup size="sm">
+                                  <Form.Control
+                                    placeholder={`Barracks level ${warrior.requiredLevel.toString()}`}
+                                    aria-label="Amount (to the nearest dollar)"
+                                    disabled
+                                  />
+                                  <Button variant="outline-light" disabled>
+                                    Train
+                                  </Button>
+                                </InputGroup>
+                              </>
+                            )}
+                          </div>
+                        </Col>
+                      ))}
+                  </Row>
+                </>
+              )}
             </>
           )}
         </Container>

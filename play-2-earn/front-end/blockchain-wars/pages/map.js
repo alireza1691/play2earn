@@ -245,9 +245,6 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                   <p>
                     To update your account you may need to refresh the page.
                   </p>
-                  <Button variant="outline-dark" onClick={() => handleClose()}>
-                    Close
-                  </Button>
                 </div>
               </div>
             )}

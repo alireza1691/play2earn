@@ -1161,6 +1161,34 @@ justify-content: flex-start;
 .faucetBox h2 {
   font-style: italic;
 }
+.notResultBox {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif !important;
+  padding: 1rem;
+  background-color: var(--darkGreen);
+  border-radius: 1rem;
+  color: white;
+
+  box-shadow: 0 0 1rem 0.3rem rgba(9, 9, 8, 0.9);
+  text-align: center;
+  margin-block: auto;
+}
+.notResultBox h4 {
+  font-size: 1.3rem;
+}
+.notResultBox h5 {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+
+}
+.notResultBox span {
+  text-decoration: underline;
+  color: white;
+  cursor: pointer;
+}
+.notResultBox span:hover {
+  color: greenyellow !important;
+
+}
 @media (max-width: 767px) {
   .warriorCard {
     margin-top: 1rem;
