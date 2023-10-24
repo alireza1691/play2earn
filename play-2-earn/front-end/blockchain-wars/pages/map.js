@@ -325,7 +325,7 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
                   <>
                     <Card.Text>Land is available to mint </Card.Text>
                     <Card.Text>
-                      Price : {ethers.utils.formatEther(landPrice)}
+                      Price : {ethers.utils.formatEther(landPrice)} ETH
                     </Card.Text>
                   </>
                 )}

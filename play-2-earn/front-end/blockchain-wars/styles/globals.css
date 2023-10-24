@@ -12,6 +12,8 @@
 }
 html,
 body {
+
+  background-color: #000000;
   padding: 0;
   margin: 0;
   font-family: "Inter", sans-serif;
@@ -1069,7 +1071,7 @@ justify-content: flex-start;
 
 .documentation h2 {
   font-size: 1.5rem;
-  border-bottom: 1px white solid;
+  border-bottom: 1px rgb(163, 163, 163) solid;
   padding: 1rem;
   margin-bottom: 3rem;
 }
@@ -1079,16 +1081,27 @@ justify-content: flex-start;
   padding: 0.5rem;
   cursor: pointer;
 }
+.documentation h4 {
+  font-size: 1.8rem;
+  /* font-style: italic; */
+  margin-left: 2%;
+  margin-bottom: 1rem;
+}
+.documentation h5 {
+  font-size: 0.9rem;
+
+}
 .documentation h3:hover {
   background-color: rgb(58, 58, 58);
 }
 .sidebar {
   padding: 1rem;
   display: block;
-  border-right: 2px solid white;
+  border-right: 1px solid rgb(163, 163, 163);
   min-height: 1024px;
 }
 .sidebarContent {
+  padding: 2rem;
 }
 .mainPageCard {
   border-radius: 1rem;
@@ -1153,7 +1166,8 @@ justify-content: flex-start;
   background-color: var(--greenTransparent);
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 0 2rem 0.5rem rgba(202, 243, 140, 0.3);
+  /* box-shadow: 0 0 1rem 0.5rem rgba(202, 243, 140, 0.3); */
+  border: 2px rgb(42, 42, 42) solid;
   width: fit-content;
   margin-left: auto;
   margin-right: auto;

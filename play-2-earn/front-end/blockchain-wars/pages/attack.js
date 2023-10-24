@@ -270,13 +270,16 @@ const Attack = ({
                     </Dropdown.Item>
                   ))
                 ) : (
+                  <>
                   <Dropdown.Item
                     style={{ fontFamily: "verdana", fontSize: "0.8rem" }}
                     href="#/action-3"
                     disabled
                   >
-                    Loading lands...
+                    Not land found
                   </Dropdown.Item>
+        
+                  </>
                 )}
               </DropdownButton>
               <h4 className="defaultH4" style={{ marginTop: "15px" }}>
