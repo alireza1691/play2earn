@@ -22,7 +22,7 @@ const documentation = () => {
           <h3 onClick={() => setCompIndex(5)}>Tokenomics</h3> */}
           <h3 onClick={() => setCompIndex(5)}>Contracts</h3>
         </Col>
-        <Col sm={9} className="sidebarContent">
+        {/* <Col sm={9} className="sidebarContent">
           {compIndex == 0 && (
             <>
               <h4>What is Blockdom?</h4>
@@ -153,7 +153,7 @@ const documentation = () => {
               <h5>Contracts info will add here soon.</h5>
             </>
           )}
-        </Col>
+        </Col> */}
       </Row>
       {/* </Row>
     </Container> */}
