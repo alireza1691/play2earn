@@ -49,7 +49,7 @@ const documentation = () => {
               </h5>
               <h4>Buildings</h4>
               <h5>
-                <br></br> <br></br>There are different types of buildings, each
+                There are different types of buildings, each
                 of which extracts a type of goods for you, which includes stone,
                 wood, iron, gold, and food. Each of these buildings may require
                 some of each of these goods to be built. Also, the buildings can
