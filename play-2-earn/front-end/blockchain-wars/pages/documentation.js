@@ -4,7 +4,7 @@ import { useState } from "react";
 // import Container from 'react-bootstrap'
 // import Row from 'react-bootstrap'
 
-const documentation = () => {
+const Docs = () => {
   const [compIndex, setCompIndex] = useState(0);
 
   return (
@@ -161,4 +161,4 @@ const documentation = () => {
   );
 };
 
-export default documentation;
+export default Docs;
