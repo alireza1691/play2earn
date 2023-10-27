@@ -1422,6 +1422,21 @@ justify-content: flex-start;
   /* .card {
     background: white !important;
   } */
+  .sidebar {
+    min-height: 300px;
+    text-align: center;
+    border-bottom: 1px solid rgb(58, 58, 58);
+  }
+  .documentation h2{
+    font-size: 1.8rem;
+    border-bottom: 2px solid rgb(73, 73, 73);
+  }
+  .documentation h3{
+    font-size: 1.5rem;
+  }
+  .documentation h4{
+    font-size: 1.6rem;
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

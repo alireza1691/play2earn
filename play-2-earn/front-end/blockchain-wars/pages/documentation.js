@@ -22,7 +22,7 @@ const Docs = () => {
           <h3 onClick={() => setCompIndex(5)}>Tokenomics</h3> */}
           <h3 onClick={() => setCompIndex(5)}>Contracts</h3>
         </Col>
-        {/* <Col sm={9} className="sidebarContent">
+        <Col sm={9} className="sidebarContent">
           {compIndex == 0 && (
             <>
               <h4>What is Blockdom?</h4>
@@ -34,7 +34,7 @@ const Docs = () => {
                 depends on these assets.<br></br>
                 <br></br>
                 The important feature of this game is that with the entry of
-                each user, the amount of cash available in the game increases
+                each user, the amount of liquidity and the value of the game increases
                 and makes the assets of other users more valuable. Also, by
                 spending money to build assets such as buildings and armies, the
                 user may increase this trend in the long term.
@@ -66,12 +66,16 @@ const Docs = () => {
                 the cost (goods). This is one of our solutions to maintain the
                 value of the token BMT, which we will discuss more in the
                 Tokenamies section.
+                <br></br>
+                <br></br>
+                Buildings of V1:
+                
               </h5>
 
               <h4>Earning</h4>
               <h5>
                 The goods that are extracted from these buildings can be
-                converted into BNT tokens and users can earn money by selling
+                converted into BMT tokens and users can earn money by selling
                 them.<br></br> Also, users can use the extracted goods to
                 upgrade new buildings or build an army, which can increase their
                 income during the game.
@@ -153,7 +157,7 @@ const Docs = () => {
               <h5>Contracts info will add here soon.</h5>
             </>
           )}
-        </Col> */}
+        </Col>
       </Row>
       {/* </Row>
     </Container> */}
