@@ -69,7 +69,7 @@ const Docs = () => {
                 <br></br>
                 <br></br>
                 Buildings of V1:
-                
+
               </h5>
 
               <h4>Earning</h4>
@@ -87,7 +87,7 @@ const Docs = () => {
                 users to build a more diverse and powerful army.<br></br>
                 <br></br> By building an army, users can attack another user and
                 in case of victory, according to the result of this war, they
-                can loot some of the defender's goods.<br></br> This feature not
+                can loot some of the defender&apos;s goods.<br></br> This feature not
                 only increases the excitement and enjoyment of the game but also
                 makes inactive users or inappropriate users cannot earn money
                 from the game.<br></br>
