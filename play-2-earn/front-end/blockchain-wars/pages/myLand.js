@@ -362,7 +362,9 @@ const MyLand = ({
         );
         console.log("Required barracks coms:", requiredComs);
         setRequiredBarracksCommodities(requiredComs);
-        const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, signer);
+        const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, provider);
+        console.log(BMTInst);
+        console.log(address, townV2);
         const approvedAmount = await BMTInst.allowance(address, townV2);
         console.log("Approved amount:", approvedAmount.toString());
         setApprovedAm(approvedAmount);
@@ -563,7 +565,7 @@ const MyLand = ({
                           }}
                         >
                           <h4>Attack</h4>
-                          <Image src="/War.png" width={50} height={40} />
+                          <Image src="/War.png" width={50} height={40} alt="Warlogo" />
                         </div>
                       </div>
                     </Col>
@@ -779,7 +781,7 @@ const MyLand = ({
                         <tbody>
                           <tr>
                             <td className="tableLine">
-                              <Image src="/Stone.png" width={25} height={25} />
+                              <Image src="/Stone.png" width={25} height={25} alt="Goodslogo"/>
                             </td>
                             <td className="tableLine">
                               {landObj[selectedLandIndex].stone !== undefined
@@ -789,7 +791,7 @@ const MyLand = ({
                           </tr>
                           <tr>
                             <td className="tableLine">
-                              <Image src="/Wood.png" width={25} height={25} />
+                              <Image src="/Wood.png" width={25} height={25} alt="Goodslogo" />
                             </td>
                             <td className="tableLine">
                               {landObj[selectedLandIndex].wood !== undefined
@@ -799,7 +801,7 @@ const MyLand = ({
                           </tr>
                           <tr>
                             <td className="tableLine">
-                              <Image src="/Iron.png" width={25} height={25} />
+                              <Image src="/Iron.png" width={25} height={25} alt="Goodslogo" />
                             </td>
                             <td className="tableLine">
                               {landObj[selectedLandIndex].iron !== undefined
@@ -809,7 +811,7 @@ const MyLand = ({
                           </tr>
                           <tr>
                             <td className="tableLine">
-                              <Image src="/Food.png" width={25} height={25} />
+                              <Image src="/Food.png" width={25} height={25} alt="Goodslogo" />
                             </td>
                             <td className="tableLine">
                               {landObj[selectedLandIndex].food !== undefined
@@ -819,7 +821,7 @@ const MyLand = ({
                           </tr>
                           <tr>
                             <td className="tableLine">
-                              <Image src="/Gold.png" width={25} height={25} />
+                              <Image src="/Gold.png" width={25} height={25} alt="Goodslogo" />
                             </td>
                             <td className="tableLine">
                               {landObj[selectedLandIndex].gold !== undefined
@@ -865,7 +867,7 @@ const MyLand = ({
                       {workerBusyTime > 0 && workerBusyTime != undefined ? (
                         <div className="timer">
                           <Spinner animation="grow" variant="success" />
-                          <h4>Wroker is busy.</h4>
+                          <h4>Worker is busy</h4>
                           <h3>
                             {`${Math.floor(workerBusyTime / 60)} hours ${
                               workerBusyTime % 60
@@ -902,6 +904,7 @@ const MyLand = ({
                               src={item.imageURL}
                               height={160}
                               width={200}
+                              alt="building"
                             />
                             <div className="infoColumn">
                               <h2 className="defaultH2">{item.name}</h2>
@@ -1023,6 +1026,7 @@ const MyLand = ({
                                     src={barracksImg}
                                     width={200}
                                     height={160}
+                                    alt="barracksImage"
                                   />
                                   <div className="InfoColumn">
                                     <div style={{ padding: "0.5rem" }}>
@@ -1038,6 +1042,7 @@ const MyLand = ({
                                         className="commodityLogo"
                                         height={25}
                                         width={25}
+                                        alt="GoodsIcon"
                                       />
                                       <p>
                                         {convertedCommodityAmount(
@@ -1051,6 +1056,7 @@ const MyLand = ({
                                         className="commodityLogo"
                                         height={25}
                                         width={25}
+                                        alt="GoodsIcon"
                                       />
                                       <p>
                                         {convertedCommodityAmount(
@@ -1064,6 +1070,7 @@ const MyLand = ({
                                         className="commodityLogo"
                                         height={25}
                                         width={25}
+                                        alt="GoodsIcon"
                                       />
                                       <p>
                                         {convertedCommodityAmount(
@@ -1077,6 +1084,7 @@ const MyLand = ({
                                         className="commodityLogo"
                                         height={25}
                                         width={25}
+                                        alt="GoodsIcon"
                                       />
                                       <p>
                                         {convertedCommodityAmount(
@@ -1090,6 +1098,7 @@ const MyLand = ({
                                         className="commodityLogo"
                                         height={25}
                                         width={25}
+                                        alt="GoodsIcon"
                                       />
                                       <p>
                                         {convertedCommodityAmount(
@@ -1146,6 +1155,7 @@ const MyLand = ({
                                       src={buildingsImageSources[key]}
                                       height={160}
                                       width={200}
+                                      alt="buildingImage"
                                     />
                                     <div className="InfoColumn">
                                       <div style={{ padding: "0.5rem" }}>
@@ -1159,6 +1169,7 @@ const MyLand = ({
                                           className="commodityLogo"
                                           height={25}
                                           width={25}
+                                          alt="GoodsIcon"
                                         />
                                         <p>
                                           {ethers.utils.formatEther(
@@ -1172,6 +1183,7 @@ const MyLand = ({
                                           className="commodityLogo"
                                           height={25}
                                           width={25}
+                                          alt="GoodsIcon"
                                         />
                                         <p>
                                           {ethers.utils.formatEther(
@@ -1185,6 +1197,7 @@ const MyLand = ({
                                           className="commodityLogo"
                                           height={25}
                                           width={25}
+                                          alt="GoodsIcon"
                                         />
                                         <p>
                                           {ethers.utils.formatEther(
@@ -1199,6 +1212,7 @@ const MyLand = ({
                                           className="commodityLogo"
                                           height={25}
                                           width={25}
+                                          alt="GoodsIcon"
                                         />
                                         <p>
                                           {ethers.utils.formatEther(
@@ -1212,6 +1226,7 @@ const MyLand = ({
                                           className="commodityLogo"
                                           height={25}
                                           width={25}
+                                          alt="GoodsIcon"
                                         />
                                         <p>
                                           {ethers.utils.formatEther(
@@ -1362,6 +1377,7 @@ const MyLand = ({
                             src={warriorsImageSources[key]}
                             width={200}
                             height={300}
+                            alt="warriorImage"
                           />
                           <div className="warriorInfoBox">
                             <div style={{ padding: "0.5rem" }}>
@@ -1380,6 +1396,7 @@ const MyLand = ({
                                     className="commodityLogo"
                                     width={25}
                                     height={25}
+                                    alt="GoodsIcon"
                                   />
                                 </span>
                               </p>

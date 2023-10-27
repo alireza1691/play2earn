@@ -1,6 +1,8 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useState } from "react";
+import Table from "react-bootstrap/Table";
+
 // import Container from 'react-bootstrap'
 // import Row from 'react-bootstrap'
 
@@ -34,10 +36,10 @@ const Docs = () => {
                 depends on these assets.<br></br>
                 <br></br>
                 The important feature of this game is that with the entry of
-                each user, the amount of liquidity and the value of the game increases
-                and makes the assets of other users more valuable. Also, by
-                spending money to build assets such as buildings and armies, the
-                user may increase this trend in the long term.
+                each user, the amount of liquidity and the value of the game
+                increases and makes the assets of other users more valuable.
+                Also, by spending money to build assets such as buildings and
+                armies, the user may increase this trend in the long term.
               </h5>
 
               <h4>Land</h4>
@@ -49,12 +51,11 @@ const Docs = () => {
               </h5>
               <h4>Buildings</h4>
               <h5>
-                There are different types of buildings, each
-                of which extracts a type of goods for you, which includes stone,
-                wood, iron, gold, and food. Each of these buildings may require
-                some of each of these goods to be built. Also, the buildings can
-                be upgraded, and by upgrading, more goods will be extracted for
-                you.
+                There are different types of buildings, each of which extracts a
+                type of goods for you, which includes stone, wood, iron, gold,
+                and food. Each of these buildings may require some of each of
+                these goods to be built. Also, the buildings can be upgraded,
+                and by upgrading, more goods will be extracted for you.
                 <br></br>
                 <br></br>Another thing about constructing buildings is that
                 depending on the level of the building, a certain amount of time
@@ -66,12 +67,52 @@ const Docs = () => {
                 the cost (goods). This is one of our solutions to maintain the
                 value of the token BMT, which we will discuss more in the
                 Tokenamies section.
-                <br></br>
-                <br></br>
-                Buildings of V1:
-
               </h5>
+              <h5>Buildings of V1:</h5>
 
+          
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Building</th>
+                    <th>Extracted goods</th>
+                    <th>Extracted amount (level 1)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Stone mine</td>
+                    <td>Stone</td>
+                    <td>8 per day</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Wood lumber</td>
+                    <td>Wood</td>
+                    <td>8 per day</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Iron mine</td>
+                    <td>Iron</td>
+                    <td>8 per day</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Farm</td>
+                    <td>Food</td>
+                    <td>8 per day</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Gold mine</td>
+                    <td>Gold</td>
+                    <td>8 per day</td>
+                  </tr>
+                </tbody>
+              </Table>
               <h4>Earning</h4>
               <h5>
                 The goods that are extracted from these buildings can be
@@ -87,16 +128,16 @@ const Docs = () => {
                 users to build a more diverse and powerful army.<br></br>
                 <br></br> By building an army, users can attack another user and
                 in case of victory, according to the result of this war, they
-                can loot some of the defender&apos;s goods.<br></br> This feature not
-                only increases the excitement and enjoyment of the game but also
-                makes inactive users or inappropriate users cannot earn money
-                from the game.<br></br>
+                can loot some of the defender&apos;s goods.<br></br> This
+                feature not only increases the excitement and enjoyment of the
+                game but also makes inactive users or inappropriate users cannot
+                earn money from the game.<br></br>
                 <br></br>We consider this as an advantage of the game because if
                 all users make a profit, the supply of BMT will increase and in
-                the long run the price will decrease.<br></br><br></br> In summary, we can say
-                that this game is enjoyable and profitable for active users
-                without worrying about the price of BMT falling and reducing
-                their income.
+                the long run the price will decrease.<br></br>
+                <br></br> In summary, we can say that this game is enjoyable and
+                profitable for active users without worrying about the price of
+                BMT falling and reducing their income.
               </h5>
             </>
           )}
