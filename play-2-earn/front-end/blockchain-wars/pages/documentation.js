@@ -74,42 +74,42 @@ const Docs = () => {
               <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>#</th>
-                    <th>Building</th>
-                    <th>Extracted goods</th>
-                    <th>Extracted amount (level 1)</th>
+                    <th className="tableLine2">#</th>
+                    <th className="tableLine2">Building</th>
+                    <th className="tableLine2">Extracted goods</th>
+                    <th className="tableLine2">Extracted amount (level 1)</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody >
                   <tr>
-                    <td>1</td>
-                    <td>Stone mine</td>
-                    <td>Stone</td>
-                    <td>8 per day</td>
+                    <td className="tableLine2">1</td>
+                    <td className="tableLine2">Stone mine</td>
+                    <td className="tableLine2">Stone</td>
+                    <td className="tableLine2">8 per day</td>
                   </tr>
                   <tr>
-                    <td>2</td>
-                    <td>Wood lumber</td>
-                    <td>Wood</td>
-                    <td>8 per day</td>
+                    <td className="tableLine2">2</td>
+                    <td className="tableLine2">Wood lumber</td>
+                    <td className="tableLine2">Wood</td>
+                    <td className="tableLine2">8 per day</td>
                   </tr>
                   <tr>
-                    <td>3</td>
-                    <td>Iron mine</td>
-                    <td>Iron</td>
-                    <td>8 per day</td>
+                    <td className="tableLine2">3</td>
+                    <td className="tableLine2">Iron mine</td>
+                    <td className="tableLine2">Iron</td>
+                    <td className="tableLine2">8 per day</td>
                   </tr>
                   <tr>
-                    <td>4</td>
-                    <td>Farm</td>
-                    <td>Food</td>
-                    <td>8 per day</td>
+                    <td className="tableLine2">4</td>
+                    <td className="tableLine2">Farm</td>
+                    <td className="tableLine2">Food</td>
+                    <td className="tableLine2">8 per day</td>
                   </tr>
                   <tr>
-                    <td>5</td>
-                    <td>Gold mine</td>
-                    <td>Gold</td>
-                    <td>8 per day</td>
+                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">Gold mine</td>
+                    <td className="tableLine2">Gold</td>
+                    <td className="tableLine2">8 per day</td>
                   </tr>
                 </tbody>
               </Table>
@@ -138,7 +138,56 @@ const Docs = () => {
                 <br></br> In summary, we can say that this game is enjoyable and
                 profitable for active users without worrying about the price of
                 BMT falling and reducing their income.
+                <br></br>
+                <br></br>
+                We have defined 3 types of warriors and more warriors will add in updates Here is current warriors:
               </h5>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th className="tableLine2">#</th>
+                    <th className="tableLine2">Warrior</th>
+                    <th className="tableLine2">Attack power</th>
+                    <th className="tableLine2">Defence power</th>
+                    <th className="tableLine2">Hit point (HP)</th>
+                  </tr>
+                </thead>
+                <tbody >
+                  <tr>
+                    <td className="tableLine2">1</td>
+                    <td className="tableLine2">Spearman</td>
+                    <td className="tableLine2">60</td>
+                    <td className="tableLine2">90</td>
+                    <td className="tableLine2">140</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">2</td>
+                    <td className="tableLine2">Swordsman</td>
+                    <td className="tableLine2">90</td>
+                    <td className="tableLine2">70</td>
+                    <td className="tableLine2">200</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">3</td>
+                    <td className="tableLine2">Archer</td>
+                    <td className="tableLine2">40</td>
+                    <td className="tableLine2">60</td>
+                    <td className="tableLine2">80</td>
+                  </tr>
+                  {/* <tr>
+                    <td className="tableLine2">4</td>
+                    <td className="tableLine2">Farm</td>
+                    <td className="tableLine2">Food</td>
+                    <td className="tableLine2">8 per day</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">Gold mine</td>
+                    <td className="tableLine2">Gold</td>
+                    <td className="tableLine2">8 per day</td>
+                  </tr> */}
+                </tbody>
+              </Table>
             </>
           )}
           {compIndex == 1 && (
@@ -157,13 +206,47 @@ const Docs = () => {
                 users can count on long-term income from the game.<br></br>
                 In the following cases, we have mentioned demand or token
                 burning:<br></br> <br></br>
-                Building Construction<br></br>
-                Building upgrade<br></br>
-                Fast completion of build and upgrade<br></br>
-                Transfer fee<br></br>
-                Withdraw fee<br></br>
-                Creating warriors<br></br>
-                Wars damage <br></br>
+                <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th className="tableLine2">#</th>
+                    {/* <th className="tableLine2">Action</th>
+                    <th className="tableLine2">Burning</th> */}
+                    <th className="tableLine2">Usages</th>
+                  </tr>
+                </thead>
+                <tbody >
+                  <tr>
+                    <td className="tableLine2">1</td>
+                    <td className="tableLine2">Build</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">2</td>
+                    <td className="tableLine2">Upgrade</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">3</td>
+                    <td className="tableLine2">Army training</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">4</td>
+                    <td className="tableLine2">War</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">Transfer</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">Finish building operation</td>
+                  </tr>
+                  <tr>
+                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">Finish training operation</td>
+                  </tr>
+                </tbody>
+              </Table>
+   
                 <br></br> <br></br>
                 Another thing about the total value of the token market is that
                 with the addition of each user, new buildings will be built and
