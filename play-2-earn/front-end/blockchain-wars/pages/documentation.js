@@ -194,18 +194,19 @@ const Docs = () => {
             <>
               <h4>Tokenomics</h4>
               <h5>
+                BMT is token of blockdom that is convertable to goods of the game and users need BMT that can build their kingdom, also they will earn money by BMT from the game. Goods are earnable from relevant building or looting other users.<br></br>
+                Max supply of the BMT is 1,000,000,000. To keep supply of the token close to max supply we have considered soulutions that we mentioned below.
+              <br></br> <br></br>
                 Since almost all play-to-earn applications face the problem of
                 token supply disproportionate to demand, we have given great
-                importance to this issue and have considered (anticipated)
-                different Tokenemies.<br></br> In general, we can say that it is
-                an application where all users can easily earn money.
+                importance to this issue and have anticipated
+                different Tokenemies.<br></br> In general, we can say that the application where all users can easily earn money,
                 Undoubtedly, the supply of the unconventional token will have a
                 problem with the demand, and the price of the token will always
                 decrease.<br></br> <br></br>
-                So we have designed the game in such a way that only active
+                So we have designed the game in such a way that active
                 users can count on long-term income from the game.<br></br>
-                In the following cases, we have mentioned demand or token
-                burning:<br></br> <br></br>
+                In the following cases, we have mentioned actions that require goods:<br></br> <br></br>
                 <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -237,11 +238,11 @@ const Docs = () => {
                     <td className="tableLine2">Transfer</td>
                   </tr>
                   <tr>
-                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">6</td>
                     <td className="tableLine2">Finish building operation</td>
                   </tr>
                   <tr>
-                    <td className="tableLine2">5</td>
+                    <td className="tableLine2">7</td>
                     <td className="tableLine2">Finish training operation</td>
                   </tr>
                 </tbody>
@@ -254,7 +255,11 @@ const Docs = () => {
                 which means that the total market value is always increasing. It
                 is also a kind of token burning as warriors are built and
                 killed.
+                <br></br> <br></br>
+                If the supply of BMT increases compared to the demand due to high extraction of goods, there are some incentives that will encourage users to spend more goods in the game, thereby balancing demand and supply. Another solution is reduing buildings daily extraction temporarily until supply and demand are matched.
+                <br></br>At first glance it may looks unfair for users that earned goods decrease. But this solution will keep the price of BMT and in the end, it benefits the user.
               </h5>
+
             </>
           )}
           {compIndex == 2 && (
