@@ -205,7 +205,8 @@ const Docs = () => {
                 problem with the demand, and the price of the token will always
                 decrease.<br></br> <br></br>
                 So we have designed the game in such a way that active
-                users can count on long-term income from the game.<br></br>
+                users can count on long-term income from the game. Active users frequently attack and loot other users who are not active and it reduces supply of the token by the users who are not active.<br></br>
+                Also BMT has variety of use cases as goods in the game.<br></br>
                 In the following cases, we have mentioned actions that require goods:<br></br> <br></br>
                 <Table striped bordered hover>
                 <thead>
