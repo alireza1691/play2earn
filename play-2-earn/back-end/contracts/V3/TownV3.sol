@@ -331,11 +331,12 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
-
+  
     error CallerIsNotOwner();
     error ClaimBeforeAction();
     error UnAuthorizedToken();
     error InvalidLand();
+    error InsufficientBalance();
     error InsufficientCommodity();
     error InsufficientArmy();
     error InvalidItem();
@@ -409,6 +410,7 @@ contract TownV3 is Ownable, Barracks{
 
     /// @notice token ID => landId
     mapping (uint256 => uint256) private belongTo;
+    mapping (address => uint256) private BMTBalance;
 
 
     //  ******************************************************************************
@@ -479,9 +481,28 @@ contract TownV3 is Ownable, Barracks{
         landData[landTokenId].commoditiesBalance[toIndex] += amount * 9 / 10; // Including 10% burn
     }
 
-    function deposit( uint256 landTokenId, uint256 amount, uint256 commodityIndex) external onlyLandOwner(landTokenId){
+    function deposit(uint256 landTokenId, uint256 amount) external onlyLandOwner(landTokenId){
         TransferHelper.safeTransferFrom(address(BKT),msg.sender,address(this),amount);
+        BMTBalance[msg.sender] += amount;
+    }
+    function buyCommodity( uint256 landTokenId, uint256 commodityIndex, uint256 amount) external {
+        if (BMTBalance[msg.sender] <= amount) {
+            revert InsufficientBalance();
+        }
+        BMTBalance[msg.sender] -= amount;
         landData[landTokenId].commoditiesBalance[commodityIndex] += amount;
+    }
+    function sellCommodity( uint256 landTokenId, uint256[] memory amounts) external {
+        uint256 totalAmount;
+        for (uint i = 0; i < amounts.length; i++) {
+            if (landData[landTokenId].commoditiesBalance[i] <= amounts[i]) {
+                revert InsufficientCommodity();
+            } else {
+                totalAmount += amounts[i];
+                landData[landTokenId].commoditiesBalance[i] -= amounts[i];
+            }
+        }
+        BMTBalance[msg.sender] += totalAmount*95/100;
     }
     function splitDeposit(uint256 landTokenId, uint256 amount) external {
         TransferHelper.safeTransferFrom(address(BKT),msg.sender,address(this),amount);
@@ -489,11 +510,11 @@ contract TownV3 is Ownable, Barracks{
             landData[landTokenId].commoditiesBalance[i] += amount/5;
         }
     }
-    function withdraw(uint256 amount, uint256 landTokenId, uint256 commodityIndex) external onlyLandOwner(landTokenId){
-        if (landData[landTokenId].commoditiesBalance[commodityIndex] < amount) {
+    function withdraw(uint256 amount) external {
+        if (BMTBalance[msg.sender] < amount) {
             revert InsufficientCommodity();
         }
-        landData[landTokenId].commoditiesBalance[commodityIndex] -= amount;
+        BMTBalance[msg.sender] -= amount;
         TransferHelper.safeTransfer(address(BKT), msg.sender, amount * 95 /100); // Including 5% withdrawal burn
     }
 
