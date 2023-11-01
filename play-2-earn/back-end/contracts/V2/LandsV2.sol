@@ -162,7 +162,7 @@ contract LandsV2 is ERC721, Ownable {
 
 
 
-    constructor() ERC721("Polygon wars land","PWL") Ownable(msg.sender){
+    constructor() ERC721("Blockdom lands","BML") Ownable(msg.sender){
     }
 
 

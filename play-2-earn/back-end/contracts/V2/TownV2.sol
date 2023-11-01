@@ -2,7 +2,6 @@
 pragma solidity ^0.8.19;
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-// import { LandsV2 } from "./LandsV2.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { IERC721 } from "@openzeppelin/contracts/interfaces/IERC721.sol";
 interface ILands is IERC721 {
@@ -342,6 +341,7 @@ contract TownV2 is Ownable, Barracks{
     error MaxCapacity();
     error TimeLimitation();
     error LevelLessThanMin();
+    
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -374,6 +374,7 @@ contract TownV2 is Ownable, Barracks{
     uint8 private constant baseArmyCapacity = 50;
     uint256 private tokenIdCounter = 1;
     uint256 private constant baseCapacity = 80 ether;
+    uint256[5] private commodityRevenuePer12Hours  = [4 ether, 4 ether, 4 ether, 4 ether, 2 ether];
 
     struct Info {
         uint256 requiredStone;
@@ -566,13 +567,13 @@ contract TownV2 is Ownable, Barracks{
         uint256[5] memory balArray = getAssetsBal(landTokenId);
         require(balArray[0] >= baseBararcksRequiredCommodities[0] &&
         balArray[1] >= baseBararcksRequiredCommodities[1] * (currentLevel+1) && 
-        balArray[2] >= baseBararcksRequiredCommodities[2] * (currentLevel+1) &&
-        balArray[3] >= baseBararcksRequiredCommodities[3] * (currentLevel+1) &&
+        balArray[2] >= baseBararcksRequiredCommodities[2] * (currentLevel+1) && 
+        balArray[3] >= baseBararcksRequiredCommodities[3] * (currentLevel+1) && 
         balArray[4] >= baseBararcksRequiredCommodities[4] * (currentLevel+1)
         , "Insufficient commodities");
         _spendCommodities(landTokenId,baseBararcksRequiredCommodities);
         landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (landData[landTokenId].barracksLevel+1));
-        landData[landTokenId].barracksLevel ++;
+        landData[landTokenId].barracksLevel ++ ;
     }
 
     function recruit(uint256 landTokenId, uint256 typeIndex, uint256 amount) external onlyLandOwner(landTokenId){
@@ -636,6 +637,11 @@ contract TownV2 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
+    function updateRevenue(uint256 commodityIndex, uint256 newRevenue) external onlyOwner {
+        require(1 ether <= newRevenue && newRevenue <= 16 ether, "Invalid amount");
+        commodityRevenuePer12Hours[commodityIndex] = newRevenue;
+    }
+
 
     // function updateBuilding(uint256 index, uint256[5] memory requiredCommodities/*, string memory imgUrl*/, string memory name) external onlyOwner {
     //     buildings[index] = (Info(
@@ -661,11 +667,12 @@ contract TownV2 is Ownable, Barracks{
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
         Status memory buildingStatus = getStatus(buildingTokenId);
         uint256 period = block.timestamp - (buildingStatus.latestActionTimestamp);
-        uint256 rev = (period / 3 hours) * buildingStatus.level * 1 ether;
-        if (rev > baseCapacity * buildingStatus.level ) {
-            rev = baseCapacity * buildingStatus.level ;
+        uint256 revenue = (period / 12 hours) * buildingStatus.level * commodityRevenuePer12Hours[buildingStatus.buildingTypeIndex] * 1 ether;
+        // uint256 rev = (period / 3 hours) * buildingStatus.level * 1 ether;
+        if (revenue > baseCapacity * buildingStatus.level ) {
+            revenue = baseCapacity * buildingStatus.level ;
         }
-        return rev;
+        return revenue;
     }
 
     function getStatus(uint256 tokenId) public view returns(Status memory){

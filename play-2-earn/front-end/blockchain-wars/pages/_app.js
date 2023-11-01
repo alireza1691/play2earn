@@ -27,6 +27,9 @@ import {
   metamaskWallet,
   coinbaseWallet,
   walletConnect,
+  trustWallet,
+  safeWallet,
+  rainbowWallet
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
 // require("dotenv").config()
@@ -253,7 +256,7 @@ function MyApp({ Component, pageProps }) {
     <ThirdwebProvider
       //   activeChain={activeChain}
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
-      supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect()]}
+      supportedWallets={[metamaskWallet(), coinbaseWallet(), walletConnect(), trustWallet(), safeWallet(), rainbowWallet()]}
       supportedChains={[Sepolia, LineaTestnet ]}
       dAppMeta={{
         name: "Blockchain wars",
