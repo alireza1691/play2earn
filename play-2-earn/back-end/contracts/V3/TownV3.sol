@@ -361,15 +361,25 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
-    //  *******************************   Vairables  *********************************
+    //  ******************************   Interfaces  *********************************
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
+
     ILands lands;
     IERC20 BKT;
 
 
-    // address[] private items;
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  *******************************   Vairables  *********************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+
+
+
 
     uint256[5] private baseBararcksRequiredCommodities = [50 ether, 50 ether, 50 ether, 50 ether, 100 ether];
     uint8 private constant maxBuildingsCapacity = 12;
@@ -410,6 +420,7 @@ contract TownV3 is Ownable, Barracks{
 
     /// @notice token ID => landId
     mapping (uint256 => uint256) private belongTo;
+
     mapping (address => uint256) private BMTBalance;
 
 
@@ -473,6 +484,36 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
+
+
+    function deposit(uint256 amount) external {
+        TransferHelper.safeTransferFrom(address(BKT),msg.sender,address(this),amount);
+        BMTBalance[msg.sender] += amount;
+    }
+
+    function buyGood( uint256 landTokenId, uint256 commodityIndex, uint256 amount) external onlyLandOwner(landTokenId){
+        if (BMTBalance[msg.sender] < amount) {
+            revert InsufficientBalance();
+        }
+        BMTBalance[msg.sender] -= amount;
+        landData[landTokenId].commoditiesBalance[commodityIndex] += amount;
+    }
+
+    function butBatchOfGoods (uint256 landTokenId, uint256[] memory amounts) external onlyLandOwner(landTokenId){
+        uint256 sumAmounts;
+        for (uint i = 0; i < amounts.length; i++) {
+            sumAmounts += amounts[i];
+        }
+        if (sumAmounts > BMTBalance[msg.sender]) {
+            revert InsufficientBalance();
+        }
+        BMTBalance[msg.sender] -= sumAmounts;
+        for (uint i = 0; i < amounts.length; i++) {
+            landData[landTokenId].commoditiesBalance[i] += amounts[i];
+        }
+
+    }
+
     function swapCommodity(uint256 landTokenId, uint256 fromIndex, uint256 toIndex, uint256 amount) external onlyLandOwner(landTokenId) {
         if (landData[landTokenId].commoditiesBalance[fromIndex] < amount) {
             revert InsufficientCommodity();
@@ -481,17 +522,7 @@ contract TownV3 is Ownable, Barracks{
         landData[landTokenId].commoditiesBalance[toIndex] += amount * 9 / 10; // Including 10% burn
     }
 
-    function deposit(uint256 landTokenId, uint256 amount) external onlyLandOwner(landTokenId){
-        TransferHelper.safeTransferFrom(address(BKT),msg.sender,address(this),amount);
-        BMTBalance[msg.sender] += amount;
-    }
-    function buyCommodity( uint256 landTokenId, uint256 commodityIndex, uint256 amount) external {
-        if (BMTBalance[msg.sender] <= amount) {
-            revert InsufficientBalance();
-        }
-        BMTBalance[msg.sender] -= amount;
-        landData[landTokenId].commoditiesBalance[commodityIndex] += amount;
-    }
+
     function sellCommodity( uint256 landTokenId, uint256[] memory amounts) external {
         uint256 totalAmount;
         for (uint i = 0; i < amounts.length; i++) {
