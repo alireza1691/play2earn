@@ -386,6 +386,7 @@ contract TownV3 is Ownable, Barracks{
     uint8 private constant baseArmyCapacity = 50;
     uint256 private tokenIdCounter = 1;
     uint256 private constant baseCapacity = 80 ether;
+    uint256[] private totalExistedGood;
 
     struct Info {
         uint256 requiredStone;
