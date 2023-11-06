@@ -26,4 +26,7 @@ contract Heroes is ERC721, Ownable {
     function buy(uint256 tokenId) external{
         _mint(msg.sender, tokenId);
     }
+    function getHero(uint256 tokenId) view public returns (HeroInfo memory) {
+        return tokenIdToHero[tokenId];
+    }
 }
