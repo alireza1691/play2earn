@@ -11,6 +11,9 @@ interface ILands is IERC721 {
     function URI() pure external returns (uint256); 
     function tokenURI(uint256 _tokenId) pure external returns (uint256); 
 }   
+// interface IHeroes is IERC721 {
+//     function getHero(uint256) external view returns(uint256[] memory);
+// }
 library TransferHelper {
     /// @notice Transfers tokens from the targeted address to the given destination
     /// @notice Errors with 'STF' if transfer fails
@@ -88,12 +91,16 @@ contract Barracks is Ownable{
     //  ******************************************************************************
     //  ******************************************************************************
 
+        // IHeroes HEROES;
+
     /// @notice Land token id => type of warrior => amount
     mapping (uint256 => mapping(uint256 => uint256)) internal landArmy;
     /// @notice Land id => Barracks level
     /// *** Note that since defaul level is 0 it means barracks has not builed yet.
     /// After each 'buildBararcks' barrack will upgrade to next level and new kind of army will unlock for user.
 
+    /// @notice Land Id => Hero token ID
+    mapping (uint256 => uint256) private attachedHero;
 
     struct WarriorInfo {
         uint8 attackPower;
@@ -117,10 +124,11 @@ contract Barracks is Ownable{
     //  ******************************************************************************
 
 
-    constructor() Ownable(msg.sender){
-        warriorTypes.push(WarriorInfo( 60, 90, 140, 1,"Spearman",5 ether));
-        warriorTypes.push(WarriorInfo( 90, 70, 200, 2,"Swordsman",8 ether));
-        warriorTypes.push(WarriorInfo( 40, 60, 80, 3,"Archer",10 ether));
+    constructor(/*address heroesContract*/) Ownable(msg.sender){
+        // HEROES = IHeroes(heroesContract);
+        warriorTypes.push(WarriorInfo( 40, 80, 140, 1,"Spearman",5 ether));
+        warriorTypes.push(WarriorInfo( 85, 60, 200, 2,"Swordsman",8 ether));
+        warriorTypes.push(WarriorInfo( 70, 80, 90, 3,"Archer",7 ether));
     }
 
 
@@ -152,6 +160,7 @@ contract Barracks is Ownable{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
+
 
 
 
@@ -193,6 +202,12 @@ contract Barracks is Ownable{
         return warriorTypes;
     }
 
+    // function getHero(uint256 landId) view public returns (uint256 heroTokenId, uint256[] memory heroInfo) {
+    //     heroTokenId = attachedHero[landId];
+    //     return (heroTokenId, HEROES.getHero(heroTokenId));
+    // }
+
+
     // function getRequiredCommodities() view public returns (uint256[5] memory) {
     //     return requiredCommodities;
     // }
@@ -204,7 +219,10 @@ contract Barracks is Ownable{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
-
+    // function _attachHero(uint256 landId, uint256 heroId) internal{
+    //     require(HEROES.ownerOf(heroId) == msg.sender, "caller is not hero owner");
+    //     attachedHero[landId] = heroId;
+    // }
 
     function _reduceBatchWarriorByPercent(uint256 remainedPercent, uint256 landId) internal {
         for (uint i = 0; i < warriorTypes.length; i++) {
@@ -247,7 +265,11 @@ contract Barracks is Ownable{
             defenderHp += warriorTypes[i].hp * defenderWarriorsAmounts[i];
         }
         // require(totalArmy > 0, "Army = 0");
-
+        // (uint256 defenderHeroTokenId, uint256[] memory heroInfo) = getHero(targetId);
+        // if (defenderHeroTokenId != 0) {
+        //     defenderPower += heroInfo[1];
+        //     defenderHp += heroInfo[2];
+        // }
 
         (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = _calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
 
@@ -353,10 +375,15 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
-    event Build( uint256 buildingTypeIndex, uint256 indexed buildingId, uint256 indexed landTokenId);
-    event Upgrade( uint256 indexed buildingId, uint256 level);
-    event Attack (uint256 indexed attackerLandId, uint256 indexed defenderLandId, bool success , uint256[5] lootAmounts);
-
+    event Build( uint256 buildingTypeIndex, uint256 indexed buildingId, uint256 indexed landTokenId );
+    event Upgrade( uint256 indexed buildingId, uint256 level );
+    event UpgradeBarracks( uint256 indexed landTokenId, uint256 currentLevel );
+    event Attack( uint256 indexed attackerLandId, uint256 indexed defenderLandId, bool success , uint256[5] lootAmounts);
+    event IncreaseGoodsCirculatingSupply( uint256[] amounts, uint256 indexed landId );
+    event DecreaseGoodsCirculatingSupply( uint256[] amounts, uint256 indexed landId );
+    event RecruitWarrior( uint256[] typesAmount, uint256 indexed landId );
+    event WarriorLosses( uint256[] typesAmount, uint256 indexed landId );
+    
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -366,7 +393,7 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
-    ILands lands;
+    ILands LANDS;
     IERC20 BKT;
 
 
@@ -386,6 +413,7 @@ contract TownV3 is Ownable, Barracks{
     uint8 private constant baseArmyCapacity = 50;
     uint256 private tokenIdCounter = 1;
     uint256 private constant baseCapacity = 80 ether;
+    uint256 private constant baseWarriorRequiredFood = 3 ether;
     uint256[] private totalExistedGood;
 
     struct Info {
@@ -419,7 +447,7 @@ contract TownV3 is Ownable, Barracks{
 
     mapping (uint256 => Status) private tokenIdStatus;
 
-    /// @notice token ID => landId
+    /// @notice Token ID => Land ID
     mapping (uint256 => uint256) private belongTo;
 
     mapping (address => uint256) private BMTBalance;
@@ -433,9 +461,9 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
-    constructor(address BlockchainsKingdomToken ,address landsContract){
+    constructor(address BlockchainsKingdomToken ,address landsContract, address heroes) Barracks(heroes){
         BKT = IERC20(BlockchainsKingdomToken);
-        lands = ILands(landsContract);
+        LANDS = ILands(landsContract);
         buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0/*,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o"*/,"Stone mine"));
         buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,1/*,"https://ipfs.io/ipfs/QmU99dxpwMoFAGSoQPLxB6YVAoYSk1iwbDoKj2CuM2pKyB"*/,"Lumber mill"));
         buildings.push(Info(100 ether, 100 ether, 100 ether, 0, 25 ether, 2/*, "Url"*/,"Iron mine"));
@@ -462,7 +490,7 @@ contract TownV3 is Ownable, Barracks{
 
     /// @notice Making sure caller is owner of pointed land in Lands contract.
     modifier onlyLandOwner(uint256 landTokenId) {
-        if (lands.ownerOf(landTokenId) != msg.sender) {
+        if (LANDS.ownerOf(landTokenId) != msg.sender) {
             revert CallerIsNotOwner();
         } 
         _;
@@ -471,7 +499,7 @@ contract TownV3 is Ownable, Barracks{
 
     /// @notice Making sure caller of token is owner of entered toeknId.
     modifier belongToCaller(uint256 tokenId) {
-        if (lands.ownerOf(belongTo[tokenId]) != msg.sender) {
+        if (LANDS.ownerOf(belongTo[tokenId]) != msg.sender) {
             revert CallerIsNotOwner(); 
         } 
         _;
@@ -636,6 +664,10 @@ contract TownV3 is Ownable, Barracks{
         landData[landTokenId].barracksLevel ++;
     }
 
+    // function attachHero( uint256 landId, uint256 heroId) external onlyLandOwner(landId) {
+    //     _attachHero(landId, heroId);
+    // }
+
     function finishNow(uint256 landTokenId) external onlyLandOwner(landTokenId){
         if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
             uint256 remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
@@ -672,7 +704,7 @@ contract TownV3 is Ownable, Barracks{
             revert MaxCapacity();
         }
 
-        _spendCommodities(landTokenId,[0,0,0,0,getWarriorTypes()[typeIndex].price * amount]);
+        _spendCommodities(landTokenId,[0,0,0,baseWarriorRequiredFood * amount,getWarriorTypes()[typeIndex].price * amount]);
         _addWarrior(typeIndex, amount, landTokenId);
     }
 
@@ -689,7 +721,7 @@ contract TownV3 is Ownable, Barracks{
 
     function attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId) external onlyLandOwner(attackerId) {
 
-        require(lands.ownerOf(targetId) != address(0), "");
+        require(LANDS.ownerOf(targetId) != address(0), "");
         (bool success, uint256 winRate) = _attack(warriorsAmounts, attackerId, targetId);
         uint256 [5] memory lootAmounts;
         if (success) {
@@ -715,19 +747,6 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
-
-    // function updateBuilding(uint256 index, uint256[5] memory requiredCommodities/*, string memory imgUrl*/, string memory name) external onlyOwner {
-    //     buildings[index] = (Info(
-    //         requiredCommodities[0],
-    //         requiredCommodities[1],
-    //         requiredCommodities[2],
-    //         requiredCommodities[3],
-    //         requiredCommodities[4],
-    //         index,
-    //         // imgUrl,
-    //         name
-    //     ));
-    // }
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -797,6 +816,8 @@ contract TownV3 is Ownable, Barracks{
         }
         return requiredComs ;
     }
+
+ 
 
 
     //  ******************************************************************************
