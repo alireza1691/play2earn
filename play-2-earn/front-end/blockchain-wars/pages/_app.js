@@ -32,6 +32,7 @@ import {
   rainbowWallet
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
+import { fetchLandsData } from "../utils";
 // require("dotenv").config()
 // dotenv.config();
 // This is the chain your dApp will work on.
@@ -69,6 +70,7 @@ function MyApp({ Component, pageProps }) {
       return prefix + zeros + suffix;
     }
   };
+
 
   //   const connectReq = async () => {
   //     if (typeof window.ethereum !== "undefined") {
