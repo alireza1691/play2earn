@@ -34,17 +34,17 @@ import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
 import { abi } from "../Blockchain/Faucet.json";
-
+import {fetchLandsData} from "../utils"
 
 const metamaskConfig = metamaskWallet();
 
-const Faucet = ({ provider, mintedLands, landObj, target, setTarget ,  existedWarriors}) => {
+const Faucet =  () => {
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [error, setError] = useState();
 
-
+  // const {APIresponse} = fetchLandsData()
   const connectWithMetamask = useMetamask();
   const router = useRouter();
   const sdk = useSDK();
@@ -102,7 +102,7 @@ const Faucet = ({ provider, mintedLands, landObj, target, setTarget ,  existedWa
 
     };
     fetchData();
-  }, [address, visibleConfirmation, target]);
+  }, [address, visibleConfirmation]);
 
   return (
     <div>

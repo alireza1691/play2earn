@@ -1,13 +1,15 @@
-import { ethers } from "ethers";
-import { landsV2, townV2, BMTAddress, faucet } from "../Blockchain/Addresses";
-import TownV2 from "../Blockchain/TownV2.json"
-import LandsV2 from "../Blockchain/LandsV2.json"
 
-const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T"
+import { ethers } from '@/node_modules/ethers/lib.commonjs/index';
+import { LandsABI, TownABI, landsV2, townV2 } from '@/blockchain/index';
+import axios from "@/node_modules/axios/index"
 
-export async function fetchLandsData(provider) {
-    const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
-    const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
+const provider = new ethers.providers.JsonRpcProvider(
+    `https://sepolia.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
+  );
+
+export async function fetchEvents(params:type) {
+    const landsInst = new ethers.Contract(landsV2, LandsABI, provider);
+    const townInst = new ethers.Contract(townV2, TownABI, provider)
     let landsObjects = []
     let mintedLands = []
     try {
@@ -75,9 +77,4 @@ export async function fetchLandsData(provider) {
         console.error("Error fetching contract events:", error);
       }
     //   return landsObjects, mintedLands
-}
-
-export async function fetchTownsData(params) {
-    
-}
-
+} 
