@@ -14,7 +14,7 @@ import {
   Linea,
   LineaTestnet
 } from "@thirdweb-dev/chains";
-import TestABI from "../Blockchain/Test.json";
+
 import { useEffect, useState } from "react";
 import {barracks, lands, landsV2, town, townV1, townV2 } from "../Blockchain/Addresses";
 import LandsV2 from "../Blockchain/LandsV2.json";
@@ -32,6 +32,7 @@ import {
   rainbowWallet
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
+import { apiCall, fetchLandsData, getMintedLandsFromEvents } from "../utils";
 // require("dotenv").config()
 // dotenv.config();
 // This is the chain your dApp will work on.
@@ -160,95 +161,110 @@ function MyApp({ Component, pageProps }) {
     }
     const fetchData = async () => {
       console.log(provider);
-      const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
-      const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
-      const imgURL = await landsInst.URI();
-      const existedWarriorTypes = await townInst.getWarriorTypes()
-      setExistedWarriors(existedWarriorTypes)
-      setLandImgUrl(imgURL);
+      const events = await apiCall()
+      const mintedLands = await getMintedLandsFromEvents(events)
+      setMintedLands(mintedLands)
       if (address) {
-        // dataLoad()
+        const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
+        // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
         const landBalance = await landsInst.balanceOf(address);
-        setOwnedLands(landBalance);
-        // if (landBalance > 0) {
-          console.log(`User owned ${landBalance.toString()} land`);
-          let mintedLands = [];
-          let landObject = [];
-          try {
-            const response = await axios.get(
-              // `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
-              `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
-            );
-            console.log("Fetched events");
-            console.log(response);
-            setResponse(response)
-            const events = response.data.result;
-            for (let index = 0; index < events.length; index++) {
-              const topics = events[index].topics;
-              // console.log(topics);
-              if ( landBalance > 0 &&
-                Array.isArray(topics) &&
-                topics.length === 4 &&
-                topics[2] == convertAddress(address.toLowerCase())
-              ) {
+        if (landBalance > 0) {
+          const connectedAddressLands = await connectedAddressLands(events, address)
+          setLandObj(connectedAddressLands)
 
-                const commoditiesBalance = await townInst.getAssetsBal(
-                  parseInt(topics[3], 16)
-                );
-                const armyBal = await townInst.getArmy(parseInt(topics[3], 16))
-                const landInfo = {armyBal,
-                  stone: ethers.utils.formatEther(
-                    commoditiesBalance[0].toString()
-                  ),
-                  wood: ethers.utils.formatEther(
-                    commoditiesBalance[1].toString()
-                  ),
-                  iron: ethers.utils.formatEther(
-                    commoditiesBalance[2].toString()
-                  ),
-                  food: ethers.utils.formatEther(
-                    commoditiesBalance[3].toString()
-                  ),
-                  gold: ethers.utils.formatEther(
-                    commoditiesBalance[4].toString()
-                  ),
-                  coordinate: parseInt(topics[3], 16),
-                };
-                console.log(landInfo);
-                landObject.push(landInfo);
-              }
-              if (
-                Array.isArray(topics) &&
-                topics.length === 4 &&
-                topics[1] ==
-                  "0x0000000000000000000000000000000000000000000000000000000000000000" &&
-                100 <= parseInt(topics[3], 16) <= 200
-              ) {
-                let ownerAddress = topics[2].replace(
-                  "000000000000000000000000",
-                  ""
-                );
-                mintedLands.push({
-                  tokenId: parseInt(topics[3], 16).toString(),
-                  owner: ownerAddress,
-                });
-              }
-            }
-          } catch (error) {
-            console.error("Error fetching contract events:", error);
-          }
-          setLandObj(landObject);
-          setMintedLands(mintedLands);
-          console.log("Here is minted lands:", mintedLands);
-          console.log("Connected address owned these lands:", landObject);
-        // }
-      } else {
-        console.log("Address not connected!");
-        if (response == undefined) {
-          dataLoad()
-          console.log("API called");
         }
+
       }
+
+      // const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
+      // const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
+      // const imgURL = await landsInst.URI();
+      // const existedWarriorTypes = await townInst.getWarriorTypes()
+      // setExistedWarriors(existedWarriorTypes)
+      // setLandImgUrl(imgURL);
+      // if (address) {
+      //   // dataLoad()
+      //   const landBalance = await landsInst.balanceOf(address);
+      //   setOwnedLands(landBalance);
+      //   // if (landBalance > 0) {
+      //     console.log(`User owned ${landBalance.toString()} land`);
+      //     let mintedLands = [];
+      //     let landObject = [];
+      //     try {
+      //       const response = await axios.get(
+      //         // `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
+      //         `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
+      //       );
+      //       console.log("Fetched events");
+      //       console.log(response);
+      //       setResponse(response)
+      //       const events = response.data.result;
+      //       for (let index = 0; index < events.length; index++) {
+      //         const topics = events[index].topics;
+      //         // console.log(topics);
+      //         if ( landBalance > 0 &&
+      //           Array.isArray(topics) &&
+      //           topics.length === 4 &&
+      //           topics[2] == convertAddress(address.toLowerCase())
+      //         ) {
+
+      //           const commoditiesBalance = await townInst.getAssetsBal(
+      //             parseInt(topics[3], 16)
+      //           );
+      //           const armyBal = await townInst.getArmy(parseInt(topics[3], 16))
+      //           const landInfo = {armyBal,
+      //             stone: ethers.utils.formatEther(
+      //               commoditiesBalance[0].toString()
+      //             ),
+      //             wood: ethers.utils.formatEther(
+      //               commoditiesBalance[1].toString()
+      //             ),
+      //             iron: ethers.utils.formatEther(
+      //               commoditiesBalance[2].toString()
+      //             ),
+      //             food: ethers.utils.formatEther(
+      //               commoditiesBalance[3].toString()
+      //             ),
+      //             gold: ethers.utils.formatEther(
+      //               commoditiesBalance[4].toString()
+      //             ),
+      //             coordinate: parseInt(topics[3], 16),
+      //           };
+      //           console.log(landInfo);
+      //           landObject.push(landInfo);
+      //         }
+      //         if (
+      //           Array.isArray(topics) &&
+      //           topics.length === 4 &&
+      //           topics[1] ==
+      //             "0x0000000000000000000000000000000000000000000000000000000000000000" &&
+      //           100 <= parseInt(topics[3], 16) <= 200
+      //         ) {
+      //           let ownerAddress = topics[2].replace(
+      //             "000000000000000000000000",
+      //             ""
+      //           );
+      //           mintedLands.push({
+      //             tokenId: parseInt(topics[3], 16).toString(),
+      //             owner: ownerAddress,
+      //           });
+      //         }
+      //       }
+      //     } catch (error) {
+      //       console.error("Error fetching contract events:", error);
+      //     }
+      //     setLandObj(landObject);
+      //     setMintedLands(mintedLands);
+      //     console.log("Here is minted lands:", mintedLands);
+      //     console.log("Connected address owned these lands:", landObject);
+      //   // }
+      // } else {
+      //   console.log("Address not connected!");
+      //   if (response == undefined) {
+      //     dataLoad()
+      //     console.log("API called");
+      //   }
+      // }
     };
     fetchData();
   }, [address, apiKey]);

@@ -38,7 +38,9 @@ import {fetchLandsData} from "../utils"
 
 const metamaskConfig = metamaskWallet();
 
-const Faucet =  () => {
+const Faucet = () => {
+
+
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [visibleConfirmation, setVisibleConfirmation] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -86,6 +88,7 @@ const Faucet =  () => {
 
 
   useEffect(() => {
+
     if (visibleConfirmation) {
       const timeout = setTimeout(() => {
         setConfirmed(true);
@@ -99,7 +102,6 @@ const Faucet =  () => {
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-
     };
     fetchData();
   }, [address, visibleConfirmation]);
