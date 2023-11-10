@@ -45,7 +45,6 @@ function MyApp({ Component, pageProps }) {
   const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T"
   // const apiKey = process.env.LINEA_API_KEY;
   // const infuraApiKey = process.env.INFURA_API_KEY;
-
   const provider = new ethers.providers.JsonRpcProvider(
     `https://sepolia.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
   );
@@ -103,171 +102,28 @@ function MyApp({ Component, pageProps }) {
   //     }
   //   };
 
-  const dataLoad = async () => {
-    let events = [];
-    let mintedLands = [];
-    try {
-      const response = await axios.get(
-        `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
-        // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
-      );
-      // const responseTown = await axios.get(
-      //   `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${town}&apikey=${apiKey}`
-      //   // `https://api.lineascan.build/api?module=logs&action=getLogs&address=${landsLinea}&apikey=${apiKey}`
-      // );
-      // console.log("Barracks res:", responseTown);
-      console.log(response);
-      setResponse(response);
-      events = response.data.result;
-      console.log(events);
-      for (let index = 0; index < events.length; index++) {
-        const topics = events[index].topics;
 
-        if (
-          Array.isArray(topics) &&
-          topics.length === 4 &&
-          topics[1] ===
-            "0x0000000000000000000000000000000000000000000000000000000000000000" &&
-          100 <= parseInt(topics[3], 16) <= 200
-        ) {
-          let ownerAddress = topics[2].replace("000000000000000000000000", "");
-          console.log(
-            "Onwer of land with token id:",
-            (topics[3], 16).toString(),
-            "is:",
-            ownerAddress
-          );
-          mintedLands.push({
-            tokenId: parseInt(topics[3], 16).toString(),
-            owner: ownerAddress,
-          });
-        }
-      }
-      setMintedLands(mintedLands);
-      console.log(mintedLands);
-    } catch (error) {
-      console.error("Error fetching contract events:", error);
-    }
-  };
+ 
+  useEffect( () => {
 
-  const balanceLoad = async () => {
-
-  }
-
-  useEffect(() => {
-    if (apiKey ==! undefined) {
-      console.log("api key:");
-      console.log(apiKey);
-    }
     const fetchData = async () => {
       console.log(provider);
       const events = await apiCall()
       const mintedLands = await getMintedLandsFromEvents(events)
       setMintedLands(mintedLands)
-      if (address) {
-        const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
-        // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
-        const landBalance = await landsInst.balanceOf(address);
-        if (landBalance > 0) {
-          const connectedAddressLands = await connectedAddressLands(events, address)
-          setLandObj(connectedAddressLands)
-
-        }
-
-      }
-
-      // const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
-      // const townInst = new ethers.Contract(townV2, TownV2.abi, provider)
-      // const imgURL = await landsInst.URI();
-      // const existedWarriorTypes = await townInst.getWarriorTypes()
-      // setExistedWarriors(existedWarriorTypes)
-      // setLandImgUrl(imgURL);
       // if (address) {
-      //   // dataLoad()
+      //   const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
+      //   // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
       //   const landBalance = await landsInst.balanceOf(address);
-      //   setOwnedLands(landBalance);
-      //   // if (landBalance > 0) {
-      //     console.log(`User owned ${landBalance.toString()} land`);
-      //     let mintedLands = [];
-      //     let landObject = [];
-      //     try {
-      //       const response = await axios.get(
-      //         // `https://api-testnet.polygonscan.com/api?module=logs&action=getLogs&fromBlock=0&toBlock=latest&address=${contractsWithBalance[i].contractAddress}&apikey=${apiKey}`
-      //         `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
-      //       );
-      //       console.log("Fetched events");
-      //       console.log(response);
-      //       setResponse(response)
-      //       const events = response.data.result;
-      //       for (let index = 0; index < events.length; index++) {
-      //         const topics = events[index].topics;
-      //         // console.log(topics);
-      //         if ( landBalance > 0 &&
-      //           Array.isArray(topics) &&
-      //           topics.length === 4 &&
-      //           topics[2] == convertAddress(address.toLowerCase())
-      //         ) {
-
-      //           const commoditiesBalance = await townInst.getAssetsBal(
-      //             parseInt(topics[3], 16)
-      //           );
-      //           const armyBal = await townInst.getArmy(parseInt(topics[3], 16))
-      //           const landInfo = {armyBal,
-      //             stone: ethers.utils.formatEther(
-      //               commoditiesBalance[0].toString()
-      //             ),
-      //             wood: ethers.utils.formatEther(
-      //               commoditiesBalance[1].toString()
-      //             ),
-      //             iron: ethers.utils.formatEther(
-      //               commoditiesBalance[2].toString()
-      //             ),
-      //             food: ethers.utils.formatEther(
-      //               commoditiesBalance[3].toString()
-      //             ),
-      //             gold: ethers.utils.formatEther(
-      //               commoditiesBalance[4].toString()
-      //             ),
-      //             coordinate: parseInt(topics[3], 16),
-      //           };
-      //           console.log(landInfo);
-      //           landObject.push(landInfo);
-      //         }
-      //         if (
-      //           Array.isArray(topics) &&
-      //           topics.length === 4 &&
-      //           topics[1] ==
-      //             "0x0000000000000000000000000000000000000000000000000000000000000000" &&
-      //           100 <= parseInt(topics[3], 16) <= 200
-      //         ) {
-      //           let ownerAddress = topics[2].replace(
-      //             "000000000000000000000000",
-      //             ""
-      //           );
-      //           mintedLands.push({
-      //             tokenId: parseInt(topics[3], 16).toString(),
-      //             owner: ownerAddress,
-      //           });
-      //         }
-      //       }
-      //     } catch (error) {
-      //       console.error("Error fetching contract events:", error);
-      //     }
-      //     setLandObj(landObject);
-      //     setMintedLands(mintedLands);
-      //     console.log("Here is minted lands:", mintedLands);
-      //     console.log("Connected address owned these lands:", landObject);
-      //   // }
-      // } else {
-      //   console.log("Address not connected!");
-      //   if (response == undefined) {
-      //     dataLoad()
-      //     console.log("API called");
+      //   if (landBalance > 0) {
+      //     const connectedAddressLands = await connectedAddressLands(events, address)
+      //     setLandObj(connectedAddressLands)
       //   }
       // }
+
     };
     fetchData();
-  }, [address, apiKey]);
+  }, []);
 
   return (
     <ThirdwebProvider
@@ -286,7 +142,7 @@ function MyApp({ Component, pageProps }) {
             <Head>
   <link rel="icon" href="/BlockdomLogo.ico" />
 </Head>
-      <Navbar setAddress={setAddress} />
+      <Navbar setAddress={setAddress}/>
 
       <Component
         {...pageProps}
@@ -296,7 +152,7 @@ function MyApp({ Component, pageProps }) {
         ownedLands={ownedLands}
         landObj={landObj}
         mintedLands={mintedLands}
-        dataLoad={dataLoad}
+        // dataLoad={dataLoad}
         target={target}
         setTarget={setTarget}
         existedWarriors={existedWarriors}

@@ -23,8 +23,6 @@ const Navbar = (
   const apiKey = process.env.SEPOLIA_API_KEY;
   const address = useAddress();
 
-  let previousResponse
-
   // const etherScanApiCall = async () => {
   //   if (previousResponse == undefined) {
   //     try {

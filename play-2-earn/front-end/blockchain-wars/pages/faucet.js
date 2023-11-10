@@ -33,7 +33,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
-import { abi } from "../Blockchain/Faucet.json";
+import {FaucetABI} from "../Blockchain/index";
 import {fetchLandsData} from "../utils"
 
 const metamaskConfig = metamaskWallet();
@@ -72,7 +72,7 @@ const Faucet = () => {
     const chainId = await sdk.wallet.getChainId();
     if (chainId == validChainId && signer != undefined) {
       try {
-        const faucetInst = new ethers.Contract(faucet, abi, signer)
+        const faucetInst = new ethers.Contract(faucet, faucetABI, signer)
         await faucetInst.faucetReq()
         setVisibleConfirmation(true);
       } catch (error) {

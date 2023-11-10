@@ -28,7 +28,7 @@ import Toast from "react-bootstrap/Toast";
 
 const metamaskConfig = metamaskWallet();
 
-const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
+const Map = ({ provider, landImgUrl, mintedLands, setTarget }) => {
   const [viewLands, setViewLands] = useState();
   const [isLandSelected, setIsLandSelected] = useState(false);
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
@@ -99,10 +99,6 @@ const Map = ({ provider, landImgUrl, mintedLands, dataLoad, setTarget }) => {
     setLandBal();
   };
 
-  // const handleClosePopUp = () => {
-  //   setClosePopUp(true);
-  //   dataLoad();
-  // };
 
   const mintLand = async () => {
     const chainId = await sdk.wallet.getChainId();
