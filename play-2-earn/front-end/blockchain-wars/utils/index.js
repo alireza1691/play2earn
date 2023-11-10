@@ -3,6 +3,7 @@ import { landsV2, townV2, BMTAddress, faucet } from "../Blockchain/Addresses";
 import TownV2 from "../Blockchain/TownV2.json";
 import LandsV2 from "../Blockchain/LandsV2.json";
 import axios from "axios";
+import { TownABI } from "../Blockchain";
 
 const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T";
 const provider = new ethers.providers.JsonRpcProvider(
@@ -49,6 +50,7 @@ export async function getMintedLandsFromEvents(events) {
 export async function getConnectedAddressLands(events, address) {
   let landsObjects = [];
   for (let index = 0; index < events.length; index++) {
+    const townInst = new ethers.Contract(townV2, TownABI, provider);
     const topics = events[index].topics;
     if (
       Array.isArray(topics) &&
@@ -123,3 +125,13 @@ export async function fetchLandsData(address) {
 }
 
 export async function fetchTownsData(params) {}
+
+const convertAddress = (input) => {
+  if (input.length > 3) {
+    const prefix = input.substring(0, 2);
+    const suffix = input.substring(2);
+    const zeros = "000000000000000000000000";
+    return prefix + zeros + suffix;
+  }
+};
+

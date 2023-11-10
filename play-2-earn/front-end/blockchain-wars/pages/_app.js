@@ -6,19 +6,13 @@ import Head from 'next/head';
 
 import { ethers } from "ethers";
 import {
-  Mumbai,
-  Polygon,
   Sepolia,
-  Ethereum,
-  Arbitrum,
-  Linea,
+
   LineaTestnet
 } from "@thirdweb-dev/chains";
 
 import { useEffect, useState } from "react";
-import {barracks, lands, landsV2, town, townV1, townV2 } from "../Blockchain/Addresses";
-import LandsV2 from "../Blockchain/LandsV2.json";
-import TownV2 from "../Blockchain/TownV2.json";
+import {landsV2, LandsABI, townV2, TownABI} from "../Blockchain/index";
 import axios from "axios";
 import { config } from 'dotenv';
 config();
@@ -32,13 +26,10 @@ import {
   rainbowWallet
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
-import { apiCall, fetchLandsData, getMintedLandsFromEvents } from "../utils";
+import { apiCall, fetchLandsData, getMintedLandsFromEvents, getConnectedAddressLands } from "../utils";
 // require("dotenv").config()
 // dotenv.config();
-// This is the chain your dApp will work on.
-// Change this to the chain your app is built for.
-// You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-// const activeChain = "ethereum";
+
 
 function MyApp({ Component, pageProps }) {
   // const apiKey = process.env.ETHERSCAN_SEPOLIA_API_KEY;
@@ -61,69 +52,38 @@ function MyApp({ Component, pageProps }) {
   const [target, setTarget] = useState(0)
   const [existedWarriors, setExistedWarriors] = useState()
 
-  const convertAddress = (input) => {
-    if (input.length > 3) {
-      const prefix = input.substring(0, 2);
-      const suffix = input.substring(2);
-      const zeros = "000000000000000000000000";
-      return prefix + zeros + suffix;
-    }
-  };
-
-  //   const connectReq = async () => {
-  //     if (typeof window.ethereum !== "undefined") {
-  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //       const network = await provider.getNetwork();
-
-  //       if (network.chainId !== Sepolia.chainId) {
-  //         const hexStringChainId =
-  //           "0x" + parseInt(Sepolia.chainId).toString(16);
-  //         await window.ethereum.request({
-  //           method: "wallet_addEthereumChain",
-  //           params: [
-  //             {
-  //             //   chainId: hexStringChainId,
-  //             //   rpcUrls: ["https://polygon.llamarpc.com"],
-  //             //   chainName: "Polygon Mainnet",
-  // 			chainId: hexStringChainId,
-  // 			rpcUrls: ["https://sepolia.infura.io/v3/"],
-  // 			chainName: "Sepolia test network",
-  //             },
-  //           ],
-  //         });
-  //         if (network.chainId == Sepolia.chainId) {
-  //           location.reload();
-  //         }
-  //       }
-  //       console.log("Connected!");
-  //       return provider;
-  //     } else {
-  //       return null;
-  //     }
-  //   };
-
 
  
   useEffect( () => {
 
     const fetchData = async () => {
       console.log(provider);
-      const events = await apiCall()
-      const mintedLands = await getMintedLandsFromEvents(events)
-      setMintedLands(mintedLands)
-      // if (address) {
-      //   const landsInst = new ethers.Contract(landsV2, LandsV2.abi, provider);
-      //   // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
-      //   const landBalance = await landsInst.balanceOf(address);
-      //   if (landBalance > 0) {
-      //     const connectedAddressLands = await connectedAddressLands(events, address)
-      //     setLandObj(connectedAddressLands)
-      //   }
-      // }
+      let events
+      try {
+        events = await apiCall()
+        const mintedLands = await getMintedLandsFromEvents(events)
+        setMintedLands(mintedLands)
+      } catch (error) {
+        
+      }
+
+
+      if (address !== undefined) {
+        const landsInst = new ethers.Contract(landsV2, LandsABI, provider);
+        // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
+        const landBalance = await landsInst.balanceOf(address);
+        console.log(address);
+        setOwnedLands(landBalance)
+        console.log(`owned lands:${landBalance.toString()}`);
+        if (landBalance > 0) {
+          const currentAddressLands = await getConnectedAddressLands(events, address)
+          setLandObj(currentAddressLands)
+        }
+      }
 
     };
     fetchData();
-  }, []);
+  }, [address]);
 
   return (
     <ThirdwebProvider

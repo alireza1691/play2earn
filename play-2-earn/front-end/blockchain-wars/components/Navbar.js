@@ -23,32 +23,21 @@ const Navbar = (
   const apiKey = process.env.SEPOLIA_API_KEY;
   const address = useAddress();
 
-  // const etherScanApiCall = async () => {
-  //   if (previousResponse == undefined) {
-  //     try {
-  //       const response = await axios.get(
-  //         `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsSepolia}&apikey=${apiKey}`
-  //       );
-  //       console.log("Fetched events");
-  //       previousResponse = response;
-  //       return response;
-  //     } catch (error) {}
-  //   } else {
-  //     console.log("Response already exist");
-  //     return previousResponse;
-  //   }
-  // };
 
 
   useEffect(() => {
+    console.log("hello");
     const fetchOnchainData = async () => {
       try {
-        if (address !== undefined) {
+        if (address) {
           console.log(address);
           setAddress(address)
         }
       } catch (error) {
         console.error(error);
+      }
+      if (!address) {
+        console.log("address disconnected!");
       }
     };
 

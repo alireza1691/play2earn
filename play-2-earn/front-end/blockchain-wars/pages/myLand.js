@@ -511,7 +511,7 @@ const MyLand = ({
           {isFetching == false &&
           address !== undefined &&
           Array.isArray(landObj) &&
-          landObj.length == 0 ? (
+          landObj.length == 0 && (
             <Row>
               <Col
                 md={{ span: 4, offset: 4 }}
@@ -534,8 +534,12 @@ const MyLand = ({
                 </h5>
                 </div>
               </Col>
-            </Row>
-          ) : (
+            </Row>)}
+            {isFetching == false &&
+            address !== undefined &&
+            Array.isArray(landObj) &&
+            landObj.length > 0 && ( 
+        
             <>
               {Array.isArray(landObj) && landObj.length > 0 && (
                 <>
