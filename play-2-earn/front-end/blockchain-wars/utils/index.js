@@ -1,9 +1,6 @@
 import { ethers } from "ethers";
-import { landsV2, townV2, BMTAddress, faucet } from "../Blockchain/Addresses";
-import TownV2 from "../Blockchain/TownV2.json";
-import LandsV2 from "../Blockchain/LandsV2.json";
 import axios from "axios";
-import { TownABI } from "../Blockchain";
+import { TownABI , LandsABI, landsV2, townV2, BMTAddress, faucet  } from "../Blockchain/index";
 
 const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T";
 const provider = new ethers.providers.JsonRpcProvider(

@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
-import LandsComponent from "../components/LandsComponent";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
-import { Card } from "react-bootstrap";
 import {
-  townV2,
-  landsV2,
   faucet
 } from "../Blockchain/Addresses";
-import TownV2 from "../Blockchain/TownV2.json";
-import LandsV2 from "../Blockchain/LandsV2.json";
+
 import { Contract, ethers } from "ethers";
 import {
   useSigner,
@@ -22,20 +17,9 @@ import {
   metamaskWallet,
   useAddress,
 } from "@thirdweb-dev/react";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Tooltip from "react-bootstrap/Tooltip";
-import CloseButton from "react-bootstrap/CloseButton";
 import { useRouter } from "next/router";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
 import { useSDK } from "@thirdweb-dev/react";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
-import { warriorsImageSources, commodityItems } from "../Images/ImagesSource";
-import {FaucetABI} from "../Blockchain/index";
-import {fetchLandsData} from "../utils"
-
 const metamaskConfig = metamaskWallet();
 
 const Faucet = () => {
