@@ -40,6 +40,7 @@ const Attack = ({
   target,
   setTarget,
   existedWarriors,
+  isFetching
 }) => {
   const [isTransactionRejected, setIsTransactionRejected] = useState(false);
   const [selectedLand, setSelectedLand] = useState();
@@ -188,6 +189,7 @@ const Attack = ({
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
+      console.log(existedWarriors);
       // const townInst = new ethers.Contract(
       //   townV2,
       //   TownV2.abi,
@@ -285,7 +287,8 @@ const Attack = ({
               <h4 className="defaultH4" style={{ marginTop: "15px" }}>
                 Army:
               </h4>
-              {Array.isArray(existedWarriors) && existedWarriors.length >= 0 ? (
+              {}
+              {Array.isArray(existedWarriors) && existedWarriors.length >= 0   ? (
                 existedWarriors.map((warrior, key) => (
                   <div key={key} style={{ display: "flex" }}>
                     {/* <h4 className="defaultH5">{warrior.name}</h4> */}

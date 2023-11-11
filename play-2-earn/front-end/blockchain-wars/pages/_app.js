@@ -26,7 +26,7 @@ import {
   rainbowWallet
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
-import { apiCall, fetchLandsData, getMintedLandsFromEvents, getConnectedAddressLands } from "../utils";
+import { apiCall, getMintedLandsFromEvents, getConnectedAddressLands, getWarriorTypes } from "../utils";
 // require("dotenv").config()
 // dotenv.config();
 
@@ -51,6 +51,7 @@ function MyApp({ Component, pageProps }) {
   const [response, setResponse] = useState();
   const [target, setTarget] = useState(0)
   const [existedWarriors, setExistedWarriors] = useState()
+  const [isFetching, setIsFetching] = useState(true)
 
 
  
@@ -63,8 +64,10 @@ function MyApp({ Component, pageProps }) {
         events = await apiCall()
         const mintedLands = await getMintedLandsFromEvents(events)
         setMintedLands(mintedLands)
+        const existedWarriors = await  getWarriorTypes()
+        setExistedWarriors(existedWarriors)
       } catch (error) {
-        
+        console.log(error);
       }
 
 
@@ -79,10 +82,12 @@ function MyApp({ Component, pageProps }) {
           const currentAddressLands = await getConnectedAddressLands(events, address)
           setLandObj(currentAddressLands)
         }
+ 
       }
 
     };
     fetchData();
+    setIsFetching(false)
   }, [address]);
 
   return (
@@ -113,6 +118,7 @@ function MyApp({ Component, pageProps }) {
         landObj={landObj}
         mintedLands={mintedLands}
         // dataLoad={dataLoad}
+        isFetching={isFetching}
         target={target}
         setTarget={setTarget}
         existedWarriors={existedWarriors}

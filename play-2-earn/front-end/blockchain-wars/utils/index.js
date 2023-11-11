@@ -124,6 +124,13 @@ export async function fetchLandsData(address) {
   return landsObjects, mintedLands;
 }
 
+export async function getWarriorTypes() {
+  const townInst = new ethers.Contract(townV2, TownABI, provider);
+  const existedWarriors = await townInst.getWarriorTypes()
+  console.log("Here is warrior types:", existedWarriors);
+  return existedWarriors
+}
+
 export async function fetchTownsData(params) {}
 
 const convertAddress = (input) => {
