@@ -33,7 +33,6 @@ import {
 const MyLand = ({
   provider,
   landImgUrl,
-  ownedLands,
   landObj,
   existedWarriors,
   defaultLand,
@@ -330,9 +329,10 @@ const MyLand = ({
     }
 
     const fetchData = async () => {
-      if (ownedLands !== undefined && ownedLands == 0) {
+      if (Array.isArray(existedWarriors) && existedWarriors.length == 0) {
         setIsFetching(false);
       }
+      console.log(isFetching);
       if (
         signer &&
         address &&
@@ -345,34 +345,16 @@ const MyLand = ({
         const landData = await townInstance.getLandIdData(
           landObj[selectedLandIndex].coordinate
         );
-
-        console.log(landData);
         const ownedBuildings_ = landData.buildedBuildings;
         const existedBuildings = await townInstance.getBuildings();
-        console.log(existedBuildings);
-        setBuildings(existedBuildings);
-        // const existedWarriors = await townInstance.getWarriorTypes();
-        // const landArmy = await townInstance.getArmy(selectedLand.coordinate);
         const barracksLvl = landData.barracksLevel;
-
-        setBarracksLevel(barracksLvl); //// Replace and edit this
-        console.log("Existed warriors:", existedWarriors);
         const requiredComs = await townInstance.getBarracksRequiredCommodities(
           landObj[selectedLandIndex].coordinate
         );
-        console.log("Required barracks coms:", requiredComs);
+        setBuildings(existedBuildings);
+        setBarracksLevel(barracksLvl); //// Replace and edit this
         setRequiredBarracksCommodities(requiredComs);
-        const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, provider);
-        console.log(BMTInst);
-        console.log(address, townV2);
-        const approvedAmount = await BMTInst.allowance(address, townV2);
-        console.log("Approved amount:", approvedAmount.toString());
-        setApprovedAm(approvedAmount);
-        setEnteredAmount(ethers.utils.formatEther(approvedAmount));
-        if (approvedAmount >= ethers.utils.parseEther("1")) {
-          setIsApproved(true);
-        }
-        // console.log("Current existed army:", landArmy);
+
         if (ownedBuildings_.length > 0) {
           const busyTime = await townInstance.getRemainedTimestamp(
             landObj[selectedLandIndex].coordinate
@@ -406,10 +388,22 @@ const MyLand = ({
           console.log("User still does not have any buildings");
           setOwnedBuildings([]);
         }
+
+        const BMTInst = new ethers.Contract(BMTAddress, BMT.abi, provider);
+        console.log(BMTInst);
+        console.log(address, townV2);
+        const approvedAmount = await BMTInst.allowance(address, townV2);
+        console.log("Approved amount:", approvedAmount.toString());
+        setApprovedAm(approvedAmount);
+        setEnteredAmount(ethers.utils.formatEther(approvedAmount));
+        if (approvedAmount >= ethers.utils.parseEther("1")) {
+          setIsApproved(true);
+        }
+
       }
     };
     fetchData();
-  }, [provider, ownedLands, address, signer, visibleConfirmation, landObj]);
+  }, [ address, visibleConfirmation, landObj]);
 
   return (
     <>

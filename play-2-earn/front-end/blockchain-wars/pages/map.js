@@ -20,11 +20,9 @@ import {
 } from "@thirdweb-dev/react";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import CloseButton from "react-bootstrap/CloseButton";
 import { Sepolia, Linea, LineaTestnet } from "@thirdweb-dev/chains";
 import { useRouter } from "next/router";
 import { useSDK } from "@thirdweb-dev/react";
-import Toast from "react-bootstrap/Toast";
 
 const metamaskConfig = metamaskWallet();
 

@@ -10,12 +10,16 @@ import { landsSepolia } from "../Blockchain/Addresses";
 import axios from "axios";
 import dotenv from "dotenv";
 import Image from "next/image"
+import {ethers} from "ethers"
+import {landsV2, LandsABI, townV2, TownABI} from "../Blockchain/index";
+import { apiCall, getMintedLandsFromEvents, getConnectedAddressLands, getTypes } from "../utils";
 // dotenv.config();
 require("dotenv").config();
 
-const Navbar = (
-    { setAddress}
-    ) => {
+
+export default function Navbar (
+    { setExistedWarriors, setMintedLands, setOwnedLands, setLandObj, provider}
+    ) {
   const [balance, setBalance] = useState();
   const [owner, setOwner] = useState();
   const router = useRouter();
@@ -26,22 +30,37 @@ const Navbar = (
 
 
   useEffect(() => {
-    console.log("hello");
-    const fetchOnchainData = async () => {
-      try {
-        if (address) {
-          console.log(address);
-          setAddress(address)
-        }
-      } catch (error) {
-        console.error(error);
-      }
-      if (!address) {
-        console.log("address disconnected!");
-      }
-    };
 
-    fetchOnchainData();
+    const fetchData = async () => {
+      console.log(provider);
+      let events
+      try {
+        events = await apiCall()
+        const mintedLands = await getMintedLandsFromEvents(events)
+        setMintedLands(mintedLands)
+        const {existedWarriors, existedBuildings} = await  getTypes()
+        setExistedWarriors(existedWarriors)
+      } catch (error) {
+        console.log(error);
+      }
+
+
+      if (address !== undefined) {
+        const landsInst = new ethers.Contract(landsV2, LandsABI, provider);
+        // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
+        const landBalance = await landsInst.balanceOf(address);
+        console.log(address);
+        setOwnedLands(landBalance)
+        console.log(`owned lands:${landBalance.toString()}`);
+        if (landBalance > 0) {
+          const currentAddressLands = await getConnectedAddressLands(events, address)
+          setLandObj(currentAddressLands)
+        }
+ 
+      }
+
+    };
+    fetchData();
   }, [address]);
 
   return (
@@ -83,4 +102,4 @@ const Navbar = (
   );
 };
 
-export default Navbar;
+

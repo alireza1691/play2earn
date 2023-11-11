@@ -121,15 +121,56 @@ export async function fetchLandsData(address) {
   return landsObjects, mintedLands;
 }
 
-export async function getWarriorTypes() {
+export async function getTypes() {
   const townInst = new ethers.Contract(townV2, TownABI, provider);
   const existedWarriors = await townInst.getWarriorTypes()
+  const existedBuildings = await townInst.getBuildings();
   console.log("Here is warrior types:", existedWarriors);
-  return existedWarriors
+  return existedWarriors, existedBuildings
 }
 
 export async function fetchTownsData(params) {}
 
+export async function getSelectedLandAssets(coordinate) {
+  const townInstance = new ethers.Contract(townV2, TownABI, provider);
+  const landData = await townInstance.getLandIdData(
+    coordinate
+  );
+  const ownedBuildings = landData.buildedBuildings;
+  const barracksLvl = landData.barracksLevel;
+  const requiredComs = await townInstance.getBarracksRequiredCommodities(
+    coordinate
+  );
+  let busyTime = 0
+  let ownedBuildingsArray = [];
+  if (ownedBuildings.length > 0) {
+    busyTime = await townInstance.getRemainedTimestamp(
+      landObj[selectedLandIndex].coordinate
+    );
+    console.log(
+      "worker will be busy for",
+      busyTime.toString(),
+      "minutes"
+    );
+    setWorkerBusyTime(busyTime);
+
+
+    for (let index = 0; index < ownedBuildings.length; index++) {
+      const status = await townInstance.getStatus(ownedBuildings[index]);
+      const revenue = await townInstance.getCurrentRevenue(
+        ownedBuildings[index]
+      );
+      ownedBuildingsArray.push({
+        imageURL: buildingsImageSources[status.buildingTypeIndex],
+        name: existedBuildings[status.buildingTypeIndex].buildingName,
+        tokenId: ownedBuildings[index],
+        level: status.level,
+        revenue: revenue,
+      });
+    }
+    return  barracksLvl, requiredComs, busyTime, ownedBuildingsArray
+}
+}
 const convertAddress = (input) => {
   if (input.length > 3) {
     const prefix = input.substring(0, 2);

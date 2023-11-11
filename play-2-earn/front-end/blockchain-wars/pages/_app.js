@@ -26,7 +26,7 @@ import {
   rainbowWallet
 } from "@thirdweb-dev/react";
 import Footer from "../components/Footer"
-import { apiCall, getMintedLandsFromEvents, getConnectedAddressLands, getWarriorTypes } from "../utils";
+import { apiCall, getMintedLandsFromEvents, getConnectedAddressLands, getTypes } from "../utils";
 // require("dotenv").config()
 // dotenv.config();
 
@@ -43,7 +43,7 @@ function MyApp({ Component, pageProps }) {
   //   `https://linea-goerli.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
   // );
 
-  const [address, setAddress] = useState();
+
   const [landImgUrl, setLandImgUrl] = useState();
   const [ownedLands, setOwnedLands] = useState();
   const [landObj, setLandObj] = useState([]);
@@ -51,44 +51,11 @@ function MyApp({ Component, pageProps }) {
   const [response, setResponse] = useState();
   const [target, setTarget] = useState(0)
   const [existedWarriors, setExistedWarriors] = useState()
-  const [isFetching, setIsFetching] = useState(true)
+  const [existedBuildings, setExistedBuildings] = useState()
+ 
 
 
  
-  useEffect( () => {
-
-    const fetchData = async () => {
-      console.log(provider);
-      let events
-      try {
-        events = await apiCall()
-        const mintedLands = await getMintedLandsFromEvents(events)
-        setMintedLands(mintedLands)
-        const existedWarriors = await  getWarriorTypes()
-        setExistedWarriors(existedWarriors)
-      } catch (error) {
-        console.log(error);
-      }
-
-
-      if (address !== undefined) {
-        const landsInst = new ethers.Contract(landsV2, LandsABI, provider);
-        // const townInst = new ethers.Contract(townV2, TownV2.abi, provider);
-        const landBalance = await landsInst.balanceOf(address);
-        console.log(address);
-        setOwnedLands(landBalance)
-        console.log(`owned lands:${landBalance.toString()}`);
-        if (landBalance > 0) {
-          const currentAddressLands = await getConnectedAddressLands(events, address)
-          setLandObj(currentAddressLands)
-        }
- 
-      }
-
-    };
-    fetchData();
-    setIsFetching(false)
-  }, [address]);
 
   return (
     <ThirdwebProvider
@@ -107,7 +74,7 @@ function MyApp({ Component, pageProps }) {
             <Head>
   <link rel="icon" href="/BlockdomLogo.ico" />
 </Head>
-      <Navbar setAddress={setAddress}/>
+      <Navbar setOwnedLands={setOwnedLands} setLandObj={setLandObj} setMintedLands={setMintedLands} setExistedWarriors={setExistedWarriors} provider={provider} />
 
       <Component
         {...pageProps}
@@ -117,11 +84,10 @@ function MyApp({ Component, pageProps }) {
         ownedLands={ownedLands}
         landObj={landObj}
         mintedLands={mintedLands}
-        // dataLoad={dataLoad}
-        isFetching={isFetching}
         target={target}
         setTarget={setTarget}
         existedWarriors={existedWarriors}
+        existedBuildings={existedBuildings}
       />
       <Footer/>
     </ThirdwebProvider>
