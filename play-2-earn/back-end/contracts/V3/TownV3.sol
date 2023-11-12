@@ -176,6 +176,10 @@ contract Barracks is Ownable{
     //     townContract = town;
     // }
 
+    function addWarriorType(uint8[3] memory physicalInfo,uint8 requiredLevel, string memory name, uint256 price) external onlyOwner{
+        
+    }
+
     function updateWarriorType_(uint8[3] memory physicalInfo,uint8 requiredLevel/*, string memory imageURL*/, string memory name, uint256 price, uint256 typeIndex) public  onlyOwner{
         warriorTypes[typeIndex] = WarriorInfo( physicalInfo[0], physicalInfo[1], physicalInfo[2], requiredLevel,/* imageURL,*/name,price );
     }
@@ -461,7 +465,7 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
 
-    constructor(address BlockchainsKingdomToken ,address landsContract, address heroes) Barracks(heroes){
+    constructor(address BlockchainsKingdomToken ,address landsContract/*, address heroes*/){
         BKT = IERC20(BlockchainsKingdomToken);
         LANDS = ILands(landsContract);
         buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0/*,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o"*/,"Stone mine"));
@@ -472,9 +476,11 @@ contract TownV3 is Ownable, Barracks{
         for (uint i = 0; i<5; i++) 
         {
         landData[101101].commoditiesBalance[i] += 10000 ether;
+        landData[105105].commoditiesBalance[i] += 10000 ether;
         landData[109109].commoditiesBalance[i] += 10000 ether;
         }
         landData[101101].barracksLevel = 1;
+        landData[105105].barracksLevel = 1;
         landData[109109].barracksLevel = 1;
     }
 

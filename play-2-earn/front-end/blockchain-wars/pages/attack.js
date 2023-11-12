@@ -189,7 +189,11 @@ const Attack = ({
       return () => clearTimeout(timeout);
     }
     const fetchData = async () => {
-      console.log(existedWarriors);
+      if (existedWarriors) {
+        console.log("exited warriorrrrsssss");
+        console.log(existedWarriors);
+      }
+
       // const townInst = new ethers.Contract(
       //   townV2,
       //   TownV2.abi,

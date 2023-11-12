@@ -12,7 +12,11 @@ export async function apiCall() {
     const APIresponse = await axios.get(
       `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsV2}&apikey=${apiKey}`
     );
-
+    const APIresponse2 = await axios.get(
+      `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${townV2}&apikey=${apiKey}`
+    );
+    console.log("Res1",APIresponse);
+      console.log("Res2",APIresponse2);
     const events = APIresponse.data.result;
     console.log("Fetched events :", events );
     return events;
@@ -124,9 +128,8 @@ export async function fetchLandsData(address) {
 export async function getTypes() {
   const townInst = new ethers.Contract(townV2, TownABI, provider);
   const existedWarriors = await townInst.getWarriorTypes()
-  const existedBuildings = await townInst.getBuildings();
   console.log("Here is warrior types:", existedWarriors);
-  return existedWarriors, existedBuildings
+  return existedWarriors
 }
 
 export async function fetchTownsData(params) {}
