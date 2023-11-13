@@ -36,7 +36,7 @@ export default function Navbar({
   const apiKey = process.env.SEPOLIA_API_KEY;
   const address = useAddress();
   let a = 1;
-
+  let events = [];
   const fetchEvents = async () => {
     // if (visibleConfirmation) {
     //   const timeout = setTimeout(() => {
@@ -46,7 +46,7 @@ export default function Navbar({
     //   return () => clearTimeout(timeout);
     // }
 
-    let events = [];
+
     if (fetchEvents.length == 0) {
       try {
         events = await apiCall();
@@ -70,7 +70,7 @@ export default function Navbar({
     console.log(`owned lands:${landBalance.toString()}`);
     if (landBalance > 0) {
       const currentAddressLands = await getConnectedAddressLands(
-        fetchedEvents,
+        events,
         address
       );
       setLandObj(currentAddressLands);
@@ -78,10 +78,14 @@ export default function Navbar({
   }
 
   useEffect(() => {
+    const controller = new AbortController();
     fetchEvents();
-    if (address && fetchedEvents) {
+    return () => controller.abort()
+    console.log(events);
+    if (address != undefined && events.length > 0) {
       getData();
     }
+
   }, [address]);
 
   return (
