@@ -27,7 +27,7 @@ body {
 } */
 .tw-connect-wallet{
   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif !important;
-  background-color: #365045 !important;
+  background-color: #1f2c26 !important;
   /* background-color: transparent !important; */
   color: rgb(255, 255, 255) !important;
   border-radius: 2rem !important;
@@ -42,7 +42,7 @@ body {
   background-color: #5c7269 !important;
 }
 .tw-connected-wallet {
-  background-color: #365045 !important;
+  background-color: #1f2c26 !important;
 
   height: 3.5rem !important;
   border-radius: 2rem !important;
