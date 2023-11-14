@@ -3,18 +3,18 @@
 export const links = [
     {
         name: "Home",
-        hash: "#Home",
+        hash: "hHome",
     },
     {
         name: "Explore",
-        hash: "#Explore",
+        hash: "#explore",
     },
     {
         name: "My land",
-        hash: "#MyLand",
+        hash: "#myLand",
     },
     {
         name: "Faucet",
-        hash: "#Faucet",
+        hash: "#faucet",
     },
-]
+] as const;
