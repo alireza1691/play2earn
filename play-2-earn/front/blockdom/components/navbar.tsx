@@ -1,7 +1,7 @@
 "use client"
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { ConnectWallet } from "@thirdweb-dev/react";
+import { ConnectWallet, WalletConnect } from "@thirdweb-dev/react";
 import React, { Fragment, useState } from "react";
 import { links } from '@/lib/data';
 import Link from 'next/link';
@@ -86,24 +86,26 @@ export default function Navbar() {
 
     </header> */}
     <header className=" z-999 relative">
-      <div className='flex w-full fixed h-[5rem] bg-[#365045] top-0'></div>
-      <nav className="fixed mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
-        <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 ">
+      <div className='fixed  w-full  h-[5rem] bg-[#365045] top-0 '></div>
+      <nav className="sm:w-full fixed mx-auto top-0 flex md:w-full items-center justify-between  lg:px-8 h-[5rem] w-full   " aria-label="Global">
+        <div className="flex lg:flex-1 ">
+          <a href="#" className="m-2.5">
             <span className="sr-only">Your Company</span>
             <Image className="h-10 w-auto" src="/BlockdomLogo.png" width={90} height={90} alt="" />
           </a>
         </div>
-        <div className="flex lg:hidden">
+        <div className="sm:ml-5 flex lg:hidden">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-50 right-0 w-fit mr-2"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
+          
         </div>
+        <div className='lg:hidden mr-2'><ConnectWallet/></div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-50">
@@ -172,7 +174,7 @@ export default function Navbar() {
       </nav>
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-10" />
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-[#365045] px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>

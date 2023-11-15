@@ -26,27 +26,29 @@ body {
     rgb(var(--background-start-rgb));
 } */
 .tw-connect-wallet{
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif !important;
-  background-color: #1f2c26 !important;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: rgba(0, 0, 0, 0.15) !important;
   /* background-color: transparent !important; */
-  color: rgb(255, 255, 255) !important;
-  border-radius: 2rem !important;
+  color: white !important;
+  border-radius: 1rem !important;
   height: 3.5rem !important;
   opacity: 0.9 !important;
   filter: blur(15px) ; /* Adjust the blur radius as per your requirement */
-  padding-inline: 2rem !important;
-  box-shadow: 0 0.1rem 0.3rem 0.1rem rgba(255, 255, 255, 0.1) !important;
+  padding-inline: 1rem !important;
+
 }
 .tw-connect-wallet:hover {
-  color: azure !important;
-  background-color: #5c7269 !important;
+  color: white !important;
+  background-color: rgba(0, 0, 0, 0.25) !important;
+  /* box-shadow: 0 0.2rem 0.3rem 0.1rem rgba(0, 0, 0, 0.5) !important; */
+  transition:  all 0.15s ease-in-out;;
 }
 .tw-connected-wallet {
-  background-color: #1f2c26 !important;
-
+  background-color: rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
   height: 3.5rem !important;
-  border-radius: 2rem !important;
-  box-shadow: 0 0.1rem 0.3rem 0.1rem rgba(255, 255, 255, 0.07) !important;
+  border-radius: 1rem !important;
+
 }
 .tw-connected-wallet__balance {
   color: rgb(209, 209, 209) !important;
