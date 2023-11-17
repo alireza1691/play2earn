@@ -86,7 +86,7 @@ export default function Navbar() {
 
     </header> */}
     <header className=" z-999 relative">
-      <div className='fixed  w-full  h-[5rem] bg-[#365045] top-0 z-30 opacity-75' ></div>
+      <div className='fixed  w-full  h-[5rem] bg-[#365045] top-0 z-30' ></div>
       <nav className="sm:w-full fixed mx-auto top-0 flex md:w-full items-center justify-between  lg:px-8 h-[5rem] w-full z-30  " aria-label="Global">
         <div className="flex lg:flex-1 ">
           <a href="#" className="m-2.5">

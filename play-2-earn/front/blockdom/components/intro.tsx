@@ -39,12 +39,14 @@ export default function Intro() {
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur hic saepe eaque asperiores, maxime quaerat ad harum eveniet? Praesentium dolores autem soluta illum, iure assumenda saepe consectetur. Eveniet, repellendus ut.</p>
           </motion.div>
           <div className="mt-8">
-            <button className="py-3 px-7 mr-4 tex bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  text-black rounded-[0.8rem] text-[0.8rem] font-semibold   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB] ">Get start</button>
-            <a className="py-[14px] px-7 mr-4 tex border-neutral-50 border-[1px] text-[0.8rem] rounded-[0.8rem] font-semibold " href="https://blockdom.app" target={"_blank"} >Check the Documentation</a>
+            <motion.button initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }} className="py-3 px-7 mr-4 tex bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  text-black rounded-[0.8rem] text-[0.8rem] font-semibold   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB] ">Get start</motion.button>
+            <motion.a initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }} className="py-[14px] px-7 mr-4 tex border-neutral-50 border-[1px] text-[0.8rem] rounded-[0.8rem] font-semibold " href="https://blockdom.app" target={"_blank"} >Check the Documentation</motion.a>
           </div>
         </div>
       </div>
-      <div className="w-full max-w-[50rem] md:w-[55%] pt-[4rem] sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 2xl:pt-0 flex flex-col items-center gap-5 z-10 pl-[3rem] pr-[6rem] min-h-[40rem]">
+      <div className="w-full max-w-[50rem] md:w-[55%] pt-[4rem] sm:pt-0 md:pt-0 lg:pt-0 xl:pt-0 2xl:pt-0 flex flex-col items-center gap-5 z-10 pl-[3rem] pr-[6rem] min-h-[40rem] opacity-50">
           <div className="flex h-[50%] w-full bg-white/20 gap-5">
             <div className=" w-[50%] h-full flex flex-col gap-5 ">
                 <div className=" bg-white/50 h-[50%] w-full"></div>
@@ -58,8 +60,9 @@ export default function Intro() {
 
           </div>
       </div>
-      <div className=" flex flex-col items-center invisible sm:visible w-full h-[30rem]  absolute mt-[10rem]">        <Image className=" rounded-full opacity-70 brightness-140 w-[574px] h-[660px]" src={grid} width={300} height={300} objectFit="cover" alt="Grid" />
-</div>
+      <motion.div initial={{ opacity: 0, scale: 1}}
+      animate={{ opacity:1, scale: 1 }} transition={{ duration : 1.2}} className=" flex flex-col items-center invisible sm:visible w-full h-[30rem]  absolute mt-[10rem]">        <Image className=" rounded-full opacity-70 brightness-140 w-[574px] h-[660px]" src={grid} width={300} height={300} objectFit="cover" alt="Grid" />
+</motion.div>
     </section>
 
   );    
