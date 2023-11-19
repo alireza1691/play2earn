@@ -39,11 +39,11 @@ export default function Intro() {
             <h1 className=" text:[72px]  sm:text-[48px] text-center sm:text-left font-bold">Lorem ipsum dolor sit amet</h1>
             <p className=" text-center text-[16px] text-gray-400  font-medium sm:text-left pt-4" >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur hic saepe eaque asperiores, maxime quaerat ad harum eveniet? Praesentium dolores autem soluta illum, iure assumenda saepe consectetur. Eveniet, repellendus ut.</p>
           </motion.div>
-          <div className="t-4 md:mt-8 flex flex-wrap px-[4rem] md:px-0">
+          <div className="t-4 md:mt-8 flex flex-wrap px-[4rem] md:px-0 gap-2">
             <motion.button initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }} className="py-3 px-7 mr-4 tex bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  text-black rounded-[0.8rem] text-[0.8rem] font-semibold   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB] ">Get start</motion.button>
+        animate={{ opacity: 1, y: 0 }} className="greenButton ">Get start</motion.button>
             <motion.a initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }} className="py-[14px] px-7 mr-4 tex border-neutral-50 border-[1px] text-[0.8rem] rounded-[0.8rem] font-semibold " href="https://blockdom.app" target={"_blank"} >Documentation</motion.a>
+        animate={{ opacity: 1, y: 0 }} className="py-[14px] px-7 tex border-neutral-50 border-[1px] text-[0.8rem] rounded-[0.8rem] font-semibold " href="https://blockdom.app" target={"_blank"} >Documentation</motion.a>
           </div>
         </div>
       </div>

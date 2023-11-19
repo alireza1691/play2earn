@@ -1,4 +1,5 @@
 "use client"
+import Questions from '@/components/askedQ'
 import Intro from '@/components/intro'
 import Roadmap from '@/components/roadmap'
 import Starter from '@/components/starter'
@@ -10,6 +11,7 @@ export default function Home() {
       <Intro/>
       <Starter/>
       <Roadmap/>
+      <Questions/>
     </main>
   )
 }

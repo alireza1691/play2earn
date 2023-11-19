@@ -2,29 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+
+.greenButton {
+  @apply py-3 px-7 mr-4 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  text-black rounded-[0.8rem] text-[0.8rem] font-semibold   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB];
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-} */
 .tw-connect-wallet{
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   background-color: rgba(0, 0, 0, 0.15) !important;

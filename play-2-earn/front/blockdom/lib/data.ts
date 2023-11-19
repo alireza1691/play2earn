@@ -51,3 +51,27 @@ export const roadmapSteps = [
       releaseTime: " Q4 2024",
     },
   ] as const;
+   
+
+  export const questions = [
+    {
+        title: "What is Blockdom?",
+        answer: " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam suscipit eos minus officiis dignissimos itaque harum minima quod, eius amet, maiores vero nulla nemo, totam ducimus vel fuga consectetur incidunt?",
+    },
+    {
+        title: "What is Blockdom?",
+        answer: " Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
+    },
+    {
+        title: "What is Blockdom?",
+        answer: " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam suscipit eos minus officiis dignissimos itaque harum minima quod, eius amet, maiores vero nulla nemo",
+    },
+    {
+        title: "What is Blockdom?",
+        answer: " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam suscipit eos minus officiis dignissimos itaque harum minima quod, eius amet",
+    },
+    {
+        title: "What is Blockdom?",
+        answer: " Lorem ipsum dolor, sit amet ",
+    },
+  ] 
