@@ -35,3 +35,24 @@
 .tw-connected-wallet__balance {
   color: rgb(209, 209, 209) !important;
 }
+.question {
+  transition: max-height 0.3s ease-out;
+  max-height: 3rem;
+  overflow: hidden;
+}
+
+.opened {
+  max-height: 20rem; /* Set an appropriate value for your content */
+}
+
+.bgCircle {
+  width: 20rem;
+  height: 20rem;
+  top: -5rem;
+  left: -10rem;
+  background-color: #4caf50; /* Change the background color as needed */
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(8rem);
+  z-index: -10;
+}
