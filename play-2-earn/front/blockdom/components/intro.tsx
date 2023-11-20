@@ -49,20 +49,20 @@ export default function Intro() {
       </div>
       <div className="w-full mt-[10rem] lg:mt-0  lg:w-[50%] pt-[4rem] sm:pt-0 flex flex-col items-center gap-5 z-10  opacity-50 ">
           <div className="flex  w-full  gap-5 mr-auto  justify-center lg:justify-start">
-            <div className="  h-full flex flex-col gap-5 justify-around ">
+            <div className="  h-full flex flex-col gap-3 justify-around ">
                 <div className=" bg-white/50  rounded-2xl overflow-hidden">
-                  <Image src={"/"} width={318} height={242} alt={"test"}></Image>
+                  <Image className=" object-fill w-[318px] h-[242px]" src={"/test.jpeg"} width={318} height={242} alt={"test"}></Image>
                 </div>
                 <div className=" bg-white/30 rounded-2xl overflow-hidden">
-                <Image src={"/"} width={318} height={204} alt={"test"}></Image>
+                <Image className=" object-cover w-[318px] h-[204px]" src={"/test.jpeg"} width={318} height={204} alt={"test"}></Image>
                 </div>
             </div>
             <div className=" bg-white/40 rounded-2xl overflow-hidden">
-            <Image src={"/"} width={299} height={466} alt={"test"}></Image>
+            <Image className=" object-fill h-[466px] w-[299px] " src={"/test.jpeg"} width={299} height={466} alt={"test"}></Image>
             </div>
           </div>
           <div className=" bg-white/10 rounded-2xl overflow-hidden mr-auto justify-center lg:justify-start">
-          <Image src={"/"} width={637} height={374} alt={"test"}></Image>
+          <Image src={"/test.jpeg"} width={637} height={374} alt={"test"}></Image>
           </div>
       </div>
       <motion.div initial={{ opacity: 0, scale: 1}}
