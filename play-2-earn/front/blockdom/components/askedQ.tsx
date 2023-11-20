@@ -17,7 +17,7 @@ export default function Questions() {
         {/* <div className='w-[20rem] h-[20rem] left-[-10rem] bg-light-green-800 absolute rounded-full blur-[5rem] -z-10'></div> */}
         <div  className={" flex flex-col overflow-hidden bg-gray-50/10 py-3 px-4 rounded-[0.5rem] relative "}>
            
-            <div className='w-[20rem] h-[20rem] top-[-5rem] left-[-10rem] bg-light-green-800 absolute rounded-full blur-[8rem] -z-10'></div>
+            <div className='w-[20rem] h-[20rem] top-[-5rem] left-[-10rem] bg-green-800 absolute rounded-full blur-[8rem] -z-10'></div>
             <div className=' flex justify-between'>
             <h2 className=' text-[14px] flex items-center'>{question.title}</h2>
             {openedQ == index ? <a className=' cursor-pointer p-1' onClick={() => setOpenedQ(null)}>&#8963;</a> : <a className=' cursor-pointer p-1' onClick={() => setOpenedQ(index)}>&gt;</a> }
