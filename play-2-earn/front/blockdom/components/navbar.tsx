@@ -86,8 +86,8 @@ export default function Navbar() {
 
     </header> */}
     <header className=" z-999 relative">
-      <div className='fixed  w-full  h-[5rem] bg-[#46b989] dark:bg-[#365045] top-0 z-30' ></div>
-      <nav className="sm:w-full fixed mx-auto top-0 flex md:w-full items-center justify-between  lg:px-8 h-[5rem] w-full z-30  " aria-label="Global">
+      <div className='fixed  w-full  h-[4rem] bg-[#46b989] dark:bg-[#365045] top-0 z-30' ></div>
+      <nav className="sm:w-full fixed mx-auto top-0 flex md:w-full items-center justify-between  lg:px-8 h-[4rem] w-full z-30  " aria-label="Global">
         <div className="flex lg:flex-1 ">
           <a href="#" className="m-2.5">
             <span className="sr-only">Your Company</span>

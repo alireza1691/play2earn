@@ -1,11 +1,17 @@
 import { roadmapSteps } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
 import React from "react";
 
 export default function Roadmap() {
 
+  const {ref} = useSectionInView("Roadmap")
 
   return (
-    <section className="relative mb-[22.5rem]">
+    <section ref={ref} id="roadmap" className="relative mb-[22.5rem]">
+      <div className="mb-10 px-8 text-center lg:text-left lg:px-[10rem]">
+        <h3 className="mb-4 font-bold text-2xl text-[#A5F4B6]">Roadmap</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat, accusantium laudantium aspernatur, quis provident adipisci dolor odit amet voluptas ratione non alias libero cum architecto odio iure, blanditiis perferendis molestias.</p>
+      </div>
       <div className="h-[50rem] w-1 md:h-1 left-[50%] md:left-0 md:w-full  absolute mt-[10rem] md:mt-[20rem] bg-gradient-to-t md:bg-gradient-to-r from-black via-gray-200 "></div>
       <div className=" w-[30rem] h-[20rem] bg-[#1a3a27] absolute left-1/2 -translate-x-1/2 mt-[25rem] md:mt-[10rem] rounded-full blur-[10rem]"></div>
       <div className=" relative flex flex-col md:flex-row items-center justify-around px-[10rem] h-[55rem] pt-[18rem] md:pt-0 mt-[10rem] md:h-[initial] md:mt-0 ">

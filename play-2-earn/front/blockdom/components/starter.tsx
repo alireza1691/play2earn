@@ -2,10 +2,13 @@ import Image from 'next/image'
 import React from 'react'
 
 import { motion } from 'framer-motion'
+import { useSectionInView } from '@/lib/hooks'
 
 export default function Starter() {
+
+  const { ref } = useSectionInView("Get strated", 0.5)
   return (
-    <section className='mt-[10rem] relative min-h-[50rem] flex justify-center mb-[10rem] '>
+    <section ref={ref} id='starter' className='mt-[10rem] relative min-h-[50rem] flex justify-center mb-[10rem] '>
       <div className='flex flex-row absolute  bg-blue-gray-50/5 h-15rem justify-center w-full '>
         <Image className=' absolute left-[-10rem]  lg:left-[8rem] xl:left-[7.5rem] 2xl:left-[20%] top-[5rem] lg:top-[0rem]' src={"/leftSideUnion.svg"} width={317} height={292} alt={"union1"} ></Image>
         <Image src={"/circles.svg"} width={744} height={744} alt={"circles"} className=' absolute left-1/2 -translate-x-1/2 brightness-200  shadow-2xl ' ></Image>

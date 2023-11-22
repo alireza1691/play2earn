@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { questions } from "@/lib/data";
+import { useSectionInView } from "@/lib/hooks";
 
 export default function Questions() {
   const [openedQ, setOpenedQ] = useState<number | null>(null);
+  const {ref} = useSectionInView("F Questions")
   return (
-    <section className=" transition-all duration-1000 ease-out w-full px-10 sm:px-[20%] xl:px-[25%] flex flex-col">
+    <section ref={ref} id="questions" className=" transition-all duration-1000 ease-out w-full px-10 sm:px-[20%] xl:px-[25%] flex flex-col">
       <h2 className=" text-[36px] text-white text-center font-bold">
         Frequently Asked Questions
       </h2>
