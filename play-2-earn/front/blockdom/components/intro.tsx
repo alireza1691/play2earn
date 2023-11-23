@@ -134,7 +134,7 @@ export default function Intro() {
         className=" flex flex-col items-center invisible lg:visible w-full h-[30rem]  absolute mt-[10rem]"
       >
         <Image
-          className=" opacity-20 blur-sm dark:blur-none rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]"
+          className=" opacity-20 blur-sm dark:blur-none object-fill rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]"
           src={"/grid.svg"}
           width={300}
           height={300}
