@@ -20,28 +20,30 @@ const {
       // Contracts are deployed using the first signer/account by default
       const [owner, otherAccount] = await ethers.getSigners();
   
-      const ERC20 = await ethers.getContractFactory("BKT");
-      const bkt = await ERC20.deploy();
-      const bktdd = await bkt.getAddress();
-      const Lands = await ethers.getContractFactory("LandsV2");
+      const ERC20 = await ethers.getContractFactory("BMT");
+      const BMTToken = await ERC20.deploy();
+      const landsInstance = await ethers.getContractFactory("LandsV2");
       console.log("Deploying lands...");
-      const lands = await Lands.deploy({});
+      const lands = await landsInstance.deploy({});
       console.log("Lands deployed!");
-      const Town = await ethers.getContractFactory("TownV2");
-      const town = await Town.deploy(bktdd, lands.getAddress())
+      const townInstance = await ethers.getContractFactory("TownV3");
+      const town = await townInstance.deploy(BMTToken.getAddress(), lands.getAddress())
       console.log("Town and Land are deployed!");
    
       console.log("Minting a land...");
-      await bkt.transfer(otherAccount, ethers.parseEther("500000"))
+      await BMTToken.transfer(otherAccount, ethers.parseEther("500000"))
       await lands.mintLand(101,101, {value: ethers.parseEther("0.02")})
       await lands.connect(otherAccount).mintLand(109,109, {value: ethers.parseEther("0.02")})
 
       console.log("Minted");
       console.log("Depositing in lands...");
-      await bkt.approve(town.getAddress(), ethers.parseEther("500000"))
-      await town.splitDeposit(101101, ethers.parseEther("50000"));
-      await bkt.connect(otherAccount).approve(town.getAddress(), ethers.parseEther("500000"))
-      await town.connect(otherAccount).splitDeposit(109109, ethers.parseEther("50000"));
+      await BMTToken.approve(town.getAddress(), ethers.parseEther("500000"))
+      await town.deposit( ethers.parseEther("500000"));
+      await town.buyBatchOfGoods(101101,ethers.parseEther("400000"))
+      await BMTToken.connect(otherAccount).approve(town.getAddress(), ethers.parseEther("500000"))
+      await town.connect(otherAccount).deposit(109109, ethers.parseEther("500000"));
+      await town.connect(otherAccount).buyBatchOfGoods(109109,ethers.parseEther("400000"))
+
       console.log("Deposited");
       const bal = await town.getAssetsBal(101101);
   
@@ -59,7 +61,7 @@ const {
     //   await lands.connect(otherAccount).mintLand(101, 101,{value: ethers.parseEther("0.2")});
 
 
-      console.log("Building a Stone mine...");
+      console.log("Building a wood lumber...");
       await town.build(101101, 0);
       console.log("Builded");
       const land101101data = await town.getLandIdData(101101);
@@ -101,7 +103,7 @@ const {
       });
       it("Building other construction ignoring last build timestamp should revert. ", async function () {
         const { town} = await loadFixture(deployLandsContract);
-         expect( town.build(101101, 1)).to.be.rejectedWith("TimeLimitation")
+         expect( town.build(101101, 1)).to.be.rejectedWith("WorkerIsBusy")
       });
       it("Should upgrade the building", async function () {
         const {  town } = await loadFixture(deployLandsContract);
@@ -132,13 +134,13 @@ const {
       it("Test barracks and attack", async function () {
         const { town, otherAccount, lands} = await loadFixture(deployLandsContract);
         // User should not build warrior if barracks level = 0
-        await expect(town.recruit(101101, 2, 10)).to.be.rejectedWith("LevelLessThanMin")
+        await expect(town.recruit(101101, 2, 10)).to.be.rejectedWith("BarracksLevelLowerThanWarrior")
 
         // Building barracks for both accounts
         await town.buildBarracks(101101)
         await town.connect(otherAccount).buildBarracks(109109)
         console.log("Upgdarin level of barracks");
-        // Should revert if user tries to build warrior with type that requires higher barracks level.
+        // Should revert if user tries to build warrior with type that that is not exist.
         await expect(town.recruit(101101, 3, 10)).to.be.rejectedWith("InvalidItem")
         // Upgrading up to level 3
         // await town.buildBarracks(101101)
