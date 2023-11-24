@@ -251,7 +251,6 @@ contract Barracks is Ownable{
 
     function _attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId) internal  returns(bool, uint256){
         require(warriorsAmounts.length == warriorTypes.length, "Lengths does not match");
-        // uint256 totalArmy;
         uint256 attackerPower;
         uint256 attackerHp;
         uint256 defenderPower;
@@ -260,7 +259,6 @@ contract Barracks is Ownable{
 
         for (uint i = 0; i < warriorsAmounts.length; i++) {
             require(landArmy[attackerId][i] >= warriorsAmounts[i], "Insufficient army");
-            // totalArmy += warriorsAmounts[i];
             landArmy[attackerId][i] -= warriorsAmounts[i];
 
             attackerPower += warriorTypes[i].attackPower * warriorsAmounts[i];
@@ -268,12 +266,7 @@ contract Barracks is Ownable{
             defenderPower += warriorTypes[i].defPower * defenderWarriorsAmounts[i];
             defenderHp += warriorTypes[i].hp * defenderWarriorsAmounts[i];
         }
-        // require(totalArmy > 0, "Army = 0");
-        // (uint256 defenderHeroTokenId, uint256[] memory heroInfo) = getHero(targetId);
-        // if (defenderHeroTokenId != 0) {
-        //     defenderPower += heroInfo[1];
-        //     defenderHp += heroInfo[2];
-        // }
+
 
         (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = _calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
 
@@ -412,7 +405,7 @@ contract TownV3 is Ownable, Barracks{
 
 
 
-    uint256[5] private baseBararcksRequiredCommodities = [50 ether, 50 ether, 50 ether, 50 ether, 100 ether];
+    uint256[4] private baseBararcksRequiredCommodities = [ 100 ether, 100 ether, 250 ether, 150 ether];
     uint8 private constant maxBuildingsCapacity = 12;
     uint8 private constant baseArmyCapacity = 50;
     uint256 private tokenIdCounter = 1;
@@ -421,13 +414,12 @@ contract TownV3 is Ownable, Barracks{
     uint256[] private totalExistedGood;
 
     struct Info {
-        uint256 requiredStone;
         uint256 requiredWood;
         uint256 requiredIron;
-        uint256 requiredGold;
         uint256 requiredFood;
+        uint256 requiredGold;
         uint256 revTokenIndex;
-        // string imageURL;
+
         string buildingName;
     }
 
@@ -441,7 +433,7 @@ contract TownV3 is Ownable, Barracks{
     }
 
     struct LandIdData {
-        uint256[5] commoditiesBalance;
+        uint256[4] commoditiesBalance;
         uint256 latestBuildTimeStamp;
         uint256[] buildedBuildings;
         uint256 barracksLevel;
@@ -468,12 +460,11 @@ contract TownV3 is Ownable, Barracks{
     constructor(address BlockchainsKingdomToken ,address landsContract/*, address heroes*/){
         BKT = IERC20(BlockchainsKingdomToken);
         LANDS = ILands(landsContract);
-        buildings.push(Info(0,200 ether,150 ether,0, 25 ether,0/*,"https://ipfs.io/ipfs/QmPNnffNtgiXHhbFFKpzJG6FwgWTRgpWVv7FJza5hK7V7o"*/,"Stone mine"));
-        buildings.push(Info(50 ether,50 ether,250 ether,0, 25 ether,1/*,"https://ipfs.io/ipfs/QmU99dxpwMoFAGSoQPLxB6YVAoYSk1iwbDoKj2CuM2pKyB"*/,"Lumber mill"));
-        buildings.push(Info(100 ether, 100 ether, 100 ether, 0, 25 ether, 2/*, "Url"*/,"Iron mine"));
-        buildings.push(Info( 250 ether, 50 ether, 0, 0, 100 ether, 4/*,"Replace this with image url"*/,"Farm"));
-        buildings.push(Info(250 ether, 250 ether, 250 ether, 0, 50 ether, 3/*, "Url"*/,"Gold mine"));
-        for (uint i = 0; i<5; i++) 
+        buildings.push(Info(100 ether,250 ether,50 ether, 25 ether,0,"Lumber mill"));
+        buildings.push(Info(100 ether, 100 ether, 100 ether, 50 ether, 1,"Iron mine"));
+        buildings.push(Info( 150 ether, 50 ether, 150 ether, 25 ether, 2,"Farm"));
+        buildings.push(Info(250 ether, 200 ether, 50 ether, 100 ether, 3,"Gold mine"));
+        for (uint i = 0; i<4; i++) 
         {
         landData[101101].commoditiesBalance[i] += 10000 ether;
         landData[105105].commoditiesBalance[i] += 10000 ether;
@@ -536,8 +527,8 @@ contract TownV3 is Ownable, Barracks{
         totalExistedGood[commodityIndex] += goodAmount;
     }
 
-    function buyBatchOfGoods (uint256 landTokenId, uint256[5] memory amounts) external onlyLandOwner(landTokenId){
-        uint256[5] memory prices = getGoodsPrice();
+    function buyBatchOfGoods (uint256 landTokenId, uint256[4] memory amounts) external onlyLandOwner(landTokenId){
+        uint256[4] memory prices = getGoodsPrice();
         uint256 sumAmounts;
         for (uint i = 0; i < amounts.length; i++) {
             sumAmounts += (amounts[i] * prices[i] / 1 ether);
@@ -558,7 +549,7 @@ contract TownV3 is Ownable, Barracks{
             revert InsufficientCommodity();
         }
         landData[landTokenId].commoditiesBalance[fromIndex] -= amountIn;
-        uint256[5] memory prices = getGoodsPrice();
+        uint256[4] memory prices = getGoodsPrice();
         uint256 amountOut = (amountIn * prices[fromIndex]) /(prices[toIndex] * 1 ether);
         landData[landTokenId].commoditiesBalance[toIndex] += amountOut * 9 / 10; // Including 10% burn
         totalExistedGood[fromIndex] -= amountOut;
@@ -568,7 +559,7 @@ contract TownV3 is Ownable, Barracks{
 
     function sellCommodity( uint256 landTokenId, uint256[5] memory amounts) external {
         uint256 totalAmount;
-        uint256[5] memory prices = getGoodsPrice();
+        uint256[4] memory prices = getGoodsPrice();
         for (uint i = 0; i < amounts.length; i++) {
             if (amounts[i] > 0) {
                 if (landData[landTokenId].commoditiesBalance[i] <= amounts[i]) {
@@ -604,14 +595,12 @@ contract TownV3 is Ownable, Barracks{
             revert TimeLimitation();
         }
         Info memory selecteduilding = buildings[buildingIndex];
-        require( landData[landTokenId].commoditiesBalance[0] >= selecteduilding.requiredStone && 
-        landData[landTokenId].commoditiesBalance[1] >= selecteduilding.requiredWood &&
-        landData[landTokenId].commoditiesBalance[2] >= selecteduilding.requiredIron &&
-        landData[landTokenId].commoditiesBalance[3] >= selecteduilding.requiredFood &&
-        landData[landTokenId].commoditiesBalance[4] >= selecteduilding.requiredGold
+        require( landData[landTokenId].commoditiesBalance[0] >= selecteduilding.requiredWood && 
+        landData[landTokenId].commoditiesBalance[1] >= selecteduilding.requiredIron &&
+        landData[landTokenId].commoditiesBalance[2] >= selecteduilding.requiredFood &&
+        landData[landTokenId].commoditiesBalance[3] >= selecteduilding.requiredGold 
         , "Insufficient commodities");
         _spendCommodities(landTokenId, [
-            selecteduilding.requiredStone,
             selecteduilding.requiredWood,
             selecteduilding.requiredIron,
             selecteduilding.requiredFood,
@@ -634,14 +623,12 @@ contract TownV3 is Ownable, Barracks{
         uint256 typeIndex = tokenIdStatus[buildingTokenId].buildingTypeIndex;
         uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
         Info memory selecteduilding = buildings[typeIndex];
-        require( landData[landTokenId].commoditiesBalance[0]  >= selecteduilding.requiredStone * (currentLevel+1) && 
-        landData[landTokenId].commoditiesBalance[1]  >= selecteduilding.requiredWood * (currentLevel+1) &&
-        landData[landTokenId].commoditiesBalance[2]  >= selecteduilding.requiredIron * (currentLevel+1) &&
-        landData[landTokenId].commoditiesBalance[3]  >= selecteduilding.requiredGold * (currentLevel+1) &&
-        landData[landTokenId].commoditiesBalance[4]  >= selecteduilding.requiredFood * (currentLevel+1)
+        require( landData[landTokenId].commoditiesBalance[0]  >= selecteduilding.requiredWood * (currentLevel+1) && 
+        landData[landTokenId].commoditiesBalance[1]  >= selecteduilding.requiredIron * (currentLevel+1) &&
+        landData[landTokenId].commoditiesBalance[2]  >= selecteduilding.requiredFood * (currentLevel+1) &&
+        landData[landTokenId].commoditiesBalance[3]  >= selecteduilding.requiredGold * (currentLevel+1)
         , "Insufficient commodities");
         _spendCommodities(landTokenId, [
-            selecteduilding.requiredStone * (currentLevel+1),
             selecteduilding.requiredWood * (currentLevel+1),
             selecteduilding.requiredIron * (currentLevel+1),
             selecteduilding.requiredGold * (currentLevel+1),
@@ -662,8 +649,7 @@ contract TownV3 is Ownable, Barracks{
         require(balArray[0] >= baseBararcksRequiredCommodities[0] &&
         balArray[1] >= baseBararcksRequiredCommodities[1] * (currentLevel+1) && 
         balArray[2] >= baseBararcksRequiredCommodities[2] * (currentLevel+1) &&
-        balArray[3] >= baseBararcksRequiredCommodities[3] * (currentLevel+1) &&
-        balArray[4] >= baseBararcksRequiredCommodities[4] * (currentLevel+1)
+        balArray[3] >= baseBararcksRequiredCommodities[3] * (currentLevel+1)
         , "Insufficient commodities");
         _spendCommodities(landTokenId,baseBararcksRequiredCommodities);
         landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (landData[landTokenId].barracksLevel+1));
@@ -678,8 +664,8 @@ contract TownV3 is Ownable, Barracks{
         if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
             uint256 remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
             uint256 requiredGold = (remainedTimestamp / 1 hours) * 10 ether;
-            if (landData[landTokenId].commoditiesBalance[4] >= requiredGold) {
-                landData[landTokenId].commoditiesBalance[4] -= requiredGold;
+            if (landData[landTokenId].commoditiesBalance[3] >= requiredGold) {
+                landData[landTokenId].commoditiesBalance[3] -= requiredGold;
                 landData[landTokenId].latestBuildTimeStamp = block.timestamp - 1 minutes;
                 totalExistedGood[4] -= requiredGold;
             } else {
@@ -710,7 +696,7 @@ contract TownV3 is Ownable, Barracks{
             revert MaxCapacity();
         }
 
-        _spendCommodities(landTokenId,[0,0,0,baseWarriorRequiredFood * amount,getWarriorTypes()[typeIndex].price * amount]);
+        _spendCommodities(landTokenId,[0,0,baseWarriorRequiredFood * amount,getWarriorTypes()[typeIndex].price * amount]);
         _addWarrior(typeIndex, amount, landTokenId);
     }
 
@@ -772,14 +758,14 @@ contract TownV3 is Ownable, Barracks{
         return rev;
     }
 
-    function getGoodsPrice() view public returns (uint256[5] memory ) {
+    function getGoodsPrice() view public returns (uint256[4] memory ) {
         uint256 sumTotalGoods;
-        uint256[5] memory prices; 
+        uint256[4] memory prices; 
         for (uint i = 0; i < totalExistedGood.length; i++) {
             sumTotalGoods += totalExistedGood[i];
         }
         for (uint i = 0; i < totalExistedGood.length; i++) {
-            prices[i] =  (sumTotalGoods * 1 ether) / (totalExistedGood[i] * 5);
+            prices[i] =  (sumTotalGoods * 1 ether) / (totalExistedGood[i] * 4);
         }
         return prices;
     }
@@ -835,10 +821,10 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
 
     function _spendCommodities(uint256 landTokenId,
-        uint256[5] memory amounts
+        uint256[4] memory amounts
         ) internal {
             // require(amounts.length == 5, "Length does not match");
-            for (uint i = 0; i < 5; i++) {
+            for (uint i = 0; i < 4; i++) {
                 landData[landTokenId].commoditiesBalance[i] -= amounts[i];
                 totalExistedGood[i] -= amounts[i];
             }
