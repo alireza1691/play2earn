@@ -56,3 +56,26 @@
   filter: blur(8rem);
   z-index: -10;
 }
+
+.gradientParagraph{
+  background: linear-gradient(
+    to right,
+    rgb(68, 208, 94),
+    rgb(68, 208, 94),
+    rgb(32, 32, 32),
+    rgb(32, 32, 32),
+    rgb(32, 32, 32)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.gradientTitle{
+  background: linear-gradient(
+    to right,
+    #1ca453,
+    /* #2E4F3B, */
+    rgb(32, 32, 32)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
