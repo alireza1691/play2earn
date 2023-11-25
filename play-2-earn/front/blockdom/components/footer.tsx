@@ -6,10 +6,11 @@ import { FaAngleRight } from "react-icons/fa6";
 import { FaAngleUp } from "react-icons/fa6";
 
 import Image from "next/image";
+import { footerRow1, footerRow2 } from "@/lib/data";
 
 export default function Footer() {
   return (
-    <section className=" flex flex-col bg-[#213830] bottom-0 mt-[15rem]">
+    <section className=" flex flex-col text-white/75 bg-[#213830] bottom-0 mt-[15rem]">
       <div className="flex  justify-center gap-5 text-[26px] py-5">
         <AiFillTwitterCircle />
         <FaDiscord />
@@ -32,26 +33,25 @@ export default function Footer() {
               placeholder="Email"
               className=" text-white bg-white/20  py-2 px-4 rounded-xl border-[0.15rem] border-white/20   "
             ></input>
-            <FaAngleRight className=" cursor-pointer text-[40px] p-2 text-black bg-white absolute right-[2px] top-[2px] rounded-xl" />
+            <FaAngleRight className=" cursor-pointer text-[40px] p-2 text-gray-700 bg-white absolute right-[2px] top-[2px] rounded-xl" />
           </div>
         </div>
-        <div className="w-full lg:w-[45%] px-[4rem] flex flex-wrap gap-10 justify-center lg:justify-start mt-20 lg:mt-0">
-          <div className="  flex flex-col gap-4">
-            <h2 className=" text-[22px] font-bold">Support</h2>
-            <h3 className=" opacity-70">dsfsdsdf</h3>
-            <h3 className=" opacity-70">sdfsdf</h3>
-            <h3 className=" opacity-70">sdjfklsjanlk</h3>
+        <div className="w-full  lg:w-[45%] px-[4rem] flex flex-wrap gap-10 justify-center lg:justify-start mt-20 lg:mt-0">
+          <div className=" justify-center flex flex-col gap-4">
+            {footerRow1.map((item,index) => (
+              <h3 className="  cursor-pointer  hover:opacity-70 opacity-90">{item.name}</h3>
+            ))}
+            {/* <h2 className="  text-[22px] font-bold">Support</h2>*/}
           </div>
-          <div className=" flex flex-col gap-4">
-            <h2 className=" text-[22px] font-bold">Terms</h2>
-            <h3 className=" opacity-70">dsfsdsdf</h3>
-            <h3 className=" opacity-70">sdfsdf</h3>
-            <h3 className=" opacity-70">sdjfklsjanlk</h3>
+          <div className=" flex flex-col gap-4 justify-center">
+          {footerRow2.map((item,index) => (
+              <h3 className=" cursor-pointer hover:opacity-70 opacity-90">{item.name}</h3>
+            ))}
           </div>
         </div>
       </div>
       <div className=" flex flex-col sm:flex-row justify-around items-center p-10 mt-10 relative" >
-        <Image src={"/"} width={200} height={50} alt={"logo"}></Image>
+        <Image src={"/BlockdomLogo.png"} width={70} height={60} alt={"logo"}></Image>
         <p className="absolute">@2024 Blockdom. All right reserved</p>
         <a className="p-4 bg-[#62AE94] rounded-full"><FaAngleUp/></a>
       </div>

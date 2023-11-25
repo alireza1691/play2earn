@@ -1,3 +1,4 @@
+import { useTheme } from "@/context/theme-context";
 import { useSectionInView } from "@/lib/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -6,6 +7,7 @@ import ExploreBox from "./exploreBox";
 
 export default function Intro() {
   const { ref } = useSectionInView("Home", 0.5);
+  const { theme } = useTheme()
 
   return (
     <section ref={ref} className="flex flex-wrap sm:p-0 h-auto" id="home">
@@ -59,15 +61,7 @@ export default function Intro() {
             >
               Get start
             </motion.button>
-            {/* <motion.a
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              className=" dark:bg-transparent bg-gray-300 py-[14px] px-7 tex  border-gray-300 dark:border-neutral-50 border-[1px] text-[0.8rem] rounded-[0.8rem] font-semibold "
-              href="https://blockdom.app"
-              target={"_blank"}
-            >
-              Documentation
-            </motion.a> */}
+   
           </div>
         </div>
       </div>
@@ -101,7 +95,7 @@ export default function Intro() {
               <motion.button
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="px-5 py-3 border-[0.13rem] border-gray-500/30 w-fit rounded-xl bg-black/50 hover:bg-gray-800/30 "
+                className=" text-[14px] px-5 py-3 border-[0.13rem] text-white dark:text-gray-300 dark:border-gray-400 border-gray-500/30 w-fit rounded-xl bg-black/50 hover:bg-gray-800/80 transition-all"
               >
                 Enter TESTNET
               </motion.button>
@@ -109,7 +103,7 @@ export default function Intro() {
           </div>
           <div className=" h-full w-1/2 overflow-hidden border-l-2 border-gray-600/30 flex flex-col relative justify-center">
             <Image
-              className=" hover:scale-150 hover:translate-y-12 hover:translate-x-12 transition ease-out duration-300 right-[6rem] w-fit h-fit absolute"
+              className=" hover:scale-125 hover:translate-y-12 hover:translate-x-8 transition ease-out duration-500 right-[6rem] w-fit h-fit absolute"
               src={"/icons/kingdom18.png"}
               width={720}
               height={1024}
@@ -134,8 +128,8 @@ export default function Intro() {
         className=" flex flex-col items-center invisible lg:visible w-full h-[30rem]  absolute mt-[10rem]"
       >
         <Image
-          className=" opacity-20 blur-sm dark:blur-none object-fill rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]"
-          src={"/grid.svg"}
+          className={`opacity-30 dark:blur-none object-fill rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]`}
+          src={theme === "dark" ? `/grid.svg` : "/lightGrid.svg"}
           width={300}
           height={300}
           objectFit="cover"

@@ -19,6 +19,35 @@ export const links = [
     },
 ] as const;
 
+export const footerRow1 = [
+  {
+    name:"Contact",
+    route: "",
+  },
+  {
+    name:"Terms",
+    route: "",
+  },
+  {
+    name:"Privacy",
+    route: "",
+  },
+]
+export const footerRow2 = [
+  {
+    name:"Support",
+    route: "",
+  },
+  {
+    name:"About us",
+    route: "",
+  },
+  {
+    name:"FAQ",
+    route: "",
+  },
+]
+
 export const roadmapSteps = [
     {
       stepNum: 1,
