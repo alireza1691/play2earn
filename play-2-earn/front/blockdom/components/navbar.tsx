@@ -47,41 +47,21 @@ export default function Navbar() {
     <>
     <header className=" z-999 relative">
       <div className='fixed  w-full  h-[4rem] bg-[#46b989] dark:bg-[#365045] top-0 z-30' ></div>
-      <nav className="sm:w-full fixed mx-auto top-0 flex md:w-full items-center justify-between  lg:px-8 h-[4rem] w-full z-30  " aria-label="Global">
-        <div className="flex lg:flex-1 ">
-          <a href="#" className="m-2.5">
-            <span className="sr-only">Your Company</span>
-            <Image className="h-10 w-auto rounded-full shadow-xl bg-white/60 dark:bg-transparent dark:shadow-none" src="/BlockdomLogo.png" width={90} height={90} alt="" />
-          </a>
-        </div>
-        <div className="sm:ml-5 flex lg:hidden">
+      <nav className="fixed mx-auto top-0 flex  items-center justify-between  lg:px-8 h-[4rem] w-full z-30  " aria-label="Global">
+        
+        <div className=" ml-3 sm:ml-5 flex lg:hidden">
           <button
             type="button"
             className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-50 right-0 w-fit mr-2"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <Bars3Icon className=" h-6 w-6" aria-hidden="true" />
           </button>
           
         </div>
-        <div className='lg:hidden mr-2'>
-          <ConnectWallet 
-          modalSize='wide'
-          theme={theme === "dark" ? "dark" : "light"}
-          welcomeScreen={{
-            title: "Blockdom",
-            subtitle: "Decentralized P2E game",
-            img: {
-              src: "/BlockdomLogo.png",
-              width: 80,
-              height: 80,
-            }
-          }}
-           />
-          </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <Popover className="relative">
+          <Popover className="relative ">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-50">
               Product
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
@@ -138,10 +118,32 @@ export default function Navbar() {
           <a href="#" className="text-sm font-semibold leading-6 text-gray-50">
             Marketplace
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-50">
+          {/* <a href="#" className="text-sm font-semibold leading-6 text-gray-50">
             Company
-          </a>
+          </a> */}
         </Popover.Group>
+        <div className="flex lg:flex-1 absolute left-1/2 -translate-x-1/2">
+          <a href="#" className="m-2.5">
+            <span className="sr-only">Your Company</span>
+            <Image className="h-14 w-auto rounded-full shadow-xl bg-white/60 dark:bg-transparent dark:shadow-none" src="/BlockdomLogo.png" width={120} height={120} alt="" />
+          </a>
+        </div>
+        <div className='lg:hidden mr-2'>
+          <ConnectWallet 
+          modalSize='wide'
+          theme={theme === "dark" ? "dark" : "light"}
+          welcomeScreen={{
+            title: "Blockdom",
+            subtitle: "Decentralized P2E game",
+            img: {
+              src: "/BlockdomLogo.png",
+              width: 80,
+              height: 80,
+            }
+          }}
+           />
+          </div>
+    
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <ConnectWallet
                   modalSize='wide'

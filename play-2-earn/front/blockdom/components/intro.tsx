@@ -85,7 +85,7 @@ export default function Intro() {
                 Explore
               </motion.button>
             </div>
-            <div className="w-full lg:h-1/2 flex flex-col  border-t-2 border-r-2 border-gray-600/40 justify-around items-center text-center">
+            <div className="w-full h-1/2 lg:h-1/2 flex flex-col  border-t-2 border-r-2 border-gray-600/40 justify-around items-center text-center">
               <h3 className=" opacity-80">
                 Play on{" "}
                 <span className=" uppercase underline">Testnet</span> before
@@ -129,7 +129,7 @@ export default function Intro() {
       >
         <Image
           className={`opacity-30 dark:blur-none object-fill rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]`}
-          src={theme === "dark" ? `/grid.svg` : "/lightGrid.svg"}
+          src={theme === "dark" ? `/svg/other/grid.svg` : "/svg/other/lightGrid.svg"}
           width={300}
           height={300}
           objectFit="cover"
