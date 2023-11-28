@@ -1,38 +1,18 @@
 "use client"
-import dynamic from 'next/dynamic';
-import { motion } from 'framer-motion';
 import { ConnectWallet, WalletConnect } from "@thirdweb-dev/react";
 import React, { Fragment, useState } from "react";
-import { links } from '@/lib/data';
-import Link from 'next/link';
+import { callsToAction, links, navDropdownItems } from '@/lib/data';
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react'
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon, } from '@heroicons/react/20/solid'
 import {
-  ArrowPathIcon,
   Bars3Icon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import Image from 'next/image';
 import { useTheme } from '@/context/theme-context';
+import { useRouter } from 'next/navigation'
 
 
-// const ConnectWallet = dynamic(() => import('@thirdweb-dev/react').then(module => module.ConnectWallet), { ssr: false });
-
-const products = [
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-  { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
-]
-const callsToAction = [
-{ name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-{ name: 'Contact sales', href: '#', icon: PhoneIcon },
-]
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -42,6 +22,7 @@ function classNames(...classes: string[]) {
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { theme } = useTheme()
+  const router = useRouter()
 
   return (
     <>
@@ -63,7 +44,7 @@ export default function Navbar() {
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
           <Popover className="relative ">
             <Popover.Button className="flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-50">
-              Product
+              About
               <ChevronDownIcon className="h-5 w-5 flex-none text-gray-400" aria-hidden="true" />
             </Popover.Button>
 
@@ -78,7 +59,7 @@ export default function Navbar() {
             >
               <Popover.Panel className="absolute -left-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
-                  {products.map((item) => (
+                  {navDropdownItems.map((item) => (
                     <div
                       key={item.name}
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-50"
@@ -112,20 +93,20 @@ export default function Navbar() {
             </Transition>
           </Popover>
 
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-50">
-            Features
+          <a onClick={() => { router.push('/explore')}}  className=" cursor-pointer text-sm font-semibold leading-6 text-gray-50">
+            Explore
           </a>
           <a href="#" className="text-sm font-semibold leading-6 text-gray-50">
-            Marketplace
+            Dashboard
           </a>
           {/* <a href="#" className="text-sm font-semibold leading-6 text-gray-50">
             Company
           </a> */}
         </Popover.Group>
         <div className="flex lg:flex-1 absolute left-1/2 -translate-x-1/2">
-          <a href="#" className="m-2.5">
-            <span className="sr-only">Your Company</span>
-            <Image className="h-14 w-auto rounded-full shadow-xl bg-white/60 dark:bg-transparent dark:shadow-none" src="/BlockdomLogo.png" width={120} height={120} alt="" />
+          <a onClick={() => { router.push('/')}} className="m-2.5">
+            <span className="sr-only ">Your Company</span>
+            <Image className=" cursor-pointer h-14 w-auto rounded-full shadow-xl bg-white/60 dark:bg-transparent dark:shadow-none" src="/BlockdomLogo.png" width={120} height={120} alt="" />
           </a>
         </div>
         <div className='lg:hidden mr-2'>
@@ -194,7 +175,7 @@ export default function Navbar() {
                         />
                       </Disclosure.Button>
                       <Disclosure.Panel className="mt-2 space-y-2">
-                        {[...products, ...callsToAction].map((item) => (
+                        {[...navDropdownItems, ...callsToAction].map((item) => (
                           <Disclosure.Button
                             key={item.name}
                             as="a"

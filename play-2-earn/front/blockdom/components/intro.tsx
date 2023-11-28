@@ -1,13 +1,20 @@
+
 import { useTheme } from "@/context/theme-context";
 import { useSectionInView } from "@/lib/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
 import ExploreBox from "./exploreBox";
+import { useRouter } from "next/navigation"
+
+
 
 export default function Intro() {
-  const { ref } = useSectionInView("Home", 0.5);
+  const { ref } = useSectionInView("Home", 0.3);
   const { theme } = useTheme()
+  const router = useRouter()
+
+
 
   return (
     <section ref={ref} className="flex flex-wrap sm:p-0 h-auto" id="home">
@@ -43,7 +50,7 @@ export default function Intro() {
               duration: 0.5,
             }}
           >
-            <h1 className="mt-10 text:[72px] text-gray-800 dark:text-gray-200 sm:text-[48px] text-center sm:text-left font-bold">
+            <h1 className="mt-10 text-3xl text-gray-800 dark:text-gray-200 sm:text-[48px] text-center sm:text-left font-bold">
               Blockdom
             </h1>
             <p className=" text-center text-[16px] text-gray-600 dark:text-gray-400  font-medium sm:text-left pt-4">
@@ -81,6 +88,7 @@ export default function Intro() {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="greenButton "
+                onClick={() => {router.push("/explore")}}
               >
                 Explore
               </motion.button>

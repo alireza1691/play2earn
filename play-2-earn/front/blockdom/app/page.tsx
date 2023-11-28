@@ -1,20 +1,23 @@
 "use client"
 import Questions from '@/components/askedQ'
+import Footer from '@/components/footer';
 import Intro from '@/components/intro'
 import Roadmap from '@/components/roadmap'
-
+import SideBar from "@/components/sideBar";
 import Starter from '@/components/starter'
-import TopBar from '@/components/topBar'
-import Image from 'next/image'
+import FAQ from '@/components/faq';
 
 export default function Home() {
   return (
-    <main className="flex flex-col ">
-      <TopBar/>
+    <main className="flex flex-col pt-[7rem]">
+      <SideBar/>
       <Intro/>
       <Starter/>
       <Roadmap/>
-      <Questions/>
+      {/* <Questions/> */}
+      <FAQ/>
+      <Footer/>
+
     </main>
   )
 }
