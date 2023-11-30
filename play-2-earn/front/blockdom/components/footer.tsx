@@ -22,10 +22,8 @@ export default function Footer() {
             Join our community
           </h2>
           <p className="text-[14px] opacity-60 text-white">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
-            neque quod est architecto reprehenderit unde iusto laborum
-            exercitationem ipsum. Tenetur qui laudantium esse ratione.
-            Accusantium, nulla. Esse facere distinctio cum.
+          Blockdom is a place where you can build your kingdom and earn from.
+
           </p>
           <div className=" w-fit flex flex-row relative mt-8 left-1/2 -translate-x-1/2 lg:left-0 lg:-translate-x-0">
             {" "}

@@ -64,7 +64,7 @@ export default function Intro() {
             <motion.button
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
-              className="greenButton "
+              className="greenButton shadow-lg"
             >
               Get start
             </motion.button>
@@ -87,7 +87,7 @@ export default function Intro() {
               <motion.button
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="greenButton "
+                className="greenButton shadow-lg "
                 onClick={() => {router.push("/explore")}}
               >
                 Explore
@@ -103,7 +103,7 @@ export default function Intro() {
               <motion.button
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                className=" text-[14px] px-5 py-3 border-[0.13rem] text-white dark:text-gray-300 dark:border-gray-400 border-gray-500/30 w-fit rounded-xl bg-black/50 hover:bg-gray-800/80 transition-all"
+                className=" shadow-lg text-[14px] px-5 py-3 border-[0.13rem] text-white dark:text-gray-300 dark:border-gray-400 border-gray-500/30 w-fit rounded-xl bg-black/50 hover:bg-gray-800/80 transition-all"
               >
                 Enter TESTNET
               </motion.button>

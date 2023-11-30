@@ -25,22 +25,26 @@ export const links = [
     {
         name: "Home",
         hash: "#home",
-        icon: "/icons/home.svg"
+        icon: "/icons/home.svg",
+        darkIcon: "/icons/homeBlack.svg"
     },
     {
         name: "Get strated",
         hash: "#starter",
-        icon: "/icons/starter.svg"
+        icon: "/icons/starter.svg",
+        darkIcon: "/icons/starterBlack.svg"
     },
     {
         name: "Roadmap",
         hash: "#roadmap",
-        icon: "/icons/roadmap.svg"
+        icon: "/icons/roadmap.svg",
+        darkIcon: "/icons/roadmapBlack.svg"
     },
     {
         name: "F Questions",
         hash: "#questions",
-        icon: "/icons/FAQ.svg"
+        icon: "/icons/FAQ.svg",
+        darkIcon: "/icons/FAQBlack.svg"
     },
 ] as const;
 

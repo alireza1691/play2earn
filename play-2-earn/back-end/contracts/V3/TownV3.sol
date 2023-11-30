@@ -405,7 +405,7 @@ contract TownV3 is Ownable, Barracks{
     uint256 private constant BaseWarriorRequiredFood = 3 ether;
     uint256 private tokenIdCounter = 1;
     uint256[] private totalExistedGood;
-    uint256 private constant trnasferCostPercentage = 5;
+    uint256 private constant TrnasferCostPercentage = 5;
 
     struct Info {
         uint256 requiredFood;
@@ -571,9 +571,9 @@ contract TownV3 is Ownable, Barracks{
     function transferGoods(uint256 goodIndex, uint256 amount, uint256 fromId, uint256 toId) external onlyLandOwner(fromId){
         require(landData[fromId].goodsBalance[goodIndex] >= amount, "Insufficient balance");
         landData[fromId].goodsBalance[goodIndex] -= amount;
-        landData[toId].goodsBalance[goodIndex] += amount * (100-trnasferCostPercentage) / 100;
+        landData[toId].goodsBalance[goodIndex] += amount * (100-TrnasferCostPercentage) / 100;
         uint256[2] memory amounts;
-        amounts[goodIndex] = amount * trnasferCostPercentage / 100;
+        amounts[goodIndex] = amount * TrnasferCostPercentage / 100;
         emit GoodsConsumption(amounts, toId);
     }
 
