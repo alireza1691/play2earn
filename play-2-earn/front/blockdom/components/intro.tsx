@@ -4,7 +4,7 @@ import { useSectionInView } from "@/lib/hooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
-import ExploreBox from "./exploreBox";
+import { IoMdDownload } from "react-icons/io";
 import { useRouter } from "next/navigation"
 
 
@@ -32,7 +32,7 @@ export default function Intro() {
             {" "}
             <Image
               className=" right-0 object-center  rounded-[1rem] "
-              src={"/warriors/archerWoman.png"}
+              src={"/warriors/archerWoman6.png"}
               width={477}
               height={416}
               alt="sample"
@@ -68,7 +68,14 @@ export default function Intro() {
             >
               Get start
             </motion.button>
-   
+            <motion.button
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="group flex flex-row items-center gap-3 border-2 border-gray-200/60 px-5 rounded-xl shadow-lg"
+            >
+              Whitepaper <IoMdDownload className=" text-xl group-hover:translate-y-1 transition-all" />
+            </motion.button>
+
           </div>
         </div>
       </div>
@@ -112,7 +119,7 @@ export default function Intro() {
           <div className=" h-full w-1/2 overflow-hidden border-l-2 border-gray-600/30 flex flex-col relative justify-center">
             <Image
               className=" hover:scale-125 hover:translate-y-12 hover:translate-x-8 transition ease-out duration-500 right-[6rem] w-fit h-fit absolute"
-              src={"/icons/kingdom18.png"}
+              src={"/parcels/kingdom17.png"}
               width={720}
               height={1024}
               alt={"test"}

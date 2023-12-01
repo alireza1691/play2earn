@@ -30,7 +30,7 @@ export default function RootLayout({
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
         <ThirdwebProvider>
-        <Navbar/>
+        <Navbar/>  
         {children}
         </ThirdwebProvider>
         <ThemeSwitch/>
