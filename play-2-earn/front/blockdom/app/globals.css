@@ -9,8 +9,6 @@
 
 .tw-connect-wallet{
   font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  background-color: rgba(0, 0, 0, 0.15) !important;
-  /* background-color: transparent !important; */
   color: white !important;
   border-radius: 1rem !important;
   height: 3.5rem !important;
@@ -18,6 +16,7 @@
   filter: blur(15px) ; /* Adjust the blur radius as per your requirement */
   padding-inline: 1rem !important;
 
+  height: fit-content !important;
 }
 .tw-connect-wallet:hover {
   color: white !important;

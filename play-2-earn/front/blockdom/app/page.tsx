@@ -6,6 +6,7 @@ import Roadmap from '@/components/roadmap'
 import SideBar from "@/components/sideBar";
 import Starter from '@/components/starter'
 import FAQ from '@/components/faq';
+import Carousel from '@/components/carousel';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <SideBar/>
       <Intro/>
       <Starter/>
+      <Carousel/>
       <Roadmap/>
       {/* <Questions/> */}
       <FAQ/>
