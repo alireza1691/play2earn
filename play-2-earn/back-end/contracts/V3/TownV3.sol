@@ -380,14 +380,14 @@ contract Barracks is Ownable{
     function _calculateDistance(uint256 fromTokenId, uint256 toTokenId, uint speed) internal pure returns (uint distance, uint estimatedTime) {
         (uint256 fromX, uint256 fromY) = separateCoordinates(fromTokenId) ;
         (uint256 toX, uint256 toY) = separateCoordinates(toTokenId) ;
-        speed = 1;
+        speed = 5;
         // Calculate the Euclidean distance between the two coordinates using the Pythagorean theorem
         uint deltaX = toX > fromX ? toX - fromX : fromX - toX;
-        uint deltaY = toY > fromY ? fromY - toY : fromY - toY;
+        uint deltaY = toY > fromY ? toY - fromY : fromY - toY;
         distance = sqrt(deltaX**2 + deltaY**2);
 
         // Estimate the time based on the predefined speed (distance / speed)
-        estimatedTime = distance / speed;
+        estimatedTime = distance*100 / speed;
 
         return (distance, estimatedTime);
     }
@@ -823,12 +823,12 @@ contract TownV3 is Ownable, Barracks{
         return dispatchedArmies[landTokenId] ;
     }
 
-    function war(uint256 landTokenId ,uint256 dispatchedArmyIndex, uint256 wallsLevel) internal  returns(bool, uint256){
+    function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external  returns(bool, uint256){
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         uint256 attackerPower ;
         uint256 attackerHp;
         (,uint256 defenderPower, uint256 defenderHp,) = getArmyInfo(dArmy.target);
-        defenderPower += defenderPower * (wallsLevel * 5 /100);
+        defenderPower += defenderPower * (landData[dArmy.target].wallLevel * 5 /100);
         for (uint i = 0; i < dArmy.amounts.length; i++) {
             attackerPower += dArmy.amounts[i] * warriorTypes[i].attackPower;
             attackerHp += dArmy.amounts[i] * warriorTypes[i].hp;
@@ -838,6 +838,7 @@ contract TownV3 is Ownable, Barracks{
 
         // Updating Army of each user condsidering losses.
         _reduceBatchWarriorByPercent(remainedDefenderArmy, dArmy.target);
+        dArmy.isReturning = true;
         dArmy.remainedArmybyPercent = remainedAttackerArmy;
         if (success) {
             uint256[2] memory amounts = _calculateLoot(dArmy.target, remainedAttackerArmy-remainedDefenderArmy);
@@ -933,12 +934,16 @@ contract TownV3 is Ownable, Barracks{
         return (landData[landTokenId]);
     }
 
-    function getRemainedBuildTimestamp(uint256 landTokenId) view public returns (uint256) {
-        uint256 remainedTimestamp;
+    function getRemainedBuildTimestamp(uint256 landTokenId) view public returns (uint256 remainedTimestamp) {
         if (landData[landTokenId].latestBuildTimeStamp > block.timestamp ) {
             remainedTimestamp = (landData[landTokenId].latestBuildTimeStamp - block.timestamp)/ 1 minutes;
         }
-        return remainedTimestamp;
+    }
+    function getRemainedDispatchTimestamp(uint256 landTokenId, uint256 dispatchIndex ) view public returns (uint256 remainedTimestamp) {
+        uint256 time = dispatchedArmies[landTokenId][dispatchIndex].remainedTime;
+        if (time > block.timestamp) {
+            remainedTimestamp = (time - block.timestamp)/ 1 minutes;
+        }
     }
     function getGoodsBal(uint256 landTokenId) view public returns (uint256[2] memory) {
         return landData[landTokenId].goodsBalance;

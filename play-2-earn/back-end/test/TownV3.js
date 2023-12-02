@@ -139,43 +139,81 @@ const {
         expect(balBeforeClaiming[0]).to.below(balAfterClaiming[0]+ ethers.parseEther("250"));
       });
 
-      it("Test barracks and attack", async function () {
-        const { town, otherAccount, lands} = await loadFixture(deployLandsContract);
-        // User should not build warrior if barracks level = 0
+      it("Tests ability of upgrading barracks", async function () {
+        const { town} = await loadFixture(deployLandsContract);
+        const dataBeforeUpgrade = await town.getLandIdData(101101)
+        await town.buildBarracks(101101)
+        const dataAfterUpgrade = await town.getLandIdData(101101)
+        expect(dataBeforeUpgrade.barracksLevel).to.below(dataAfterUpgrade.barracksLevel)
+
+      })
+      it("Should revert if user try to recruit warrior higher than barracks level", async function () {
+        const { town} = await loadFixture(deployLandsContract);
         await expect(town.recruit(101101, 2, 10)).to.be.rejectedWith("BarracksLevelLowerThanWarrior")
 
+      })
+      it("Should revert if user try to recruit invalid warrior index", async function () {
+        const { town} = await loadFixture(deployLandsContract);
+        await expect(town.recruit(101101, 3, 10)).to.be.rejectedWith("InvalidItem")
+
+      })
+      it("Should create warrior if user try to recruit valid unlocked warrior ", async function () {
+        const { town} = await loadFixture(deployLandsContract);
+        const armyBeforeRecruit = await town.getArmyInfo(101101)
+        await town.buildBarracks(101101)
+        await town.recruit(101101, 0, 10)
+        const armyAfterRecruit = await town.getArmyInfo(101101)
+
+        expect(armyBeforeRecruit[3]).to.equal(0)
+        expect(armyAfterRecruit[3]).to.equal(10)
+        
+      })
+
+      it("Test barracks and attack", async function () {
+        const { town, otherAccount, lands} = await loadFixture(deployLandsContract);
         // Building barracks for both accounts
         await town.buildBarracks(101101)
+        // await town.buildBarracks(101101)
+        // await town.buildBarracks(101101)
         await town.connect(otherAccount).buildBarracks(109109)
-        console.log("Upgdarin level of barracks");
-        // Should revert if user tries to build warrior with type that that is not exist.
-        await expect(town.recruit(101101, 3, 10)).to.be.rejectedWith("InvalidItem")
+        console.log("Upgdaring level of barracks");
+
         // Upgrading up to level 3
-        // await town.buildBarracks(101101)
-        // await town.buildBarracks(101101)
+
         await town.recruit(101101, 0, 10)
-        console.log("recruited!");
-        const armyBal = await town.getArmy(101101)
-        expect(armyBal[0]).to.be.equal(10)
-        // Building some warrior type 3 and some type 1 for account 2
         await town.recruit(101101, 1, 15)
+
         await town.connect(otherAccount).recruit(109109, 0, 10)
+        console.log("recruited!");
+
+  
         // If target is a land that has not been minted
-        await expect(town.attack([10,0,0],101101,102102)).to.be.rejectedWith(`ERC721NonexistentToken(${102102})`)
-        console.log("success");
+        // await expect(town.attack([10,0,0],101101,102102)).to.be.rejectedWith(`ERC721NonexistentToken(${102102})`)
+        await town.dispatchArmy([10,1,0],101101,109109)
+        console.log("dispathced!");
+
+        const dispatchedArmies = await town.getDispatchedArmies(101101)
+        console.log(dispatchedArmies);
+        const dispatchTime = await town.getRemainedDispatchTimestamp(101101,0)
+        expect(dispatchTime).to.greaterThan(0)
+        console.log("here is remained time:", dispatchTime);
         // If enter warrior amount bigger than number of warriors
-        await expect(town.attack([11,0,0],101101,109109)).to.be.revertedWith("Insufficient army")
-        const balanceOfAttackerBeforeWar = await town.getGoodssBal(101101)
-        const balanceOfDefenderBeforeWar = await town.getGoodssBal(109109)
+        // await expect(town.attack([11,0,0],101101,109109)).to.be.revertedWith("Insufficient army")
+        const balanceOfAttackerBeforeWar = await town.getGoodsBal(101101)
+        const balanceOfDefenderBeforeWar = await town.getGoodsBal(109109)
 
-        const armyOfAttackerBeforeAttack = await town.getArmyInfo(101101)[3]
-        const armyOfdefenderBeforeAttack = await town.getArmyInfo(109109)[3]
-        console.log("Army of attacker before:", armyOfAttackerBeforeAttack);
-        console.log("Army of defender before:", armyOfdefenderBeforeAttack);
+        // const armyOfAttackerBeforeAttack = await town.getArmyInfo(101101)[3]
+        const armyOfdefenderBeforeAttack = (await town.getArmyInfo(109109))[3]
+        // console.log("Army of attacker before:", armyOfAttackerBeforeAttack);
+        console.log("Army of defender before war:", armyOfdefenderBeforeAttack);
 
-        await town.attack([0,15,0],101101,109109)
-        const balanceOfAttackerAfterWar = await town.getGoodssBal(101101)
-        const balanceOfDefenderAfterWar = await town.getGoodssBal(109109)
+        // await town.attack([0,15,0],101101,109109)
+        await town.war(101101,0)
+        const dispatchedArmyAfterWar = await town.getDispatchedArmies(101101)
+        console.log("Dispatch after war:",dispatchedArmyAfterWar );
+
+        const balanceOfAttackerAfterWar = await town.getGoodsBal(101101)
+        const balanceOfDefenderAfterWar = await town.getGoodsBal(109109)
 
         console.log("Balance of attacker before war:",balanceOfAttackerBeforeWar);
         console.log("Balance of attacker after war:",balanceOfAttackerAfterWar);
@@ -204,6 +242,5 @@ const {
   
     });
   
-    describe("Mint ticket", function () {});
   });
   
