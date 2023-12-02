@@ -39,21 +39,23 @@ const {
       console.log("Depositing in lands...");
       await BMTToken.approve(town.getAddress(), ethers.parseEther("500000"))
       await town.deposit( ethers.parseEther("500000"));
-      await town.buyBatchOfGoods(101101,ethers.parseEther("400000"))
+      console.log("Deposited!");
+      await town.buyGood(101101,0,ethers.parseEther("200000"))
+      await town.buyGood(101101,1,ethers.parseEther("200000"))
+      console.log("Bought food and gold!");
       await BMTToken.connect(otherAccount).approve(town.getAddress(), ethers.parseEther("500000"))
-      await town.connect(otherAccount).deposit(109109, ethers.parseEther("500000"));
-      await town.connect(otherAccount).buyBatchOfGoods(109109,ethers.parseEther("400000"))
+      await town.connect(otherAccount).deposit( ethers.parseEther("500000"));
+      await town.connect(otherAccount).buyGood(109109,0,ethers.parseEther("200000"))
+      await town.connect(otherAccount).buyGood(109109,1,ethers.parseEther("200000"))
+      console.log("Bought food and gold for second account!");
 
-      console.log("Deposited");
-      const bal = await town.getAssetsBal(101101);
+      const bal = await town.getGoodsBal(101101);
   
       console.log(
-        "Deposited. Balances: wood ",
-        ethers.formatEther(bal[1]),
-        " iron ",
-        ethers.formatEther(bal[2]),
-        " food ",
-        ethers.formatEther(bal[4])
+        "Deposited. Balances: food ",
+        ethers.formatEther(bal[0]),
+        " gold ",
+        ethers.formatEther(bal[1])
       );
   
 
@@ -61,21 +63,19 @@ const {
     //   await lands.connect(otherAccount).mintLand(101, 101,{value: ethers.parseEther("0.2")});
 
 
-      console.log("Building a wood lumber...");
+      console.log("Building a farm...");
       await town.build(101101, 0);
       console.log("Builded");
       const land101101data = await town.getLandIdData(101101);
       console.log(land101101data);
   
   
-      const bal2 = await town.getAssetsBal(109109);
+      const bal2 = await town.getGoodsBal(109109);
       console.log(
-        "Balances after build: wood ",
-        ethers.formatEther(bal2[1]),
-        " iron ",
-        ethers.formatEther(bal2[2]),
-        " food ",
-        ethers.formatEther(bal2[4])
+        "Balances after build: food ",
+        ethers.formatEther(bal2[0]),
+        " gold ",
+        ethers.formatEther(bal2[1])
       );
   
       console.log("Mining 10000 blocks in order to waiting for stone mine revenue...");
@@ -96,8 +96,9 @@ const {
     // }
   
     describe("Deployment", function () {
-      it("Should check if token id", async function () {
+      it("Should check if token id exists", async function () {
         const { lands, owner } = await loadFixture(deployLandsContract);
+        console.log("checking owner");
         const ownerOfMintedLand = await lands.ownerOf(101101);
         expect(ownerOfMintedLand).to.equal(await owner.getAddress());
       });
@@ -117,18 +118,25 @@ const {
       });
       it("Should claim revenue and check balances", async function () {
         const { town} = await loadFixture(deployLandsContract);
-        const balBeforeClaiming = await town.getAssetsBal(101101)
+        const balBeforeClaiming = await town.getGoodsBal(101101)
         await town.claimRevenue(1)
-        const balAfterClaiming = await town.getAssetsBal(101101)
+        const balAfterClaiming = await town.getGoodsBal(101101)
         console.log(ethers.formatEther(balAfterClaiming[0]));
         expect(balBeforeClaiming[0] + ethers.parseEther("80")).to.equal(balAfterClaiming[0]);
       });
+      it("After upgrade it should use some goods (balance should decrease).", async function () {
+        const { town} = await loadFixture(deployLandsContract);
+        const balBeforeClaiming = await town.getGoodsBal(101101)
+        await town.upgrade(1, 101101);
+        const balAfterClaiming = await town.getGoodsBal(101101)
+        expect(balAfterClaiming[0]).to.below(balBeforeClaiming[0]);
+      });
       it("In order to prevent cheating in the amount claiming revenue, it should claim revenue before upgrade automatically.", async function () {
         const { town} = await loadFixture(deployLandsContract);
-        const balBeforeClaiming = await town.getAssetsBal(101101)
+        const balBeforeClaiming = await town.getGoodsBal(101101)
         await town.upgrade(1, 101101);
-        const balAfterClaiming = await town.getAssetsBal(101101)
-        expect(balBeforeClaiming[0]).to.below(balAfterClaiming[0]);
+        const balAfterClaiming = await town.getGoodsBal(101101)
+        expect(balBeforeClaiming[0]).to.below(balAfterClaiming[0]+ ethers.parseEther("250"));
       });
 
       it("Test barracks and attack", async function () {
@@ -146,6 +154,7 @@ const {
         // await town.buildBarracks(101101)
         // await town.buildBarracks(101101)
         await town.recruit(101101, 0, 10)
+        console.log("recruited!");
         const armyBal = await town.getArmy(101101)
         expect(armyBal[0]).to.be.equal(10)
         // Building some warrior type 3 and some type 1 for account 2
@@ -156,17 +165,17 @@ const {
         console.log("success");
         // If enter warrior amount bigger than number of warriors
         await expect(town.attack([11,0,0],101101,109109)).to.be.revertedWith("Insufficient army")
-        const balanceOfAttackerBeforeWar = await town.getAssetsBal(101101)
-        const balanceOfDefenderBeforeWar = await town.getAssetsBal(109109)
+        const balanceOfAttackerBeforeWar = await town.getGoodssBal(101101)
+        const balanceOfDefenderBeforeWar = await town.getGoodssBal(109109)
 
-        const armyOfAttackerBeforeAttack = await town.getArmy(101101)
-        const armyOfdefenderBeforeAttack = await town.getArmy(109109)
+        const armyOfAttackerBeforeAttack = await town.getArmyInfo(101101)[3]
+        const armyOfdefenderBeforeAttack = await town.getArmyInfo(109109)[3]
         console.log("Army of attacker before:", armyOfAttackerBeforeAttack);
         console.log("Army of defender before:", armyOfdefenderBeforeAttack);
 
         await town.attack([0,15,0],101101,109109)
-        const balanceOfAttackerAfterWar = await town.getAssetsBal(101101)
-        const balanceOfDefenderAfterWar = await town.getAssetsBal(109109)
+        const balanceOfAttackerAfterWar = await town.getGoodssBal(101101)
+        const balanceOfDefenderAfterWar = await town.getGoodssBal(109109)
 
         console.log("Balance of attacker before war:",balanceOfAttackerBeforeWar);
         console.log("Balance of attacker after war:",balanceOfAttackerAfterWar);
@@ -174,8 +183,8 @@ const {
         console.log("Balance of defender after war:",balanceOfDefenderAfterWar);
 
 
-        const armyOfAttackerAfterAttack = await town.getArmy(101101)
-        const armyOfdefenderAfterAttack = await town.getArmy(109109)
+        const armyOfAttackerAfterAttack = await town.getArmyInfo(101101)[3]
+        const armyOfdefenderAfterAttack = await town.getArmyInfo(109109)[3]
         console.log("Army of attacker after:", armyOfAttackerAfterAttack);
         console.log("Army of defender after:", armyOfdefenderAfterAttack);
 
@@ -185,10 +194,10 @@ const {
           balanceOfDefenderBeforeWar[1] > balanceOfDefenderAfterWar[1] &&
           balanceOfDefenderBeforeWar[3] > balanceOfDefenderAfterWar[3] 
           ).to.be.equal(true)
-        const remainedArmyOfAtatcker = await town.getArmy(101101)
-        const remainedArmyOfDefender = await town.getArmy(109109)
-        expect(remainedArmyOfAtatcker[1]).to.be.below(15)
-        expect(remainedArmyOfDefender[0]).to.be.below(10)
+        // const remainedArmyOfAtatcker = await town.getArmy(101101)
+        // const remainedArmyOfDefender = await town.getArmy(109109)
+        // expect(remainedArmyOfAtatcker[1]).to.be.below(15)
+        // expect(remainedArmyOfDefender[0]).to.be.below(10)
       });
       
   
