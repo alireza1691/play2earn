@@ -322,6 +322,20 @@ contract Barracks is Ownable{
         return (success, remainedAttackerArmy - remainedDefenderArmy );
     }
 
+    function test(uint256[] memory amounts, uint256[] memory amounts2) view public returns (bool, uint256, uint256) {
+        require(amounts.length == warriorTypes.length && amounts2.length == warriorTypes.length , "");
+        uint256 attPw;
+        uint256 hp1;
+        uint256 defPw;
+        uint256 hp2;
+        for (uint i = 0; i < warriorTypes.length; i++) {
+            attPw += warriorTypes[i].attackPower * amounts[i];
+            hp1 += warriorTypes[i].hp * amounts[i];
+            defPw += warriorTypes[i].defPower * amounts2[i];
+            hp2 += warriorTypes[i].hp * amounts2[i];
+        }
+        return _calculateWar(attPw, hp1, defPw, hp2);
+    }
 
     function _calculateWar(uint256 attackerPower, uint256 attackerHp, uint256 defenderPower, uint256 defenderHp) pure internal returns ( bool, uint256, uint256 ) {
         
@@ -334,11 +348,12 @@ contract Barracks is Ownable{
             if (attackerHp - defenderPower > defenderHp -  attackerPower) {
                 attackSuccess = true;
                 attackerRemainedArmyPercent = (attackerHp - (defenderPower/3))*100 / attackerHp;
-                targetRemainedArmyPercent = (defenderHp - attackerPower/2) *100 / defenderHp;
+                targetRemainedArmyPercent = (defenderHp - (attackerPower/2)) *100 / defenderHp;
             } else {
                 attackSuccess = false;
                 attackerRemainedArmyPercent = (attackerHp - (defenderPower/2))*100 / attackerHp;
-                targetRemainedArmyPercent = (defenderHp - attackerPower/3) *100 / defenderHp;
+                targetRemainedArmyPercent = ((defenderHp - (attackerPower/3)) *100) / defenderHp;
+
             }
         } else {
             
@@ -823,7 +838,7 @@ contract TownV3 is Ownable, Barracks{
         return dispatchedArmies[landTokenId] ;
     }
 
-    function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external  returns(bool, uint256){
+    function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external  returns(bool, uint256, uint256){
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         uint256 attackerPower ;
         uint256 attackerHp;
@@ -841,12 +856,12 @@ contract TownV3 is Ownable, Barracks{
         dArmy.isReturning = true;
         dArmy.remainedArmybyPercent = remainedAttackerArmy;
         if (success) {
-            uint256[2] memory amounts = _calculateLoot(dArmy.target, remainedAttackerArmy-remainedDefenderArmy);
+            uint256[2] memory amounts = _removeDefenderGoods(dArmy.target, remainedAttackerArmy-remainedDefenderArmy);
             dArmy.lootedAmounts = amounts;
         }
   
         emit Attack(landTokenId, dArmy.target,success, dArmy.lootedAmounts);
-        return (success, remainedAttackerArmy - remainedDefenderArmy );
+        return (success, remainedAttackerArmy , remainedDefenderArmy );
     }
 
     function joinDispatchedArmy(uint256 landTokenId, uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId){
@@ -1008,10 +1023,11 @@ contract TownV3 is Ownable, Barracks{
         return lootAmounts;
     }
 
-    function _calculateLoot(uint256 targetLandId, uint256 lootPercentage) view public returns (uint256[2] memory lootAmounts) {
+    function _removeDefenderGoods(uint256 targetLandId, uint256 lootPercentage) internal returns (uint256[2] memory lootAmounts) {
         for (uint i = 0; i < 2; i++) {
             uint256 lootAmount = landData[targetLandId].goodsBalance[i] * lootPercentage / 100;
             lootAmounts[i] = lootAmount;
+            landData[targetLandId].goodsBalance[i] -= lootAmount;
         } 
     }
 

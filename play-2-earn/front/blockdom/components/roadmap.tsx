@@ -9,6 +9,7 @@ export default function Roadmap() {
   return (
     <section ref={ref} id="roadmap" className="relative mb-[22.5rem]">
       <Image className=" -z-10  absolute right-0 lg:right-auto -bottom-[15rem] md:-bottom-[12.5rem] md:left-[3.5rem] lg:left-[7.5rem]" src={"/svg/unions/roadmapUnion.svg"} width={240} height={240} alt="union" />
+
       <div className="h-[66rem] w-1 lg:h-1 left-[50%] lg:left-0  lg:w-full  absolute mt-[25rem] lg:mt-[25rem] bg-gradient-to-t lg:bg-gradient-to-r from-white dark:from-black via-blue-gray-400/60 dark:via-gray-200 "></div>
       <div className=" w-[30rem] h-[20rem] dark:bg-[#1a3a27] absolute left-1/2 -translate-x-1/2 mt-[25rem] md:mt-[10rem] rounded-full blur-[10rem]"></div>
       <div className=" absolute mb-10 px-8  lg:px-[10rem]">

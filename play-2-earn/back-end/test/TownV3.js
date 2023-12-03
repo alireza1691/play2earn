@@ -189,7 +189,7 @@ const {
   
         // If target is a land that has not been minted
         // await expect(town.attack([10,0,0],101101,102102)).to.be.rejectedWith(`ERC721NonexistentToken(${102102})`)
-        await town.dispatchArmy([10,1,0],101101,109109)
+        await town.dispatchArmy([10,5,0],101101,109109)
         console.log("dispathced!");
 
         const dispatchedArmies = await town.getDispatchedArmies(101101)
@@ -208,6 +208,8 @@ const {
         console.log("Army of defender before war:", armyOfdefenderBeforeAttack);
 
         // await town.attack([0,15,0],101101,109109)
+        const resultOfTest = await town.test([10,1,0],[10,0,0])
+        console.log(resultOfTest);
         await town.war(101101,0)
         const dispatchedArmyAfterWar = await town.getDispatchedArmies(101101)
         console.log("Dispatch after war:",dispatchedArmyAfterWar );

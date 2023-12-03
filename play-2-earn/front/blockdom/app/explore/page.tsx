@@ -1,26 +1,52 @@
+"use client";
+
+import Slidebar from "@/components/exploreComponents/slidebar";
+import Attack from "@/components/gameComponents.tsx/attack";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+
+type Item = {
+  x: number;
+  y: number;
+};
 
 export default function Explore() {
+  const [slideBar, setSlideBar] = useState(false);
+  const [attackBox, setAttackBox] = useState(true)
+
+  const lands = (xFrom: number, yFrom: number) => {
+    let items = [];
+    for (let x = xFrom; x < xFrom + 10; x++) {
+      for (let y = yFrom; y < yFrom + 10; y++) {
+        items.push(x, y);
+      }
+    }
+  };
+
   return (
     <>
-      <div className="top-0 absolute  w-[100%] h-[55rem] z-0 ">
+      <div className="-z-10 relative left-0 top-0">
         <Image
-          className=" object-fill opacity-40 "
-          src={"/parcels/map.jpeg"}
-          fill
-          alt="background"
+          className="absolute top-[3rem] h-[60rem]  w-full -z-10 blur-sm object-cover"
+          src={"/svg/gameItems/bg.svg"}
+          width={1008}
+          height={629}
+          alt="deactivedParcel"
+        />
+        <Image
+          className=" absolute top-[3rem] h-[60rem]  w-full  z-10 shadow-xl object-cover"
+          src={"/svg/gameItems/clouds.svg"}
+          width={1008}
+          height={629}
+          alt="deactivedParcel"
         />
       </div>
-      <main className="h-[55rem] ">
-        <div className="mt-[4rem] p-[3rem]  flex flex-col lg:flex-row justify-evenly">
-          <div className="  border-2 border-[#D4D4D4]/30  z-10 shadow-xl backdrop-blur-[0.1rem]  rounded-lg bg-[#93F8DA]/20  lg:w-[15rem] xl:w-[17.5rem] 2xl:w-[20rem] h-[37.5rem] xl:h-[42.5rem] 2xl:h-[45rem]"></div>
-          <div className="  border-2 border-[#D4D4D4]/30  z-10  shadow-xl rounded-lg overflow-hidden bg-gray-600  lg:w-[37.5rem] xl:w-[45rem] 2xl:w-[50rem] h-[37.5rem] xl:h-[42.5rem] 2xl:h-[45rem] relative"> <Image src={"/parcels/map.jpeg"} fill alt="map" /></div>
-        </div>
-       
+
+      <main>
+        {slideBar && (<Slidebar slideBar={slideBar} setSlideBar={setSlideBar} />)}
+        {attackBox && <Attack/>}
+        
       </main>
-      <div className=" border-2 border-[#D4D4D4]/30 shadow-lg backdrop-blur-[0.1rem] rounded-3xl left-1/2 -translate-x-1/2 w-[50rem]  absolute bottom-10  h-20 bg-[#93F8DA]/30 "></div>
-    
     </>
   );
 }
