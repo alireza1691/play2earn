@@ -7,7 +7,8 @@ const nextConfig = {
                 hostname: "fill it",
             },
         ]
-    }
+    },
+    reactStrictMode: false
 }
 
 module.exports = nextConfig

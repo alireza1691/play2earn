@@ -47,17 +47,22 @@ export default function App() {
       </h2>
         </div>
 
-      <div className="w-full lg:w-[40rem] flex flex-row justify-center items-center z-10">
-        <Accordion variant="splitted">
+      <div className="w-full lg:w-[40rem] flex flex-row justify-center items-center z-10 ">
+        <Accordion variant="splitted" >
           {/* <div className="dark:w-[20rem]  dark:h-[20rem] h-[35rem] w-[35rem] top-[-5rem] dark:left-[-15rem] -right-[5rem] bg-gray-600/30 dark:bg-green-800 absolute rounded-full blur-[8rem] -z-10"></div> */}
 
           {questions.map((item, key) => (
+
+          
             <AccordionItem
-              className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 dark:from-gray-800/40 dark:via-gray-800/40 dark:to-green-700/90 `}
+              // className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 dark:from-gray-800/40 dark:via-gray-800/40 dark:to-green-700/90 `}
+              className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 `}
+
               key={key}
               aria-label="Accordion 1"
               title={item.title}
             >
+       
               <p
                 className={`${
                   theme === "dark"
@@ -69,6 +74,7 @@ export default function App() {
                 {item.answer}
               </p>
             </AccordionItem>
+
           ))}
         </Accordion>
       </div>
