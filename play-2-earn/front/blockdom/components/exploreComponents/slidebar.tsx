@@ -6,28 +6,51 @@ import Image from "next/image";
 import React, { useState } from "react";
 
 type sliderHookProps = {
-  slideBar: boolean;
-  setSlideBar: React.Dispatch<React.SetStateAction<boolean>>;
+  slidebar: boolean;
+  setSlidebar: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedLand: number | null;
 };
 
+type StringArray = string[];
+
 export default function Slidebar({
-  slideBar, setSlideBar
+  slidebar, setSlidebar, selectedLand
 }:sliderHookProps) {
 
   const isMinted = true;
 
+  // function getPermutations2(str:string) {
+  //   const results:string[] = [];
+  //   const chars = str.split('');
+  
+  
+  //   function generatePermutations(current:string, remaining:string[]) {
+  //       results.push(current);
+  //       for (let i = 0; i < remaining.length; i++) {
+  //         const nextChar = remaining[i];
+  //         const newCurrent = current + nextChar;
+  //         const newRemaining = remaining.slice(0, i).concat(remaining.slice(i + 1));
+  //           generatePermutations(newCurrent, newRemaining);
+  //       }
+  //   }
+  //     generatePermutations('', chars);
+  //   console.log( results);
+    
+  //   return results;
+  // }
+  
   return (
     <>
     <div
       className={`${
-        slideBar
-          ? " left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16"
+        slidebar
+          ? "z-10 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16"
           : "-left-[30rem]"
       } flex flex-col transition-all  top-28 absolute h-[50rem] w-[90%] md:w-[25rem] xl:w-[30rem] bg-[#21302A]/60 backdrop-blur-sm rounded-2xl `}
     >
       <div className="p-4 flex flex-row justify-between">
-        <h3 className=" text-white ">Land 101101</h3>
-        <a onClick={() => {setSlideBar(false)}}><CloseIcon/></a>
+        <h3 className=" text-white ">Land { selectedLand =! null && selectedLand}</h3>
+        <a className=" cursor-pointer rounded-md hover:bg-gray-500/20" onClick={() => {setSlidebar(false)}}><CloseIcon/></a>
 
       </div>
       <div className=" flex justify-center mt-2">
@@ -39,33 +62,24 @@ export default function Slidebar({
         />
       </div>
       <div className="flex flex-col gap-3">
-        <div className=" flex flex-col gap-2">
-          <div className=" flex flex-row justify-around">
+        <div className=" flex flex-row justify-evenly items-center">
+          <div className=" backdrop-brightness-50 shadow-xl items-center rounded-xl px-4 py-2 bg-[#9E9547]/40 bg-gradient-to-r from-[#FFFFFF]/40 via-[#FFFFFF]/20 to-[#FFFFFF]/30 flex flex-row gap-2">
             <Image
               src={"/svg/gameItems/goldIcon.svg"}
               width={32}
               height={32}
               alt="goldIcon"
             />
-            <h4 className=" text-white">12314123</h4>
+            <h4 className=" text-white font-semibold">12314123</h4>
           </div>
-          <div className=" flex flex-row justify-around">
+          <div className="backdrop-brightness-50 shadow-xl items-center rounded-xl px-4 py-2 bg-[#599E47]/40 bg-gradient-to-r from-[#FFFFFF]/20 via-[#FFFFFF]/10 to-[#FFFFFF]/30 flex flex-row gap-2">
             <Image
               src={"/svg/gameItems/goldIcon.svg"}
               width={32}
               height={32}
               alt="goldIcon"
             />
-            <h4 className=" text-white">12314123</h4>
-          </div>
-          <div className=" flex flex-row justify-around">
-            <Image
-              src={"/svg/gameItems/goldIcon.svg"}
-              width={32}
-              height={32}
-              alt="goldIcon"
-            />
-            <h4 className=" text-white">12314123</h4>
+            <h4 className=" text-white font-semibold">12314123</h4>
           </div>
         </div>
         <div className="flex flex-row justify-around">

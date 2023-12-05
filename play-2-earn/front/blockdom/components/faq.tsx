@@ -55,8 +55,8 @@ export default function App() {
 
           
             <AccordionItem
-              // className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 dark:from-gray-800/40 dark:via-gray-800/40 dark:to-green-700/90 `}
-              className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 `}
+              className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 dark:from-gray-800/40 dark:via-gray-800/40 dark:to-green-700/90 `}
+              // className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 `}
 
               key={key}
               aria-label="Accordion 1"

@@ -10,6 +10,8 @@ import { useTheme } from "@/context/theme-context";
 import { useRouter } from "next/navigation";
 import { IoMdDownload } from "react-icons/io";
 import { BsMoon, BsSun } from "react-icons/bs";
+import DarkLogo from "@/svg/darkLogo";
+import LightLogo from "@/svg/lightLogo";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -74,16 +76,17 @@ export default function Navbar() {
               onClick={() => {
                 router.push("/");
               }}
-              className="m-2.5"
+              className="m-2.5 cursor-pointer"
             >
-              <span className="sr-only ">Your Logo</span>
-              <Image
+              {/* <span className="sr-only ">Your Logo</span> */}
+              {/* <Image
                 className=" cursor-pointer h-14 w-auto rounded-full shadow-xl bg-white/60 dark:bg-transparent dark:shadow-none"
                 src="/BlockdomLogo.png"
                 width={120}
                 height={120}
                 alt=""
-              />
+              /> */}
+              {theme === "light" ? <DarkLogo/> : <LightLogo/>}
             </a>
           </div>
   
