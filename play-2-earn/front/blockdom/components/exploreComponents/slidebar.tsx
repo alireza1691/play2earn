@@ -50,7 +50,7 @@ export default function Slidebar({
     >
       <div className="p-4 flex flex-row justify-between">
         <h3 className=" text-white ">Land { selectedLand =! null && selectedLand}</h3>
-        <a className=" cursor-pointer rounded-md hover:bg-gray-500/20" onClick={() => {setSlidebar(false)}}><CloseIcon/></a>
+        <a className=" closeIcon" onClick={() => {setSlidebar(false)}}><CloseIcon/></a>
 
       </div>
       <div className=" flex justify-center mt-2">

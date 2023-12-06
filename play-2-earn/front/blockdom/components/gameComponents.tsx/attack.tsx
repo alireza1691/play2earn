@@ -29,27 +29,6 @@ export default function Attack() {
             ))}
             </div>}
             </div>
-  
-            {/* <Dropdown>
-      <DropdownTrigger>
-        <Button 
-          variant="bordered" 
-          className=" bg-[#06291D]/50 border-0 w-[230px] text-[#98FBD7] font-medium text-[16px] justify-between px-6"
-        >
-          {selectedLand}<IoIosArrowDown />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Dynamic Actions" items={Lands} className={"w-[216px] bg-gradient-to-r from-[#34594B] to-[#213830] bg-[#06291D] "} >
-        {Lands.map((land,key) => (
-       <DropdownItem 
-
-     >
-       {land}
-     </DropdownItem>
-        ))}
-
-      </DropdownMenu>
-    </Dropdown> */}
           </div>
           <div className="flex flex-col justify-center">
             <DoubleSword />

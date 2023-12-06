@@ -138,3 +138,7 @@ export const roadmapSteps = [
         light: 'bg-gradient-to-tl'
     },
   ] 
+
+  export const landItems = [
+    "Townhall","Barracks","GoldMine","Farm","Wall"
+  ] as const
