@@ -2,15 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.buildingWindow{
+  @apply absolute left-10 top-24 rounded-xl w-[25rem] h-[50rem] bg-[#21302A]/60 backdrop-blur-sm
+}
 .greenButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  text-black rounded-[0.8rem] text-[0.8rem] font-semibold   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB];
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9] hover:border-[#4DFBB9] active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
 }
 .redButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F]  text-black rounded-[0.8rem] text-[0.8rem] font-semibold   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB];
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB] text-[#424040];
 }
 .closeIcon {
   @apply cursor-pointer rounded-md hover:bg-gray-500/20
+}
+.secondaryButton {
+  @apply py-3 px-7 w-fit border-1 font-medium text-[#FFFFFF] border-[#FFFFFF] text-[16px] hover:text-[#4DFBB9] hover:border-[#4DFBB9] rounded-[0.8rem] active:border-[#1F6C4F] active:text-[#1F6C4F] transition-all;
 }
 
 .tw-connect-wallet{

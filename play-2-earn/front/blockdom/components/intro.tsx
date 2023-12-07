@@ -71,7 +71,7 @@ export default function Intro() {
             <motion.button
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
-              className="group flex flex-row items-center gap-3 border-2 border-gray-200/60 px-5 rounded-xl shadow-lg"
+              className="group flex flex-row items-center gap-3 secondaryButton shadow-lg"
             >
               Whitepaper <IoMdDownload className=" text-xl group-hover:translate-y-1 transition-all" />
             </motion.button>
@@ -110,7 +110,7 @@ export default function Intro() {
               <motion.button
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
-                className=" shadow-lg text-[14px] px-5 py-3 border-[0.13rem] text-white dark:text-gray-300 dark:border-gray-400 border-gray-500/30 w-fit rounded-xl bg-black/50 hover:bg-gray-800/80 transition-all"
+                className=" shadow-lg secondaryButton "
               >
                 Enter TESTNET
               </motion.button>

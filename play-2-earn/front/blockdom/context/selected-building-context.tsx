@@ -6,18 +6,18 @@ import { createContext, useContext, useState } from "react";
 type itemType = typeof landItems[number]
 
 
-type StatesContextProviderProps = {
+type SelectedBuildingContextProviderProps = {
     children: React.ReactNode;
   };
 
-type StateContextType = {
+type SelectedBuildingContextType = {
     selectedItem: itemType | null,
     setSelectedItem: React.Dispatch<React.SetStateAction<itemType|null>>
 }
 
-const StatesContext = createContext<StateContextType | null>(null)
+const StatesContext = createContext<SelectedBuildingContextType | null>(null)
 
-export default function StatesContextProvider({children}:StatesContextProviderProps) {
+export default function SelectedBuildingContextProvider({children}:SelectedBuildingContextProviderProps) {
       const [selectedItem, setSelectedItem] =  useState< itemType | null >(null)
     
 
@@ -28,7 +28,7 @@ export default function StatesContextProvider({children}:StatesContextProviderPr
       )
 }
 
-export function useStatesContext() {
+export function useSelectedBuildingContext() {
     const context = useContext(StatesContext)
     if (context === null) {
         throw new Error("useActiveSectionContext must be used within an ActiveSectionContextProvider")

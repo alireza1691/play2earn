@@ -58,7 +58,7 @@ export default function Explore() {
           height={629}
           alt="deactivedParcel"
         />
-        <a className=" cursor-pointer z-50 left-[21.5rem] bottom-[14rem] absolute">
+        {/* <a className=" cursor-pointer z-50 left-[21.5rem] bottom-[14rem] absolute">
         <Image src={"/svg/gameItems/bottomLeftArrow.svg"} width={65} height={65} alt="arrow"/>
         </a>
         <a className="cursor-pointer z-50 right-[22.5rem] bottom-[15rem] absolute">
@@ -69,7 +69,7 @@ export default function Explore() {
         </a>
         <a className=" cursor-pointerz-50 left-[22.5rem] top-[23rem] absolute">
         <Image src={"/svg/gameItems/topLeftArrow.svg"} width={60} height={60} alt="arrow"/>
-        </a>
+        </a> */}
         <a className=" transition-all cursor-pointer shadow-md hover:bg-[#06291D]/40 font- text-[#98FBD7] top-[10rem] z-10 flex flex-row items-center gap-3 rounded-md left-1/2 -translate-x-1/2 absolute bg-[#06291D]/50 px-4 py-3"><WorldVector/> Go to world map</a>
       </div>
 
