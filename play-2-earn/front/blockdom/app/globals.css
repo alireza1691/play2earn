@@ -89,6 +89,9 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.greenHeaderGradient{
+  background: linear-gradient(to left, transparent,transparent, #34594b99, #34594ba2, transparent,transparent);
+}
 
 .landGrid {
   /* display: grid;
