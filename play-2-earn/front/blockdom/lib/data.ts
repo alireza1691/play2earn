@@ -167,8 +167,8 @@ export const questions = [
 
 export const landItems = [
   { name: "Townhall", imageUrl: "/testTownHall.png" ,level:2},
-  { name: "Barracks", imageUrl: "" ,level:2},
-  { name: "GoldMine", imageUrl: "" ,level:2},
-  { name: "Farm", imageUrl: "" ,level:2},
-  { name: "Wall", imageUrl: "" ,level:2},
+  { name: "Barracks", imageUrl: "/testBarracks.svg" ,level:2},
+  { name: "GoldMine", imageUrl: "/testGoldMine.svg" ,level:2},
+  { name: "Farm", imageUrl: "/testEmptyBuilding.svg" ,level:2},
+  { name: "Wall", imageUrl: "/testWalls.svg" ,level:2},
 ] as const;

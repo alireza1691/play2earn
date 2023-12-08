@@ -9,7 +9,7 @@ export default function BuildingWindowHeader() {
     <div className=" w-full p-3 flex flex-row justify-between">
       {" "}
       <h3 className="font-semibold">{selectedItem?.name}</h3>{" "}
-      <h2 className=" font-bold">{selectedItem?.level}</h2>
+      <h2 className=" font-bold">Level: {selectedItem?.level}</h2>
       <a className="closeIcon" onClick={() => setSelectedItem(null)}>
         <CloseIcon />
       </a>{" "}
