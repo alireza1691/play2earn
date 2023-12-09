@@ -21,9 +21,10 @@ export default function Explore() {
 
   return (
     <>
-          <SelectedParcel setSelectedLand={setSelectedLand} setSlideBar={setSlidebar}/>
+          <div className="z-0 right-0  absolute w-screen h-screen lg:w-[976px] 2xl:w-[1440px] overflow-hidden lg:bg-[url('/svg/gameItems/bg.svg')] bg-[url('/BGMobile.jpg')] bg-cover bg-center bg-no-repeat brightness-75 blur-sm "></div>
 
-      <div className="z-0 right-0 absolute w-screen h-screen lg:w-[976px] 2xl:w-[1440px] overflow-hidden lg:bg-[url('/svg/gameItems/bg.svg')] bg-[url('/BGMobile.jpg')] bg-cover bg-center bg-no-repeat brightness-75 blur-sm "></div>
+          <SelectedParcel setSelectedLand={setSelectedLand} setSlideBar={setSlidebar}/>
+          
       {/* sm:w-[480px]  md:w-[768px] lg:w-[976px] */}
         {/* <Image
           className=" backdrop-brightness-0 brightness-75 absolute  h-[37.5rem] top-[3rem] md:h-[45rem] lg:h-screen w-full  2xl:w-[1290px]  sm:right-0 -z-10 blur-sm object-cover xl:top-[3rem] "
@@ -34,28 +35,28 @@ export default function Explore() {
         /> */}
         <div className=" absolute h-screen w-screen overflow-hidden">
         <Image
-          className=" absolute left-20 -translate-x-1/2 md:top-0 -top-[7.5rem] h-[20rem]  w-auto z-10  object-cover"
+          className=" absolute left-20 -translate-x-1/2 md:top-0 -top-[7.5rem] h-[20rem]  w-auto  "
           src={"/svg/gameItems/cloudTL.svg"}
           width={698}
           height={467}
           alt="tlcloud"
         />
         <Image
-          className=" absolute right-0 translate-x-1/2  md:top-0 -top-[7.5rem] h-[20rem]  w-auto z-10  "
+          className=" absolute -right-10 translate-x-1/2  md:top-0 -top-[7.5rem] h-[20rem] lg:-top-20  w-auto  z-10 "
           src={"/svg/gameItems/cloudTR.svg"}
           width={698}
           height={467}
           alt="trcloud"
         />
         <Image
-          className=" absolute -left-20  translate-y-1/2 bottom-0  h-[20rem]  w-auto z-10  "
+          className=" absolute -left-20  translate-y-1/2 bottom-0  h-[20rem]  w-auto  "
           src={"/svg/gameItems/cloudBL.svg"}
           width={698}
           height={467}
           alt="deactivedParcel"
         />
         <Image
-          className=" absolute translate-y-1/2 bottom-0  -right-20 h-[20rem]  w-auto  z-10 "
+          className=" absolute translate-y-1/2 bottom-0  -right-20 h-[20rem]  w-auto  "
           src={"/svg/gameItems/cloudBR.svg"}
           width={1008}
           height={629}
