@@ -34,7 +34,7 @@ export default function SideBar() {
               setTimeOfLastClick(Date.now);
             }}
           >
-            {activeSection === link.name ? (
+            {/* {activeSection === link.name ? (
               <div className="flex flex-row justify-around">
               <h3 className=" text-[16px] font-medium">
               {link.name}
@@ -44,7 +44,7 @@ export default function SideBar() {
               
             ) : (
               <Image src={theme === "dark" ? link.icon : link.darkIcon} width={20} height={20} alt="icon" />
-            )}
+            )} */}
           </motion.a>
         ))}
       </ul>

@@ -90,13 +90,13 @@ export default function Slidebar({
             src={"/svg/gameItems/warriorCard.svg"}
             width={109}
             height={177}
-            alt="warriorCard"
+            alt="warriorCard2"
           />
           <Image
             src={"/svg/gameItems/warriorCard.svg"}
             width={109}
             height={177}
-            alt="warriorCard"
+            alt="warriorCard3"
           />
         </div>
       </div>

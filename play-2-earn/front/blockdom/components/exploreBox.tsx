@@ -29,7 +29,7 @@ export default function ExploreBox() {
       width={300}
       height={200}
         src={"/icons/kingdom18.png"}
-        alt="preject I worked on"
+        alt="world"
         quality={50}
         className="absolute hidden sm:block top-10 -right-40 w-[28.25rem] rounded-t-lg 
       transition 

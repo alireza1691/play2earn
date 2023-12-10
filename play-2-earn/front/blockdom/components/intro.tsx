@@ -132,7 +132,7 @@ export default function Intro() {
             src={"/parcels/land1.png"}
             width={637}
             height={374}
-            alt={"test"}
+            alt={"test2"}
           ></Image>
         </div>
       </div>

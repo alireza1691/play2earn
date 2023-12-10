@@ -2,12 +2,8 @@ import React from "react";
 import Image from "next/image";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 
-// type buildingWindowImageProps = {
-//     imageUrl: string
-// }
-type BuildingWindowImageProps = {
-  imageUrl?: string;
-};
+
+
 
 export default function BuildingWindowImage() {
   const { selectedItem, setSelectedItem } = useSelectedBuildingContext();
