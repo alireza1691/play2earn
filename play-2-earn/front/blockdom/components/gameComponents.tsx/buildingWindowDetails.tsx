@@ -1,3 +1,4 @@
+"use client"
 import { useSelectedBuildingContext } from '@/context/selected-building-context'
 import Image from 'next/image'
 import React from 'react'

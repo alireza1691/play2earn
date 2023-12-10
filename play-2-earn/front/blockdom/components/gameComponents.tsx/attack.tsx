@@ -1,3 +1,4 @@
+"use client"
 import DoubleSword from "@/svg/doubleSword";
 import Image from "next/image";
 import React, { useState } from "react";
