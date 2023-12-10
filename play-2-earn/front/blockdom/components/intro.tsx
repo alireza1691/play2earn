@@ -136,21 +136,21 @@ export default function Intro() {
           ></Image>
         </div>
       </div>
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, scale: 1 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2 }}
         className=" flex flex-col items-center invisible lg:visible w-full h-[30rem]  absolute mt-[10rem]"
       >
         <Image
-          className={`opacity-30 dark:blur-none object-fill rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]`}
+          className={`opacity-30 dark:blur-none  rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]`}
           src={theme === "dark" ? `/svg/other/grid.svg` : "/svg/other/lightGrid.svg"}
           width={300}
           height={300}
           objectFit="cover"
           alt="Grid"
         />
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }
