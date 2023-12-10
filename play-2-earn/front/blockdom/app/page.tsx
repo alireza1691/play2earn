@@ -11,15 +11,15 @@ import Carousel from '@/components/carousel';
 export default function Home() {
   return (
     <main className="flex flex-col pt-[7rem]">
-      
-      <SideBar/>
+      hello
+      {/* <SideBar/>
       <Intro/>
       <Starter/>
       <Carousel/>
       <Roadmap/>
-      {/* <Questions/> */}
+   
       <FAQ/>
-      <Footer/>
+      <Footer/> */}
 
     </main>
   )
