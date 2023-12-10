@@ -27,38 +27,7 @@ const containerRef = useRef<HTMLDivElement >(null);
     y: 100,
   });
 
-//   const inViewParcels = (selectedParcel:selectedParcelType): selectedParcelType[] => {
-//     let parcelsArray = []
 
-//     parcelsArray[0] = {...selectedParcel, x : selectedParcel.x -10, y: selectedParcel.y - 10}
-//     parcelsArray[1] = {...selectedParcel,  y: selectedParcel.y - 10}
-//     parcelsArray[2] = {...selectedParcel, x : selectedParcel.x + 10,  y: selectedParcel.y - 10}
-//     parcelsArray[3] = {...selectedParcel, x : selectedParcel.x - 10}
-//     parcelsArray[4] = selectedParcel
-//     parcelsArray[5] = {...selectedParcel, x : selectedParcel.x + 10}
-//     parcelsArray[6] = {...selectedParcel, x : selectedParcel.x - 10, y: selectedParcel.y + 10}
-//     parcelsArray[7] = {...selectedParcel, y: selectedParcel.y + 10}
-//     parcelsArray[8] = {...selectedParcel, x : selectedParcel.x + 10, y: selectedParcel.y + 10}
-
-//     return parcelsArray
-//   }
-
-
-//   const parcelLands = (xFrom: number, yFrom: number) => {
-//     let items = [];
-//     for (let x = xFrom; x < xFrom + 10; x++) {
-//       for (let y = yFrom; y < yFrom + 10; y++) {
-//         items.push(Number(x.toString() + y.toString()));
-//       }
-//     }
-//     return items;
-//   };
-
-//   const separatedCoordinate = (coordinate:string) =>{
-//     const middleIndex = Math.floor(coordinate.length / 2);
-//     const result = coordinate.slice(0, middleIndex) + " - " + coordinate.slice(middleIndex);
-//     return result
-//   }
 
   useEffect(() => {
     const container = containerRef.current!;
@@ -80,8 +49,88 @@ const containerRef = useRef<HTMLDivElement >(null);
           {selectedParcel.y}
         </h3>
       </div>
-      <div ref={containerRef} className="w-[100vw] h-[100vh] overflow-scroll flex items-center justify-center object-cover relative">
- 
+      {/* <div ref={containerRef} className="w-[100vw] h-[100vh] md:max-w-[720px] lg:max-w-[967px] 2xl:max-w-[1320px] ml-auto mr-auto   overflow-scroll  object-cover relative"> */}
+
+      <div ref={containerRef} className="w-[100vw] h-[100vh]   overflow-scroll  items-center justify-center object-cover relative">
+        <div className=" absolute h-[40rem] w-[40rem] top-[30rem] left-[800px]">
+        <a
+          onClick={() => {
+            selectedParcel.y >= 110 &&
+              setSelectedParcel((prevState) => ({
+                ...prevState,
+                y: prevState.y - 10,
+              }));
+          }}
+          className={` ${
+            selectedParcel.y <= 100 ? "brightness-50  opacity-50 " : "cursor-pointer"
+          } invisible md:visible   z-50 md:right-[4rem] md:top-[9.5rem] 2xl:top-[7.5rem] absolute`}
+        >
+          <Image
+            src={"/svg/gameItems/topRightArrow.svg"}
+            width={60}
+            height={60}
+            alt="arrow"
+          />
+        </a>
+        <a
+          onClick={() => {
+            selectedParcel.x >= 110 &&
+              setSelectedParcel((prevState) => ({
+                ...prevState,
+                x: prevState.x - 10,
+              }));
+          }}
+          className={`${
+            selectedParcel.x <= 100 ? "brightness-50  opacity-50" : "cursor-pointer"
+          } invisible md:visible   z-50 md:left-[3rem] md:top-[10.5rem] 2xl:top-[8rem] absolute`}
+        >
+          <Image
+            src={"/svg/gameItems/topLeftArrow.svg"}
+            width={60}
+            height={60}
+            alt="arrow"
+          />
+        </a>
+        <a
+          onClick={() => {
+            selectedParcel.y < 190 &&
+              setSelectedParcel((prevState) => ({
+                ...prevState,
+                y: prevState.y + 10,
+              }));
+          }}
+          className={`${
+            selectedParcel.y >= 190 ? "brightness-50  opacity-50" : "cursor-pointer"
+          } invisible md:visible  z-50  md:left-[2.5rem] md:bottom-[9.5rem] absolute`}
+        >
+          <Image
+            src={"/svg/gameItems/bottomLeftArrow.svg"}
+            width={65}
+            height={65}
+            alt="arrow"
+          />
+        </a>
+        <a
+          onClick={() => {
+            selectedParcel.x < 190 &&
+              setSelectedParcel((prevState) => ({
+                ...prevState,
+                x: prevState.x + 10,
+              }));
+          }}
+          className={` ${
+            selectedParcel.x >= 190 ? "brightness-50  opacity-50" : "cursor-pointer"
+          } invisible md:visible  z-50 md:right-[4rem] bottom-[11rem] absolute`}
+        >
+          <Image
+            src={"/svg/gameItems/bottomRightArrow.svg"}
+            width={60}
+            height={60}
+            alt="arrow"
+          />
+        </a>
+        </div>
+
       {/* <div className=" invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px] transform grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
             {parcels(selectedParcel).map((parcel,key) =>(
                 <div key={key} className={`grid w-fit grid-cols-10 gap-[1px] ${key == 4 ? "":"blur-md brightness-50"}`}>

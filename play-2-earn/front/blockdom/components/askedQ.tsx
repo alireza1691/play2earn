@@ -16,8 +16,8 @@ export default function Questions() {
       id="questions"
       className=" relative lg:h-[35rem] transition-all duration-1000 ease-out w-full px-4 md:px-[20%] xl:px-[25%] flex flex-col"
     >
-      <Image className="xl:left-[10rem] lg:left-[6rem] 2xl:left-[15%] md:left-[3.75rem]  -z-10 absolute" src={ theme == "dark" ? "/svg/unions/questionsLeftUnion.svg" : "/svg/unions/lightQuestionsLeftUnion.svg"} width={240} height={240} alt={"leftUnion"}></Image>
-      <Image className=" right-0 xl:right-[10rem] lg:right-[6rem] 2xl:right-[15%] lg:-bottom-[5rem] -z-10 md:-bottom-[10rem]  md:right-[3.75rem] -bottom-[5rem] absolute " src={ theme == "dark" ?"/svg/unions/questionsRightUnion.svg": "/svg/unions/lightQuestionsRightUnion.svg"} width={240} height={240} alt={"leftUnion"}></Image>
+      {/* <Image className="xl:left-[10rem] lg:left-[6rem] 2xl:left-[15%] md:left-[3.75rem]  -z-10 absolute" src={ theme == "dark" ? "/svg/unions/questionsLeftUnion.svg" : "/svg/unions/lightQuestionsLeftUnion.svg"} width={240} height={240} alt={"leftUnion"}></Image>
+      <Image className=" right-0 xl:right-[10rem] lg:right-[6rem] 2xl:right-[15%] lg:-bottom-[5rem] -z-10 md:-bottom-[10rem]  md:right-[3.75rem] -bottom-[5rem] absolute " src={ theme == "dark" ?"/svg/unions/questionsRightUnion.svg": "/svg/unions/lightQuestionsRightUnion.svg"} width={240} height={240} alt={"leftUnion"}></Image> */}
 
       <h2
         className={` text-[36px]  text-center font-bold ${

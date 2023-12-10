@@ -38,8 +38,8 @@ export const inViewParcels = (
 
 export const parcelLands = (xFrom: number, yFrom: number) => {
   let items = [];
-  for (let x = xFrom; x < xFrom + 10; x++) {
-    for (let y = yFrom; y < yFrom + 10; y++) {
+  for (let y = yFrom; y < yFrom + 10; y++) {
+    for (let x = xFrom; x < xFrom + 10; x++) {
       items.push(Number(x.toString() + y.toString()));
     }
   }

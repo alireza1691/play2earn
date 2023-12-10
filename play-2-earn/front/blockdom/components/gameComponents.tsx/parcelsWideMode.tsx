@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Tooltip } from "@nextui-org/react";
 import Image from "next/image";
@@ -16,7 +17,7 @@ export default function ParcelsWideMode({
 
   return (
     <>
-         <a
+         {/* <a
           onClick={() => {
             selectedParcel.y < 190 &&
               setSelectedParcel((prevState) => ({
@@ -91,8 +92,8 @@ export default function ParcelsWideMode({
             height={60}
             alt="arrow"
           />
-        </a>
-    <div className=" invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px] transform grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
+        </a> */}
+    <div className=" transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px] transform grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
       {inViewParcels(selectedParcel).map((parcel, key) => (
         <div
           key={key}

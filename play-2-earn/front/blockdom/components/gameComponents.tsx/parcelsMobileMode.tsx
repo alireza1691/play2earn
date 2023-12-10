@@ -1,3 +1,4 @@
+"use client"
 import { inViewParcels, parcelLands, separatedCoordinate } from '@/lib/utils';
 import React from 'react'
 import { Tooltip } from "@nextui-org/react";

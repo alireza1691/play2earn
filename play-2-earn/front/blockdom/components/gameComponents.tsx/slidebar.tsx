@@ -1,6 +1,7 @@
 import CloseIcon from "@/svg/closeIcon";
 import Image from "next/image";
 import React, { useState } from "react";
+import SlideBarButtons from "./slideBarButtons";
 
 type sliderHookProps = {
   slidebar: boolean;
@@ -41,13 +42,13 @@ export default function Slidebar({
     <div
       className={`${
         slidebar
-          ? "z-10 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16"
+          ? "z-50 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16"
           : "-left-[50rem]"
-      } flex flex-col transition-all  top-28 absolute h-[50rem] w-[90%] md:w-[25rem] xl:w-[30rem] bg-[#21302A]/60 backdrop-blur-sm rounded-2xl `}
+      } flex flex-col transition-all  top-[7.75rem] absolute h-[50rem] w-[90%] md:w-[25rem] xl:w-[30rem] bg-[#21302A]/60 backdrop-blur-sm rounded-2xl `}
     >
       <div className="p-4 flex flex-row justify-between">
         <h3 className=" text-white ">Land { selectedLand =! null && selectedLand}</h3>
-        <a className=" closeIcon" onClick={() => {setSlidebar(false)}}><CloseIcon/></a>
+        <a className=" transition-all closeIcon" onClick={() => {setSlidebar(false)}}><CloseIcon/></a>
 
       </div>
       <div className=" flex justify-center mt-2">
@@ -60,7 +61,8 @@ export default function Slidebar({
       </div>
       <div className="flex flex-col gap-3">
         <div className=" flex flex-row justify-evenly items-center">
-          <div className=" backdrop-brightness-50 shadow-xl items-center rounded-xl px-4 py-2 bg-[#9E9547]/40 bg-gradient-to-r from-[#FFFFFF]/40 via-[#FFFFFF]/20 to-[#FFFFFF]/30 flex flex-row gap-2">
+      
+          <div className="goldBg goodsBalanceKeeper">
             <Image
               src={"/svg/gameItems/goldIcon.svg"}
               width={32}
@@ -69,7 +71,7 @@ export default function Slidebar({
             />
             <h4 className=" text-white font-semibold">12314123</h4>
           </div>
-          <div className="backdrop-brightness-50 shadow-xl items-center rounded-xl px-4 py-2 bg-[#599E47]/40 bg-gradient-to-r from-[#FFFFFF]/20 via-[#FFFFFF]/10 to-[#FFFFFF]/30 flex flex-row gap-2">
+          <div className="foodBg goodsBalanceKeeper">
             <Image
               src={"/svg/gameItems/goldIcon.svg"}
               width={32}
@@ -100,9 +102,10 @@ export default function Slidebar({
           />
         </div>
       </div>
-      <div className=" mt-auto p-3">
+      <SlideBarButtons/>
+      {/* <div className=" mt-auto p-3">
         <button className="greenButton !w-full  ">Do something</button>
-      </div>
+      </div> */}
     </div>
     </>
   );

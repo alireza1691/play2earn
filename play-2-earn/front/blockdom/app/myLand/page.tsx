@@ -16,10 +16,10 @@ export default function MyLand() {
         height={720}
         alt="bg"
       />
-      {/* <Town /> */}
+      <Town />
 
       <div> MyLand</div>
-      {/* <SelectedBuilding /> */}
+      <SelectedBuilding />
     </>
   );
 }
