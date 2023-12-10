@@ -19,7 +19,7 @@ export default function MyLand() {
       {/* <Town /> */}
 
       <div> MyLand</div>
-      <SelectedBuilding />
+      {/* <SelectedBuilding /> */}
     </>
   );
 }

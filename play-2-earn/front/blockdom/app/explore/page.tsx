@@ -30,10 +30,10 @@ export default function Explore2() {
      
 
       <main className=" flex flex-row justify-center">
-
+{/* 
         <Slidebar slidebar={slidebar} setSlidebar={setSlidebar} selectedLand={selectedLand} />
         {attackBox && <Attack />}
-     
+      */}
       </main>
     </>
   );
