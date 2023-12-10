@@ -1,7 +1,4 @@
-import Card from "@/svg/card";
 import CloseIcon from "@/svg/closeIcon";
-import GoldIcon from "@/svg/goldIcon";
-
 import Image from "next/image";
 import React, { useState } from "react";
 

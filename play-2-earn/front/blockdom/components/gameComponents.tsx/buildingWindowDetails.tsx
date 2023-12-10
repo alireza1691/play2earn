@@ -1,5 +1,4 @@
 import { useSelectedBuildingContext } from '@/context/selected-building-context'
-import GoldIcon from '@/svg/goldIcon'
 import Image from 'next/image'
 import React from 'react'
 
