@@ -23,8 +23,8 @@ export default function Roadmap() {
       </div>
 
       <div className="  relative flex flex-col lg:flex-row items-center lg:items-start justify-around  px-[10rem]  pt-[8rem] lg:pt-0 mt-[18.5rem] lg:h-[initial] lg:mt-[15rem] ">
-        {roadmapSteps.map((step, index) => (
-          <React.Fragment>
+        {roadmapSteps.map((step, key) => (
+          <React.Fragment key={key}>
             <div className=" group relative w-fit ">
               <h3 className=" text-gray-400 px-3 py-2 -translate-x-1/2 -translate-y-1/4  absolute mt-[9.5rem] left-1/2 bg-gradient-to-br  from-[#1a2920] to-[#1c3827]  rounded-xl">
                 {step.stepNum}

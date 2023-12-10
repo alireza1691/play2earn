@@ -36,14 +36,14 @@ export default function Footer() {
         </div>
         <div className="w-full  lg:w-[45%] px-[4rem] flex flex-wrap gap-10 justify-center lg:justify-start mt-20 lg:mt-0">
           <div className=" justify-center flex flex-col gap-4">
-            {footerRow1.map((item,index) => (
-              <h3 className="  cursor-pointer  hover:opacity-70 opacity-90">{item.name}</h3>
+            {footerRow1.map((item,key) => (
+              <h3 key={key} className="  cursor-pointer  hover:opacity-70 opacity-90">{item.name}</h3>
             ))}
             {/* <h2 className="  text-[22px] font-bold">Support</h2>*/}
           </div>
           <div className=" flex flex-col gap-4 justify-center">
-          {footerRow2.map((item,index) => (
-              <h3 className=" cursor-pointer hover:opacity-70 opacity-90">{item.name}</h3>
+          {footerRow2.map((item,key) => (
+              <h3 key={key} className=" cursor-pointer hover:opacity-70 opacity-90">{item.name}</h3>
             ))}
           </div>
         </div>
