@@ -1,4 +1,5 @@
 
+import ErrorBoundary from "@/components/ErrorBoundary";
 import SelectedBuilding from "@/components/gameComponents.tsx/selectedBuilding";
 import Town from "@/components/gameComponents.tsx/town";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
@@ -9,6 +10,7 @@ export default function MyLand() {
 
   return (
     <>
+    <ErrorBoundary fallback={"myland page occurs an error"}>
       <Image
         className=" absolute w-screen h-screen"
         src={"/testBg.png"}
@@ -20,6 +22,7 @@ export default function MyLand() {
       
       <div> MyLand</div>
       <SelectedBuilding />
+      </ErrorBoundary>
     </>
   );
 }

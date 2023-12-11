@@ -7,11 +7,14 @@ import SideBar from "@/components/sideBar";
 import Starter from '@/components/starter'
 import FAQ from '@/components/faq';
 import Carousel from '@/components/carousel';
+import Error from './error';
+import ErrorBoundary from '@/components/ErrorBoundary';
+
 
 export default function Home() {
   return (
     <main className="flex flex-col pt-[7rem]">
-      
+      <ErrorBoundary fallback={"index page error"} >
       <SideBar/>
       <Intro/>
       <Starter/>
@@ -20,7 +23,7 @@ export default function Home() {
    
       <FAQ/>
       <Footer/>
-
+      </ErrorBoundary>
     </main>
   )
 }
