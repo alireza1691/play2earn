@@ -13,9 +13,7 @@ import { BsMoon, BsSun } from "react-icons/bs";
 import DarkLogo from "@/svg/darkLogo";
 import LightLogo from "@/svg/lightLogo";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

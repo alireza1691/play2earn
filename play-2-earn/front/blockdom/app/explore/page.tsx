@@ -3,16 +3,10 @@
 import Slidebar from "@/components/gameComponents.tsx/slidebar";
 import Attack from "@/components/gameComponents.tsx/attack";
 import SelectedParcel from "@/components/gameComponents.tsx/selectedParcel";
-
 import WorldVector from "@/svg/worldVector";
-import Image from "next/image";
 import React, { useState } from "react";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
-type Item = {
-  x: number;
-  y: number;
-};
+
 
 export default function Explore2() {
   const [slidebar, setSlidebar] = useState(false);
@@ -22,7 +16,6 @@ export default function Explore2() {
   return (
     <>
       {/* <div className=" ml-auto mr-auto  relative md:max-w-[720px] lg:max-w-[967px] 2xl:max-w-[1320px] overflow-hidden"> */}
-      <ErrorBoundary fallback={"error from explore"} >
       <SelectedParcel
         setSelectedLand={setSelectedLand}
         setSlideBar={setSlidebar}
@@ -41,8 +34,6 @@ export default function Explore2() {
           selectedLand={selectedLand}
         />
         {attackBox && <Attack />}
-      </main>
-      </ErrorBoundary>
-    </>
+      </main>    </>
   );
 }
