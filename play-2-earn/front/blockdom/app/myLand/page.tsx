@@ -17,7 +17,7 @@ export default function MyLand() {
         alt="bg"
       />
       <Town />
-
+      
       <div> MyLand</div>
       <SelectedBuilding />
     </>
