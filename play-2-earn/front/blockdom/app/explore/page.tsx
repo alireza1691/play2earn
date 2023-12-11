@@ -10,7 +10,7 @@ import React, { useState } from "react";
 
 export default function Explore2() {
   const [slidebar, setSlidebar] = useState(false);
-  const [attackBox, setAttackBox] = useState(false);
+  const [attackBox, setAttackBox] = useState(true);
   const [selectedLand, setSelectedLand] = useState<number | null>(null);
 
   return (
@@ -23,7 +23,7 @@ export default function Explore2() {
 
       {/* </div> */}
 
-      <a className="z-50 transition-all cursor-pointer shadow-md hover:bg-[#06291D]/40 font- text-[#98FBD7] top-[10rem]  flex flex-row items-center gap-3 rounded-md left-1/2 -translate-x-1/2 absolute bg-[#06291D]/50 px-4 py-3">
+      <a onClick={() => {setAttackBox(!attackBox)}} className="z-50 transition-all cursor-pointer shadow-md hover:bg-[#06291D]/40 font- text-[#98FBD7] top-[10rem]  flex flex-row items-center gap-3 rounded-md left-1/2 -translate-x-1/2 absolute bg-[#06291D]/50 px-4 py-3">
         <WorldVector /> Go to world map
       </a>
 

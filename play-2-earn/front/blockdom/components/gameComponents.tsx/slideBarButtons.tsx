@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function SlideBarButtons() {
     let isMinted = true
-    let isEnemy = false
+    let isEnemy = true
   return (
     <div className="w-full mt-auto flex flex-col">
     <div className="w-full px-3">

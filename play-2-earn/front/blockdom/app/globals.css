@@ -21,17 +21,35 @@
   @apply py-3 px-7 w-fit border-1 font-medium text-[#98FBD7] border-[#98FBD7] text-[16px] hover:border-[#4DFBB9] hover:text-[#4DFBB9]  rounded-[0.8rem] active:border-[#1F6C4F] active:text-[#1F6C4F] transition-all;
 }
 .goodsBalanceKeeper {
-  @apply items-center rounded-xl px-4 py-2 flex flex-row gap-2 shadow-xl
+  @apply items-center rounded-lg px-4 py-2 flex flex-row gap-2 shadow-xl
 }
 
+.darkShadow {
+  box-shadow: -0.2rem 0.15rem 0.3rem 0.04rem rgba(0, 0, 0, 0.3);
+}
+.attackWindowBg {
+  background-color: rgba(33, 48, 42, 0.6);
+  background-image: linear-gradient(to top left,  rgba(168, 131, 76, 0.2), rgba(106, 168, 76, 0.2));
+
+}
+.cardBg {
+  background: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff53, #ffffff00, #ffffff21);
+  border-radius: 0.2rem;
+  padding-inline: 0.2rem;
+  padding-top: 0.2rem;
+}
 .goldBg {
-  background: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
   background-color: #9e954784;
 
 }
 .foodBg {
-  background: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
   background-color: #589e478e;
+}
+.bronzeBg {
+  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-color: #50110541;
 }
 
 
