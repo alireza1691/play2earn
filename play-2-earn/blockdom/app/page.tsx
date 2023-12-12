@@ -1,3 +1,4 @@
+
 import Footer from '@/components/indexPage/footer'
 
 

@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import Slidebar from "@/components/gameComponents/slidebar";
 import Attack from "@/components/gameComponents/attack";
 import SelectedParcel from "@/components/gameComponents/selectedParcel";

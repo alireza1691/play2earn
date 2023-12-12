@@ -76,14 +76,7 @@ export default function Navbar() {
               }}
               className="m-2.5 cursor-pointer"
             >
-              {/* <span className="sr-only ">Your Logo</span> */}
-              {/* <Image
-                className=" cursor-pointer h-14 w-auto rounded-full shadow-xl bg-white/60 dark:bg-transparent dark:shadow-none"
-                src="/BlockdomLogo.png"
-                width={120}
-                height={120}
-                alt=""
-              /> */}
+          
               {theme === "light" ? <DarkLogo/> : <LightLogo/>}
             </a>
           </div>

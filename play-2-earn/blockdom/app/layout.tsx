@@ -1,5 +1,6 @@
 import Navbar from '@/components/navbar'
 import ThemeContextProvider from '@/context/theme-context'
+import { ThirdwebProvider } from "../components/ThirdwebProvider"
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -17,11 +18,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className=' !scroll-smooth'>
+   
+   
+      <body className={`${inter.className} bg-white  dark:bg-black text-gray-800 dark:text-yellow-50 relative `}>
+      <div className="bg-[#0e6f3d] dark:bg-[#7FDDAD] absolute top-[-13rem] -z-10 left-[0rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[5rem] dark:blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-70  dark:opacity-50 lg:left-[10rem] lg:w-[22.5rem]" ></div>
+ 
       <ThemeContextProvider>
-      <Navbar/>
-      <body className={inter.className}>{children}</body>
-      </ThemeContextProvider>
+        <ThirdwebProvider>
+        <Navbar/>
+        {children}
+        </ThirdwebProvider>
+        </ThemeContextProvider>
+        </body>
+      
     </html>
   )
 }

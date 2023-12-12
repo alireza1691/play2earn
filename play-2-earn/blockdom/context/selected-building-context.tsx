@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { landItems } from "@/lib/data";
 import { createContext, useContext, useState } from "react";
