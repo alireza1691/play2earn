@@ -2,26 +2,158 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.buildingWindow{
+  @apply absolute left-10 top-24 rounded-xl w-[25rem] h-[50rem] bg-[#21302A]/60 backdrop-blur-sm
+}
+.greenButton {
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9] hover:border-[#4DFBB9] active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
+}
+.redButton {
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB] text-[#424040];
+}
+.closeIcon {
+  @apply cursor-pointer rounded-md hover:bg-gray-500/20
+}
+.outlineRedButton {
+  @apply py-3 px-7 w-fit border font-medium text-[#F48475] border-[#F48475] text-[16px] hover:text-[#FFBFB1] hover:border-[#FFBFB1] rounded-[0.8rem] active:border-[#9C695E] active:text-[#9C695E] transition-all;
+}
+.outlineGreenButton {
+  @apply py-3 px-7 w-fit border font-medium text-[#98FBD7] border-[#98FBD7] text-[16px] hover:border-[#4DFBB9] hover:text-[#4DFBB9]  rounded-[0.8rem] active:border-[#1F6C4F] active:text-[#1F6C4F] transition-all;
+}
+.goodsBalanceKeeper {
+  @apply items-center rounded-lg px-4 py-2 flex flex-row gap-2 shadow-xl
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.darkShadow {
+  box-shadow: -0.2rem 0.15rem 0.3rem 0.04rem rgba(0, 0, 0, 0.3);
+}
+.attackWindowBg {
+  background-color: rgba(33, 48, 42, 0.6);
+  background-image: linear-gradient(to top left,  rgba(168, 131, 76, 0.2), rgba(106, 168, 76, 0.2));
+
+}
+.cardBg {
+  background: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff53, #ffffff00, #ffffff21);
+  border-radius: 0.2rem;
+  padding-inline: 0.2rem;
+  padding-top: 0.2rem;
+}
+.goldBg {
+  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-color: #9e954784;
+
+}
+.foodBg {
+  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-color: #589e478e;
+}
+.bronzeBg {
+  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-color: #50110541;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
+
+.tw-connect-wallet{
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color: white !important;
+  border-radius: 1rem !important;
+  height: 3.5rem !important;
+  opacity: 0.9 !important;
+  filter: blur(15px) ; /* Adjust the blur radius as per your requirement */
+  padding-inline: 1rem !important;
+
+  height: fit-content !important;
+}
+.tw-connect-wallet:hover {
+  color: white !important;
+  background-color: rgba(0, 0, 0, 0.25) !important;
+  /* box-shadow: 0 0.2rem 0.3rem 0.1rem rgba(0, 0, 0, 0.5) !important; */
+  transition:  all 0.15s ease-in-out;;
+}
+.tw-connected-wallet {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  height: 3.5rem !important;
+  border-radius: 1rem !important;
+
+}
+.tw-connected-wallet__balance {
+  color: rgb(209, 209, 209) !important;
+}
+.question {
+  transition: max-height 0.3s ease-out;
+  max-height: 3rem;
+  overflow: hidden;
+}
+
+.opened {
+  max-height: 20rem; /* Set an appropriate value for your content */
+}
+
+.bgCircle {
+  width: 20rem;
+  height: 20rem;
+  top: -5rem;
+  left: -10rem;
+  background-color: #4caf50; /* Change the background color as needed */
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(8rem);
+  z-index: -10;
+}
+
+.gradientParagraph{
   background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+    to right,
+    rgb(68, 208, 94),
+    rgb(68, 208, 94),
+    rgb(32, 32, 32),
+    rgb(32, 32, 32),
+    rgb(32, 32, 32)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.gradientTitle{
+  background: linear-gradient(
+    to right,
+    #1ca453,
+    /* #2E4F3B, */
+    rgb(32, 32, 32)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.greenHeaderGradient{
+  background: linear-gradient(to left, transparent,transparent, #34594b99, #34594ba2, transparent,transparent);
+}
+
+.landGrid {
+  /* display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  width: 30rem;
+  height: 30rem;
+  padding: 0.2rem; */
+  transform: perspective(600px) rotateY(0deg) scale(1.2) rotateX(30deg);
+  /* transition: 0.6s ease all;
+  background-color: khaki;
+  border-radius: 10px; */
+}
+.viewGrid {
+  /* display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 2px;
+  width: 30rem;
+  height: 30rem;
+  padding: 0.6rem; */
+  /* transform: perspective(1000px) rotateY(0deg) scale(1) rotateX(48deg) 
+    rotateZ(44deg); */
+  transform: perspective(50000px) rotateY(-4deg) scale(1) rotateX(55deg) 
+    rotateZ(42deg);
+  transition: 0.6s ease all;
+  box-shadow: 1rem 1rem 0.7rem 0.3rem rgba(0, 0, 0, 0.55);
+  /* background-color: khaki;
+  background-image: url("../public/map/map2.jpg");
+  object-fit: fill;
+  border-radius: 10px; */
 }
