@@ -33,7 +33,7 @@ export default function ParcelsWideScreen({
                 key={key}
                 color={"default"}
                 content={separatedCoordinate(land.toString())}
-                className={`capitalize  !bg-[#06291D]/80 ${
+                className={`capitalize p-2 rounded-xl text-[12px] text-white !bg-[#06291D]/60 ${
                   key != 4 && "invisible"
                 }`}
               >
@@ -46,9 +46,9 @@ export default function ParcelsWideScreen({
                   }}
                   className={`${
                     key == 4
-                      ? "cursor-pointer hover:bg-blue-gray-900/10"
+                      ? "cursor-pointer hover:bg-blue-gray-900/10 hover:brightness-75"
                       : "cursor-default"
-                  } text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                  } transition-all duration-300 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                 >
                   <Image
                     className=" h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10"
