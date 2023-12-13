@@ -26,15 +26,15 @@ export default function Roadmap() {
       <div className="  relative flex flex-col lg:flex-row items-center lg:items-start justify-around  px-[10rem]  pt-[8rem] lg:pt-0 mt-[18.5rem] lg:h-[initial] lg:mt-[15rem] ">
         {roadmapSteps.map((step, key) => (
           <React.Fragment key={key}>
-            <div className=" group relative w-fit ">
+            <div className=" group relative w-fit text-center">
               <h3 className=" text-gray-400 px-3 py-2 -translate-x-1/2 -translate-y-1/4  absolute mt-[9.5rem] left-1/2 bg-gradient-to-br  from-[#1a2920] to-[#1c3827]  rounded-xl">
                 {step.stepNum}
               </h3>
-              <div className=" translate-y-3/4 lg:translate-y-0 group-odd:-left-[6.5rem] group-even:-right-[6.5rem] lg:group-odd:-left-0 lg:group-even:-right-0 lg:group-even:mt-[12.5rem] h-40 w-40  relative">
+              <div className=" translate-y-3/4 lg:translate-y-0 group-odd:-left-[5.5rem] max-w-[120px] lg:max-w-none group-even:-right-[5.5rem] lg:group-odd:-left-0 lg:group-even:-right-0 lg:group-even:mt-[12.5rem] h-40 w-40  relative">
                 <h3 className=" text-[16px] text-[#2E4F3B] dark:text-[#A5F4B6] text-center font-[700]">
                   {step.title}
                 </h3>
-                <p className="text-[12px] mt-2 text-gray-800  dark:text-[#BFBFBF] text-center font-[500]">
+                <p className="text-[12px] mt-2 text-gray-800  dark:text-[#BFBFBF] text-center font-[500] ">
                   {step.description} Lorem ipsum dolor sit, amet consectetur
                 </p>
                 <p className=" text-center text-[12px] text-gray-900 dark:text-gray-100 mt-2 font-[700]">
