@@ -31,15 +31,15 @@ export default function Navbar() {
           className="fixed  w-full  h-[4rem] from-[#A9FFDE] to-[#7ECFB3] bg-gradient-to-r dark:from-[#34594B] dark:to-[#213830]  top-0 z-30  shadow-md md:shadow-none"
         ></div>
         <nav
-          className="fixed mx-auto top-0 flex  items-center justify-between px-4  lg:px-8 h-[4rem] w-full z-30 "
+          className="fixed mx-auto top-0 flex  items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-30 "
           aria-label="Global"
         >
-              <div className="flex lg:flex-1  left-0 ">
+              <div className="flex lg:flex-1  ">
             <a
               onClick={() => {
                 router.push("/");
               }}
-              className="m-2.5 cursor-pointer"
+              className="md:m-2.5 cursor-pointer "
             >
           
               {theme === "light" ? <DarkLogo/> : <LightLogo/>}

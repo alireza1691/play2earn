@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
 import ParcelsWideScreen from "./parcelsWideScreen";
 import ParcelsMobileScreen from "./parcelsMobileScreen"
-import WorldVector from "@/svg/worldVector";
+
 
 
 type landSelectorHookProps = {
@@ -20,7 +20,6 @@ export default function SelectedParcel2({
   setSlideBar,
 }: landSelectorHookProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [attackBox, setAttackBox] = useState(false)
   const [selectedParcel, setSelectedParcel] = useState<selectedParcelType>({
     x: 100,
     y: 100,
@@ -39,12 +38,7 @@ export default function SelectedParcel2({
 
   return (
     <>
-<div className=" fixed z999 w-full" >
-<a onClick={() => {setAttackBox(!attackBox)}} className=" z-10 transition-all cursor-pointer shadow-md hover:bg-[#06291D]/40 font- text-[#98FBD7] top-[10rem]  flex flex-row items-center gap-3 rounded-md left-1/2 -translate-x-1/2 absolute bg-[#06291D]/50 px-4 py-3" >
-        <WorldVector /> Go to world map
-      </a>
-</div>
-    
+
 
       <div className="z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center flex justify-center ">
         <h3 className="text-[#98FBD7] -z-10">
