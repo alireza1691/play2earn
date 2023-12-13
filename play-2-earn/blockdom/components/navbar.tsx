@@ -14,7 +14,7 @@ import DarkLogo from "@/svg/darkLogo";
 import LightLogo from "@/svg/lightLogo";
 import BattleLogIcon from "@/svg/battleLogIcon";
 import MyLandIcon from "@/svg/myLandIcon";
-import ExploreIcon from "@/svg/exploreicon";
+import ExploreIcon from "@/svg/exploreIcon";
 
 
 
