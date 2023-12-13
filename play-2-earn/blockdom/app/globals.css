@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.z999{
+  z-index: 998 !important;
+}
+.z998{
+  z-index: 998 !important;
+}
+
 .buildingWindow{
   @apply absolute left-10 top-24 rounded-xl w-[25rem] h-[50rem] bg-[#21302A]/60 backdrop-blur-sm
 }

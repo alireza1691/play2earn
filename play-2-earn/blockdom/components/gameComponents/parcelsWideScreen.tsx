@@ -18,19 +18,19 @@ export default function ParcelsWideScreen({
   return (
     <>
    
-    <div className=" transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px] transform grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
+    <div className="z-10 transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px]  grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
       {inViewParcels(selectedParcel).map((parcel, key) => (
         <div
           key={key}
           className={`grid w-fit grid-cols-10 gap-[1px] ${
-            key == 4 ? "" : "blur-md brightness-50"
+            key == 4 ? "" : "blur-md brightness-50 "
           }`}
         >
-          {parcelLands(selectedParcel.x, selectedParcel.y).map(
+          {parcelLands(parcel.x, parcel.y).map(
             (land, index) => (
               <Tooltip
                 radius="sm"
-                key={key}
+                key={land}
                 color={"default"}
                 content={separatedCoordinate(land.toString())}
                 className={`capitalize p-2 rounded-xl text-[12px] text-white !bg-[#06291D]/60 ${
@@ -38,7 +38,7 @@ export default function ParcelsWideScreen({
                 }`}
               >
                 <a
-                  key={index}
+                  key={land}
                   onClick={() => {
                     key == 4 && setSelectedLand(land),
                       key == 4 && setSlideBar(true),
@@ -46,7 +46,7 @@ export default function ParcelsWideScreen({
                   }}
                   className={`${
                     key == 4
-                      ? "cursor-pointer hover:bg-blue-gray-900/10 hover:opacity-80"
+                      ? " cursor-pointer hover:bg-blue-gray-900/10 hover:opacity-90"
                       : "cursor-default"
                   } bg-[url("/parcels/parcel.png")]  transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                 >

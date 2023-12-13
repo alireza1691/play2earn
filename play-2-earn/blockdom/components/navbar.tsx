@@ -12,6 +12,9 @@ import { IoMdDownload } from "react-icons/io";
 import { BsMoon, BsSun } from "react-icons/bs";
 import DarkLogo from "@/svg/darkLogo";
 import LightLogo from "@/svg/lightLogo";
+import BattleLogIcon from "@/svg/battleLogIcon";
+import MyLandIcon from "@/svg/myLandIcon";
+import ExploreIcon from "@/svg/exploreicon";
 
 
 
@@ -19,6 +22,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
+  let route = "explore"
 
   return (
     <>
@@ -30,7 +34,20 @@ export default function Navbar() {
           className="fixed mx-auto top-0 flex  items-center justify-between px-4  lg:px-8 h-[4rem] w-full z-30 "
           aria-label="Global"
         >
-          <div className=" ml-3 md:ml-5 flex md:hidden  ">
+              <div className="flex lg:flex-1  left-0 ">
+            <a
+              onClick={() => {
+                router.push("/");
+              }}
+              className="m-2.5 cursor-pointer"
+            >
+          
+              {theme === "light" ? <DarkLogo/> : <LightLogo/>}
+            </a>
+          </div>
+              {route == "index" ? (
+                <>
+                      <div className=" ml-3 md:ml-5 flex md:hidden  ">
             <button
              
               className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-800 dark:text-gray-50 right-0 w-fit mr-2"
@@ -44,7 +61,7 @@ export default function Navbar() {
               <FaBars className=" h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <div className="hidden  md:flex md:gap-x-10 ">
+          <div className="hidden  md:flex md:gap-x-10  ">
           
             <a
               onClick={() => {
@@ -69,18 +86,38 @@ export default function Navbar() {
 
             </a>
           </div>
-          <div className="flex lg:flex-1 absolute left-1/2 -translate-x-1/2">
-            <a
-              onClick={() => {
-                router.push("/");
-              }}
-              className="m-2.5 cursor-pointer"
-            >
+                </>
+              ):(
+                <div className="hidden  md:flex md:gap-x-10  ">
           
-              {theme === "light" ? <DarkLogo/> : <LightLogo/>}
-            </a>
-          </div>
-  
+                <a
+                  onClick={() => {
+                    router.push("/explore");
+                  }}
+                  className=" flex flex-col justify-center items-center transition-all hover:bg-black/10 p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 text-gray-800 dark:text-gray-50"
+                >
+                  <ExploreIcon/>
+                  Explore
+                </a>
+                <a
+                  href="#"
+                  className=" flex flex-col justify-center items-center text-sm transition-all hover:bg-black/10 p-2 rounded-lg  font-semibold leading-6 text-gray-800 dark:text-gray-50"
+                >
+                  <MyLandIcon/>
+                  My land
+                </a>
+                <a
+                  onClick={() => {}}
+                  className=" flex flex-col justify-center items-center cursor-pointer transition-all p-2  text-sm  rounded-lg font-semibold leading-6 text-gray-800 dark:text-gray-50"
+                >
+                         <BattleLogIcon/>
+                  Battle log
+           
+                </a>
+              </div>
+              )}
+    
+      
           <div className=" flex flex-1 justify-end items-center gap-3">
           <button
       onClick={toggleTheme}

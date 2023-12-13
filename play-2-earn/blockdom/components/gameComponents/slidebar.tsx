@@ -31,7 +31,7 @@ export default function Slidebar({
       </div>
       <div className=" flex justify-center mt-2">
         <Image
-          src={"/svg/gameItems/landCard.svg"}
+          src={"/svgs/images/landCard.svg"}
           width={256}
           height={364}
           alt="card"
@@ -42,7 +42,7 @@ export default function Slidebar({
       
           <div className="goldBg goodsBalanceKeeper">
             <Image
-              src={"/svg/gameItems/goldIcon.svg"}
+              src={"/svgs/icons/goldIcon.svg"}
               width={32}
               height={32}
               alt="goldIcon"
@@ -51,7 +51,7 @@ export default function Slidebar({
           </div>
           <div className="foodBg goodsBalanceKeeper">
             <Image
-              src={"/svg/gameItems/goldIcon.svg"}
+              src={"/svgs/icons/foodIcon.svg"}
               width={32}
               height={32}
               alt="goldIcon"
@@ -61,19 +61,19 @@ export default function Slidebar({
         </div>
         <div className="flex flex-row justify-around">
           <Image
-            src={"/svg/gameItems/warriorCard.svg"}
+            src={"/svgs/images/warriorCard.svg"}
             width={109}
             height={177}
             alt="warriorCard"
           />
           <Image
-            src={"/svg/gameItems/warriorCard.svg"}
+            src={"/svgs/images/warriorCard.svg"}
             width={109}
             height={177}
             alt="warriorCard2"
           />
           <Image
-            src={"/svg/gameItems/warriorCard.svg"}
+            src={"/svgs/images/warriorCard.svg"}
             width={109}
             height={177}
             alt="warriorCard3"
