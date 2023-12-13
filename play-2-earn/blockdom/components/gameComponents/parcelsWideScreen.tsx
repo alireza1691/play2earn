@@ -4,6 +4,7 @@ import { Tooltip } from "@nextui-org/react";
 import Image from "next/image";
 import { inViewParcels, parcelLands, separatedCoordinate } from "@/lib/utils";
 import { parcelsViewHookProps } from "@/lib/types";
+import { useSelectedWindowContext } from "@/context/selected-window-context";
 
 
 
@@ -13,6 +14,7 @@ export default function ParcelsWideScreen({
   selectedParcel,
   setSelectedParcel
 }: parcelsViewHookProps) {
+  const {selectedWindowComponent, setSelectedWindowComponent} = useSelectedWindowContext()
 
 
   return (
@@ -42,6 +44,7 @@ export default function ParcelsWideScreen({
                   onClick={() => {
                     key == 4 && setSelectedLand(land),
                       key == 4 && setSlideBar(true),
+                      key == 4 && setSelectedWindowComponent("emptyLand"),
                       console.log(land);
                   }}
                   className={`${

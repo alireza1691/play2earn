@@ -31,7 +31,7 @@ export default function SelectedBuildingContextProvider({children}:SelectedBuild
 export function useSelectedBuildingContext() {
     const context = useContext(StatesContext)
     if (context === null) {
-        throw new Error("useActiveSectionContext must be used within an ActiveSectionContextProvider")
+        throw new Error("useSelectedBuildingContext must be used within an useSelectedBuildingContext")
     }
     return context
 }

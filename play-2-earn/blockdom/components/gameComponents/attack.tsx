@@ -1,4 +1,5 @@
 "use client";
+import { useSelectedWindowContext } from "@/context/selected-window-context";
 import DoubleSword from "@/svg/doubleSword";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -9,12 +10,13 @@ import WarriorsSliders from "./warriorsSliders";
 export default function Attack() {
   const [selectedLand, setSelectedLand] = useState<number | null>(101101);
   const [dropDown, setDropDown] = useState<boolean>(false);
+  const {selectedWindowComponent, setSelectedWindowComponent} = useSelectedWindowContext()
   let isAttackSelected = false;
 
   const Lands = [101101, 105105];
   return (
     <>
-      {isAttackSelected && (
+      {selectedWindowComponent == "attack" && (
         <section className="top-[6rem] w-[90%] h-[50rem] absolute left-1/2 -translate-x-1/2 z-50">
           <div className=" flex flex-col  w-full h-full border-[#D4D4D4]/30 attackWindowBg rounded-xl border">
             <div className="mt-10 flex flex-row justify-around h-full ">

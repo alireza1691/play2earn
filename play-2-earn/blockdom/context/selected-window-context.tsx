@@ -1,9 +1,18 @@
 "use client";
 
-import { landItems } from "@/lib/data";
+
 import { createContext, useContext, useState } from "react";
 
-type itemType = typeof landItems[number]
+
+const windowComponentsList = [
+    "attack",
+    "mintedLand",
+    "emptyLand",
+    "myLand",
+    "battleLog",
+    "attackStatus"
+] as const
+type itemType = typeof windowComponentsList[number]
 
 
 type SelectedBuildingContextProviderProps = {
@@ -11,27 +20,27 @@ type SelectedBuildingContextProviderProps = {
   };
 
 type SelectedBuildingContextType = {
-    selectedItem: itemType | null,
-    setSelectedItem: React.Dispatch<React.SetStateAction<itemType|null>>
+    selectedWindowComponent: itemType | null,
+    setSelectedWindowComponent: React.Dispatch<React.SetStateAction<itemType|null>>
 }
 
 const StatesContext = createContext<SelectedBuildingContextType | null>(null)
 
-export default function SelectedBuildingContextProvider({children}:SelectedBuildingContextProviderProps) {
-      const [selectedItem, setSelectedItem] =  useState< itemType | null >(null)
+export default function SelectedWindowContextProvider({children}:SelectedBuildingContextProviderProps) {
+      const [selectedWindowComponent, setSelectedWindowComponent] =  useState< itemType | null >(null)
     
 
       return(
-        <StatesContext.Provider value={{ selectedItem, setSelectedItem}}>
+        <StatesContext.Provider value={{ selectedWindowComponent, setSelectedWindowComponent}}>
             {children}
         </StatesContext.Provider>
       )
 }
 
-export function useSelectedBuildingContext() {
+export function useSelectedWindowContext() {
     const context = useContext(StatesContext)
     if (context === null) {
-        throw new Error("useActiveSectionContext must be used within an ActiveSectionContextProvider")
+        throw new Error("useSelectedWindowContext must be used within an useSelectedWindowContext")
     }
     return context
 }
