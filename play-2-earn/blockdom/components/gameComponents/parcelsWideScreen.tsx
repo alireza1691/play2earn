@@ -22,8 +22,8 @@ export default function ParcelsWideScreen({
       {inViewParcels(selectedParcel).map((parcel, key) => (
         <div
           key={key}
-          className={`grid w-fit grid-cols-10 gap-[1px] ${
-            key == 4 ? "" : "blur-md brightness-50 "
+          className={`grid w-fit grid-cols-10 gap-[0px] ${
+            key == 4 ? " " : "blur-md brightness-50 "
           }`}
         >
           {parcelLands(parcel.x, parcel.y).map(
@@ -46,19 +46,20 @@ export default function ParcelsWideScreen({
                   }}
                   className={`${
                     key == 4
-                      ? " cursor-pointer hover:bg-blue-gray-900/10 hover:opacity-90"
-                      : "cursor-default"
+                      ? " cursor-pointer hover:bg-blue-gray-900/10 hover:opacity-90 active:opacity-70 "
+                      : "cursor-default bg-yellow-300"
                   }   transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                 >
-                  <Image
+                  {key == 4 &&                  <Image
                     className=" h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10"
                     src={"/parcels/parcel.png"}
                     width={60}
                     height={60}
                     alt="parcel"
                     quality={30}
-                  />
-                  {land}
+                  />}
+ 
+                  {/* {land} */}
                 </a>
               </Tooltip>
             )
