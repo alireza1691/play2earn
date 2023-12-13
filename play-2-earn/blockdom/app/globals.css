@@ -22,10 +22,10 @@
   @apply cursor-pointer rounded-md hover:bg-gray-500/20
 }
 .outlineRedButton {
-  @apply py-3 px-7 w-fit border font-medium text-[#F48475] border-[#F48475] text-[16px] hover:text-[#FFBFB1] hover:border-[#FFBFB1] rounded-[0.8rem] active:border-[#9C695E] active:text-[#9C695E] transition-all;
+  @apply py-3 px-7 w-fit border font-medium dark:text-[#F48475] dark:border-[#F48475] text-[16px] dark:hover:text-[#FFBFB1] dark:hover:border-[#FFBFB1] rounded-[0.8rem] dark:active:border-[#9C695E] dark:active:text-[#9C695E] transition-all;
 }
 .outlineGreenButton {
-  @apply py-3 px-7 w-fit border font-medium text-[#98FBD7] border-[#98FBD7] text-[16px] hover:border-[#4DFBB9] hover:text-[#4DFBB9]  rounded-[0.8rem] active:border-[#1F6C4F] active:text-[#1F6C4F] transition-all;
+  @apply py-3 px-7 w-fit border border-gray-800 hover:bg-gray-100 dark:hover:bg-transparent font-medium dark:text-[#98FBD7] dark:border-[#98FBD7] text-[16px] dark:hover:border-[#4DFBB9] dark:hover:text-[#4DFBB9]  rounded-[0.8rem] dark:active:border-[#1F6C4F] dark:active:text-[#1F6C4F] transition-all;
 }
 .goodsBalanceKeeper {
   @apply items-center rounded-lg px-4 py-2 flex flex-row gap-2 shadow-xl

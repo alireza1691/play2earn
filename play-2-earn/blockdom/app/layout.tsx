@@ -4,6 +4,7 @@ import { ThirdwebProvider } from "../components/ThirdwebProvider"
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import ActiveSectionContextProvider from '@/context/active-section-context'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,10 +26,12 @@ export default function RootLayout({
       <div className="bg-[#0e6f3d] dark:bg-[#7FDDAD] absolute top-[-13rem] -z-10 left-[0rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[5rem] dark:blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-70  dark:opacity-50 lg:left-[10rem] lg:w-[22.5rem]" ></div>
  
       <ThemeContextProvider>
+        <ActiveSectionContextProvider>
         <ThirdwebProvider>
         <Navbar/>
         {children}
         </ThirdwebProvider>
+        </ActiveSectionContextProvider>
         </ThemeContextProvider>
         </body>
       

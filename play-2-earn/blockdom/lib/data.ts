@@ -4,26 +4,26 @@
     {
       name: "Home",
       hash: "#home",
-      icon: "/icons/home.svg",
-      darkIcon: "/icons/homeBlack.svg",
+      icon: "/svgs/icons/home.svg",
+      darkIcon: "/svgs/icons/homeBlack.svg",
     },
     {
       name: "Get strated",
       hash: "#starter",
-      icon: "/icons/starter.svg",
-      darkIcon: "/icons/starterBlack.svg",
+      icon: "/svgs/icons/starter.svg",
+      darkIcon: "/svgs/icons/starterBlack.svg",
     },
     {
       name: "Roadmap",
       hash: "#roadmap",
-      icon: "/icons/roadmap.svg",
-      darkIcon: "/icons/roadmapBlack.svg",
+      icon: "/svgs/icons/roadmap.svg",
+      darkIcon: "/svgs/icons/roadmapBlack.svg",
     },
     {
       name: "F Questions",
       hash: "#questions",
-      icon: "/icons/FAQ.svg",
-      darkIcon: "/icons/FAQBlack.svg",
+      icon: "/svgs/icons/FAQ.svg",
+      darkIcon: "/svgs/icons/FAQBlack.svg",
     },
   ] as const;
   

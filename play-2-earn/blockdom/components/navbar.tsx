@@ -22,7 +22,7 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
   const { theme, toggleTheme } = useTheme();
-  let route = "explore"
+  let route = "index"
 
   return (
     <>

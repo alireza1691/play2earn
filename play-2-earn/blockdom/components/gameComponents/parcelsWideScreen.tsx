@@ -48,16 +48,16 @@ export default function ParcelsWideScreen({
                     key == 4
                       ? " cursor-pointer hover:bg-blue-gray-900/10 hover:opacity-90"
                       : "cursor-default"
-                  } bg-[url("/parcels/parcel.png")]  transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                  }   transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                 >
-                  {/* <Image
+                  <Image
                     className=" h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10"
                     src={"/parcels/parcel.png"}
                     width={60}
                     height={60}
                     alt="parcel"
                     quality={30}
-                  /> */}
+                  />
                   {land}
                 </a>
               </Tooltip>
