@@ -1,5 +1,6 @@
 "use client";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
+import CloseIcon from "@/svg/closeIcon";
 import DoubleSword from "@/svg/doubleSword";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -16,11 +17,17 @@ export default function Attack() {
   const Lands = [101101, 105105];
   return (
     <>
-      {selectedWindowComponent == "attack" && (
-        <section className="top-[6rem] w-[90%] h-[50rem] absolute left-1/2 -translate-x-1/2 z-50">
-          <div className=" flex flex-col  w-full h-full border-[#D4D4D4]/30 attackWindowBg rounded-xl border">
-            <div className="mt-10 flex flex-row justify-around h-full ">
-              <div className=" flex flex-col items-center ">
+      {/* {selectedWindowComponent == "attack" && ( */}
+        <section className={` ${selectedWindowComponent == "attack" ?"top-[6rem]" : " top-[100rem]"} w-[90%] h-[50rem] absolute left-1/2 -translate-x-1/2 z-50 transition-all`}>
+          <div className=" flex flex-col  w-full h-full border-[#D4D4D4]/30 bg-[#21302A]/60  backdrop-blur-md  rounded-xl border">
+            <div className="w-full flex flex-row">
+              <a className=" md:hidden p-1 m-2">Land 101102</a>
+              <a className=" md:hidden p-1 m-2 ml-auto mr-auto">0x1234...5678 109108</a>
+            <a className=" ml-auto  closeIcon m-2 " onClick={() => setSelectedWindowComponent(null)}><CloseIcon/></a>
+            </div>
+         
+            <div className=" flex flex-row justify-center md:justify-around h-full">
+              <div className=" flex flex-col items-center w-full px-4 md:px-1 md:w-[35%] max-w-[22.5rem]">
                 <div className=" relative  w-[200px] h-auto">
                   <Image
                     className="  "
@@ -44,7 +51,7 @@ export default function Attack() {
                       )}
                     </ul>
                     {dropDown && (
-                      <div className=" absolute w-[225px] mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
+                      <div className="z-10 absolute w-[225px] mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
                         {Lands.map((land, key) => (
                           <li
                             key={key}
@@ -62,10 +69,10 @@ export default function Attack() {
                 </div>
                 <WarriorsSliders />
               </div>
-              <div className="flex flex-col justify-center">
+              <div className="md:flex flex-col justify-center hidden md:visible">
                 <DoubleSword />
               </div>
-              <div className=" flex flex-col items-center">
+              <div className=" md:flex flex-col items-center hidden md:visible w-[35%] max-w-[22.5rem]">
                 <Image
                   className="  w-[200px] h-auto"
                   src={"/cards/LandCard.png"}
@@ -82,7 +89,7 @@ export default function Attack() {
             </div>
           </div>
         </section>
-      )}
+      {/* )} */}
     </>
   );
 }

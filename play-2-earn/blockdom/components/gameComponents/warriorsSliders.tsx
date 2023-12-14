@@ -4,7 +4,7 @@ import React from "react";
 
 export default function WarriorsSliders() {
   return (
-    <div className=" flex flex-col mt-6 w-[20rem]">
+    <div className=" flex flex-col mt-6 w-full px-2">
       <div className=" flex flex-row relative">
         <Image
           src={"/cards/warriorMiniCard.png"}
@@ -19,7 +19,7 @@ export default function WarriorsSliders() {
           maxValue={100}
           minValue={0}
           defaultValue={0}
-          getValue={(warrior) => `${warrior} of 100 warriors`}
+          // getValue={(warrior) => `${warrior} of 100`}
           className="max-w-md "
           onChangeEnd={() => {
             ("");
@@ -41,7 +41,7 @@ export default function WarriorsSliders() {
           minValue={0}
           defaultValue={0}
           className="max-w-md "
-          getValue={(warrior) => `${warrior} of 100 warriors`}
+          // getValue={(warrior) => `${warrior} of 100`}
 
           onChangeEnd={() => {
             ("");
@@ -63,7 +63,7 @@ export default function WarriorsSliders() {
           minValue={0}
           defaultValue={0}
           className="max-w-md "
-          getValue={(warrior) => `${warrior} of 100 warriors`}
+          // getValue={(warrior) => `${warrior} of 100`}
 
           onChangeEnd={() => {
             ("");
@@ -86,7 +86,7 @@ export default function WarriorsSliders() {
           minValue={0}
           defaultValue={0}
           className="max-w-md "
-          getValue={(warrior) => `${warrior} of 100 warriors`}
+          // getValue={(warrior) => `${warrior} of 100`}
 
           onChangeEnd={() => {
             ("");
@@ -109,7 +109,7 @@ export default function WarriorsSliders() {
           minValue={0}
           defaultValue={0}
           className="max-w-md "
-          getValue={(warrior) => `${warrior} of 100 warriors`}
+          // getValue={(warrior) => `${warrior} of 100`}
 
           onChangeEnd={() => {
             ("");

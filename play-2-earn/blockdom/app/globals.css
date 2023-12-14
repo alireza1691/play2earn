@@ -13,13 +13,13 @@
   @apply absolute left-10 top-24 rounded-xl w-[25rem] h-[50rem] bg-[#21302A]/60 backdrop-blur-sm
 }
 .greenButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9] hover:border-[#4DFBB9] active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
 }
 .redButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#9168FB] hover:to-[#9168FB] hover:border-[#9168FB] text-[#424040];
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#FFBFB1] hover:to-[#FFBFB1]  text-[#424040] active:from-[#9C695E] active:to-[#9C695E] ;
 }
 .closeIcon {
-  @apply cursor-pointer rounded-md hover:bg-gray-500/20
+  @apply cursor-pointer rounded-md hover:bg-gray-500/20 p-1
 }
 .outlineRedButton {
   @apply py-3 px-7 w-fit border font-medium dark:text-[#F48475] dark:border-[#F48475] text-[16px] dark:hover:text-[#FFBFB1] dark:hover:border-[#FFBFB1] rounded-[0.8rem] dark:active:border-[#9C695E] dark:active:text-[#9C695E] transition-all;
@@ -35,10 +35,15 @@
   box-shadow: -0.2rem 0.15rem 0.3rem 0.04rem rgba(0, 0, 0, 0.3);
 }
 .attackWindowBg {
-  background-color: rgba(33, 48, 42, 0.6);
-  background-image: linear-gradient(to top left,  rgba(168, 131, 76, 0.2), rgba(106, 168, 76, 0.2));
-
+ @apply bg-[#21302A]/60  backdrop-blur-md 
 }
+
+/* .attackWindowBg {
+  background-color: rgba(106, 168, 76, 0.2);
+  
+  background-image: linear-gradient(to top left,  rgba(168, 131, 76, 0.2), rgba(33, 48, 42, 0.6));
+
+} */
 .cardBg {
   background: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff53, #ffffff00, #ffffff21);
   border-radius: 0.2rem;
