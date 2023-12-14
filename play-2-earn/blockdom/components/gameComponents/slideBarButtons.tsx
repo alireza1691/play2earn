@@ -15,13 +15,13 @@ export default function SlideBarButtons() {
 
     </div>
 
-    <div className=" flex flex-row  gap-2">
+    <div className=" flex flex-col md:flex-row  w-full gap-2">
    
       {!isMinted  && <button className= "greenButton !w-full">Mint</button>}
-      {isMinted && isEnemy && <button className= "outlineGreenButton !w-[50%]">Send help</button> }
-      {isMinted && isEnemy &&  <button onClick={() => {setSelectedWindowComponent("attack")}} className= "redButton !w-[50%]">Attack</button>}
-      {isMinted && !isEnemy && <button className= "outlineGreenButton !w-[50%]">Send help</button> }
-      {isMinted && !isEnemy &&  <button className= "greenButton !w-[50%]">Visit land</button>}
+      {isMinted && isEnemy && <button className= "outlineGreenButton !w-full  md:!w-[50%]">Send help</button> }
+      {isMinted && isEnemy &&  <button onClick={() => {setSelectedWindowComponent("attack")}} className= "redButton !w-full md:!w-[50%]">Attack</button>}
+      {isMinted && !isEnemy && <button className= "outlineGreenButton !w-full md:!w-[50%]">Send help</button> }
+      {isMinted && !isEnemy &&  <button className= "greenButton !w-full md:!w-[50%]">Visit land</button>}
    
     </div>
   </div>

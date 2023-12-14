@@ -18,19 +18,19 @@ export default function Attack() {
   return (
     <>
       {/* {selectedWindowComponent == "attack" && ( */}
-        <section className={` ${selectedWindowComponent == "attack" ?"top-[6rem]" : " top-[100rem]"} w-[90%] h-[50rem] absolute left-1/2 -translate-x-1/2 z-50 transition-all`}>
+        <section className={` ${selectedWindowComponent == "attack" ?"top-[6rem]" : " top-[100rem]"} w-[90%] h-[80%] absolute left-1/2 -translate-x-1/2 z-50 transition-all`}>
           <div className=" flex flex-col  w-full h-full border-[#D4D4D4]/30 bg-[#21302A]/60  backdrop-blur-md  rounded-xl border">
             <div className="w-full flex flex-row">
-              <a className=" md:hidden p-1 m-2">Land 101102</a>
-              <a className=" md:hidden p-1 m-2 ml-auto mr-auto">0x1234...5678 109108</a>
+              <a className=" md:hidden p-1 m-2">From: 101102</a>
+              <a className=" md:hidden p-1 m-2 ml-auto mr-auto">To: 109108</a>
             <a className=" ml-auto  closeIcon m-2 " onClick={() => setSelectedWindowComponent(null)}><CloseIcon/></a>
             </div>
          
             <div className=" flex flex-row justify-center md:justify-around h-full">
               <div className=" flex flex-col items-center w-full px-4 md:px-1 md:w-[35%] max-w-[22.5rem]">
-                <div className=" relative  w-[200px] h-auto">
+                <div className=" relative w-auto  md:w-[200px] h-auto max-h-[40%] md:max-h-[55%]">
                   <Image
-                    className="  "
+                    className="h-auto w-auto  "
                     src={"/cards/LandCard.png"}
                     height={364}
                     width={256}
@@ -41,7 +41,7 @@ export default function Attack() {
                       onClick={() => setDropDown(!dropDown)}
                       className={`${
                         dropDown ? " " : "bg-[#06291D]/50"
-                      } transition-all active:opacity-60 ring-gray-600 group  cursor-pointer flex flex-row justify-between items-center bg-[#06291D]/50 text-[#98FBD7] font-medium text-[16px] w-full px-6 py-3 rounded-b-xl backdrop-blur-sm`}
+                      } transition-all active:opacity-60 ring-gray-600 group  cursor-pointer flex flex-row justify-between items-center bg-[#06291D]/50 text-[#98FBD7] font-medium text-[16px] w-full px-6 md:py-3 py-1 rounded-b-lg md:rounded-b-xl backdrop-blur-sm`}
                     >
                       {selectedLand}
                       {dropDown ? (
