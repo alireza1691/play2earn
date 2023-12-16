@@ -10,7 +10,7 @@
 }
 
 .buildingWindow{
-  @apply absolute left-10 top-24 rounded-xl w-[25rem] h-[50rem] bg-[#21302A]/60 backdrop-blur-sm
+  @apply absolute sm:left-10 top-24 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[90%] sm:w-[20rem] lg:w-[25rem] h-[80vh] bg-[#21302A]/60 backdrop-blur-sm
 }
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
@@ -28,7 +28,7 @@
   @apply py-3 px-7 w-fit border border-gray-800 hover:bg-gray-100 dark:hover:bg-transparent font-medium dark:text-[#98FBD7] dark:border-[#98FBD7] text-[16px] dark:hover:border-[#4DFBB9] dark:hover:text-[#4DFBB9]  rounded-[0.8rem] dark:active:border-[#1F6C4F] dark:active:text-[#1F6C4F] transition-all;
 }
 .goodsBalanceKeeper {
-  @apply items-center rounded-lg px-4 py-2 flex flex-row gap-2 shadow-xl
+  @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden
 }
 
 .darkShadow {
@@ -49,6 +49,12 @@
   border-radius: 0.2rem;
   padding-inline: 0.2rem;
   padding-top: 0.2rem;
+}
+.warriorsSlidersBg{
+  background: linear-gradient(to bottom , rgba(0,0,0,0.6),rgba(0,0,0,0.2), rgba(0,0,0,0.1), rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+}
+.warriorsGridBg{
+  background: linear-gradient(to bottom , rgba(0,0,0,0.3),rgba(0,0,0,0.2), rgba(0,0,0,0.01), rgba(0,0,0,0.2), rgba(0,0,0,0.3));
 }
 .goldBg {
   background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
@@ -150,4 +156,18 @@
   transition: 0.6s ease all;
   box-shadow: 1rem 1rem 0.7rem 0.3rem rgba(0, 0, 0, 0.55);
 
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px; /* Adjust the width as needed */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #393939; /* Adjust the background color as needed */
+  border-radius: 10px; /* Make the track rounded */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888; /* Adjust the thumb color as needed */
+  border-radius: 10px;
 }

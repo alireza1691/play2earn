@@ -1,12 +1,13 @@
+import { warriors } from "@/lib/data";
 import { Slider } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 
-// let warriors = ["spearman","maceman","swordsman","archer","spearman","knight"]
-let warriors = ["spearman","maceman","swordsman","archer","spearman"]
+
+
 export default function WarriorsSliders() {
   return (
-    <div className=" flex flex-col mt-2 md:mt-6 w-full px-2 h-full">
+    <div className=" flex flex-col mt-2 md:mt-6 w-full px-2 h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
       {warriors.map((warrior,key) => (
     <div key={key} className=" flex flex-row relative ">
     <Image
@@ -14,8 +15,9 @@ export default function WarriorsSliders() {
       alt="warriorCard"
       width={25}
       height={40}
-      className=" w-auto h-full md:h-[50px] "
+      className=" w-auto  h-[60px] "
     />
+    {/* classNames={{indicator: "bg-[#98DDFB]",track:"bg-gray-800/20 border border-gray-300/30 darkShadow"}}  */}
     <Slider
       color="foreground"
       label={warrior}
@@ -28,6 +30,7 @@ export default function WarriorsSliders() {
       onChangeEnd={() => {
         ("");
       }}
+     
     />
   </div>
       ))}

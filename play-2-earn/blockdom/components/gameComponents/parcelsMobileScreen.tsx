@@ -19,7 +19,7 @@ export default function ParcelsMobileScreen({
   return (
     <div  className="z-10 md:-z-10 absolute grid gap-[1px] w-[1590px]  transform grid-cols-3 left-[0rem] top-0 md:invisible ">
     {inViewParcels(selectedParcel).map((parcel,key) =>(
-        <div key={key} className={`grid w-fit grid-cols-10 gap-[1px] ${key == 4 ? "":"blur-md brightness-50"}`}>
+        <div key={key} className={`grid w-fit grid-cols-10 gap-[2px] ${key == 4 ? "":"blur-md brightness-50"}`}>
             {parcelLands(parcel.x, parcel.y).map((land) => (
                        <Tooltip radius="sm" key={land} color={"default"} content={separatedCoordinate(land.toString())} className={`capitalize  !bg-[#06291D]/80 ${key != 4 && "invisible"}`}>
                        <a

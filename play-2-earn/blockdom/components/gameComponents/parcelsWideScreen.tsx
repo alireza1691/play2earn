@@ -24,7 +24,7 @@ export default function ParcelsWideScreen({
       {inViewParcels(selectedParcel).map((parcel, key) => (
         <div
           key={key}
-          className={`grid w-fit grid-cols-10 gap-[0px] ${
+          className={`grid w-fit grid-cols-10 gap-[1px] ${
             key == 4 ? " " : "blur-md brightness-50 "
           }`}
         >

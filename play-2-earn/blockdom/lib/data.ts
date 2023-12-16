@@ -127,4 +127,4 @@
     { name: "Farm", imageUrl: "/testEmptyBuilding.svg" ,level:2},
     { name: "Wall", imageUrl: "/testWalls.svg" ,level:2},
   ] as const;
-  
+  export const warriors = ["spearman","maceman","swordsman","archer","spearman","knight"]

@@ -40,18 +40,18 @@ export default function Slidebar({
         />
       </div>
       <div className="flex flex-col justify-around h-full max-h-[35%]">
-        <div className=" flex flex-row justify-evenly items-center">
+        <div className=" flex flex-row justify-evenly items-center w-full">
       
-          <div className="goldBg goodsBalanceKeeper">
+          <div className="goldBg goodsBalanceKeeper !w-[45%] h-full">
             <Image
               src={"/svgs/icons/goldIcon.svg"}
               width={32}
               height={32}
               alt="goldIcon"
             />
-            <h4 className=" text-white font-semibold">12314123</h4>
+            <h4 className=" text-white font-semibold ">12314123</h4>
           </div>
-          <div className="foodBg goodsBalanceKeeper">
+          <div className="foodBg goodsBalanceKeeper !w-[45%] h-full">
             <Image
               src={"/svgs/icons/foodIcon.svg"}
               width={32}

@@ -4,9 +4,11 @@ import CloseIcon from "@/svg/closeIcon";
 import DoubleSword from "@/svg/doubleSword";
 import Image from "next/image";
 import React, { useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp, IoIosArrowBack } from "react-icons/io";
 import AttackTargetInfo from "./attackTargetInfo";
 import WarriorsSliders from "./warriorsSliders";
+
+
 
 export default function Attack() {
   const [selectedLand, setSelectedLand] = useState<number | null>(101101);
@@ -21,16 +23,17 @@ export default function Attack() {
         <section className={` ${selectedWindowComponent == "attack" ?"top-[6rem]" : " top-[100rem]"} w-[90%] h-[80%] absolute left-1/2 -translate-x-1/2 z-50 transition-all`}>
           <div className=" flex flex-col  w-full h-full border-[#D4D4D4]/30 bg-[#21302A]/60  backdrop-blur-md  rounded-xl border">
             <div className="w-full flex flex-row">
-              <a className=" md:hidden p-1 m-2">From: 101102</a>
-              <a className=" md:hidden p-1 m-2 ml-auto mr-auto">To: 109108</a>
+            <a className=" mr-auto hidden md:flex  closeIcon m-2 text-[24px]" onClick={() => setSelectedWindowComponent("emptyLand")}><IoIosArrowBack/></a>
+              <a  className=" md:hidden p-1 m-2">From: {selectedLand}</a>
+              <a onClick={() => setSelectedWindowComponent("emptyLand")}  className=" md:hidden p-1 m-2 ml-auto mr-auto hover:cursor-pointer hover:brightness-150">To: 109108</a>
             <a className=" ml-auto  closeIcon m-2 " onClick={() => setSelectedWindowComponent(null)}><CloseIcon/></a>
             </div>
          
-            <div className=" flex flex-row justify-center md:justify-around h-full">
+            <div className=" flex flex-row justify-center md:justify-around h-[80%]">
               <div className=" flex flex-col items-center w-full px-4 md:px-1 md:w-[35%] max-w-[22.5rem]">
-                <div className=" relative w-auto  md:w-[200px] h-auto max-h-[40%] md:max-h-[55%]">
+                <div className=" relative w-auto  md:w-[200px] max-h-[55%] h-full ">
                   <Image
-                    className="h-auto w-auto  "
+                    className="h-full w-full  "
                     src={"/cards/LandCard.png"}
                     height={364}
                     width={256}
@@ -41,7 +44,7 @@ export default function Attack() {
                       onClick={() => setDropDown(!dropDown)}
                       className={`${
                         dropDown ? " " : "bg-[#06291D]/50"
-                      } transition-all active:opacity-60 ring-gray-600 group  cursor-pointer flex flex-row justify-between items-center bg-[#06291D]/50 text-[#98FBD7] font-medium text-[16px] w-full px-6 md:py-3 py-1 rounded-b-lg md:rounded-b-xl backdrop-blur-sm`}
+                      } transition-all active:opacity-60 ring-gray-600 group  cursor-pointer flex flex-row justify-between items-center bg-[#06291D]/50 text-[#98FBD7] font-medium text-[16px] w-full px-6 py-3 rounded-b-[1.02rem] backdrop-blur-sm`}
                     >
                       {selectedLand}
                       {dropDown ? (
@@ -74,18 +77,18 @@ export default function Attack() {
               </div>
               <div className=" md:flex flex-col items-center hidden md:visible w-[35%] max-w-[22.5rem]">
                 <Image
-                  className="  w-[200px] h-auto"
+                  className="  w-[200px] h-auto max-h-[55%]"
                   src={"/cards/LandCard.png"}
                   height={364}
                   width={256}
-                  alt="card"
+                  alt="targetCard"
                 />
                 <AttackTargetInfo />
               </div>
             </div>
-            <div className="p-3 justify-center flex">
+            <div className="p-1 md:p-3 justify-center flex mt-auto ">
               {" "}
-              <button className="redButton mt-auto !w-[30rem]">Attack</button>
+              <button className="redButton mt-auto !w-full md:!w-[30rem]">Attack</button>
             </div>
           </div>
         </section>

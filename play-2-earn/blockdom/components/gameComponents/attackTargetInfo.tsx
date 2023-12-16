@@ -7,7 +7,7 @@ const warriors = [10, 50, 22, 70, 0];
 
 export default function AttackTargetInfo() {
   return (
-    <div className=" flex flex-col w-full mt-3">
+    <div className=" flex flex-col w-full mt-5">
       <div className=" h-[4.5rem] w-full bronzeBg rounded-xl  flex flex-col darkShadow">
         <h3 className="ml-8  font-bold text-[24px]">Target</h3>
         <p className="ml-8 w-full flex flex-row gap-3 text-[#98FBD7]">
