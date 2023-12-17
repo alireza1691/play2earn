@@ -10,7 +10,7 @@ export default function BuildingWindowButtons() {
   return (
     <div className="w-full mt-auto flex flex-col justify-end h-full">
          <div className=" mt-auto flex flex-row justify-evenly p-1 ">
-    <div className=" flex flex-row items-center ">
+    {/* <div className=" flex flex-row items-center ">
       <Image
         src={"/svgs/icons/goldIcon.svg"}
         width={30}
@@ -18,7 +18,7 @@ export default function BuildingWindowButtons() {
         alt="goldIcon"
       />
       <h4>1000</h4>
-    </div>
+    </div> */}
     <div className=" flex flex-row items-center">
       <Image
         src={"/svgs/icons/foodIcon.svg"}
@@ -32,7 +32,7 @@ export default function BuildingWindowButtons() {
       {selectedItem?.name == "Barracks"&&
       <div className=" flex flex-row p-2 gap-2">
         <button className="greenButton !py-2 !w-[70%]">Upgrade</button>
-        <button className="outlineGreenButton !py-1 !w-[30%] "><TopDuobleArrow/></button>
+        <button className="outlineGreenButton !py-1 !w-[30%] flex justify-center "><TopDuobleArrow/></button>
         </div>
       }
       {/* <div className="w-full px-3">

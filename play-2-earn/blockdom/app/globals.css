@@ -10,7 +10,7 @@
 }
 
 .buildingWindow{
-  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm
+  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[85%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm
 }
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
