@@ -74,14 +74,16 @@ export default function ParcelsWideScreen({
         </div>
       )}
       {!isParcelSelected && (
-        <div className="p-10 z-10 absolute left-[0rem] grid grid-cols-10 gap-10 top-[4.5rem] w-[1080px] md:w-[1590px] 2xl:w-[2130px] ">
-        {allParcelsAndTheirLands.map((parcel,key) => (
-          <div className=" grid grid-cols-10 gap-4 !w-[20rem] !h-[20rem]">
+        <div className="p-10 z-10 absolute left-[0rem]  grid grid-cols-10 gap-1 top-[4.5rem] !h-[80rem] xl:h-[180rem] xl:w-[147rem] ">
+        {
+        allParcelsAndTheirLands.map((parcel,key) => (
+          <div key={key} className=" grid grid-cols-10 gap-[1px] xl:!w-[14rem] !w-[7rem] !h-auto">
           {parcel.map((land,index) => (
-            <p className=" w-1 h-1 bg-gray-500 text-white text-[4px]">{land}</p>
+            <p key={index} className=" xl:w-5 xl:h-5 w-2 h-2 bg-yellow-500 blur-sm text-white text-[4px]"></p>
           ))}
           </div>
         ))}
+  
         </div>
       )}
     </>

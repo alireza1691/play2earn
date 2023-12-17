@@ -20,7 +20,7 @@ export default function Attack() {
   return (
     <>
       {/* {selectedWindowComponent == "attack" && ( */}
-        <section className={` ${selectedWindowComponent == "attack" ?"top-[6rem]" : " top-[100rem]"} w-[90%] h-[80%] absolute left-1/2 -translate-x-1/2 z-50 transition-all`}>
+        <section className={` ${selectedWindowComponent == "attack" ?"top-[6rem]" : " top-[200rem]"} w-[90%] h-[80%] absolute left-1/2 -translate-x-1/2 z-50 transition-all`}>
           <div className=" flex flex-col  w-full h-full border-[#D4D4D4]/30 bg-[#21302A]/60  backdrop-blur-md  rounded-xl border">
             <div className="w-full flex flex-row">
             <a className=" mr-auto hidden md:flex  closeIcon m-2 text-[24px]" onClick={() => setSelectedWindowComponent("emptyLand")}><IoIosArrowBack/></a>
