@@ -8,9 +8,25 @@
 .z998{
   z-index: 998 !important;
 }
+.z-100{
+  z-index: 100 !important;
+}
+.z-200{
+  z-index: 200 !important;
+}
+.z-300{
+  z-index: 300 !important;
+}
+.z-400{
+  z-index: 400 !important;
+}
+.z-500{
+  z-index: 500 !important;
+}
+
 
 .buildingWindow{
-  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[85%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm
+  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[82.5%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm
 }
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
@@ -37,6 +53,9 @@
 .attackWindowBg {
  @apply bg-[#21302A]/60  backdrop-blur-md 
 }
+.battleLogWindowBg {
+  @apply bg-[#21302A]/90  backdrop-blur-md border border-[#D4D4D4]/30
+ }
 
 /* .attackWindowBg {
   background-color: rgba(106, 168, 76, 0.2);

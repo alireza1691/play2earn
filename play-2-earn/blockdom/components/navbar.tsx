@@ -7,7 +7,7 @@ import { IoClose } from "react-icons/io5";
 // import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useTheme } from "@/context/theme-context";
-import { useRouter } from "next/navigation";
+import { useRouter , usePathname } from "next/navigation";
 import { IoMdDownload } from "react-icons/io";
 import { BsMoon, BsSun } from "react-icons/bs";
 import DarkLogo from "@/svg/darkLogo";
@@ -15,14 +15,19 @@ import LightLogo from "@/svg/lightLogo";
 import BattleLogIcon from "@/svg/battleLogIcon";
 import MyLandIcon from "@/svg/myLandIcon";
 import ExploreIcon from "@/svg/exploreIcon";
+import { useSelectedWindowContext } from "@/context/selected-window-context";
 
 
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const {selectedWindowComponent, setSelectedWindowComponent} = useSelectedWindowContext()
   const router = useRouter();
+
   const { theme, toggleTheme } = useTheme();
-  let route = "index"
+ 
+
+  const currentRoute = usePathname();
 
   return (
     <>
@@ -34,7 +39,7 @@ export default function Navbar() {
           className="fixed mx-auto top-0 flex  items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-30 "
           aria-label="Global"
         >
-              <div className="flex lg:flex-1  ">
+              <div className="flex   ">
             <a
               onClick={() => {
                 router.push("/");
@@ -45,7 +50,7 @@ export default function Navbar() {
               {theme === "light" ? <DarkLogo/> : <LightLogo/>}
             </a>
           </div>
-              {route == "index" ? (
+              {currentRoute === "/" ? (
                 <>
                       <div className=" ml-3 md:ml-5 flex md:hidden  ">
             <button
@@ -88,7 +93,7 @@ export default function Navbar() {
           </div>
                 </>
               ):(
-                <div className="hidden  md:flex md:gap-x-10  ">
+                <div className="hidden  md:flex md:gap-x-10 ">
           
                 <a
                   onClick={() => {
@@ -107,7 +112,7 @@ export default function Navbar() {
                   My land
                 </a>
                 <a
-                  onClick={() => {}}
+                  onClick={() => { setSelectedWindowComponent("battleLog")}}
                   className=" flex flex-col justify-center items-center cursor-pointer transition-all p-2  text-sm  rounded-lg font-semibold leading-6 text-gray-800 dark:text-gray-50"
                 >
                          <BattleLogIcon/>
@@ -118,7 +123,7 @@ export default function Navbar() {
               )}
     
       
-          <div className=" flex flex-1 justify-end items-center gap-3">
+          <div className=" flex  justify-center items-center gap-3">
           <button
       onClick={toggleTheme}
       className="  bg-[#06291D] text-white bg-opacity-50  w-[2.5rem] h-[2.5rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "

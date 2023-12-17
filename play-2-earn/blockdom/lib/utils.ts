@@ -46,9 +46,32 @@ export const parcelLands = (xFrom: number, yFrom: number) => {
   return items;
 };
 
+export const allLands = () => {
+  let parcelLandsArray= []
+  for (let x = 0; x < 10; x++) {
+    for (let y = 0; y < 10; y++) {
+      const item = parcelLands((x+10)*10 , (y+10)*10)
+      parcelLandsArray.push(item)
+    }
+  }
+  return parcelLandsArray
+}
+
+export const getParcelStartIndexes = ()=> {
+  let indexes: selectedParcelType[] = []
+  for (let x = 0; x < 10; x++) {
+    for (let y = 0; y < 10; y++) {
+      const item = {x:(x+10)*10 , y:(y+10)*10}
+      indexes.push(item)
+    }
+  }
+  return indexes
+}
+
 export const separatedCoordinate = (coordinate: string) => {
   const middleIndex = Math.floor(coordinate.length / 2);
   const result =
     coordinate.slice(0, middleIndex) + " - " + coordinate.slice(middleIndex);
   return result;
 };
+

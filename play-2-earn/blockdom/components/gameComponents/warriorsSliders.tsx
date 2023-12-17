@@ -1,5 +1,6 @@
 import { warriors } from "@/lib/data";
 import { Slider } from "@nextui-org/react";
+import { Span } from "next/dist/trace";
 import Image from "next/image";
 import React from "react";
 
@@ -26,11 +27,25 @@ export default function WarriorsSliders() {
       minValue={0}
       defaultValue={0}
       // getValue={(warrior) => `${warrior} of 100`}
-      className="max-w-md "
+      // className="max-w-md "
       onChangeEnd={() => {
         ("");
       }}
-     
+     classNames={{
+      base:" text-white",
+      filler:"-ml-3 bg-[#9BFCD4] rounded-l-full ",
+      track:" bg-gray-400/30 darkShadow border border-gray-300/30",
+      thumb:" bg-[#9BFCD4]",
+      
+     }}
+     renderThumb={(props) => (
+      <div
+        {...props}
+        className="group p-[2px] top-1/2 bg-gray-200/70 border-small border-default-200 dark:border-gray-300/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
+      >
+        <span className="transition-transform bg-[#9BFCD4] shadow-small  rounded-full w-5 h-5 block group-data-[dragging=true]:scale-90" />
+      </div>
+    )}
     />
   </div>
       ))}

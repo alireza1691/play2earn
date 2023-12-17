@@ -4,6 +4,7 @@ import Attack from "@/components/gameComponents/attack";
 import SelectedParcel from "@/components/gameComponents/selectedParcel";
 import React, { useState } from "react";
 import MapHandler from "@/components/mapHandler";
+import BattleLog from "@/components/gameComponents/battleLog";
 
 
 
@@ -13,6 +14,7 @@ export default function Explore() {
 
   return (
     <div className=" overflow-hidden w-screen h-screen relative">
+      <BattleLog/>
     <MapHandler/>
       <SelectedParcel
         setSelectedLand={setSelectedLand}

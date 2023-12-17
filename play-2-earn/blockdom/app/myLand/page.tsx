@@ -1,16 +1,15 @@
-
-// import SelectedBuilding from "@/components/gameComponents.tsx/selectedBuilding";
-// import Town from "@/components/gameComponents.tsx/town";
 import SelectedBuilding from "@/components/gameComponents/selectedBuilding";
 import Town from "@/components/gameComponents/town";
 import Image from "next/image";
 import React from "react";
+
 
 export default function MyLand() {
 
   return (
     <>
     <div className=" w-screen h-screen overflow-hidden relative">
+ 
       <div
 className=" w-[100vw] h-[100vh]   overflow-scroll custom-scrollbar  items-center justify-center  relative "
        >

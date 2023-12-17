@@ -28,7 +28,8 @@ const StatesContext = createContext<SelectedBuildingContextType | null>(null)
 
 export default function SelectedWindowContextProvider({children}:SelectedBuildingContextProviderProps) {
       const [selectedWindowComponent, setSelectedWindowComponent] =  useState< itemType | null >(null)
-    
+        console.log(selectedWindowComponent);
+        
 
       return(
         <StatesContext.Provider value={{ selectedWindowComponent, setSelectedWindowComponent}}>
