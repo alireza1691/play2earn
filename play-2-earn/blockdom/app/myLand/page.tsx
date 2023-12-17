@@ -36,7 +36,7 @@ className=" w-[100vw] h-[100vh]   overflow-scroll custom-scrollbar  items-center
       <div className=" w-full z-30 h-[4rem] fixed bottom-0 bg-gradient-to-r from-[#A9FFDE] to-[#7ECFB3] dark:from-[#34594B]/60 dark:to-[#213830]/60 sm:hidden dark:bg-[#000000] ">
 
       </div>
-      <div className=" hidden sm:flex w-full h-[3rem] fixed bottom-0 bg-gradient-to-t from-black via-black"></div>
+      <div className=" hidden sm:flex w-full h-[3rem] bottom-0 bg-gradient-to-t from-black via-black"></div>
     </>
   );
 }
