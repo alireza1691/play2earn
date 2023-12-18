@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 type selectedParcelType = {
   x: number;
   y: number;
@@ -45,6 +47,8 @@ export const parcelLands = (xFrom: number, yFrom: number) => {
   }
   return items;
 };
+
+
 
 export const allLands = () => {
 
