@@ -81,3 +81,8 @@ export const separatedCoordinate = (coordinate: string) => {
   return result;
 };
 
+export const coordinatesObject = (coordinates:number) => {
+const xCoordinate = Math.floor(coordinates / 1000); // 123
+const yCoordinate = coordinates % 1000;
+return {x: xCoordinate,y: yCoordinate-9}
+}

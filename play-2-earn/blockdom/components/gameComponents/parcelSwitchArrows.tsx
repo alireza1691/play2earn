@@ -4,12 +4,13 @@ import React from 'react'
 
 type SwitchParcelArrowsProps = {
     selectedParcel : selectedParcelType,
-    setSelectedParcel: React.Dispatch<React.SetStateAction<selectedParcelType>>
+    setSelectedParcel: React.Dispatch<React.SetStateAction<selectedParcelType>>,
+    isParcelSelected: boolean
 }
 
-export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel}:SwitchParcelArrowsProps) {
+export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel,isParcelSelected}:SwitchParcelArrowsProps) {
 
-    const isParcelSelected = false;
+    // const isParcelSelected = false;
 
   return (
     <>
@@ -18,14 +19,14 @@ export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel}:Sw
 
      <a
        onClick={() => {
-         selectedParcel.y >= 110 &&
+         selectedParcel.y < 190 &&
            setSelectedParcel((prevState) => ({
              ...prevState,
-             y: prevState.y - 10,
+             y: prevState.y + 10,
            }));
        }}
        className={` ${
-         selectedParcel.y <= 100
+         selectedParcel.y >= 190
            ? "brightness-50  opacity-50 "
            : "cursor-pointer"
        } invisible md:visible   z-40 md:right-[4rem] md:top-[9.5rem] 2xl:top-[7.5rem] absolute`}
@@ -60,14 +61,14 @@ export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel}:Sw
      </a>
      <a
        onClick={() => {
-         selectedParcel.y < 190 &&
+         selectedParcel.y >= 110 &&
            setSelectedParcel((prevState) => ({
              ...prevState,
-             y: prevState.y + 10,
+             y: prevState.y - 10,
            }));
        }}
        className={`${
-         selectedParcel.y >= 190
+         selectedParcel.y <= 100
            ? "brightness-50  opacity-50"
            : "cursor-pointer"
        } invisible md:visible  z-40  md:left-[2.5rem] md:bottom-[9.5rem] absolute`}
@@ -81,7 +82,7 @@ export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel}:Sw
      </a>
      <a
        onClick={() => {
-         selectedParcel.x < 190 &&
+        selectedParcel.x < 190 &&
            setSelectedParcel((prevState) => ({
              ...prevState,
              x: prevState.x + 10,
