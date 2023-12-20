@@ -38,7 +38,7 @@ export default function ParcelsMobileScreen({
                 >
                   <a
                     onClick={() => {
-                      key == 4 && setSelectedLand(land),
+                      // key == 4 && setSelectedLand(land),
                         key == 4 && setSlideBar(true),
                         key == 4 && setSelectedWindowComponent("emptyLand"),
                         console.log(land);

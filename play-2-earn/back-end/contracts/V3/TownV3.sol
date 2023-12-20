@@ -69,275 +69,8 @@ library TransferHelper {
         require(success, 'STE');
     }
 }
-
-contract Barracks is Ownable{
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ********************************   Events  ***********************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    // //  ******************************************************************************
-
-    // event Attack(uint256 attackerLandId, uint256 defenderLandId,uint256[] attackerArmy, uint256[] defenderArmy, bool success);
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  *******************************   Vairables  *********************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-
-        // IHeroes HEROES;
-
-    /// @notice Land token id => type of warrior => amount
-    mapping (uint256 => mapping(uint256 => uint256)) internal landArmy;
-    /// @notice Land id => Barracks level
-    /// *** Note that since defaul level is 0 it means barracks has not builed yet.
-    /// After each 'buildBararcks' barrack will upgrade to next level and new kind of army will unlock for user.
-
-    /// @notice Land Id => Hero token ID
-    mapping (uint256 => uint256) private attachedHero;
-    mapping (uint256 => DispatchedArmy[]) internal dispatchedArmies;
-    
-
-    struct WarriorInfo {
-        uint8 attackPower;
-        uint8 defPower;
-        uint8 hp;
-        uint8 requiredLevel;
-        string name;
-        uint256 price;
-    }
-
-    struct DispatchedArmy {
-        uint256[] amounts;
-        uint256 remainedTime;
-        uint256 target;
-        uint256[2] lootedAmounts;
-        bool isReturning;
-        uint256 remainedArmybyPercent;
-    }
-
-    WarriorInfo[] warriorTypes;
-    // address private  townContract;
-
-    // function _dispatchArmy(uint256[] memory warriorAmounts,uint256 from,  uint256 target, bool attack) internal {
-    //     require(warriorAmounts.length == warriorTypes.length, "Lengths does not match");
-    //     (,uint256 time) =  _calculateDistance(from, target,1);
-    //     uint256 totalA;
-    //     uint256 totalD;
-    //     uint256 totalHP;
-    //     for (uint256 index = 0; index < warriorAmounts.length; index++) {
-    //         WarriorInfo memory thisWarrior =  warriorTypes[index];
-    //         totalA += thisWarrior.attackPower;
-    //         totalD += thisWarrior.defPower;
-    //         totalHP += thisWarrior.hp;
-    //     }
-
-    //     dispatchedArmies[from] = DispatchedArmy(warriorAmounts, time, target, totalA, totalD, totalHP);
-    // }
-    // function _war(uint256 landTokenId ,uint256 dispatchedArmyIndex) internal {
-    //     uint256 attackerPower = dispatchedArmies[landTokenId][dispatchedArmyIndex].totalAttPower;
-    //     uint256 attackerHp = dispatchedArmies[landTokenId][dispatchedArmyIndex].totalHp;
-    //     uint256 defenderPower;
-    //     uint256 defenderHp;
-    //     uint256[] memory defenderWarriorsAmounts = getArmy(targetId);
-
-    //     for (uint i = 0; i < warriorsAmounts.length; i++) {
-    //         defenderPower += warriorTypes[i].defPower * defenderWarriorsAmounts[i];
-    //         defenderHp += warriorTypes[i].hp * defenderWarriorsAmounts[i];
-    //     }
-    //     defenderPower += defenderPower * (wallsLevel * 5 /100);
-
-    //     (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = _calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
-
-    //     // Updating Army of each user condsidering losses.
-    //     _reduceBatchWarriorByPercent(remainedDefenderArmy, targetId);
-    //     _addEnteredBatchWarriorByPercent(warriorsAmounts, remainedAttackerArmy, attackerId);
-        
-    //     // emit Attack(attackerId, targetId, warriorsAmounts, getArmy(targetId),success);
-    //     return (success, remainedAttackerArmy - remainedDefenderArmy );
-    // }
-
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************   Constructor  ********************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-
-
-    constructor(/*address heroesContract*/) Ownable(msg.sender){
-        // HEROES = IHeroes(heroesContract);
-        warriorTypes.push(WarriorInfo( 40, 80, 140, 1,"Spearman",5 ether));
-        warriorTypes.push(WarriorInfo( 85, 60, 200, 2,"Swordsman",8 ether));
-        warriorTypes.push(WarriorInfo( 70, 80, 90, 3,"Archer",7 ether));
-    }
-
-
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  *******************************   Modifiers  *********************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-
-    modifier existItem (uint256 typeIndex) {
-        require(typeIndex < warriorTypes.length , "No defined");
-        _;
-    }
-    // modifier onlyTown () {
-    //     require(msg.sender == townContract, "Caller should be town contract");
-    //     _;
-    // }
-
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ***********************   External & public functions  ***********************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-
-
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  *********************   Only owner and town functions  ***********************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-
-    // function authorize(address town) external  onlyOwner{
-    //     townContract = town;
-    // }
-
-    function addWarriorType(uint8[3] memory physicalInfo,uint8 requiredLevel, string memory name, uint256 price) external onlyOwner{
-        
-    }
-
-    function updateWarriorType_(uint8[3] memory physicalInfo,uint8 requiredLevel/*, string memory imageURL*/, string memory name, uint256 price, uint256 typeIndex) public  onlyOwner{
-        warriorTypes[typeIndex] = WarriorInfo( physicalInfo[0], physicalInfo[1], physicalInfo[2], requiredLevel,/* imageURL,*/name,price );
-    }
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  *****************************   View functions  ******************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-
-
-    // function getArmy(uint256 landId) view public returns (uint256[] memory) {
-    //     uint256[] memory amounts = new uint256[](warriorTypes.length);
-    //     for (uint i = 0; i < warriorTypes.length; i++) {
-    //         amounts[i] = landArmy[landId][i];
-    //     }
-    //     return (amounts);
-    // }
-
-    function getWarriorTypes() view public   returns (WarriorInfo[] memory) {
-        return warriorTypes;
-    }
-    function getArmyInfo(uint256 landTokenId) view public returns (uint256 attPower , uint256 defPower,uint256 hp, uint256 totalArmy) {
-        for (uint i = 0; i < warriorTypes.length; i++) {
-            attPower +=warriorTypes[i].attackPower * landArmy[landTokenId][i];
-            defPower += warriorTypes[i].defPower * landArmy[landTokenId][i];
-            hp += warriorTypes[i].hp * landArmy[landTokenId][i];
-            totalArmy += landArmy[landTokenId][i];
-        }
-    }
-    function getArmy(uint256 landTokenId) view public returns (uint256[3] memory amounts) {
-        for (uint i = 0; i < warriorTypes.length; i++) {
-            amounts[i] = landArmy[landTokenId][i];
-        }
-        return amounts;
-    }
-
-
-
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ****************************   Internal functions  ***************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    //  ******************************************************************************
-    // function _attachHero(uint256 landId, uint256 heroId) internal{
-    //     require(HEROES.ownerOf(heroId) == msg.sender, "caller is not hero owner");
-    //     attachedHero[landId] = heroId;
-    // }
-
-    function _reduceBatchWarriorByPercent(uint256 remainedPercent, uint256 landId) internal {
-        for (uint i = 0; i < warriorTypes.length; i++) {
-            if (landArmy[landId][i] > 0) {
-                landArmy[landId][i] = (landArmy[landId][i]) * (remainedPercent) / (100) ;
-            }
-        }
-    }
-    function _addEnteredBatchWarriorByPercent(uint256[] memory enteredArmy, uint256 percentage, uint256 landId) internal{
-        for (uint i = 0; i < warriorTypes.length; i++) {
-            if (enteredArmy[i] > 0) {
-                landArmy[landId][i] += (enteredArmy[i]) * (percentage) / (100);
-            }
-        }
-    }
-
-
-    function _addWarrior(uint256 warriorType, uint256 amount, uint256 landId) internal  {
-        landArmy[landId][warriorType] += amount;
-    }
-
-
-    function _attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId, uint256 wallsLevel) internal  returns(bool, uint256){
-        require(warriorsAmounts.length == warriorTypes.length, "Lengths does not match");
-        uint256 attackerPower;
-        uint256 attackerHp;
-        (,uint256 defenderPower, uint256 defenderHp,) = getArmyInfo(targetId);
-        defenderPower += defenderPower * (wallsLevel * 5 /100);
-
-        (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = _calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
-
-        // Updating Army of each user condsidering losses.
-        _reduceBatchWarriorByPercent(remainedDefenderArmy, targetId);
-        _addEnteredBatchWarriorByPercent(warriorsAmounts, remainedAttackerArmy, attackerId);
-        
-        // emit Attack(attackerId, targetId, warriorsAmounts, getArmy(targetId),success);
-        return (success, remainedAttackerArmy - remainedDefenderArmy );
-    }
-
-    function test(uint256[] memory amounts, uint256[] memory amounts2) view public returns (bool, uint256, uint256) {
-        require(amounts.length == warriorTypes.length && amounts2.length == warriorTypes.length , "");
-        uint256 attPw;
-        uint256 hp1;
-        uint256 defPw;
-        uint256 hp2;
-        for (uint i = 0; i < warriorTypes.length; i++) {
-            attPw += warriorTypes[i].attackPower * amounts[i];
-            hp1 += warriorTypes[i].hp * amounts[i];
-            defPw += warriorTypes[i].defPower * amounts2[i];
-            hp2 += warriorTypes[i].hp * amounts2[i];
-        }
-        return _calculateWar(attPw, hp1, defPw, hp2);
-    }
-
-    function _calculateWar(uint256 attackerPower, uint256 attackerHp, uint256 defenderPower, uint256 defenderHp) pure internal returns ( bool, uint256, uint256 ) {
+library Utils {
+    function calculateWar(uint256 attackerPower, uint256 attackerHp, uint256 defenderPower, uint256 defenderHp) pure internal  returns ( bool, uint256, uint256 ) {
         
         // Calculate the percentage of loss for attacker and target
         uint256 attackerRemainedArmyPercent;
@@ -392,7 +125,7 @@ contract Barracks is Ownable{
             return (attackSuccess,attackerRemainedArmyPercent, targetRemainedArmyPercent);
 
     }
-    function _calculateDistance(uint256 fromTokenId, uint256 toTokenId, uint speed) internal pure returns (uint distance, uint estimatedTime) {
+    function calculateDistance(uint256 fromTokenId, uint256 toTokenId, uint speed) internal  pure returns (uint distance, uint estimatedTime) {
         (uint256 fromX, uint256 fromY) = separateCoordinates(fromTokenId) ;
         (uint256 toX, uint256 toY) = separateCoordinates(toTokenId) ;
         speed = 5;
@@ -407,10 +140,10 @@ contract Barracks is Ownable{
         return (distance, estimatedTime);
     }
     function separateCoordinates(uint256 tokenId) internal pure returns (uint256, uint256) {
-  return (tokenId / 100, tokenId % 100);
-}
+        return (tokenId / 100, tokenId % 100);
+    }
 
-    function sqrt(uint x) internal pure returns (uint y) {
+    function sqrt(uint x) internal  pure returns (uint y) {
         uint z = (x + 1) / 2;
         y = x;
         while (z < y) {
@@ -418,7 +151,204 @@ contract Barracks is Ownable{
             z = (x / z + z) / 2;
         }
     }
+}
+
+contract Barracks is Ownable{
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ********************************   Events  ***********************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    // //  ******************************************************************************
+
+    // event Attack(uint256 attackerLandId, uint256 defenderLandId,uint256[] attackerArmy, uint256[] defenderArmy, bool success);
+
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  *******************************   Vairables  *********************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+
+        // IHeroes HEROES;
+
+    /// @notice Land token id => type of warrior => amount
+    mapping (uint256 => mapping(uint256 => uint256)) internal landArmy;
+    /// @notice Land id => Barracks level
+    /// *** Note that since defaul level is 0 it means barracks has not builed yet.
+    /// After each 'buildBararcks' barrack will upgrade to next level and new kind of army will unlock for user.
+
+    /// @notice Land Id => Hero token ID
+    mapping (uint256 => uint256) private attachedHero;
+    mapping (uint256 => DispatchedArmy[]) internal dispatchedArmies;
     
+
+    struct WarriorInfo {
+        uint8 attackPower;
+        uint8 defPower;
+        uint8 hp;
+        string name;
+        uint256 price;
+    }
+
+    struct DispatchedArmy {
+        uint256[] amounts;
+        uint256 remainedTime;
+        uint256 target;
+        uint256[2] lootedAmounts;
+        bool isReturning;
+        uint256 remainedArmybyPercent;
+    }
+
+    WarriorInfo[] warriorTypes;
+    // address private  townContract;
+
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************   Constructor  ********************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+
+
+    constructor(/*address heroesContract*/) Ownable(msg.sender){
+        // HEROES = IHeroes(heroesContract);
+        warriorTypes.push(WarriorInfo( 45, 30, 70, "Maceman",7 ether));
+        warriorTypes.push(WarriorInfo( 20, 60, 70, "Spearman",8 ether));
+        warriorTypes.push(WarriorInfo( 60, 70, 90,"Swordsman",15 ether));
+        warriorTypes.push(WarriorInfo( 50, 50, 70,"Archer",10 ether));
+        warriorTypes.push(WarriorInfo( 45, 80, 110,"Shieldman",22 ether));
+        warriorTypes.push(WarriorInfo( 90, 60, 100,"Knight",30 ether));
+    }
+
+
+
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  *******************************   Modifiers  *********************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+
+    modifier existItem (uint256 typeIndex) {
+        require(typeIndex < warriorTypes.length , "No defined");
+        _;
+    }
+
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ***********************   External & public functions  ***********************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+
+
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  *****************************   View functions  ******************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+
+
+
+    function getWarriorTypes() view public   returns (WarriorInfo[] memory) {
+        return warriorTypes;
+    }
+    function getArmyInfo(uint256 landTokenId) view public returns (uint256 attPower , uint256 defPower,uint256 hp, uint256 totalArmy) {
+        for (uint i = 0; i < warriorTypes.length; i++) {
+            attPower +=warriorTypes[i].attackPower * landArmy[landTokenId][i];
+            defPower += warriorTypes[i].defPower * landArmy[landTokenId][i];
+            hp += warriorTypes[i].hp * landArmy[landTokenId][i];
+            totalArmy += landArmy[landTokenId][i];
+        }
+    }
+    function getArmy(uint256 landTokenId) view public returns (uint256[6] memory amounts) {
+        for (uint i = 0; i < warriorTypes.length; i++) {
+            amounts[i] = landArmy[landTokenId][i];
+        }
+        return amounts;
+    }
+
+
+
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ****************************   Internal functions  ***************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    //  ******************************************************************************
+    // function _attachHero(uint256 landId, uint256 heroId) internal{
+    //     require(HEROES.ownerOf(heroId) == msg.sender, "caller is not hero owner");
+    //     attachedHero[landId] = heroId;
+    // }
+
+    function _reduceBatchWarriorByPercent(uint256 remainedPercent, uint256 landId) internal {
+        for (uint i = 0; i < warriorTypes.length; i++) {
+            if (landArmy[landId][i] > 0) {
+                landArmy[landId][i] = (landArmy[landId][i]) * (remainedPercent) / (100) ;
+            }
+        }
+    }
+    function _addEnteredBatchWarriorByPercent(uint256[] memory enteredArmy, uint256 percentage, uint256 landId) internal{
+        for (uint i = 0; i < warriorTypes.length; i++) {
+            if (enteredArmy[i] > 0) {
+                landArmy[landId][i] += (enteredArmy[i]) * (percentage) / (100);
+            }
+        }
+    }
+
+
+    function _addWarrior(uint256 warriorType, uint256 amount, uint256 landId) internal  {
+        landArmy[landId][warriorType] += amount;
+    }
+
+
+    function _attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId, uint256 wallsLevel) internal  returns(bool, uint256){
+        require(warriorsAmounts.length == warriorTypes.length, "Lengths does not match");
+        uint256 attackerPower;
+        uint256 attackerHp;
+        (,uint256 defenderPower, uint256 defenderHp,) = getArmyInfo(targetId);
+        defenderPower += defenderPower * (wallsLevel * 5 /100);
+
+        (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = Utils.calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
+
+        // Updating Army of each user condsidering losses.
+        _reduceBatchWarriorByPercent(remainedDefenderArmy, targetId);
+        _addEnteredBatchWarriorByPercent(warriorsAmounts, remainedAttackerArmy, attackerId);
+        
+        // emit Attack(attackerId, targetId, warriorsAmounts, getArmy(targetId),success);
+        return (success, remainedAttackerArmy - remainedDefenderArmy );
+    }
+
+    // function test(uint256[] memory amounts, uint256[] memory amounts2) view public returns (bool, uint256, uint256) {
+    //     require(amounts.length == warriorTypes.length && amounts2.length == warriorTypes.length , "");
+    //     uint256 attPw;
+    //     uint256 hp1;
+    //     uint256 defPw;
+    //     uint256 hp2;
+    //     for (uint i = 0; i < warriorTypes.length; i++) {
+    //         attPw += warriorTypes[i].attackPower * amounts[i];
+    //         hp1 += warriorTypes[i].hp * amounts[i];
+    //         defPw += warriorTypes[i].defPower * amounts2[i];
+    //         hp2 += warriorTypes[i].hp * amounts2[i];
+    //     }
+    //     return _calculateWar(attPw, hp1, defPw, hp2);
+    // }
+
 
 
 }
@@ -448,6 +378,7 @@ contract TownV3 is Ownable, Barracks{
     error WorkerIsBusy();
     error BarracksLevelLowerThanWarrior();
     error AlreadyFinished();
+    error TownhallUpgradeRequired();
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -463,6 +394,9 @@ contract TownV3 is Ownable, Barracks{
     event Upgrade( uint256 indexed buildingId, uint256 level );
     event UpgradeBarracks( uint256 indexed landTokenId, uint256 currentLevel );
     event UpgradeWalls(uint256 indexed landTokenId, uint256 currentLevel );
+    event UpgradeTownhall(uint256 indexed landTokenId, uint256 currentLevel );
+    event UpgradeTrainingCamp(uint256 indexed landTokenId, uint256 currentLevel );
+    event UpgradeWarehouse(uint256 indexed landTokenId, uint256 currentLevel );
     event Attack( uint256 indexed attackerLandId, uint256 indexed defenderLandId, bool success , uint256[2] lootAmounts);
     event GoodsProduction( uint256[2] amounts, uint256 indexed landId );
     event GoodsConsumption( uint256[2] amounts, uint256 indexed landId );
@@ -493,26 +427,34 @@ contract TownV3 is Ownable, Barracks{
 
 
 
-    uint256[2] private BaseBararcksRequiredGoods = [ 250 ether, 250 ether];
-    uint256[2] private BaseWallRequiredGoods = [ 50 ether, 200 ether];
-    uint8 private constant MaxBuildingsCapacity = 8;
+    uint256[2] private BaseBararcksRequiredGoods = [ 150 ether, 200 ether];
+    uint256[2] private BaseWallRequiredGoods = [ 50 ether, 175 ether];
+    uint256[2] private BaseTownhallRequiredGoods = [ 300 ether, 300 ether];
+    uint256[2] private BaseTrainingCampRequiredGoods = [ 200 ether, 50 ether];
+    uint256[2] private BaseWarehouseRequiredGoods = [ 150 ether, 125 ether];
+    uint256 private constant WithdrawalFee = 10;
+    uint256 private constant SwapFee = 5;
+    uint256 private constant WorkerGoldPerHour = 10 ether;
+    uint256 private constant BaseBuildTimestamp = 3 hours;
+    uint256 private constant BaseTownhallBuildTimestamp = 6 hours;
+    uint8 private constant MaxResourceBuildingsCapacity = 8;
     uint8 private constant BaseArmyCapacity = 50;
     uint256 private constant BaseGoodCapacityOfBuilding = 80 ether;
     uint256 private constant BaseWarriorRequiredFood = 3 ether;
     uint256 private tokenIdCounter = 1;
     uint256[2] private totalExistedGood;
-    uint256 private constant TrnasferCostPercentage = 5;
+    uint256 private constant TrnasferCostPercentage = 7;
 
-    struct Info {
+    struct ResourceBuildingInfo {
         uint256 requiredFood;
         uint256 requiredGold;
         uint256 revTokenIndex;
         string buildingName;
     }
 
-    Info[] private buildings;
+    ResourceBuildingInfo[] private resourceBuildings;
 
-    struct Status {
+    struct ResourceBuildingStatus {
         uint256 level;
         uint256 latestActionTimestamp;
         uint256 attachedLand;
@@ -522,14 +464,16 @@ contract TownV3 is Ownable, Barracks{
     struct LandIdData {
         uint256[2] goodsBalance;
         uint256 latestBuildTimeStamp;
-        uint256[] buildedBuildings;
+        uint256[] buildedResourceBuildings;
         uint256 barracksLevel;
         uint256 wallLevel;
+        uint256 townhallLevel;
+        uint256 trainingCampLevel;
     }
 
     mapping (uint256 => LandIdData) internal landData;
 
-    mapping (uint256 => Status) private tokenIdStatus;
+    mapping (uint256 => ResourceBuildingStatus) private tokenIdStatus;
 
     /// @notice Token ID => Land ID
     mapping (uint256 => uint256) private belongTo;
@@ -548,8 +492,8 @@ contract TownV3 is Ownable, Barracks{
     constructor(address BlockchainsKingdomToken ,address landsContract/*, address heroes*/){
         BMT = IERC20(BlockchainsKingdomToken);
         LANDS = ILands(landsContract);
-        buildings.push(Info( 250 ether, 100 ether, 0,"Farm"));
-        buildings.push(Info( 200 ether, 200 ether, 1,"Gold mine"));
+        resourceBuildings.push(ResourceBuildingInfo( 75 ether, 125 ether, 0,"Farm"));
+        resourceBuildings.push(ResourceBuildingInfo( 125 ether, 75 ether, 1,"Gold mine"));
         for (uint i = 0; i<2; i++) 
         {
         landData[101101].goodsBalance[i] += 10000 ether;
@@ -589,7 +533,7 @@ contract TownV3 is Ownable, Barracks{
     }
 
     modifier typeLimit (uint256 landId, uint256 typeIndex) {
-        uint256[] memory buildedBuildings = landData[landId].buildedBuildings;
+        uint256[] memory buildedBuildings = landData[landId].buildedResourceBuildings;
         uint256 count;
         for (uint i = 0; i < buildedBuildings.length; i++) {
            uint256 buildingType = tokenIdStatus[buildedBuildings[i]].buildingTypeIndex;
@@ -597,11 +541,22 @@ contract TownV3 is Ownable, Barracks{
             count ++;
            }
         }
-        if (count + 1 > MaxBuildingsCapacity / 2) {
+        if (count + 1 > MaxResourceBuildingsCapacity / 2) {
             revert MaxCapacity();
+        }
+        if (count + 1 > landData[landId].townhallLevel + 2) {
+            revert TownhallUpgradeRequired();
         }
         _;
     }
+
+    modifier isWorkerReady (uint256 landTokenId){
+     if (getRemainedBuildTimestamp(landTokenId) != 0) {
+            revert WorkerIsBusy();
+        }
+        _;
+    }
+
 
 
     //  ******************************************************************************
@@ -643,11 +598,11 @@ contract TownV3 is Ownable, Barracks{
         uint256 toIndex = fromIndex == 0 ? 1 : 0;
         uint256[2] memory prices = getGoodsPrice();
         uint256 amountOut = (amountIn * prices[fromIndex]) /(prices[toIndex] * 1 ether);
-        landData[landTokenId].goodsBalance[toIndex] += amountOut * 9 / 10; // Including 10% burn
+        landData[landTokenId].goodsBalance[toIndex] += amountOut * (100-SwapFee) / 100; // Including 10% burn
         totalExistedGood[fromIndex] -= amountOut;
         totalExistedGood[toIndex] += amountOut;
         uint256[2] memory amounts;
-        amounts[toIndex] = amountOut * 1 / 10;
+        amounts[toIndex] = amountOut * SwapFee / 100;
         emit GoodsConsumption(amounts,landTokenId );
     }
 
@@ -661,7 +616,7 @@ contract TownV3 is Ownable, Barracks{
                     landData[landTokenId].goodsBalance[goodIndex] -= amount;
                     totalExistedGood[goodIndex] -= amount;
                 }
-        BMTBalance[msg.sender] += totalAmount*95/100;
+        BMTBalance[msg.sender] += totalAmount*(100-SwapFee)/100;
            // Add relevant emit
     }
 
@@ -680,75 +635,87 @@ contract TownV3 is Ownable, Barracks{
             revert InsufficientGoods();
         }
         BMTBalance[msg.sender] -= amount;
-        TransferHelper.safeTransfer(address(BMT), msg.sender, amount * 95 /100); // Including 5% withdrawal burn
+        TransferHelper.safeTransfer(address(BMT), msg.sender, amount * (100 - WithdrawalFee) /100); // Including 5% withdrawal burn
         emit Withdraw( msg.sender, amount);
     }
 
 
 
-    function build(uint256 landTokenId, uint8 buildingIndex) external onlyLandOwner(landTokenId) typeLimit(landTokenId, buildingIndex){
-        if (buildingIndex >= buildings.length ) {
+    function buildResourceBuilding(uint256 landTokenId, uint8 buildingIndex) external onlyLandOwner(landTokenId) typeLimit(landTokenId, buildingIndex) isWorkerReady(landTokenId){
+        if (buildingIndex >= resourceBuildings.length ) {
             revert InvalidItem();
         }
-        if (getRemainedBuildTimestamp(landTokenId) != 0) {
-            revert WorkerIsBusy();
-        }
-        Info memory selecteduilding = buildings[buildingIndex];
+        ResourceBuildingInfo memory selecteduilding = resourceBuildings[buildingIndex];
         _spendGoods(landTokenId, [
             selecteduilding.requiredFood,
             selecteduilding.requiredGold
         ]);
         belongTo[tokenIdCounter] = landTokenId;
-        tokenIdStatus[tokenIdCounter] = Status(1, block.timestamp, landTokenId,buildingIndex);
-        landData[landTokenId].buildedBuildings.push(tokenIdCounter);
+        tokenIdStatus[tokenIdCounter] = ResourceBuildingStatus(1, block.timestamp, landTokenId,buildingIndex);
+        landData[landTokenId].buildedResourceBuildings.push(tokenIdCounter);
         tokenIdCounter ++;
         landData[landTokenId].latestBuildTimeStamp  = block.timestamp + 6 hours;
         emit Build(buildingIndex, tokenIdCounter-1, landTokenId);
     }
 
 
-    function upgrade(uint256 buildingTokenId, uint256 landTokenId) external belongToCaller(buildingTokenId){
-        if (getRemainedBuildTimestamp(landTokenId) != 0) {
-            revert WorkerIsBusy();
-        }
+    function upgradeResourceBuilding(uint256 buildingTokenId, uint256 landTokenId) external belongToCaller(buildingTokenId) isWorkerReady(landTokenId) {
         if (belongTo[buildingTokenId] != landTokenId ) {
             revert InvalidItem();
         }
         claimRevenue(buildingTokenId);
         uint256 typeIndex = tokenIdStatus[buildingTokenId].buildingTypeIndex;
         uint256 currentLevel = tokenIdStatus[buildingTokenId].level;
-        Info memory selecteduilding = buildings[typeIndex];
+        ResourceBuildingInfo memory selecteduilding = resourceBuildings[typeIndex];
 
         _spendGoods(landTokenId, [
             selecteduilding.requiredGold * (2 ** currentLevel),
             selecteduilding.requiredFood * (2 ** currentLevel)
         ]);
         tokenIdStatus[buildingTokenId].level = currentLevel+1 ;
-        landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (currentLevel+1));
+        landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (currentLevel+1));
         emit Upgrade(buildingTokenId, currentLevel+1);
     }
 
-    function buildBarracks(uint256 landTokenId) public onlyLandOwner(landTokenId) {
-        if (getRemainedBuildTimestamp(landTokenId) != 0) {
-            revert WorkerIsBusy();
+    function buildBarracks(uint256 landTokenId) public onlyLandOwner(landTokenId) isWorkerReady(landTokenId){
+        LandIdData storage landProps = landData[landTokenId];
+        if (landProps.townhallLevel < landProps.barracksLevel+1) {
+            revert TownhallUpgradeRequired();
         }
-        uint256 lvl = landData[landTokenId].barracksLevel;
-        _spendGoods(landTokenId,getRequiredGoods(BaseBararcksRequiredGoods,lvl));
-        landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (lvl + 1));
-        landData[landTokenId].barracksLevel ++;
-        emit UpgradeBarracks( landTokenId, lvl + 1 );
+        _spendGoods(landTokenId,getRequiredGoods(BaseBararcksRequiredGoods,landProps.barracksLevel));
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (landProps.barracksLevel + 1));
+        landProps.barracksLevel ++;
+        emit UpgradeBarracks( landTokenId, landProps.barracksLevel + 1 );
+    }
+     function buildTownhall(uint256 landTokenId) public onlyLandOwner(landTokenId) isWorkerReady(landTokenId){
+        LandIdData storage landProps = landData[landTokenId];
+        _spendGoods(landTokenId,getRequiredGoods(BaseTownhallRequiredGoods,landProps.townhallLevel));
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseTownhallBuildTimestamp * (landProps.townhallLevel + 1));
+        landProps.townhallLevel ++;
+        emit UpgradeTownhall( landTokenId, landProps.townhallLevel + 1 );
     }
 
-    function buildWalls(uint256 landTokenId) public onlyLandOwner(landTokenId) {
-        if (getRemainedBuildTimestamp(landTokenId) != 0) {
-            revert WorkerIsBusy();
+    function buildWalls(uint256 landTokenId) public onlyLandOwner(landTokenId) isWorkerReady(landTokenId) {
+        LandIdData storage landProps = landData[landTokenId];
+        if (landProps.townhallLevel < landProps.wallLevel +1) {
+            revert TownhallUpgradeRequired();
         }
-        uint256 lvl = landData[landTokenId].wallLevel;
-        _spendGoods(landTokenId,getRequiredGoods(BaseWallRequiredGoods, lvl));
+        _spendGoods(landTokenId,getRequiredGoods(BaseWallRequiredGoods, landProps.wallLevel));
  
-        landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (6 hours * (lvl + 1));
-        landData[landTokenId].wallLevel ++;
-        emit UpgradeWalls( landTokenId, lvl + 1 );
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (landProps.wallLevel + 1));
+        landProps.wallLevel ++;
+        emit UpgradeWalls( landTokenId, landProps.wallLevel + 1 );
+    }
+    function buildTrainingCamp(uint256 landTokenId) public onlyLandOwner(landTokenId) isWorkerReady(landTokenId) {
+        LandIdData storage landProps = landData[landTokenId];
+        if (landProps.townhallLevel < landProps.trainingCampLevel +1) {
+            revert TownhallUpgradeRequired();
+        }
+        _spendGoods(landTokenId,getRequiredGoods(BaseTrainingCampRequiredGoods, landProps.trainingCampLevel));
+ 
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (landProps.trainingCampLevel + 1));
+        landProps.trainingCampLevel ++;
+        emit UpgradeTrainingCamp( landTokenId, landProps.trainingCampLevel + 1 );
     }
 
 
@@ -757,7 +724,7 @@ contract TownV3 is Ownable, Barracks{
         uint256 requiredGold;
         if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
             remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
-            requiredGold = (remainedTimestamp / 1 hours) * 10 ether;
+            requiredGold = (remainedTimestamp / 1 hours) * WorkerGoldPerHour;
             if (landData[landTokenId].goodsBalance[0] >= requiredGold) {
                 landData[landTokenId].goodsBalance[1] -= requiredGold;
                 landData[landTokenId].latestBuildTimeStamp = block.timestamp - 1 minutes;
@@ -776,12 +743,12 @@ contract TownV3 is Ownable, Barracks{
         if (typeIndex >= getWarriorTypes().length) {
             revert InvalidItem();
         }
-        if (getWarriorTypes()[typeIndex].requiredLevel > landData[landTokenId].barracksLevel) {
+        if (typeIndex + 1 > landData[landTokenId].barracksLevel) {
             revert BarracksLevelLowerThanWarrior();
         }
         (,,,uint256 currentArmy) = getArmyInfo(landTokenId);
 
-        if (landData[landTokenId].barracksLevel * BaseArmyCapacity < currentArmy + amount) {
+        if ((landData[landTokenId].trainingCampLevel > 0 ?(landData[landTokenId].trainingCampLevel * BaseArmyCapacity) : 10) < currentArmy + amount) {
             revert MaxCapacity();
         }
 
@@ -793,8 +760,8 @@ contract TownV3 is Ownable, Barracks{
 
 
     function claimRevenue(uint256 buildingTokenId) public belongToCaller(buildingTokenId){
-        Status memory buildingStatus = getStatus(buildingTokenId);
-        Info memory selecteduildingInfo = buildings[buildingStatus.buildingTypeIndex];
+        ResourceBuildingStatus memory buildingStatus = getStatus(buildingTokenId);
+        ResourceBuildingInfo memory selecteduildingInfo = resourceBuildings[buildingStatus.buildingTypeIndex];
         uint256 revenueAmount = getCurrentRevenue(buildingTokenId);
         uint256[2] memory amounts;
         amounts[buildingStatus.buildingTypeIndex] += revenueAmount;
@@ -803,9 +770,9 @@ contract TownV3 is Ownable, Barracks{
         emit GoodsProduction(amounts , belongTo[buildingTokenId]);
     }
     function claimAll(uint256 landTokenId) public onlyLandOwner(landTokenId){
-        uint256[] memory landBuildings = landData[landTokenId].buildedBuildings;
+        uint256[] memory landBuildings = landData[landTokenId].buildedResourceBuildings;
         uint256[2] memory amounts;
-        for (uint i = 0; i < buildings.length; i++) {
+        for (uint i = 0; i < resourceBuildings.length; i++) {
             uint256 typeIndex = getStatus(landBuildings[i]).buildingTypeIndex;
             uint256 currentRevenue = getCurrentRevenue(landBuildings[i]);
             landData[tokenIdStatus[landBuildings[i]].attachedLand].goodsBalance[typeIndex] += currentRevenue ;
@@ -815,19 +782,19 @@ contract TownV3 is Ownable, Barracks{
         emit GoodsProduction(amounts , landTokenId);
     }
 
-    function attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId) external onlyLandOwner(attackerId) {
+    // function attack(uint256[] memory warriorsAmounts, uint256 attackerId, uint256 targetId) external onlyLandOwner(attackerId) {
 
-        require(LANDS.ownerOf(targetId) != address(0), "");
-        (bool success, uint256 winRate) = _attack(warriorsAmounts, attackerId, targetId, landData[targetId].wallLevel);
-        uint256 [2] memory lootAmounts;
-        if (success) {
-            lootAmounts = _loot(attackerId, targetId, winRate);
-        }
-        emit Attack(attackerId, targetId, success, lootAmounts);
-    }
+    //     require(LANDS.ownerOf(targetId) != address(0), "");
+    //     (bool success, uint256 winRate) = _attack(warriorsAmounts, attackerId, targetId, landData[targetId].wallLevel);
+    //     uint256 [2] memory lootAmounts;
+    //     if (success) {
+    //         lootAmounts = _loot(attackerId, targetId, winRate);
+    //     }
+    //     emit Attack(attackerId, targetId, success, lootAmounts);
+    // }
     function dispatchArmy(uint256[] memory warriorAmounts,uint256 from,  uint256 target) external {
         require(warriorAmounts.length == warriorTypes.length, "Lengths does not match");
-        (,uint256 remainingTime) =  _calculateDistance(from, target,1);
+        (,uint256 remainingTime) =  Utils.calculateDistance(from, target,1);
         (,,,uint256 totalArmy) = getArmyInfo(from);
         _spendGoods(from, [totalArmy,0]);
 
@@ -849,7 +816,7 @@ contract TownV3 is Ownable, Barracks{
             attackerHp += dArmy.amounts[i] * warriorTypes[i].hp;
         }
 
-        (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = _calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
+        (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = Utils.calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
 
         // Updating Army of each user condsidering losses.
         _reduceBatchWarriorByPercent(remainedDefenderArmy, dArmy.target);
@@ -884,15 +851,8 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
 
     // function hideArmy() external {}
-    // function createStoreHouse() external {}
-    // function createHouse() external {}
-    // function createHiddenStoreHouse() external {}
     // function attachHero() external {}
     // function dispatchSupport() external {}
-    // function returnArmy() external {}
-    // function dispatchAttack() external {}
-    // function attack() external {}
-    // function calculateDispatchTime() view public returns (uint256) {}
     // function tradeOrder() external {}
     // function cancelOrder() external {}
     // function fulfillOrder() external {}
@@ -916,7 +876,7 @@ contract TownV3 is Ownable, Barracks{
     //  ******************************************************************************
 
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
-        Status memory buildingStatus = getStatus(buildingTokenId);
+        ResourceBuildingStatus memory buildingStatus = getStatus(buildingTokenId);
         uint256 period = block.timestamp - (buildingStatus.latestActionTimestamp);
         uint256 rev = (period / 3 hours) * 1 ether * (2 ** (buildingStatus.level - 1));
         if (rev > BaseGoodCapacityOfBuilding * buildingStatus.level ) {
@@ -937,12 +897,12 @@ contract TownV3 is Ownable, Barracks{
         return prices;
     }
 
-    function getStatus(uint256 tokenId) public view returns(Status memory){
+    function getStatus(uint256 tokenId) public view returns(ResourceBuildingStatus memory){
         return tokenIdStatus[tokenId];
     }
 
-    function getBuildings() view public returns (Info[] memory) {
-        return buildings;
+    function getBuildings() view public returns (ResourceBuildingInfo[] memory) {
+        return resourceBuildings;
     }
 
     function getLandIdData(uint256 landTokenId) external view returns(LandIdData memory) {

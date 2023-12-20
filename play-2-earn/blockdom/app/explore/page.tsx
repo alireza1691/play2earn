@@ -5,12 +5,13 @@ import SelectedParcel from "@/components/gameComponents/selectedParcel";
 import React, { useState } from "react";
 
 import BattleLog from "@/components/gameComponents/battleLog";
+import { SelectedLandType } from "@/lib/types";
 
 
 
 export default function Explore() {
   const [slidebar, setSlidebar] = useState(false);
-  const [selectedLand, setSelectedLand] = useState<number | null>(null);
+  const [selectedLand, setSelectedLand] = useState<SelectedLandType | null>(null);
 
   return (
     <div className=" overflow-hidden w-screen h-screen relative">
@@ -22,13 +23,14 @@ export default function Explore() {
 
  
 
-      <main className=" flex flex-row justify-center">
+      <div className=" flex flex-row justify-center">
         <Slidebar
           slidebar={slidebar}
           setSlidebar={setSlidebar}
           selectedLand={selectedLand}
         />
         <Attack />
-      </main>    </div>
+      </div>
+          </div>
   );
 }

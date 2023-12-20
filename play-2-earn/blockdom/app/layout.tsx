@@ -7,6 +7,8 @@ import "./globals.css";
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import SelectedWindowContextProvider from "@/context/selected-window-context";
 import SelectedBuildingContextProvider from "@/context/selected-building-context";
+import { ApiDataProvider } from "@/context/api-data-context";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,12 +22,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
   return (
     <html lang="en" className=" !scroll-smooth overflow-x-hidden">
       <body
         className={`${inter.className} w-screen bg-white  dark:bg-black text-gray-800 dark:text-yellow-50 relative overflow-x-hidden`}
       >
         <div className="bg-[#7CFF99] absolute dark:bg-[#7FDDAD]  -top-[20rem] z-0 left-[10rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[5rem] dark:blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-70  dark:opacity-50 lg:left-[10rem] lg:w-[22.5rem]"></div>
+        <ApiDataProvider>
         <SelectedWindowContextProvider>
           <SelectedBuildingContextProvider>
           <ThemeContextProvider>
@@ -38,6 +43,7 @@ export default function RootLayout({
           </ThemeContextProvider>
           </SelectedBuildingContextProvider>
         </SelectedWindowContextProvider>
+        </ApiDataProvider>
       </body>
     </html>
   );

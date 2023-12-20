@@ -1,21 +1,53 @@
+"use client"
 import { useSelectedWindowContext } from "@/context/selected-window-context";
+import { landsAddress } from "@/lib/blockchainData";
+import { landsPInst, landsSInst, provider } from "@/lib/instances";
 import CloseIcon from "@/svg/closeIcon";
+import { useSigner } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SlideBarButtons from "./slideBarButtons";
+import landsAbiJsonFile from "../../abis/landsABI.json";
+import { SelectedLandType } from "@/lib/types";
 
-type sliderHookProps = {
+type SliderHookProps = {
   slidebar: boolean;
   setSlidebar: React.Dispatch<React.SetStateAction<boolean>>;
-  selectedLand: number | null;
+  selectedLand: SelectedLandType | null;
 };
 
 export default function Slidebar({
   slidebar, setSlidebar, selectedLand
-}:sliderHookProps) {
+}:SliderHookProps) {
   const {selectedWindowComponent, setSelectedWindowComponent} = useSelectedWindowContext()
+  const [imageUrl,setImageUrl] = useState<null| string>(null)
+  const signer = useSigner()
 
+  const landsInstance = new ethers.Contract(landsAddress,landsAbiJsonFile.abi,provider)
+
+  
   const isMinted = true;
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = await landsInstance.URI()
+        setImageUrl(url)
+        console.log(url);
+        
+        return url
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
+    fetchData()
+  },[imageUrl,selectedLand])
+
+  
 
   return (
     <>
@@ -27,17 +59,22 @@ export default function Slidebar({
       } flex flex-col transition-all  top-[4.55rem] absolute h-[85%] w-[90%] md:w-fit px-3 bg-[#21302A]/60 backdrop-blur-sm rounded-2xl `}
     >
       <div className="p-4 flex flex-row justify-between">
-        <h3 className=" text-white ">Land { selectedLand =! null && selectedLand}</h3>
+        <h3 className=" text-white ">Land { selectedLand  && selectedLand?.coordinate}</h3>
         <a className=" transition-all closeIcon" onClick={() => {setSelectedWindowComponent(null)}}><CloseIcon/></a>
 
       </div>
-      <div className=" flex justify-center mt-2 max-h-[35%]">
-        <Image
-          src={"/svgs/images/landCard.svg"}
-          width={256}
-          height={364}
-          alt="card"
-        />
+      <div className=" flex justify-center mt-2 h-[35%]  ">
+        {imageUrl && 
+        <div className=" w-auto  h-auto !p-2 cardBg !rounded-lg darkShadow">
+                 <Image
+                 src={imageUrl}
+                 width={256}
+                 height={364}
+                 alt="card"
+                 className=" h-full w-auto "
+               />
+             </div>
+        }
       </div>
       <div className="flex flex-col justify-around h-full max-h-[35%]">
         <div className=" flex flex-row justify-evenly items-center w-full">

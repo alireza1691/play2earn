@@ -1,8 +1,9 @@
+
 import { links } from "./data";
 
 export type SectionName = (typeof links)[number]["name"];
 export type parcelsViewHookProps = {
-  setSelectedLand: React.Dispatch<React.SetStateAction<number | null>>;
+  setSelectedLand: React.Dispatch<React.SetStateAction<SelectedLandType | null>>;
   setSlideBar: React.Dispatch<React.SetStateAction<boolean>>;
   selectedParcel: selectedParcelType;
   isParcelSelected: boolean;
@@ -11,3 +12,8 @@ export type selectedParcelType = {
   x: number;
   y: number;
 } ;
+export type SelectedLandType = {
+  coordinate: number,
+  isMinted: boolean,
+  owner: string
+}

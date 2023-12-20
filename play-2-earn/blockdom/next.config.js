@@ -4,7 +4,11 @@ const nextConfig = {
     experimental: {
         esmExternals: true,
       },
-      reactStrictMode: false
+      reactStrictMode: false,
+
+      images: {
+        domains: ['gateway.pinata.cloud'],
+      },
 }
 
 module.exports = nextConfig
