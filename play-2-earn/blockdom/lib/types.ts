@@ -17,3 +17,16 @@ export type SelectedLandType = {
   isMinted: boolean,
   owner: string
 }
+export type ApiDataResultType ={
+  address: string;
+  blockHash: string;
+  blockNumber: string;
+  data: string;
+  gasPrice: string;
+  gasUsed: string;
+  logIndex: string;
+  timeStamp: string;
+  topics: string[];
+  transactionHash: string;
+  transactionIndex: string;
+}[];

@@ -1,12 +1,16 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
 import Image from "next/image";
-import { inViewParcels, parcelLands, separatedCoordinate } from "@/lib/utils";
+import { getMintedLandsFromEvents, inViewParcels, parcelLands, separatedCoordinate } from "@/lib/utils";
 import { parcelsViewHookProps } from "@/lib/types";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
-import { landsPInst, provider } from "@/lib/instances";
 import { useApiData } from "@/context/api-data-context";
+
+type MintedLand = {
+  tokenId: string,
+  owner: string,
+}
 
 export default function ParcelsWideScreen({
   setSelectedLand,
@@ -15,7 +19,7 @@ export default function ParcelsWideScreen({
   isParcelSelected,
 }: parcelsViewHookProps) {
   const { setSelectedWindowComponent } = useSelectedWindowContext();
-
+  const [mintedLands, setMintedLands] = useState<MintedLand[]|null>(null)
   const { apiData, loading } = useApiData();
   // async function landClickHandler(selectedLand:number):Promise<string | null> {
   //   try {
@@ -29,57 +33,34 @@ export default function ParcelsWideScreen({
   //     return null
   //   }
   // }
-  type ApiDataType ={
-    address: string;
-    blockHash: string;
-    blockNumber: string;
-    data: string;
-    gasPrice: string;
-    gasUsed: string;
-    logIndex: string;
-    timeStamp: string;
-    topics: string[];
-    transactionHash: string;
-    transactionIndex: string;
-  }[];
+  const isTokenIdPresent =(tokenId:number):boolean =>{
+    let isPresent: boolean
+    if (!mintedLands) {
+      isPresent = false;
+    } else{
+      isPresent = mintedLands?.some(item => item.tokenId === tokenId.toString());
+    }
+    return isPresent
+  }
 
 
-  console.log(apiData, "111");
-  console.log(apiData.result);
-  // async function getMintedLandsFromEvents(events: ApiDataType) {
-  //   let mintedLands = [];
-  //   for (let index = 0; index < events.length; index++) {
-  //     if (events[index].topics !== undefined) {
-  //       const topics = events[index].topics;
-  //       if (
-  //         Array.isArray(topics) &&
-  //         topics.length === 4 &&
-  //         topics[1] ==
-  //           "0x0000000000000000000000000000000000000000000000000000000000000000" &&
-  //         100 <= parseInt(topics[3], 16) <= 200
-  //       ) {
-  //         let ownerAddress = topics[2].replace("000000000000000000000000", "");
-  //         mintedLands.push({
-  //           tokenId: parseInt(topics[3], 16).toString(),
-  //           owner: ownerAddress,
-  //         });
-  //       }
-  //     }
-  //   }
-  //   console.log("Here are all minted lands:", mintedLands);
-  //   return mintedLands;
-  // }
 
-  const parcelImage = (
-    <Image
-      className=" h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10"
-      src={"/parcels/parcel.png"}
-      width={60}
-      height={60}
-      alt="parcel"
-      quality={30}
-    />
-  );
+  console.log(apiData);
+  // console.log(apiData.result);
+
+
+
+  useEffect(()=> {
+    const getData =() => {
+      if (apiData) {
+        const mintedLandsFromEvents = getMintedLandsFromEvents(apiData.result )
+        setMintedLands(mintedLandsFromEvents)
+      }
+    }
+    getData()
+  },[apiData])
+  
+
 
   return (
     <>
@@ -113,19 +94,19 @@ export default function ParcelsWideScreen({
                     className={`${
                       key == 4
                         ? " cursor-pointer  hover:opacity-80 active:opacity-70  "
-                        : "cursor-default bg-yellow-300"
-                    }   transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                        : `cursor-default ${parcel.x >=100 && parcel.y >= 100 && "bg-yellow-300 "} `
+                    }  ${isTokenIdPresent(land) && "brightness-50" } transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >
                     {
-                      key == 4 && parcelImage
-                      // <Image
-                      //   className=" h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10"
-                      //   src={"/parcels/parcel.png"}
-                      //   width={60}
-                      //   height={60}
-                      //   alt="parcel"
-                      //   quality={30}
-                      // />
+                      key == 4 &&
+                      <Image
+                      className={`${isTokenIdPresent(land) && " brightness-50" }  h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10`}
+                      src={"/parcels/parcel.png"}
+                      width={60}
+                      height={60}
+                      alt="parcel"
+                      quality={30}
+                    />
                     }
 
                     {/* {land} */}
