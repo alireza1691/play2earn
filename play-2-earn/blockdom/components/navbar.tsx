@@ -50,7 +50,7 @@ export default function Navbar() {
             </a>
           </div>
 
-          <div className=" ml-3 md:ml-5 flex md:hidden  ">
+          <div className=" ml-3 md:ml-5 flex md:hidden   ">
             <button
               className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-800 dark:text-gray-50 right-0 w-fit mr-2"
               onClick={() => {

@@ -6,7 +6,7 @@ export default function NavbarLandingItems() {
 
     const router = useRouter()
   return (
-    <div className="hidden  md:flex md:gap-x-10  ">
+    <div className="hidden  md:flex md:gap-x-10  translate-x-[30%] ">
           
     <a
       onClick={() => {
