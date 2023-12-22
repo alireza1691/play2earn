@@ -88,6 +88,12 @@ const yCoordinate = coordinates % 1000;
 return {x: xCoordinate,y: yCoordinate-9}
 }
 
+export const landObjectFromTokenId = (coordinates:number) => {
+  const xCoordinate = Math.floor(coordinates / 1000); // 123
+  const yCoordinate = coordinates % 1000;
+  return {x: xCoordinate,y: yCoordinate}
+  }
+
 export function getMintedLandsFromEvents(events: ApiDataResultType) {
   console.log(events);
   
@@ -117,3 +123,5 @@ export function getMintedLandsFromEvents(events: ApiDataResultType) {
   console.log("Here are all minted lands:", mintedLands);
   return mintedLands;
 }
+
+export const zeroAddress = "0x0000000000000000000000000000000000000000"

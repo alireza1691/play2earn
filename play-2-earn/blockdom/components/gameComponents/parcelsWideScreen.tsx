@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
 import Image from "next/image";
-import { getMintedLandsFromEvents, inViewParcels, parcelLands, separatedCoordinate } from "@/lib/utils";
+import { getMintedLandsFromEvents, inViewParcels, parcelLands, separatedCoordinate, zeroAddress } from "@/lib/utils";
 import { parcelsViewHookProps } from "@/lib/types";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useApiData } from "@/context/api-data-context";
@@ -21,6 +21,7 @@ export default function ParcelsWideScreen({
   const { setSelectedWindowComponent } = useSelectedWindowContext();
   const [mintedLands, setMintedLands] = useState<MintedLand[]|null>(null)
   const { apiData, loading } = useApiData();
+
   // async function landClickHandler(selectedLand:number):Promise<string | null> {
   //   try {
   //     const owner =await landsPInst.ownerOf(selectedLand)
@@ -33,14 +34,20 @@ export default function ParcelsWideScreen({
   //     return null
   //   }
   // }
-  const isTokenIdPresent =(tokenId:number):boolean =>{
+  const getOwnerFromEvents =(tokenId:number):string =>{
     let isPresent: boolean
+    let ownerAddress: string = zeroAddress
     if (!mintedLands) {
       isPresent = false;
     } else{
       isPresent = mintedLands?.some(item => item.tokenId === tokenId.toString());
+      if (isPresent) {
+        const land = mintedLands.find(item => item.tokenId === tokenId.toString());
+        ownerAddress = land?.owner ?? ownerAddress;
+      }
+
     }
-    return isPresent
+    return ownerAddress 
   }
 
 
@@ -65,6 +72,7 @@ export default function ParcelsWideScreen({
   return (
     <>
       {isParcelSelected && (
+        <>
         <div className="z-10 transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px]  grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
           {inViewParcels(selectedParcel).map((parcel, key) => (
             <div
@@ -86,7 +94,7 @@ export default function ParcelsWideScreen({
                   <a
                     key={land}
                     onClick={() => {
-                      // key == 4 && setSelectedLand(land),
+                      key == 4 && setSelectedLand({coordinate: land,owner: getOwnerFromEvents(land),isMinted: getOwnerFromEvents(land) != zeroAddress}),
                       key == 4 && setSlideBar(true),
                         key == 4 && setSelectedWindowComponent("emptyLand"),
                         console.log(land);
@@ -95,12 +103,12 @@ export default function ParcelsWideScreen({
                       key == 4
                         ? " cursor-pointer  hover:opacity-80 active:opacity-70  "
                         : `cursor-default ${parcel.x >=100 && parcel.y >= 100 && "bg-yellow-300 "} `
-                    }  ${isTokenIdPresent(land) && "brightness-50" } transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                    }  ${getOwnerFromEvents(land) != zeroAddress && "brightness-50" } transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >
                     {
                       key == 4 &&
                       <Image
-                      className={`${isTokenIdPresent(land) && " brightness-50" }  h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10`}
+                      className={`${getOwnerFromEvents(land) != zeroAddress && " brightness-50" }  h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10`}
                       src={"/parcels/parcel.png"}
                       width={60}
                       height={60}
@@ -116,6 +124,56 @@ export default function ParcelsWideScreen({
             </div>
           ))}
         </div>
+           <div className="z-10 md:-z-10 absolute grid gap-[1px] w-[1590px]  transform grid-cols-3 left-[0rem] top-0 md:invisible ">
+           {inViewParcels(selectedParcel).map((parcel, key) => (
+             <div
+               key={key}
+               className={`grid w-fit grid-cols-10 gap-[2px] ${
+                 key == 4 ? "" : "blur-md brightness-50"
+               }`}
+             >
+               {parcelLands(parcel.x, parcel.y).map((land) => (
+                 <Tooltip
+                   radius="sm"
+                   key={land}
+                   color={"default"}
+                   content={separatedCoordinate(land.toString())}
+                   className={`capitalize  !bg-[#06291D]/80 ${
+                     key != 4 && "invisible"
+                   }`}
+                 >
+                   <a
+                     onClick={() => {
+                       // key == 4 && setSelectedLand(land),
+                         key == 4 && setSlideBar(true),
+                         key == 4 && setSelectedWindowComponent("emptyLand"),
+                         console.log(land);
+                     }}
+                     className={`${
+                       key == 4
+                         ? "cursor-pointer hover:opacity-90 active:opacity-70"
+                         : " bg-yellow-300 cursor-default"
+                     } text-black text-[8px] h-[52px] w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                   >
+                     {key == 4 && (
+                       <Image
+                         className=" h-[52px] w-[52px] absolute -z-10"
+                         src={"/parcels/parcel.png"}
+                         width={60}
+                         height={60}
+                         alt="parcel"
+                         quality={20}
+                       />
+                     )}
+ 
+                     {key == 4 && land}
+                   </a>
+                 </Tooltip>
+               ))}
+             </div>
+           ))}
+         </div>
+         </>
       )}
     </>
   );

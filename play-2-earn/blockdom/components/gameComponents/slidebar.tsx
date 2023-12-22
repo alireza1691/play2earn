@@ -151,7 +151,7 @@ export default function Slidebar({
           </div>
         </div>
       </div>
-      <SlideBarButtons/>
+      <SlideBarButtons selectedLand={selectedLand}/>
 
     </div>
     </>
