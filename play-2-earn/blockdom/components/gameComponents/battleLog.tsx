@@ -1,3 +1,4 @@
+"use client"
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import React from "react";
 

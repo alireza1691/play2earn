@@ -3,37 +3,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Tooltip } from "@nextui-org/react";
 import Image from "next/image";
 import { getMintedLandsFromEvents, inViewParcels, parcelLands, separatedCoordinate, zeroAddress } from "@/lib/utils";
-import { parcelsViewHookProps } from "@/lib/types";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useApiData } from "@/context/api-data-context";
+import { useMapContext } from "@/context/map-context";
+import { MintedLand } from "@/lib/types";
 
-type MintedLand = {
-  tokenId: string,
-  owner: string,
-}
 
-export default function ParcelsWideScreen({
-  setSelectedLand,
-  setSlideBar,
-  selectedParcel,
-  isParcelSelected,
-}: parcelsViewHookProps) {
+
+export default function Parcels() {
   const { setSelectedWindowComponent } = useSelectedWindowContext();
   const [mintedLands, setMintedLands] = useState<MintedLand[]|null>(null)
-  const { apiData, loading } = useApiData();
+  const { apiData, loading} = useApiData();
+  const {selectedParcel, setSelectedLand} = useMapContext()
 
-  // async function landClickHandler(selectedLand:number):Promise<string | null> {
-  //   try {
-  //     const owner =await landsPInst.ownerOf(selectedLand)
-  //     const imageUrl = await landsPInst.URI(selectedLand)
-  //     console.log(uri);
-  //     setSelectedLand({})
 
-  //   } catch (error) {
-  //     console.log("land not minted");
-  //     return null
-  //   }
-  // }
   const getOwnerFromEvents =(tokenId:number):string =>{
     let isPresent: boolean
     let ownerAddress: string = zeroAddress
@@ -51,12 +34,6 @@ export default function ParcelsWideScreen({
   }
 
 
-
-  console.log(apiData);
-  // console.log(apiData.result);
-
-
-
   useEffect(()=> {
     const getData =() => {
       if (apiData) {
@@ -71,7 +48,7 @@ export default function ParcelsWideScreen({
 
   return (
     <>
-      {isParcelSelected && (
+      {selectedParcel && (
         <>
         <div className="z-10 transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px]  grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
           {inViewParcels(selectedParcel).map((parcel, key) => (
@@ -95,7 +72,7 @@ export default function ParcelsWideScreen({
                     key={land}
                     onClick={() => {
                       key == 4 && setSelectedLand({coordinate: land,owner: getOwnerFromEvents(land),isMinted: getOwnerFromEvents(land) != zeroAddress}),
-                      key == 4 && setSlideBar(true),
+                      // key == 4 && setSlideBar(true),
                         key == 4 && setSelectedWindowComponent("emptyLand"),
                         console.log(land);
                     }}
@@ -145,7 +122,7 @@ export default function ParcelsWideScreen({
                    <a
                      onClick={() => {
                        // key == 4 && setSelectedLand(land),
-                         key == 4 && setSlideBar(true),
+                        //  key == 4 && setSlideBar(true),
                          key == 4 && setSelectedWindowComponent("emptyLand"),
                          console.log(land);
                      }}

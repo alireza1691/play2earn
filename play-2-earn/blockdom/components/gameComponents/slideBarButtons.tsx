@@ -1,27 +1,32 @@
 import { useSelectedWindowContext } from "@/context/selected-window-context";
-import { landsPInst, landsSInst } from "@/lib/instances";
+import { landsAddress } from "@/lib/blockchainData";
+import { landsABI, landsPInst, landsSInst } from "@/lib/instances";
 import { SelectedLandType } from "@/lib/types";
 import { landObjectFromTokenId, separatedCoordinate } from "@/lib/utils";
 import { useSigner } from "@thirdweb-dev/react";
+import { ethers } from "ethers";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 type SlidebarButtonsProps = {
   selectedLand : SelectedLandType | null
+  isOwnedLand : boolean
 }
 
-export default function SlideBarButtons({selectedLand}:SlidebarButtonsProps) {
-  let isEnemy = true;
+export default function SlideBarButtons({selectedLand,isOwnedLand}:SlidebarButtonsProps) {
   let signer = useSigner()
+  const [priceFormatEther, setPriceFromatEther] = useState<number | null>(null)
 
   async function mint() {
     console.log("minting a land...");
     
     try {
-      if (signer && selectedLand) {
+      if (signer && selectedLand && priceFormatEther) {
         const inst = landsSInst(signer)
         const landCoordinatesObject = landObjectFromTokenId(selectedLand.coordinate)
-        await inst.mintLand(landCoordinatesObject.x,landCoordinatesObject.y)
+        console.log("minted land coordinates: x:",landCoordinatesObject.x,"y:",landCoordinatesObject.y);
+        await inst.mintLand(landCoordinatesObject.x,landCoordinatesObject.y,{value: priceFormatEther})
       }
  
     } catch (error) {
@@ -29,6 +34,21 @@ export default function SlideBarButtons({selectedLand}:SlidebarButtonsProps) {
       
     }
   }
+
+  useEffect(() => {
+    
+  
+    const getData = async () => {
+      if (signer) {
+        const inst = landsSInst(signer)
+        const price = await inst.getPrice()
+        setPriceFromatEther(price)
+      }
+    
+    }
+    getData()
+  }, [signer])
+  
 
   const { selectedWindowComponent, setSelectedWindowComponent } =
     useSelectedWindowContext();
@@ -45,12 +65,12 @@ export default function SlideBarButtons({selectedLand}:SlidebarButtonsProps) {
       </div>
       <div className=" flex flex-col md:flex-row  w-full gap-2">
         {selectedLand && !selectedLand.isMinted  && <button onClick={() => mint()} className="greenButton !w-full mt-2">Mint</button>}
-        {selectedLand && selectedLand.isMinted  && isEnemy && (
+        {selectedLand && selectedLand.isMinted  && !isOwnedLand && (
           <button className="outlineGreenButton !w-full  md:!w-[50%]">
             Send help
           </button>
         )}
-        {selectedLand && selectedLand.isMinted  && isEnemy && (
+        {selectedLand && selectedLand.isMinted  && !isOwnedLand && (
           <button
             onClick={() => {
               setSelectedWindowComponent("attack");
@@ -60,12 +80,12 @@ export default function SlideBarButtons({selectedLand}:SlidebarButtonsProps) {
             Attack
           </button>
         )}
-        {selectedLand && selectedLand.isMinted  && !isEnemy && (
+        {selectedLand && selectedLand.isMinted  && isOwnedLand && (
           <button className="outlineGreenButton !w-full md:!w-[50%]">
             Send help
           </button>
         )}
-        {selectedLand && selectedLand.isMinted  && !isEnemy && (
+        {selectedLand && selectedLand.isMinted  && isOwnedLand && (
           <button className="greenButton !w-full md:!w-[50%]">
             Visit land
           </button>

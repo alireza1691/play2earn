@@ -1,30 +1,15 @@
 "use client";
-import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
-import ParcelsWideScreen from "./parcelsWideScreen";
-import ParcelsMobileScreen from "./parcelsMobileScreen";
 import ParcelSwitchArrows from "./parcelSwitchArrows";
-import { SelectedLandType, selectedParcelType } from "@/lib/types";
-
 import Map from "./map";
-import MapHandler from "./mapHandler";
+import { useMapContext } from "@/context/map-context";
+import Parcels from "./parcels";
 
-type LandSelectorHookProps = {
-  setSelectedLand: React.Dispatch<React.SetStateAction<SelectedLandType | null>>;
-  setSlideBar: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
-export default function SelectedParcel2({
-  setSelectedLand,
-  setSlideBar,
-}: LandSelectorHookProps) {
+export default function SelectedParcel() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isParcelSelected, setIsParcelSelected] = useState(false);
+  const { selectedParcel, setSelectedParcel } = useMapContext();
 
-  const [selectedParcel, setSelectedParcel] = useState<selectedParcelType>({
-    x: 100,
-    y: 100,
-  });
 
   useEffect(() => {
     const container = containerRef.current!;
@@ -35,11 +20,11 @@ export default function SelectedParcel2({
 
     // Scroll the container to the center position
     container.scrollTo(scrollLeft, scrollTop);
-  }, [isParcelSelected]);
+  }, [selectedParcel]);
 
   return (
     <>
-      {isParcelSelected && (
+      {selectedParcel && (
         <>
           {/* <MapHandler setIsParcelSelected={setIsParcelSelected} /> */}
           <div className="z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center flex justify-center ">
@@ -54,29 +39,10 @@ export default function SelectedParcel2({
         ref={containerRef}
         className="w-[100vw] h-[100vh]   overflow-scroll  items-center justify-center object-cover relative"
       >
-        <Map
-          isParcelSelected={isParcelSelected}
-          setIsParcelSelected={setIsParcelSelected}
-          setSelectedParcel={setSelectedParcel}
-        />
-        <ParcelSwitchArrows
-          selectedParcel={selectedParcel}
-          setSelectedParcel={setSelectedParcel}
-          isParcelSelected={isParcelSelected}
-        />
+        <Map />
+        <ParcelSwitchArrows />
 
-        <ParcelsWideScreen
-          setSlideBar={setSlideBar}
-          setSelectedLand={setSelectedLand}
-          selectedParcel={selectedParcel}
-          isParcelSelected={isParcelSelected}
-        />
-        <ParcelsMobileScreen
-          setSlideBar={setSlideBar}
-          setSelectedLand={setSelectedLand}
-          selectedParcel={selectedParcel}
-          isParcelSelected={isParcelSelected}
-        />
+        <Parcels />
       </div>
     </>
   );

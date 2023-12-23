@@ -1,29 +1,26 @@
-import { selectedParcelType } from '@/lib/types';
+import { useMapContext } from '@/context/map-context';
+import { SelectedParcelType } from '@/lib/types';
 import Image from 'next/image';
 import React from 'react'
 
-type SwitchParcelArrowsProps = {
-    selectedParcel : selectedParcelType,
-    setSelectedParcel: React.Dispatch<React.SetStateAction<selectedParcelType>>,
-    isParcelSelected: boolean
-}
 
-export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel,isParcelSelected}:SwitchParcelArrowsProps) {
 
-    // const isParcelSelected = false;
+export default function ParcelSwitchArrows() {
+  const {selectedParcel,setSelectedParcel} = useMapContext()
+
 
   return (
     <>
-    {isParcelSelected && (
+    {selectedParcel && (
      <div className=" absolute w-[42rem] h-[42rem] left-[29rem]  top-[29rem] md:h-[40rem] md:w-[40rem] md:top-[30rem] md:left-[800px] 2xl:left-[1140px] 2xl:top-[46rem] 2xl:w-[47rem] 2xl:h-[43rem] ">
 
      <a
        onClick={() => {
          selectedParcel.y < 190 &&
-           setSelectedParcel((prevState) => ({
-             ...prevState,
-             y: prevState.y + 10,
-           }));
+           setSelectedParcel({
+             x: selectedParcel.x,
+             y: selectedParcel.y + 10,
+           });
        }}
        className={` ${
          selectedParcel.y >= 190
@@ -41,10 +38,11 @@ export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel,isP
      <a
        onClick={() => {
          selectedParcel.x >= 110 &&
-           setSelectedParcel((prevState) => ({
-             ...prevState,
-             x: prevState.x - 10,
-           }));
+           setSelectedParcel({
+  
+             x: selectedParcel.x - 10,
+             y: selectedParcel.y
+           });
        }}
        className={`${
          selectedParcel.x <= 100
@@ -62,10 +60,10 @@ export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel,isP
      <a
        onClick={() => {
          selectedParcel.y >= 110 &&
-           setSelectedParcel((prevState) => ({
-             ...prevState,
-             y: prevState.y - 10,
-           }));
+           setSelectedParcel({
+             x: selectedParcel.x,
+             y: selectedParcel.y - 10,
+           });
        }}
        className={`${
          selectedParcel.y <= 100
@@ -83,10 +81,10 @@ export default function ParcelSwitchArrows({selectedParcel,setSelectedParcel,isP
      <a
        onClick={() => {
         selectedParcel.x < 190 &&
-           setSelectedParcel((prevState) => ({
-             ...prevState,
-             x: prevState.x + 10,
-           }));
+           setSelectedParcel({
+             x: selectedParcel.x + 10,
+             y: selectedParcel.y
+           });
        }}
        className={` ${
          selectedParcel.x >= 190

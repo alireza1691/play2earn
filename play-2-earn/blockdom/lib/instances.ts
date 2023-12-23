@@ -15,9 +15,12 @@ export const provider = new ethers.providers.JsonRpcProvider(
 // export const signer = useSigner()
 // export const chainId = useChainId()
 
-export const landsPInst = new ethers.Contract(landsAddress, landsAbiJsonFile.abi, provider);
+export const landsABI = landsAbiJsonFile.abi
+export const townABI = townAbiJsonFile.abi
+
+export const landsPInst = new ethers.Contract(landsAddress, landsABI, provider);
 
 export const landsSInst = (signer: Signer) => {
-    const instance =new ethers.Contract(landsAddress, landsAbiJsonFile.abi, signer);
+    const instance =new ethers.Contract(landsAddress, landsABI, signer);
   return instance
 };

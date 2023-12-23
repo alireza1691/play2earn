@@ -2,40 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-.z999{
+.z999 {
   z-index: 998 !important;
 }
-.z998{
+.z998 {
   z-index: 998 !important;
 }
-.z-100{
+.z-100 {
   z-index: 100 !important;
 }
-.z-200{
+.z-200 {
   z-index: 200 !important;
 }
-.z-300{
+.z-300 {
   z-index: 300 !important;
 }
-.z-400{
+.z-400 {
   z-index: 400 !important;
 }
-.z-500{
+.z-500 {
   z-index: 500 !important;
 }
 
-
-.buildingWindow{
-  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[82.5%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm
+.blueText {
+  color: #98FBD7;
+font-size: 16px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
+.balBg {
+  border-radius: 6.4px;
+border: 1px solid rgba(135, 240, 229, 0.60);
+background: rgba(6, 41, 29, 0.50);
+box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+}
+.greenBg {
+  border-radius: 10px;
+  border: 1px solid rgba(212, 212, 212, 0.35);
+  background: rgba(33, 48, 42, 0.6);
+  backdrop-filter: blur(10px);
+}
+.buildingWindow {
+  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[82.5%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm;
 }
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
 }
 .redButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#FFBFB1] hover:to-[#FFBFB1]  text-[#424040] active:from-[#9C695E] active:to-[#9C695E] ;
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#FFBFB1] hover:to-[#FFBFB1]  text-[#424040] active:from-[#9C695E] active:to-[#9C695E];
 }
 .closeIcon {
-  @apply cursor-pointer rounded-md hover:bg-gray-500/20 p-1
+  @apply cursor-pointer rounded-md hover:bg-gray-500/20 p-1;
 }
 .outlineRedButton {
   @apply py-3 px-7 w-fit border font-medium dark:text-[#F48475] dark:border-[#F48475] text-[16px] dark:hover:text-[#FFBFB1] dark:hover:border-[#FFBFB1] rounded-[0.8rem] dark:active:border-[#9C695E] dark:active:text-[#9C695E] transition-all;
@@ -44,18 +62,18 @@
   @apply py-3 px-7 w-fit border border-gray-800 hover:bg-gray-100 dark:hover:bg-transparent font-medium dark:text-[#98FBD7] dark:border-[#98FBD7] text-[16px] dark:hover:border-[#4DFBB9] dark:hover:text-[#4DFBB9]  rounded-[0.8rem] dark:active:border-[#1F6C4F] dark:active:text-[#1F6C4F] transition-all;
 }
 .goodsBalanceKeeper {
-  @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden
+  @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden;
 }
 
 .darkShadow {
   box-shadow: -0.2rem 0.15rem 0.3rem 0.04rem rgba(0, 0, 0, 0.3);
 }
 .attackWindowBg {
- @apply bg-[#21302A]/60  backdrop-blur-md 
+  @apply bg-[#21302A]/60  backdrop-blur-md;
 }
 .battleLogWindowBg {
-  @apply bg-[#21302A]/90  backdrop-blur-md border border-[#D4D4D4]/30
- }
+  @apply bg-[#21302A]/90  backdrop-blur-md border border-[#D4D4D4]/30;
+}
 
 /* .attackWindowBg {
   background-color: rgba(106, 168, 76, 0.2);
@@ -64,39 +82,80 @@
 
 } */
 .cardBg {
-  background: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff53, #ffffff00, #ffffff21);
+  background: linear-gradient(
+    to bottom left,
+    #ffffff44,
+    #ffffff17,
+    #ffffff53,
+    #ffffff00,
+    #ffffff21
+  );
   border-radius: 0.2rem;
   padding-inline: 0.2rem;
   padding-top: 0.2rem;
 }
-.warriorsSlidersBg{
-  background: linear-gradient(to bottom , rgba(0,0,0,0.6),rgba(0,0,0,0.2), rgba(0,0,0,0.1), rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+.warriorsSlidersBg {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.6)
+  );
 }
-.warriorsGridBg{
-  background: linear-gradient(to bottom , rgba(0,0,0,0.3),rgba(0,0,0,0.2), rgba(0,0,0,0.01), rgba(0,0,0,0.2), rgba(0,0,0,0.3));
+.warriorsGridBg {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.01),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.3)
+  );
 }
 .goldBg {
-  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-image: linear-gradient(
+    to bottom left,
+    #ffffff44,
+    #ffffff17,
+    #ffffff25,
+    #ffffff00,
+    #ffffff21
+  );
   background-color: #9e954784;
-
 }
 .foodBg {
-  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-image: linear-gradient(
+    to bottom left,
+    #ffffff44,
+    #ffffff17,
+    #ffffff25,
+    #ffffff00,
+    #ffffff21
+  );
   background-color: #589e478e;
 }
 .bronzeBg {
-  background-image: linear-gradient(to bottom left, #ffffff44,#ffffff17, #ffffff25, #ffffff00, #ffffff21);
+  background-image: linear-gradient(
+    to bottom left,
+    #ffffff44,
+    #ffffff17,
+    #ffffff25,
+    #ffffff00,
+    #ffffff21
+  );
   background-color: #50110541;
 }
 
-
-.tw-connect-wallet{
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+.tw-connect-wallet {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
   color: white !important;
   border-radius: 1rem !important;
   height: 3.5rem !important;
   opacity: 0.9 !important;
-  filter: blur(15px) ; /* Adjust the blur radius as per your requirement */
+  filter: blur(15px); /* Adjust the blur radius as per your requirement */
   padding-inline: 1rem !important;
 
   height: fit-content !important;
@@ -105,14 +164,13 @@
   color: white !important;
   background-color: rgba(0, 0, 0, 0.25) !important;
   /* box-shadow: 0 0.2rem 0.3rem 0.1rem rgba(0, 0, 0, 0.5) !important; */
-  transition:  all 0.15s ease-in-out;;
+  transition: all 0.15s ease-in-out;
 }
 .tw-connected-wallet {
   background-color: rgba(0, 0, 0, 0.15) !important;
   border: none !important;
   height: 3.5rem !important;
   border-radius: 1rem !important;
-
 }
 .tw-connected-wallet__balance {
   color: rgb(209, 209, 209) !important;
@@ -139,7 +197,7 @@
   z-index: -10;
 }
 
-.gradientParagraph{
+.gradientParagraph {
   background: linear-gradient(
     to right,
     rgb(68, 208, 94),
@@ -151,30 +209,35 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.gradientTitle{
+.gradientTitle {
   background: linear-gradient(
     to right,
     #1ca453,
-    /* #2E4F3B, */
-    rgb(32, 32, 32)
+    /* #2E4F3B, */ rgb(32, 32, 32)
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.greenHeaderGradient{
-  background: linear-gradient(to left, transparent,transparent, #34594b99, #34594ba2, transparent,transparent);
+.greenHeaderGradient {
+  background: linear-gradient(
+    to left,
+    transparent,
+    transparent,
+    #34594b99,
+    #34594ba2,
+    transparent,
+    transparent
+  );
 }
 
 .landGrid {
   transform: perspective(600px) rotateY(0deg) scale(1.2) rotateX(30deg);
-
 }
 .viewGrid {
-  transform: perspective(50000px) rotateY(-4deg) scale(1) rotateX(55deg) 
+  transform: perspective(50000px) rotateY(-4deg) scale(1) rotateX(55deg)
     rotateZ(42deg);
   transition: 0.6s ease all;
   box-shadow: 1rem 1rem 0.7rem 0.3rem rgba(0, 0, 0, 0.55);
-
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -191,4 +254,3 @@
   background-color: #888; /* Adjust the thumb color as needed */
   border-radius: 10px;
 }
-

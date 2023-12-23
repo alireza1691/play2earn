@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { ApiDataResultType } from "./types";
+import { ApiDataResultType, MintedLand } from "./types";
 
 type selectedParcelType = {
   x: number;
@@ -102,7 +102,6 @@ export function getMintedLandsFromEvents(events: ApiDataResultType) {
     for (let index = 0; index < events.length; index++) {
     
         const topics = events[index].topics;
-        console.log("topics",parseInt(topics[3], 16));
         
         if (
           Array.isArray(topics) &&
@@ -123,5 +122,11 @@ export function getMintedLandsFromEvents(events: ApiDataResultType) {
   console.log("Here are all minted lands:", mintedLands);
   return mintedLands;
 }
+
+export function getOwnedLands(mintedLands : MintedLand[],connectedAddress: string) {
+  const ownedLands = mintedLands.filter(token => token.owner.toUpperCase() === connectedAddress.toUpperCase());
+  return ownedLands
+}
+
 
 export const zeroAddress = "0x0000000000000000000000000000000000000000"

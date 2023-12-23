@@ -1,34 +1,39 @@
 "use client";
-import { ConnectWallet, WalletConnect } from "@thirdweb-dev/react";
-import React, { Fragment, useState } from "react";
+import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
-
-// import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { useTheme } from "@/context/theme-context";
-import { useRouter, usePathname } from "next/navigation";
-import { IoMdDownload } from "react-icons/io";
+import {  usePathname } from "next/navigation";
 import { BsMoon, BsSun } from "react-icons/bs";
 import DarkLogo from "@/svg/darkLogo";
 import LightLogo from "@/svg/lightLogo";
-import BattleLogIcon from "@/svg/battleLogIcon";
-import MyLandIcon from "@/svg/myLandIcon";
-import ExploreIcon from "@/svg/exploreIcon";
-import { useSelectedWindowContext } from "@/context/selected-window-context";
 import NavDropdownMobileScreen from "./navDropdownMobileScreen";
 import NavbarLandingItems from "./navbarLandingItems";
 import NavbarGameItems from "./navbarGameItems";
+import { getMintedLandsFromEvents, getOwnedLands } from "@/lib/utils";
+import { useApiData } from "@/context/api-data-context";
+import { useUserDataContext } from "@/context/user-data-context";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { selectedWindowComponent, setSelectedWindowComponent } =
-    useSelectedWindowContext();
-  const router = useRouter();
+  const {apiData} = useApiData()
+  const {setOwnedLands} = useUserDataContext()
+  const address= useAddress()
 
   const { theme, toggleTheme } = useTheme();
 
   const currentRoute = usePathname();
+
+  useEffect(() => {
+    const data= async() => {
+      if (address && apiData) { 
+        const ownedl = getOwnedLands(getMintedLandsFromEvents(apiData?.result),address)
+        setOwnedLands(ownedl)
+
+      }
+    }
+    data()
+  },[address,apiData])
 
   return (
     <>

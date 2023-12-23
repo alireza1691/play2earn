@@ -8,6 +8,8 @@ import ActiveSectionContextProvider from "@/context/active-section-context";
 import SelectedWindowContextProvider from "@/context/selected-window-context";
 import SelectedBuildingContextProvider from "@/context/selected-building-context";
 import { ApiDataProvider } from "@/context/api-data-context";
+import MapContextProvider from "@/context/map-context";
+import UserDataContextProvider from "@/context/user-data-context";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -30,20 +32,26 @@ export default function RootLayout({
         className={`${inter.className} w-screen bg-white  dark:bg-black text-gray-800 dark:text-yellow-50 relative overflow-x-hidden`}
       >
         <div className="bg-[#7CFF99] absolute dark:bg-[#7FDDAD]  -top-[20rem] z-0 left-[10rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[5rem] dark:blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-70  dark:opacity-50 lg:left-[10rem] lg:w-[22.5rem]"></div>
+        <ThirdwebProvider>
+          <UserDataContextProvider>
+        <MapContextProvider>
         <ApiDataProvider>
         <SelectedWindowContextProvider>
           <SelectedBuildingContextProvider>
           <ThemeContextProvider>
             <ActiveSectionContextProvider>
-              <ThirdwebProvider>
+           
                 <Navbar />
                 {children}
-              </ThirdwebProvider>
+         
             </ActiveSectionContextProvider>
           </ThemeContextProvider>
           </SelectedBuildingContextProvider>
         </SelectedWindowContextProvider>
         </ApiDataProvider>
+        </MapContextProvider>
+        </UserDataContextProvider>
+        </ThirdwebProvider>
       </body>
     </html>
   );

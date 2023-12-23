@@ -1,14 +1,10 @@
-import { selectedParcelType } from '@/lib/types';
+import { useMapContext } from '@/context/map-context';
+import { SelectedParcelType } from '@/lib/types';
 import { coordinatesObject, parcelLands } from '@/lib/utils';
 import React, { useMemo } from 'react'
 
-type mapProps = {
-    isParcelSelected: boolean,
-    setIsParcelSelected: React.Dispatch<React.SetStateAction<boolean>>
-    setSelectedParcel: React.Dispatch<React.SetStateAction<selectedParcelType>>
-}
-
-export default function Map({isParcelSelected,setIsParcelSelected,setSelectedParcel}: mapProps) {
+export default function Map() {
+    const {selectedParcel,setSelectedParcel} = useMapContext()
     const allParcels = useMemo(() => {
         let parcelLandsArray = [];
         for (let y = 9; y > -1; y--) {
@@ -26,7 +22,7 @@ export default function Map({isParcelSelected,setIsParcelSelected,setSelectedPar
 
   return (
     <>
-    {!isParcelSelected && (
+    {selectedParcel == null && (
         <div className="p-10 z-10 absolute left-[0rem]  grid grid-cols-10 gap-1 top-[4rem] !h-[90rem] w-[87rem] xl:h-[180rem] xl:w-[137rem] ">
           {allParcels.map((parcel, key) => (
             <div
@@ -35,7 +31,7 @@ export default function Map({isParcelSelected,setIsParcelSelected,setSelectedPar
         
             >
               <a       onClick={() => {
-                setIsParcelSelected(true),
+        
                   setSelectedParcel(coordinatesObject(parcel[0])),
                   console.log(parcel[0]);
               }} className=" active:backdrop-brightness-50 opacity-50 xl:opacity-10 xl:hover:opacity-100 h-full w-full flex items-center justify-center   text-center absolute z-50 text-white  text-[25px]">

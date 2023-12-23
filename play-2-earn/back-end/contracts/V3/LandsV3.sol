@@ -190,7 +190,7 @@ contract LandsV3 is ERC721, Ownable {
     // }
     // Check if range of location coordinate is in authorized range.
     modifier isCorrectCoordinate (uint8 x, uint8 y) {
-        if (x < 100 || x > 999 || y < 100 || y > 999) {
+        if (x < 100 || x > 199 || y < 100 || y > 199) {
             revert Lands__InvalidCoordinate();
         }
         _;
