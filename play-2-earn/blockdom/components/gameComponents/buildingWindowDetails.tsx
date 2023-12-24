@@ -9,27 +9,25 @@ import { warriors } from "@/lib/data";
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem } = useSelectedBuildingContext();
 
-  const relevantContainer = () =>{
+  const relevantContainer = () => {
     if (selectedItem?.name == "Townhall") {
-      return TownhallContainer
+      return TownhallContainer;
     }
     if (selectedItem?.name == "Wall") {
-      return WallContainer
+      return WallContainer;
     }
     if (selectedItem?.name == "Barracks") {
-      return BarracksContainer
+      return BarracksContainer;
     }
     if (selectedItem?.name == "GoldMine" || selectedItem?.name == "Farm") {
-      return ResourceContainer
+      return ResourceContainer;
     }
-
-  }
+  };
   const Container = relevantContainer(); // Call the function to get the component
-
 
   return (
     <>
-        {/* {selectedItem?.name == "Barracks" && (
+      {/* {selectedItem?.name == "Barracks" && (
     <div className="h-[30%] overflow-y-scroll custom-scrollbar warriorsGridBg rounded-md w-[80%] ml-auto mr-auto ">
           
   
@@ -71,44 +69,52 @@ export default function BuildingWindowDetails() {
     </div>
       )}
  */}
-   <div className="flex flex-grow">
-   {Container && <Container />} {/* Use the component in JSX */}
-
-   </div>
-
-  
+      <div className="flex flex-grow">
+        {Container && <Container />} {/* Use the component in JSX */}
+      </div>
     </>
   );
 }
 
 const ResourceContainer = () => {
   return (
-    <>
-    <p>resource</p>
-    </>
-  )
-}
+    <div className=" w-[85%] ml-auto mr-auto flex flex-col mt-6">
+      <Progress
+        label="8 per hour"
+        value={15}
+        maxValue={100}
+        showValueLabel={true}
+        color="warning"
+        classNames={{
+          base: "max-w-md",
+          track: "drop-shadow-md border border-default",
+          indicator: "bg-gradient-to-r from-pink-500 to-yellow-500",
+          label: "tracking-wider font-medium text-default-600",
+          value: "text-foreground/60",
+        }}
+      />
+    </div>
+  );
+};
 const BarracksContainer = () => {
   return (
     <>
-    <p>barracks</p>
+      <p>barracks</p>
     </>
-  )
-}
+  );
+};
 
 const TownhallContainer = () => {
   return (
     <>
-    <p>townhall</p>
+      <p>townhall</p>
     </>
-  )
-}
+  );
+};
 const WallContainer = () => {
   return (
     <>
-    <p>wall</p>
+      <p>wall</p>
     </>
-  )
-}
-
-
+  );
+};

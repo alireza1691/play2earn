@@ -5,6 +5,8 @@ import { useSelectedBuildingContext } from "@/context/selected-building-context"
 import { landItems } from "@/lib/data";
 import TownBarracks from "./townBarracks";
 import TownWalls from "./townWalls";
+import TownTrainingCamp from "./townTrainingCamp";
+import TownResourceBuildings from "./townResourceBuildings";
 
 export default function Town() {
   const { setSelectedItem } = useSelectedBuildingContext();
@@ -25,6 +27,9 @@ export default function Town() {
       />
       <TownBarracks/>
       <TownWalls/>
+      <TownTrainingCamp/>
+      <TownResourceBuildings/>
+
     </section>
   );
 }

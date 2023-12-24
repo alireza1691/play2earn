@@ -901,9 +901,9 @@ contract TownV3 is Ownable, Barracks{
         return tokenIdStatus[tokenId];
     }
 
-    function getBuildings() view public returns (ResourceBuildingInfo[] memory) {
-        return resourceBuildings;
-    }
+    // function getBuildings() view public returns (ResourceBuildingInfo[] memory) {
+    //     return resourceBuildings;
+    // }
 
     function getLandIdData(uint256 landTokenId) external view returns(LandIdData memory) {
         return (landData[landTokenId]);

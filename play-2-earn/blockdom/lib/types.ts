@@ -1,4 +1,5 @@
 
+import { BigNumber } from "ethers";
 import { links } from "./data";
 
 export type SectionName = (typeof links)[number]["name"];
@@ -42,3 +43,32 @@ export type APICallData = {
   result: ApiDataResultType,
   status: string
 }
+
+// export type InViewLandType = {
+//   tokenId : number,
+//   townhallLvl : number,
+//   barracksLvl : number,
+//   wallLvl : number,
+//   trainingCampLvl : number,
+//   buildedResourceBuildings: BigNumber[],
+//   goodsBalance: number[]
+// }
+export type InViewLandType = {
+  tokenId : number,
+  townhallLvl : BigNumber,
+  barracksLvl : BigNumber,
+  wallLvl : BigNumber,
+  trainingCampLvl : BigNumber,
+  buildedResourceBuildings: BigNumber[],
+  goodsBalance: [BigNumber,BigNumber]
+}
+export type landDataResType = {
+barracksLevel:BigNumber,
+buildedResourceBuildings:BigNumber[],
+goodsBalance:[BigNumber, BigNumber],
+latestBuildTimeStamp: BigNumber,
+townhallLevel: BigNumber,
+trainingCampLevel:BigNumber,
+wallLevel:BigNumber
+}
+

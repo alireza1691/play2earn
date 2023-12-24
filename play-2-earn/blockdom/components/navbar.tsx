@@ -3,7 +3,7 @@ import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { useTheme } from "@/context/theme-context";
-import {  usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { BsMoon, BsSun } from "react-icons/bs";
 import DarkLogo from "@/svg/darkLogo";
 import LightLogo from "@/svg/lightLogo";
@@ -13,27 +13,52 @@ import NavbarGameItems from "./navbarGameItems";
 import { getMintedLandsFromEvents, getOwnedLands } from "@/lib/utils";
 import { useApiData } from "@/context/api-data-context";
 import { useUserDataContext } from "@/context/user-data-context";
+import { townPInst } from "@/lib/instances";
+import { InViewLandType, landDataResType } from "@/lib/types";
+import { formatEther, parseEther } from "ethers/lib/utils";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const {apiData} = useApiData()
-  const {setOwnedLands} = useUserDataContext()
-  const address= useAddress()
+  const { apiData } = useApiData();
+  const { setOwnedLands, ownedLands, setInViewLand } = useUserDataContext();
+  const address = useAddress();
 
   const { theme, toggleTheme } = useTheme();
 
   const currentRoute = usePathname();
 
   useEffect(() => {
-    const data= async() => {
-      if (address && apiData) { 
-        const ownedl = getOwnedLands(getMintedLandsFromEvents(apiData?.result),address)
-        setOwnedLands(ownedl)
+    const data = async () => {
+      if (address && apiData) {
+        const ownedl = getOwnedLands(
+          getMintedLandsFromEvents(apiData?.result),
+          address
+        );
+        setOwnedLands(ownedl);
+        const defaultLandData: landDataResType = await townPInst.getLandIdData(
+          Number(ownedl[0].tokenId)
+        );
+  
 
+        const defaultLand: InViewLandType = {
+          tokenId: Number(ownedl[0].tokenId),
+          townhallLvl: defaultLandData.townhallLevel,
+          wallLvl: defaultLandData.wallLevel,
+          barracksLvl: defaultLandData.barracksLevel,
+          trainingCampLvl: defaultLandData.trainingCampLevel,
+          goodsBalance: [ defaultLandData.goodsBalance[0],  defaultLandData.goodsBalance[1]],
+          buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
+        };
+        setInViewLand(defaultLand)
+        console.log("default land:", defaultLand);
+   
       }
-    }
-    data()
-  },[address,apiData])
+      if (!address) {
+        setOwnedLands(null);
+      }
+    };
+    data();
+  }, [address, apiData]);
 
   return (
     <>
@@ -45,7 +70,7 @@ export default function Navbar() {
         >
           <div className="flex   ">
             <a
-            href="/"
+              href="/"
               // onClick={() => {
               //   router.push("/");
               // }}

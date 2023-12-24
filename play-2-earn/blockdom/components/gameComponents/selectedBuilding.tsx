@@ -1,5 +1,6 @@
 "use client";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
+import { useUserDataContext } from "@/context/user-data-context";
 import CloseIcon from "@/svg/closeIcon";
 import DoubleArrow from "@/svg/doubleArrow";
 import TopDuobleArrow from "@/svg/topDuobleArrow";
@@ -12,7 +13,9 @@ import BuildingWindowImage from "./buildingWindowImage";
 import UpgradeContainer from "./upgradeContainer";
 
 export default function SelectedBuilding() {
-  const { selectedItem, setSelectedItem, activeMode, upgradeMode } = useSelectedBuildingContext();
+  const { selectedItem, setSelectedItem, activeMode, upgradeMode } =
+    useSelectedBuildingContext();
+  const {ownedLands} = useUserDataContext()
   const imageUrl = selectedItem?.imageUrl || "";
   return (
     // <section
@@ -29,22 +32,24 @@ export default function SelectedBuilding() {
     //     </div>
     //     <div className="h-[7.5%]">        <UpgradeContainer/></div>
     //     <BuildingWindowDetails />
-      
-    
+
     //     <div className="h-[20%] w-full">
     //     <BuildingWindowButtons/>
     //     </div>
-     
+
     //   </div>
     // </section>
-    <section className=" !flex-shrink-0 flex flex-col buildingWindow">
-  <BuildingWindowHeader />
-  <BuildingWindowImage />
+    <section
+      className={`${
+        selectedItem == null && "!-left-[50rem]"
+      } transition-all !flex-shrink-0 flex flex-col buildingWindow`}
+    >
+      <BuildingWindowHeader />
+      <BuildingWindowImage />
 
-    <BuildingWindowDetails/>
+      <BuildingWindowDetails />
 
-  <BuildingWindowButtons/>
-     
+      <BuildingWindowButtons />
     </section>
   );
 }
