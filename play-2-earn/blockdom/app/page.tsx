@@ -1,4 +1,5 @@
 
+import Questions from '@/components/indexPage/askedQ'
 import Carousel from '@/components/indexPage/carousel'
 import FAQ from '@/components/indexPage/faq'
 import Footer from '@/components/indexPage/footer'
@@ -17,6 +18,7 @@ export default function Home() {
        <Carousel/>
       <Roadmap/>
      <FAQ/>
+     {/* <Questions/> */}
   <Footer/>
   </main>
   )

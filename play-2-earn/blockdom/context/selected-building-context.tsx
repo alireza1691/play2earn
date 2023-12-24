@@ -13,16 +13,22 @@ type SelectedBuildingContextProviderProps = {
 type SelectedBuildingContextType = {
     selectedItem: itemType | null,
     setSelectedItem: React.Dispatch<React.SetStateAction<itemType|null>>
+    activeMode: boolean
+    setActiveMode:React.Dispatch<React.SetStateAction<boolean>>
+    upgradeMode: boolean
+    setUpgradeMode:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const StatesContext = createContext<SelectedBuildingContextType | null>(null)
 
 export default function SelectedBuildingContextProvider({children}:SelectedBuildingContextProviderProps) {
       const [selectedItem, setSelectedItem] =  useState< itemType | null >(null)
+      const [activeMode, setActiveMode] = useState <boolean>(false)
+      const [upgradeMode, setUpgradeMode] = useState <boolean>(false)
     
 
       return(
-        <StatesContext.Provider value={{ selectedItem, setSelectedItem}}>
+        <StatesContext.Provider value={{ selectedItem, setSelectedItem, activeMode, setActiveMode, upgradeMode, setUpgradeMode}}>
             {children}
         </StatesContext.Provider>
       )

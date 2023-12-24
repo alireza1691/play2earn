@@ -95,28 +95,33 @@
       answer:
         " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam suscipit eos minus officiis dignissimos itaque harum minima quod, eius amet, maiores vero nulla nemo, totam ducimus vel fuga consectetur incidunt?",
       light: "bg-gradient-to-bl",
+      position:"top-[-3rem]"
     },
     {
       title: "What is Blockdom?",
       answer: " Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
       light: "bg-gradient-to-l",
+      position:"top-[-5rem]"
     },
     {
       title: "What is Blockdom?",
       answer:
         " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam suscipit eos minus officiis dignissimos itaque harum minima quod, eius amet, maiores vero nulla nemo",
       light: "bg-gradient-to-l",
+      position:"top-[-13rem]"
     },
     {
       title: "What is Blockdom?",
       answer:
         " Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam suscipit eos minus officiis dignissimos itaque harum minima quod, eius amet",
       light: "bg-gradient-to-tl",
+      position:"top-[-15rem]"
     },
     {
       title: "What is Blockdom?",
       answer: " Lorem ipsum dolor, sit amet ",
       light: "bg-gradient-to-tl",
+      position:"top-[-17rem]"
     },
   ];
   

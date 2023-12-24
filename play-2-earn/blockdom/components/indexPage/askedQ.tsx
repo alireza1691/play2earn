@@ -10,7 +10,6 @@ export default function Questions() {
   const { ref } = useSectionInView("F Questions");
   const { theme } = useTheme();
   return (
-    
     <section
       ref={ref}
       id="questions"
@@ -27,7 +26,7 @@ export default function Questions() {
         Frequently Asked Questions
       </h2>
 
-      <div className="min-h-20 mt-20 flex flex-col gap-4 relative overflow-hidden">
+      {/* <div className="min-h-20 mt-20 flex flex-col gap-4 relative overflow-hidden">
         {questions.map((question, index) => (
           <React.Fragment key={index}>
             <div
@@ -72,6 +71,36 @@ export default function Questions() {
               )}
             </div>
           </React.Fragment>
+        ))}
+      </div> */}
+      <div className="flex flex-col gap-2 relative">
+        {questions.map((question, key) => (
+    
+            <div key={key} className="z-10 bg-gray-500/10 py-1 px-1 rounded-xl relative overflow-hidden">
+              <div className={`-z-10 dark:w-[30rem]  dark:h-[30rem] h-[35rem] w-[35rem] ${question.position} dark:left-[-10rem]  bg-gray-600/30 dark:bg-green-800 absolute rounded-full blur-[5rem]`}></div>
+
+              <a
+                onClick={() => {
+                  openedQ == key ? setOpenedQ(null) : setOpenedQ(key);
+                }}
+                className={` cursor-pointer flex flex-row items-center  justify-between w-full px-4 py-2  !font-normal !text-[16px] focus:outline-none transition-colors duration-300 hover:brightness-105`}
+              >
+                {question.title}
+              </a>
+              <div
+                className={`overflow-hidden transition-max-height  duration-500 mt-1 ${
+                  openedQ == key ? "max-h-40" : "max-h-0"
+                }`}
+              >
+                {openedQ == key && (
+                  <div
+                    className={` py-2 px-1  max-h-40 gap-1 flex flex-col`}
+                  >
+                    {question.answer}
+                  </div>
+                )}
+              </div>
+            </div>
         ))}
       </div>
     </section>

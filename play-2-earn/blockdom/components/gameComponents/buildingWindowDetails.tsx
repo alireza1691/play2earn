@@ -8,9 +8,33 @@ import { warriors } from "@/lib/data";
 
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem } = useSelectedBuildingContext();
+
+  const relevantContainer = () =>{
+    if (selectedItem?.name == "Townhall") {
+      return TownhallContainer
+    }
+    if (selectedItem?.name == "Wall") {
+      return WallContainer
+    }
+    if (selectedItem?.name == "Barracks") {
+      return BarracksContainer
+    }
+    if (selectedItem?.name == "GoldMine" || selectedItem?.name == "Farm") {
+      return ResourceContainer
+    }
+
+  }
+  const Container = relevantContainer(); // Call the function to get the component
+
+
   return (
+    <>
+        {/* {selectedItem?.name == "Barracks" && (
+    <div className="h-[30%] overflow-y-scroll custom-scrollbar warriorsGridBg rounded-md w-[80%] ml-auto mr-auto ">
+          
+  
     <div className="h-full flex flex-col w-full py-3">
-      {selectedItem?.name == "Barracks" && (
+  
         <div className="px-3 h-full ">
           <div className=" flex flex-col h-[20%]">
             <h3 className="gap-2 text-[14px] font-bold flex flex-row items-center">
@@ -43,9 +67,48 @@ export default function BuildingWindowDetails() {
             ))}
           </div>
         </div>
-      )}
-
-
+        </div>
     </div>
+      )}
+ */}
+   <div className="flex flex-grow">
+   {Container && <Container />} {/* Use the component in JSX */}
+
+   </div>
+
+  
+    </>
   );
 }
+
+const ResourceContainer = () => {
+  return (
+    <>
+    <p>resource</p>
+    </>
+  )
+}
+const BarracksContainer = () => {
+  return (
+    <>
+    <p>barracks</p>
+    </>
+  )
+}
+
+const TownhallContainer = () => {
+  return (
+    <>
+    <p>townhall</p>
+    </>
+  )
+}
+const WallContainer = () => {
+  return (
+    <>
+    <p>wall</p>
+    </>
+  )
+}
+
+
