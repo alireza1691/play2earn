@@ -138,7 +138,7 @@ const BarracksContainer = () => {
           </h3>
           <div className=" grid grid-cols-3 mt-4 gap-y-4 ">
             {warriors.map((warrior, key) => (
-              <div className="relative cardBg py-1 justify-center items-center w-fit ml-auto mr-auto darkShadow">
+              <div key={key} className="relative cardBg py-1 justify-center items-center w-fit ml-auto mr-auto darkShadow">
                 {barracksLevel <= key && (
                   <p className=" !leading-4 w-full px-1 z-10 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center  left-1/2 absolute blueText !font-light !text-[12px]">
                     Available at<br></br>{" "}

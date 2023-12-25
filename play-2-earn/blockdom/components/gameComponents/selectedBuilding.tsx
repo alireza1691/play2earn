@@ -81,7 +81,7 @@ export default function SelectedBuilding() {
         </div>
         <div className="grid grid-cols-2 gap-4 w-[80%] ml-auto mr-auto flex-grow pt-8">
         {warriors.map((warrior,key) => (
-          <div className=" flex flex-col gap-1  !rounded-lg">
+          <div key={key} className=" flex flex-col gap-1  !rounded-lg">
             <div className=" glassBg darkShadow blueText !font-normal text-center py-2 ">{warrior}</div>
             <div className=" flex flex-row relative h-full glassBg">
               <Image className="py-1 px-1 rounded-lg !h-[100%] w-auto" src={"/images/warriorTest.png"} width={100} height={150} alt="warrior" />
