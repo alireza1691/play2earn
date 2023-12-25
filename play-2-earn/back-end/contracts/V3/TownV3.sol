@@ -441,6 +441,8 @@ contract TownV3 is Ownable, Barracks{
     uint8 private constant BaseArmyCapacity = 50;
     uint256 private constant BaseGoodCapacityOfBuilding = 80 ether;
     uint256 private constant BaseWarriorRequiredFood = 3 ether;
+    uint256 private constant BaseFoodRevenuePer3hours = 1 ether;
+    uint256 private constant BaseGoldRevenuePer3hours = 1 ether;
     uint256 private tokenIdCounter = 1;
     uint256[2] private totalExistedGood;
     uint256 private constant TrnasferCostPercentage = 7;
@@ -878,11 +880,13 @@ contract TownV3 is Ownable, Barracks{
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
         ResourceBuildingStatus memory buildingStatus = getStatus(buildingTokenId);
         uint256 period = block.timestamp - (buildingStatus.latestActionTimestamp);
-        uint256 rev = (period / 3 hours) * 1 ether * (2 ** (buildingStatus.level - 1));
+        uint256 baseRev = buildingStatus.buildingTypeIndex == 0 ? BaseFoodRevenuePer3hours : BaseGoldRevenuePer3hours ;
+        uint256 rev = (period / 3 hours) * baseRev * (2 ** (buildingStatus.level - 1));
         if (rev > BaseGoodCapacityOfBuilding * buildingStatus.level ) {
             rev = BaseGoodCapacityOfBuilding * buildingStatus.level ;
         }
         return rev;
+       
     }
 
     function getGoodsPrice() view public returns (uint256[2] memory ) {
