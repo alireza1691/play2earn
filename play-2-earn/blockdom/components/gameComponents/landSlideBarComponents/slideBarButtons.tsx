@@ -1,22 +1,71 @@
+import { useMapContext } from "@/context/map-context";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
+import { useUserDataContext } from "@/context/user-data-context";
 import { landsAddress } from "@/lib/blockchainData";
 import { landsABI, landsPInst, landsSInst } from "@/lib/instances";
 import { SelectedLandType } from "@/lib/types";
 import { landObjectFromTokenId, separatedCoordinate } from "@/lib/utils";
-import { useSigner } from "@thirdweb-dev/react";
-import { ethers } from "ethers";
+import { useMetamask, useSDK, useSigner } from "@thirdweb-dev/react";
+import { BigNumber, ethers } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
-
+import { Sepolia } from "@thirdweb-dev/chains";
 import React, { useEffect, useState } from "react";
 
-type SlidebarButtonsProps = {
-  selectedLand : SelectedLandType | null
-  isOwnedLand : boolean
-}
 
-export default function SlideBarButtons({selectedLand,isOwnedLand}:SlidebarButtonsProps) {
+
+export default function SlideBarButtons() {
+  const { selectedLand} = useMapContext();
+  const {  isOwnedLand } = useUserDataContext();
   let signer = useSigner()
-  const [priceFormatEther, setPriceFromatEther] = useState<number | null>(null)
+  const [priceFormatEther, setPriceFromatEther] = useState<BigNumber | null>(null)
+  const connectWithMetamask = useMetamask();
+  const sdk = useSDK();
+  const validChainId = Sepolia.chainId;
+
+const handleConnectWithMetamask = async () => {
+  try {
+    await connectWithMetamask({
+      chainId: validChainId,
+    });
+    // Connection successful
+  } catch (error) {
+    console.log("Error connecting with MetaMask:", error);
+    // Handle the error gracefully without showing it on the screen
+  }
+};
+
+
+const mintLand = async () => {
+  if (!signer) {
+    await handleConnectWithMetamask()
+  }
+  if (sdk && signer) {
+    const chainId = await sdk.wallet.getChainId();
+    if (chainId == validChainId && selectedLand && signer) {
+      try {
+        const landsInst = landsSInst(signer)
+        const landCoordinatesObject = landObjectFromTokenId(selectedLand.coordinate)
+        await landsInst.mintLand(landCoordinatesObject.x, landCoordinatesObject.y, {
+          value: priceFormatEther,
+        });
+        // handleCloseLandWindow();
+        // setVisibleConfirmation(true);
+      } catch (error) {
+        console.log(error);
+        
+        // setError(error);
+        // setIsLandSelected(false);
+        // setIsTransactionRejected(true);
+      }
+    } else {
+      await handleConnectWithMetamask();
+      await mintLand()
+    }
+  }
+
+};
+
+
 
   async function mint() {
     console.log("minting a land...");
@@ -40,7 +89,9 @@ export default function SlideBarButtons({selectedLand,isOwnedLand}:SlidebarButto
   
     const getData = async () => {
       if (signer) {
-        const inst = landsSInst(signer)
+        const inst = landsPInst
+        console.log(inst);
+        
         const price = await inst.getPrice()
         setPriceFromatEther(price)
       }
@@ -60,11 +111,11 @@ export default function SlideBarButtons({selectedLand,isOwnedLand}:SlidebarButto
       <div className="w-full ">
         {" "}
         {selectedLand && !selectedLand.isMinted && (
-          <h3 className="py-2 px-5 bg-[#06291D]/50 rounded-xl text-[#98FBD7] !w-full text-center">Price: 0.02 ETH</h3>
+          <h3 className="py-2 px-5 bg-[#06291D]/50 rounded-xl text-[#98FBD7] !w-full text-center">Price: {formatEther(priceFormatEther ? priceFormatEther : parseEther("0.002"))} ETH</h3>
         )}
       </div>
       <div className=" flex flex-col md:flex-row  w-full gap-2">
-        {selectedLand && !selectedLand.isMinted  && <button onClick={() => mint()} className="greenButton !w-full mt-2">Mint</button>}
+        {selectedLand && !selectedLand.isMinted  && <button onClick={() => mintLand()} className="greenButton !w-full mt-2">Mint</button>}
         {selectedLand && selectedLand.isMinted  && !isOwnedLand && (
           <button className="outlineGreenButton !w-full  md:!w-[50%]">
             Send help
@@ -81,7 +132,7 @@ export default function SlideBarButtons({selectedLand,isOwnedLand}:SlidebarButto
           </button>
         )}
         {selectedLand && selectedLand.isMinted  && isOwnedLand && (
-          <button className="outlineGreenButton !w-full md:!w-[50%]">
+          <button className="outlineGreenButton !w-full md:!w-[50%]" disabled>
             Send help
           </button>
         )}

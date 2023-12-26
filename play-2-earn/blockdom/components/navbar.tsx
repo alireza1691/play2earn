@@ -35,23 +35,26 @@ export default function Navbar() {
           address
         );
         setOwnedLands(ownedl);
-        const defaultLandData: landDataResType = await townPInst.getLandIdData(
-          Number(ownedl[0].tokenId)
-        );
-  
+        if (ownedl.length>0) {
+          const defaultLandData: landDataResType = await townPInst.getLandIdData(
+            Number(ownedl[0].tokenId)
+          );
+    
+          const defaultLand: InViewLandType = {
+            tokenId: Number(ownedl[0].tokenId),
+            townhallLvl: defaultLandData.townhallLevel,
+            wallLvl: defaultLandData.wallLevel,
+            barracksLvl: defaultLandData.barracksLevel,
+            trainingCampLvl: defaultLandData.trainingCampLevel,
+            goodsBalance: [ defaultLandData.goodsBalance[0],  defaultLandData.goodsBalance[1]],
+            buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
+          };
+          setInViewLand(defaultLand)
+          console.log("default land:", defaultLand);
+     
+        }
+      
 
-        const defaultLand: InViewLandType = {
-          tokenId: Number(ownedl[0].tokenId),
-          townhallLvl: defaultLandData.townhallLevel,
-          wallLvl: defaultLandData.wallLevel,
-          barracksLvl: defaultLandData.barracksLevel,
-          trainingCampLvl: defaultLandData.trainingCampLevel,
-          goodsBalance: [ defaultLandData.goodsBalance[0],  defaultLandData.goodsBalance[1]],
-          buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
-        };
-        setInViewLand(defaultLand)
-        console.log("default land:", defaultLand);
-   
       }
       if (!address) {
         setOwnedLands(null);

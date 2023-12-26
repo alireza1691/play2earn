@@ -29,4 +29,3 @@ export const townSInst = (signer: Signer) => {
   const instance = new ethers.Contract(townAddress, townABI, signer);
 return instance
 };
-

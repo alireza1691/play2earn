@@ -1,7 +1,7 @@
-import BalanceContainer from "@/components/gameComponents/balanceContainer";
+import BalanceContainer from "@/components/gameComponents/townComponents/balanceContainer";
 import Notifications from "@/components/gameComponents/notifications";
 import SelectedBuilding from "@/components/gameComponents/selectedBuilding";
-import Town from "@/components/gameComponents/town";
+import Town from "@/components/gameComponents/townComponents/town";
 import Image from "next/image";
 import React from "react";
 

@@ -5,8 +5,14 @@ import CloseIcon from "@/svg/closeIcon";
 import { useUserDataContext } from "@/context/user-data-context";
 
 export default function BuildingWindowHeader() {
-  const { selectedItem, setSelectedItem } = useSelectedBuildingContext();
+  const { selectedItem, setSelectedItem, setActiveMode, setUpgradeMode,activeMode } = useSelectedBuildingContext();
   const { inViewLand} = useUserDataContext()
+
+  const handleClose = () => {
+    setSelectedItem(null)
+    setActiveMode(false)
+    setUpgradeMode(false)
+  }
 
   const getLevel = () => {
     if (inViewLand) {
@@ -28,8 +34,8 @@ export default function BuildingWindowHeader() {
     <div className=" w-full p-2 flex flex-row justify-between flex-shrink-0">
       {" "}
       <h3 className="font-semibold">{selectedItem?.name}</h3>{" "}
-      <h2 className=" font-bold">Level: {getLevel()}</h2>
-      <a className="closeIcon" onClick={() => setSelectedItem(null)}>
+      {!activeMode &&   <h2 className=" absolute left-1/2 -translate-x-1/2 font-bold">Level: {getLevel()}</h2>}
+      <a className="closeIcon" onClick={() => handleClose()}>
         <CloseIcon />
       </a>{" "}
     </div>

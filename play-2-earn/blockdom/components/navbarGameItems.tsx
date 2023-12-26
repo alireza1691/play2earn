@@ -11,7 +11,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function NavbarGameItems() {
-  const { selectedParcel, setSelectedParcel } = useMapContext();
+  const { selectedParcel, setSelectedParcel, setSelectedLand } = useMapContext();
   const { ownedLands } = useUserDataContext();
 
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function NavbarGameItems() {
       {/* {currentRoute == "/explore" &&  */}
       <>
         <a
-          onClick={() => setSelectedParcel(null)}
+          onClick={() => {setSelectedParcel(null) , setSelectedLand(null)}}
           className={`${
             selectedParcel == null
               ? " brightness-50"

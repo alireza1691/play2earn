@@ -2,15 +2,16 @@
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import Image from "next/image";
 import React from "react";
-import { Progress } from "@nextui-org/react";
+
 import ArmyCapacityIcon from "@/svg/armyCapacityIcon";
 import { warriors } from "@/lib/data";
 import FoodIcon from "@/svg/foodIcon";
 import { IoIosArrowDown } from "react-icons/io";
 import DoubleArrow from "@/svg/doubleArrow";
-import DualProgressBar from "./daulProgressBar";
+import DualProgressBar from "../daulProgressBar";
 import CoinIcon from "@/svg/coinIcon";
-import ProgressBar from "./progressBar";
+import ProgressBar from "../progressBar";
+import CapacityProgressBar from "../capacityProgressBar";
 
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem, upgradeMode } =
@@ -25,6 +26,9 @@ export default function BuildingWindowDetails() {
     }
     if (selectedItem?.name == "Barracks") {
       return BarracksContainer;
+    }
+    if (selectedItem?.name == "TrainingCamp") {
+      return TrainingCampContainer;
     }
     if (selectedItem?.name == "GoldMine" || selectedItem?.name == "Farm") {
       return ResourceContainer;
@@ -178,6 +182,56 @@ const BarracksContainer = () => {
     </div>
   );
 };
+const TrainingCampContainer = () => {
+  const { selectedItem, setSelectedItem, upgradeMode,activeMode } =
+  useSelectedBuildingContext();
+
+  let barracksLevel = 2;
+  return (
+    <div className="w-[80%] ml-auto mr-auto mt-4 flex flex-col">
+      {!upgradeMode && !activeMode && (
+        <>
+      <div className=" flex flex-col">
+        <div className=" flex flex-row items-center font-semibold !text-white gap-3"> <ArmyCapacityIcon/> 1000 units</div>
+        <CapacityProgressBar amount={50} />
+      </div>
+      <div className="grid grid-cols-3 mt-4 gap-4 mr-auto ml-auto"> 
+      {warriors.map((warrior, key) => (
+              <div key={key} className="relative  !rounded-md cardBg px-1 pt-1 pb-6 justify-center items-center w-fit ml-auto mr-auto darkShadow">
+                {barracksLevel <= key && (
+                  <p className=" !leading-4 w-full px-1 z-10 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center  left-1/2 absolute blueText !font-light !text-[12px]">
+                    Available at<br></br>{" "}
+                    <span className=" font font-semibold">Level {key + 1}</span>
+                  </p>
+                )}
+                <p className=" absolute bottom-0 left-1/2 -translate-x-1/2 font-semibold text-[14px]">10</p>
+                <Image
+                  className={`${
+                    barracksLevel <= key && "brightness-50"
+                  } w-[80px] !h-auto rounded-md`}
+                  src={"/images/warriorTest.png"}
+                  width={60}
+                  height={120}
+                  alt="warrior image"
+                />
+              </div>
+            ))}</div>
+            </>
+      )}
+      {upgradeMode && (
+        <>
+        <UpgradeHeader title="Upgrade trait" currentLevel={1}/>
+           <div className=" flex flex-col mt-3">
+           <div className=" flex flex-row items-center font-semibold !text-white gap-3"> <ArmyCapacityIcon/> 100<span className="blueText">+ 100 </span>Army capacity</div>
+           <DualProgressBar currentLevel={1} />
+         </div>
+
+         <UpgradeContainer  foodAmount={10} goldAmount={10}/>
+         </>
+      )}
+    </div>
+  )
+}
 
 const TownhallContainer = () => {
   return (

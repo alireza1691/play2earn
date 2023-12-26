@@ -9,7 +9,7 @@ export default function TownTrainingCamp() {
     const trainingCamp = landItems[5]
   return (
     <Image
-    className="z-10 cursor-pointer absolute top-[35rem] right-[40%]  w-[10%] h-auto"
+    className="z-10 cursor-pointer absolute top-[30rem] right-[50%]  w-[10%] h-auto"
     src={trainingCamp.imageUrl}
     width={580}
     height={480}

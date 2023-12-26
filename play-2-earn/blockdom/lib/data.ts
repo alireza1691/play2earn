@@ -134,3 +134,5 @@
     { name: "TrainingCamp", imageUrl: "/testEmptyBuilding.svg" ,level:2},
   ] as const;
   export const warriors = ["spearman","maceman","swordsman","archer","spearman","knight"]
+
+  export const defaultImageAddress = "/cards/LandCard.png"

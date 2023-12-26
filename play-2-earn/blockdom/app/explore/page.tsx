@@ -1,6 +1,6 @@
-import Slidebar from "@/components/gameComponents/slidebar";
+import Slidebar from "@/components/gameComponents/landSlideBarComponents/landSlideBar";
 import Attack from "@/components/gameComponents/attack";
-import SelectedParcel from "@/components/gameComponents/selectedParcel";
+import SelectedParcel from "@/components/gameComponents/mapComponents/selectedParcel";
 import React from "react";
 
 import BattleLog from "@/components/gameComponents/battleLog";
