@@ -463,3 +463,23 @@ border: 1px solid #98FBD7;
 /* Skeuomorphic • Dark */
 box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.19), -2px -2px 5px 0px rgba(255, 255, 255, 0.10);
 }
+.spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: #87F0E5; /* Your custom color */
+  animation: spin 1s linear infinite;
+  /* background-color: #87F0E54D;  */
+  /* border-color: #87F0E54D; */
+  /* border-color: rgba(135, 240, 229, 0.3); */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
