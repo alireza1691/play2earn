@@ -10,6 +10,8 @@ import SelectedBuildingContextProvider from "@/context/selected-building-context
 import { ApiDataProvider } from "@/context/api-data-context";
 import MapContextProvider from "@/context/map-context";
 import UserDataContextProvider from "@/context/user-data-context";
+import BlockchainStateContextProvider from "@/context/blockchain-state-context";
+import ActionStateComponent from "@/components/actionStateComponent";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -36,11 +38,12 @@ export default function RootLayout({
           <UserDataContextProvider>
         <MapContextProvider>
         <ApiDataProvider>
+          <BlockchainStateContextProvider>
         <SelectedWindowContextProvider>
           <SelectedBuildingContextProvider>
           <ThemeContextProvider>
             <ActiveSectionContextProvider>
-           
+                <ActionStateComponent/>
                 <Navbar />
                 {children}
          
@@ -48,6 +51,7 @@ export default function RootLayout({
           </ThemeContextProvider>
           </SelectedBuildingContextProvider>
         </SelectedWindowContextProvider>
+        </BlockchainStateContextProvider>
         </ApiDataProvider>
         </MapContextProvider>
         </UserDataContextProvider>

@@ -450,3 +450,16 @@
   gap: 6px;
   flex-shrink: 0;
 }
+
+.txStateBg{
+  border-radius: 10px;
+  border: 1px solid rgba(212, 212, 212, 0.35);
+  background: rgba(33, 48, 42, 0.80);
+  backdrop-filter: blur(10px);
+}
+.txStateButton{
+color: #87F0E5;
+border: 1px solid #98FBD7;
+/* Skeuomorphic • Dark */
+box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.19), -2px -2px 5px 0px rgba(255, 255, 255, 0.10);
+}
