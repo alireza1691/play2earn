@@ -7,6 +7,7 @@ import TownBarracks from "./townBarracks";
 import TownWalls from "./townWalls";
 import TownTrainingCamp from "./townTrainingCamp";
 import TownResourceBuildings from "./townResourceBuildings";
+import TownHall from "./townHall";
 
 export default function Town() {
   const { setSelectedItem } = useSelectedBuildingContext();
@@ -15,7 +16,8 @@ export default function Town() {
   // const walls = landItems[4]
   return (
     <section>
-      <Image
+      <TownHall/>
+      {/* <Image
         onClick={() => {
           setSelectedItem(townHall);
         }}
@@ -24,7 +26,7 @@ export default function Town() {
         width={100}
         height={100}
         alt="townHall"
-      />
+      /> */}
       <TownBarracks/>
       <TownWalls/>
       <TownTrainingCamp/>

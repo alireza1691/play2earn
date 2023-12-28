@@ -54,7 +54,7 @@ export default function Intro() {
               Blockdom
             </h1>
             <p className=" text-center text-[16px] text-gray-600 dark:text-gray-400  font-medium sm:text-left pt-4">
-              Get started earning by enjoyable P2E game based on digital assets.
+              Get started earning by exciting P2E game based on digital assets.
               <br></br>
               Lets start by choosing your land and build your kingdom on the
               Blockchain.

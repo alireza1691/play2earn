@@ -18,8 +18,8 @@ export default function Starter() {
         <div className=' top-[12rem] absolute left-1/2 -translate-x-1/2 w-[17.5rem] h-[17.5rem] bg-[#7CFF99] dark:bg-green-800 rounded-full blur-[8rem] dark:blur-[10rem]'></div>
         </div>
         <div className='flex flex-col z-20 px-[25%] mt-[8rem] md:mt-[13rem] items-center xl:px-[30%]'>
-            <h2 className=' font-bold text-[48px] text-center dark:text-white'>Lorem ipsum dolor sit amet.</h2>
-            <p className=' font-light text-[#718574] mt-6'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam, amet! Fugit obcaecati ipsam doloribus itaque? Enim vel a, unde eos possimus, cumque consequatur pariatur nihil magni maiores quasi? Quae, totam?</p>
+            <h2 className=' font-bold text-[48px] text-center dark:text-white'>Lets start earning</h2>
+            <p className=' font-light text-[#718574] mt-6'>The game is inspired by popular strategy games. All you need is to mint land and build your kingdom. To earn from the game you can simply collect goods and convert them to BMT which is Blockdom Token. </p>
             <button className='greenButton shadow-lg mt-6 !px-12' >Get started</button>
         </div>
     </section>

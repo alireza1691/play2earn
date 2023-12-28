@@ -55,38 +55,51 @@
       route: "",
     },
   ];
+
+  // - Launching game on testnet<br></br>- Attracting community
+ 
+  //   - Land presale on mainnet<br></br>- Marketing
+ 
+  //   - Launching game on mainnet <br></br>- Partnerships
+ 
+  //   - Updating game assets<br></br>- Tournaments{" "}
+
+  //   - ERC721 Heroes<br></br>- Community challenges
+ 
+  //   - Land presale on mainnet<br></br>- Marketing
+ 
   
   export const roadmapSteps = [
     {
       stepNum: 1,
-      title: "Luanch",
-      description: "Something",
-      releaseTime: "Q4 2023",
+      title: "Launch",
+      description: "Launching the game on the testnet, lands presale on mainnet and engaging the community.",
+      releaseTime: "Q1 2024",
     },
     {
       stepNum: 2,
-      title: "Community",
-      description: "Something else",
-      releaseTime: " Q1 2024",
+      title: "Mainnet & Community",
+      description: "Launching the game on the mainnet. Expanding our community and attracting active users.",
+      releaseTime: " Q2 2024",
     },
     {
       stepNum: 3,
-      title: "Community",
-      description: "Something else",
-      releaseTime: "Q2 2024",
-    },
-    {
-      stepNum: 4,
-      title: "Community",
-      description: "Something else",
+      title: "Assets updates & Partnerships",
+      description: "Updating game assets for fairness and coherence based on statistics, and forming partnerships to expand the platform as a prominent gaming destination.",
       releaseTime: "Q3 2024",
     },
     {
-      stepNum: 5,
-      title: "Community",
-      description: "Something else",
-      releaseTime: " Q4 2024",
+      stepNum: 4,
+      title: "Heroes & Tournoments",
+      description: "Introducing 1000 exclusive heroes for users to mint, attach to their land, and include in their armies. Additionally, planning tournaments to enhance excitement and provide diverse earning opportunities in the game.",
+      releaseTime: "Q4 2024",
     },
+    // {
+    //   stepNum: 5,
+    //   title: "Community",
+    //   description: "Something else",
+    //   releaseTime: " Q4 2024",
+    // },
   ] as const;
   
   export const questions = [
@@ -126,12 +139,12 @@
   ];
   
   export const landItems = [
-    { name: "Townhall", imageUrl: "/townItems/townhall.png" ,level:2},
-    { name: "Barracks", imageUrl: "/testBarracks.svg" ,level:2},
-    { name: "GoldMine", imageUrl: "/townItems/goldMine.png" ,level:2},
-    { name: "Farm", imageUrl: "/townItems/farm.png" ,level:2},
+    { name: "Townhall", imageUrl: "/buildings/townhallLv1.png" ,level:2},
+    { name: "Barracks", imageUrl: "/buildings/barracksLv1.png" ,level:2},
+    { name: "GoldMine", imageUrl: "/buildings/goldMineLv0.png" ,level:2},
+    { name: "Farm", imageUrl: "/buildings/farmLv0.png" ,level:2},
     { name: "Wall", imageUrl: "/testWalls.svg" ,level:2},
-    { name: "TrainingCamp", imageUrl: "/testEmptyBuilding.svg" ,level:2},
+    { name: "TrainingCamp", imageUrl: "/buildings/trainingCampLv1.png" ,level:2},
   ] as const;
   export const warriors = ["spearman","maceman","swordsman","archer","spearman","knight"]
 

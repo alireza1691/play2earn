@@ -48,17 +48,31 @@ export default function Parcels() {
 
   return (
     <>
+
+   
       {selectedParcel && (
+
         <>
+               
+                 {/* <div className="z-10 md:h-[1620px] relative overflow-hidden w-[1080px] md:w-[2240px] 2xl:w-[2130px]">
+              <div className="left-20 z-10 bg-white w-[60rem] h-[40rem]  rounded-full blur-lg"></div>
+                </div> */}
+
+            {/* <div className="z-0 md:h-[1620px] relative overflow-hidden w-[1080px] md:w-[2240px] 2xl:w-[2130px]">
+    <div className="z-30 bg-white/50 ml-auto mt-auto    xl:h-[52.5rem] xl:w-[70rem]  left-40 top-40"></div>
+    <Image className=" overflow-hidden object-cover blur-sm translate-x-[10%]  !h-[100rem] !w-[800rem] top-0" src={"/map/Island.png"} width={1000} height={1000} alt="sea" quality={20} ></Image>
+    </div> */}
         <div className="z-10 transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px]  grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
           {inViewParcels(selectedParcel).map((parcel, key) => (
             <div
               key={key}
-              className={`grid w-fit grid-cols-10 gap-[1px] ${
-                key == 4 ? " " : "blur-md brightness-50 "
-              }`}
+              className={` grid w-fit grid-cols-10 gap-[1px] ${
+                key == 4 ? " " : "blur-sm brightness-50 "
+              }${ parcel.x < 100 && parcel.y < 100 && parcel.y > 190 && parcel.x > 190 ? " bg-blue-400/80" :""} `}
             >
               {parcelLands(parcel.x, parcel.y).map((land, index) => (
+
+              
                 <Tooltip
                   radius="sm"
                   key={land}
@@ -79,7 +93,7 @@ export default function Parcels() {
                     className={`${
                       key == 4
                         ? " cursor-pointer  hover:opacity-80 active:opacity-70  "
-                        : `cursor-default ${parcel.x >=100 && parcel.y >= 100 && "bg-yellow-300 "} `
+                        : `cursor-default ${parcel.x >=100 && parcel.y >= 100 && parcel.y < 200 && parcel.x <200 ? "bg-yellow-300/80 " : " bg-blue-400/80"} `
                     }  ${getOwnerFromEvents(land) != zeroAddress && "brightness-50" } transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >
                     {

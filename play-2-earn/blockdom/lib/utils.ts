@@ -131,3 +131,4 @@ export function getOwnedLands(mintedLands : MintedLand[],connectedAddress: strin
 
 
 export const zeroAddress = "0x0000000000000000000000000000000000000000"
+
