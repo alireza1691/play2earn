@@ -1,37 +1,35 @@
 import { useMapContext } from "@/context/map-context";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useUserDataContext } from "@/context/user-data-context";
-import { landsAddress } from "@/lib/blockchainData";
-import { landsABI, landsPInst, landsSInst } from "@/lib/instances";
-import { SelectedLandType } from "@/lib/types";
-import { landObjectFromTokenId, separatedCoordinate } from "@/lib/utils";
-import { useChainId, useMetamask, useSigner, useNetworkMismatch, useSwitchChain } from "@thirdweb-dev/react";
-import { BigNumber, ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
+import {  landsPInst, landsSInst } from "@/lib/instances";
+import { landObjectFromTokenId } from "@/lib/utils";
+import { metamaskWallet, useChainId, useConnect, useSigner,  useSwitchChain, } from "@thirdweb-dev/react";
+import {  BigNumberish } from "ethers";
 import { Sepolia } from "@thirdweb-dev/chains";
 import React, { useEffect, useState } from "react";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
+
+
 
 export default function SlideBarButtons() {
   const { selectedLand } = useMapContext();
   const { isOwnedLand } = useUserDataContext();
   let signer = useSigner();
-  const [priceFormatEther, setPriceFromatEther] = useState<BigNumber | null>(
+  const [priceFormatEther, setPriceFromatEther] = useState<BigNumberish | null>(
     null
   );
 
   const {setTransactionState,setErrorMsg} = useBlockchainStateContext()
-  const connectWithMetamask = useMetamask();
+  const connectWithMetamask = useConnect();
   const chainId = useChainId();
   const validChainId = Sepolia.chainId;
   const switchChain = useSwitchChain()
+  const metamaskConfig = metamaskWallet();
 
 
   const handleConnectWithMetamask = async () => {
     try {
-      await connectWithMetamask({
-        chainId: validChainId,
-      });
+      await connectWithMetamask(metamaskConfig,{chainId: validChainId});
       // Connection successful
     } catch (error) {
       console.log("Error connecting with MetaMask:", error);
@@ -68,15 +66,18 @@ export default function SlideBarButtons() {
             );
             console.log("minting...");
             
-            await landsInst.mintLand(
+            const tx  = await landsInst.mintLand(
               landCoordinatesObject.x,
               landCoordinatesObject.y,
               {
                 value: priceFormatEther,
               }
             );
-    
           setTransactionState("waitingBlockchainConfirmation")
+              
+          await tx.wait()
+
+          setTransactionState("confirmed")
               
             // setVisibleConfirmation(true);
           } catch (error) {
@@ -141,7 +142,7 @@ export default function SlideBarButtons() {
       {" "}
       <div className="w-full ">
         {" "}
-        {selectedLand && !selectedLand.isMinted && (
+        {/* {selectedLand && !selectedLand.isMinted && (
           <h3 className="py-2 px-5 bg-[#06291D]/50 rounded-xl text-[#98FBD7] !w-full text-center">
             Price:{" "}
             {formatEther(
@@ -149,7 +150,7 @@ export default function SlideBarButtons() {
             )}{" "}
             ETH
           </h3>
-        )}
+        )} */}
       </div>
       <div className=" flex flex-col md:flex-row  w-full gap-2">
         {selectedLand && !selectedLand.isMinted && (

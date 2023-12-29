@@ -43,6 +43,37 @@ export default function Parcels() {
     }
     getData()
   },[apiData])
+
+  const parcelBg = (x: number, y:number) :string => {
+    if (x == 90 && y == 90) {
+      return  "bg-[url(/map/Outer1.png)] bg-cover"
+    }
+    if (x == 200 && y == 200) {
+      return  "bg-[url(/map/Outer5.png)] bg-cover"
+    }
+    if (x == 90 && y < 200 && y > 90 ) {
+      return  "bg-[url(/map/Outer2.png)] bg-cover"
+    }
+    if (x > 90 && x < 200 && y == 90 ) {
+      return  "bg-[url(/map/Outer8.png)] bg-cover"
+    }
+    if (x > 90 && x < 200 && y > 90 && y< 200 ) {
+      return  "bg-[url(/map/centerParcel.png)] bg-cover"
+    }
+    if (x == 200  && y == 90 ) {
+      return  "bg-[url(/map/Outer7.png)] bg-cover"
+    }
+    if (x == 200  && y > 90 && y < 200 ) {
+      return  "bg-[url(/map/Outer6.png)] bg-cover"
+    }
+    if (x < 200 && x > 90  && y == 200 ) {
+      return  "bg-[url(/map/Outer4.png)] bg-cover"
+    }
+    if (x == 90  && y == 200 ) {
+      return  "bg-[url(/map/Outer3.png)] bg-cover"
+    }
+    else return ""
+  }
   
 
 
@@ -54,21 +85,16 @@ export default function Parcels() {
 
         <>
                
-                 {/* <div className="z-10 md:h-[1620px] relative overflow-hidden w-[1080px] md:w-[2240px] 2xl:w-[2130px]">
-              <div className="left-20 z-10 bg-white w-[60rem] h-[40rem]  rounded-full blur-lg"></div>
-                </div> */}
-
-            {/* <div className="z-0 md:h-[1620px] relative overflow-hidden w-[1080px] md:w-[2240px] 2xl:w-[2130px]">
-    <div className="z-30 bg-white/50 ml-auto mt-auto    xl:h-[52.5rem] xl:w-[70rem]  left-40 top-40"></div>
-    <Image className=" overflow-hidden object-cover blur-sm translate-x-[10%]  !h-[100rem] !w-[800rem] top-0" src={"/map/Island.png"} width={1000} height={1000} alt="sea" quality={20} ></Image>
-    </div> */}
-        <div className="z-10 transition-all invisible md:visible absolute grid gap-[1px] w-[1080px] md:w-[1590px] 2xl:w-[2130px]  grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
+          
+        <div className="z-10 transition-all invisible md:visible absolute grid gap-[0px] w-[1080px] md:w-[1590px] 2xl:w-[2130px]  grid-cols-3 md:left-[20rem] 2xl:left-[27.5rem] top-0 viewGrid ">
           {inViewParcels(selectedParcel).map((parcel, key) => (
             <div
               key={key}
               className={` grid w-fit grid-cols-10 gap-[1px] ${
                 key == 4 ? " " : "blur-sm brightness-50 "
-              }${ parcel.x < 100 && parcel.y < 100 && parcel.y > 190 && parcel.x > 190 ? " bg-blue-400/80" :""} `}
+              }
+              ${ parcelBg(parcel.x,parcel.y)}
+               `}
             >
               {parcelLands(parcel.x, parcel.y).map((land, index) => (
 
@@ -92,11 +118,15 @@ export default function Parcels() {
                     }}
                     className={`${
                       key == 4
-                        ? " cursor-pointer  hover:opacity-80 active:opacity-70  "
-                        : `cursor-default ${parcel.x >=100 && parcel.y >= 100 && parcel.y < 200 && parcel.x <200 ? "bg-yellow-300/80 " : " bg-blue-400/80"} `
-                    }  ${getOwnerFromEvents(land) != zeroAddress && "brightness-50" } transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                        ? ` cursor-pointer  hover:backdrop-brightness-50 active:opacity-70 backdrop-brightness-75 ${getOwnerFromEvents(land) != zeroAddress && "bg-black/10" } `
+                        : `cursor-default ${getOwnerFromEvents(land) != zeroAddress && "brightness-50 bg-black/50" } `
+                    }   transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >
-                    {
+                    {key == 4 &&     getOwnerFromEvents(land) != zeroAddress&&                <div className="flex w-4/5 h-4/5 border-3 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-gray-800/20 border-gray-800/50 rounded-full absolute  ">
+                      <div className="!w-[10px] !h-[10px] p-2 rounded-md mt-auto mb-auto mr-auto ml-auto bg-gray-700/60"></div>
+                    </div>
+}
+                    {/* {
                       key == 4 &&
                       <Image
                       className={`${getOwnerFromEvents(land) != zeroAddress && " brightness-50" }  h-[35px] w-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px] absolute -z-10`}
@@ -106,7 +136,7 @@ export default function Parcels() {
                       alt="parcel"
                       quality={30}
                     />
-                    }
+                    } */}
 
                     {/* {land} */}
                   </a>

@@ -9,7 +9,8 @@ export default function LandSlidebarContent() {
   const { selectedLand, setSelectedLand } = useMapContext();
   return (
     <>
-      {!selectedLand?.isMinted && <></>}
+      {!selectedLand?.isMinted && <>
+      </>}
       {selectedLand?.isMinted && (
         <div className=" flex flex-col flex-grow items-center justify-center">
           <div className=" flex flex-row gap-3">
