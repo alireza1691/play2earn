@@ -270,7 +270,7 @@ const TownhallContainer = () => {
               />
               <div className="grid grid-cols-4 gap-4">
                 {unlocks.map((item, key) => (
-                  <a className="glassBg flex text-[12px] h-20 px-2 text-center justify-center items-center ">
+                  <a key={key} className="glassBg flex text-[12px] h-20 px-2 text-center justify-center items-center ">
                     {item}
                   </a>
                 ))}
