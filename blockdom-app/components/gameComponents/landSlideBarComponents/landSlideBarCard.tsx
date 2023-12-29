@@ -14,6 +14,8 @@ export default function LandSlideBarCard() {
   const getImageUrl = async () => {
     try {      
       const url = await landsPInst.URI();
+      console.log(url);
+      
       setImageUrl(url);
     } catch (error) {
       setImageUrl(defaultImageAddress)
@@ -22,7 +24,7 @@ export default function LandSlideBarCard() {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            if (!imageUrl) {
+            if (!imageUrl && selectedLand) {
               getImageUrl()
             }
             if (selectedLand && ownedLands) {

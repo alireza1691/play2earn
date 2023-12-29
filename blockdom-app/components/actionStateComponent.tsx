@@ -84,10 +84,8 @@ export default function ActionStateComponent() {
               </div>
             </div>
           )}
-          {transactionState == "txRejected" ||
-          transactionState == "confirmed" ||
-          transactionState == "connectionRejected" ||
-          transactionState == "failedConfirmation" ? (
+          {transactionState != "waitingBlockchainConfirmation" &&
+          transactionState != "waitingUserApproval"  ? (
             <div className="mt-auto px-3 py-3 flex flex-shrink">
               {" "}
               <button

@@ -22,7 +22,7 @@ export default function NavbarGameItems() {
   },[ownedLands])
 
   return (
-    <div className="hidden  md:flex md:gap-x-10 translate-x-[30%] ">
+    <div className="hidden  md:flex md:gap-x-4 lg:gap-x-10  absolute left-1/2  md:-translate-x-2/3 lg:-translate-x-1/2">
       {/* {currentRoute == "/explore" &&  */}
       <>
         <a

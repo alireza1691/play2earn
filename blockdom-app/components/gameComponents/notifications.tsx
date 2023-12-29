@@ -17,20 +17,17 @@ export default function Notifications() {
         onClick={() => setIsNotifActive(!isNotifActive)}
         className={` flex flex-row items-center  justify-between w-full px-4 py-2 greenBg blueText !font-normal !text-[16px] focus:outline-none transition-colors duration-300 hover:brightness-105`}
       >
-        Section Title {isNotifActive ? <IoIosArrowUp/> : <IoIosArrowDown/>}
+        Notifications {isNotifActive ? <IoIosArrowUp/> : <IoIosArrowDown/>}
       </button>
       <div
         className={`overflow-hidden transition-max-height duration-300 mt-1 ${
             isNotifActive ? 'max-h-40' : 'max-h-0'
         }`}
       >
-        <div className={` py-2 px-1 greenBg overflow-y-scroll notification-scrollbar max-h-40 gap-1 flex flex-col`}>
-            <Notif from="101101" notifMsg='Barracks upgarde' />
-            <Notif from="101101" notifMsg='Townhall upgarde' />
-            <Notif from="101101" notifMsg='Training camp upgarde' />
-            <Notif from="101101" notifMsg='Gold mine upgarde' />
-            <Notif from="101101" notifMsg='Farm upgarde' />
-            <Notif from="101101" notifMsg='You are under attack ' />
+        <div className={` py-2 px-1 greenBg overflow-y-scroll notification-scrollbar max-h-40 gap-1 flex flex-col-reverse`}>
+            <Notif from="101101" notifMsg='Land minted' />
+            <Notif from="101101" notifMsg='Town created' />
+            <Notif from="101101" notifMsg='Worker is ready' />
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ export default function Map() {
   }
 
   const landStyleMapView = (land:number)=> {
-    return ` xl:w-5 xl:h-5 w-3 h-3 bg-black/10   text-white text-[4px] ${getOwnerFromEvents(land) !== zeroAddress && " !bg-black/30"}`;
+    return ` xl:w-5 xl:h-5 w-3 h-3 bg-black/10 text-white text-[4px] ${getOwnerFromEvents(land) !== zeroAddress && " !bg-black/30"}`;
 }
   const parcelStyleMapView =
     "relative hover:bg-black/20 hover:brightness-75 transition-all cursor-pointer grid grid-cols-10 gap-[2px]  xl:!w-[13rem] !w-[8rem]  !h-auto ";
@@ -110,7 +110,7 @@ export default function Map() {
         <Image className='  blur-sm h-[26.75rem] xl:h-[39.5rem] w-auto' quality={10} src={"/map/Outer8.png"} width={100} height={100} alt='map'/>
         </div>
           </div>
-          <div className=" mt-[7.5rem] left-[6.25rem] xl:left-[6.25rem] z-10 absolute  grid grid-cols-10 gap-1 top-[4rem] !h-[90rem] w-[87rem] xl:h-[160rem] xl:w-[132rem] ">
+          <div className=" mt-[8.5rem] left-[7.5rem] xl:left-[6.25rem] z-10 absolute  grid grid-cols-10 gap-1 top-[4rem] !h-[88rem] w-[83rem] xl:h-[160rem] xl:w-[132rem] ">
             {allParcels.map((parcel, key) => (
               <div key={key} className={parcelStyleMapView}>
                 <a
