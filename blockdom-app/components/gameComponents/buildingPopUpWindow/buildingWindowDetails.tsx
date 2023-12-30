@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 
 import ArmyCapacityIcon from "@/svg/armyCapacityIcon";
-import { warriors } from "@/lib/data";
+import { baseBuildAmounts, warriors } from "@/lib/data";
 import FoodIcon from "@/svg/foodIcon";
 import { IoIosArrowDown } from "react-icons/io";
 import DoubleArrow from "@/svg/doubleArrow";
@@ -88,38 +88,38 @@ export default function BuildingWindowDetails() {
 }
 
 const ResourceContainer = () => {
-  const { upgradeMode, activeMode } = useSelectedBuildingContext();
+  const { upgradeMode, activeMode, selectedResourceBuilding } = useSelectedBuildingContext();
   return (
     <div className=" w-[85%] ml-auto mr-auto flex flex-col mt-4 !text-white">
-      {upgradeMode && (
+      {upgradeMode &&selectedResourceBuilding&& (
         <>
           <div className=" flex flex-col gap-3">
             <UpgradeHeader currentLevel={1} title="Upgrade trait" />
             <div className=" flex flex-col">
               <h3 className=" flex flex-row items-center gap-2 font-medium">
-                <FoodIcon />8<span className=" blueText !font-medium">+ 8</span>
+                <FoodIcon />{selectedResourceBuilding.level == 0 ? 0 : 8 ** selectedResourceBuilding.level}<span className=" blueText !font-medium">+ 8</span>
                 Food/Day
               </h3>
-              <DualProgressBar currentLevel={2} />
+              <DualProgressBar currentLevel={selectedResourceBuilding.level} />
             </div>
             <div className=" flex flex-col">
               <h3 className=" flex flex-row items-center gap-2 font-medium">
                 <FoodIcon />
-                50<span className=" blueText !font-medium">+ 50</span> Food
+                {selectedResourceBuilding.level == 0 ? 0 : 80 ** selectedResourceBuilding.level}<span className=" blueText !font-medium">+ { selectedResourceBuilding.level == 0 ? 80 : 80 ** selectedResourceBuilding.level}</span> Food
                 capacity
               </h3>
-              <DualProgressBar currentLevel={2} />
+              <DualProgressBar currentLevel={selectedResourceBuilding.level} />
             </div>
           </div>
-          <UpgradeContainer goldAmount={200} foodAmount={100} />
+          <UpgradeContainer goldAmount={ selectedResourceBuilding.type == "Farm" ? baseBuildAmounts.Farm.gold : baseBuildAmounts.goldMine.gold} foodAmount={selectedResourceBuilding.type == "Farm" ? baseBuildAmounts.Farm.food : baseBuildAmounts.goldMine.food} />
         </>
       )}
       {!upgradeMode && !activeMode && (
         <>
           <h3 className=" font-semibold  flex flex-row  items-center">
-            <FoodIcon /> 8/Day
+            <FoodIcon /> {selectedResourceBuilding && selectedResourceBuilding.level > 0 ?  8 ** selectedResourceBuilding.level : 0}/Day
           </h3>
-          <ProgressBar amount={16.5} />
+          <ProgressBar amount={selectedResourceBuilding ? selectedResourceBuilding.level * 16.5 : 0} />
 
           <h3 className="mt-4 font-semibold  flex flex-row  items-center">
             <FoodIcon /> 4 earned
@@ -330,10 +330,12 @@ type UpgradeHeaderProps = {
   title: string;
 };
 const UpgradeHeader = ({ currentLevel, title }: UpgradeHeaderProps) => {
+
+  const {selectedResourceBuilding} = useSelectedBuildingContext()
   return (
     <div className=" flex flex-col gap-3">
       <h3 className=" flex flex-row items-center gap-6 justify-center">
-        Level {currentLevel} <DoubleArrow /> Level {currentLevel + 1}
+        Level {selectedResourceBuilding && selectedResourceBuilding.level} <DoubleArrow /> Level {selectedResourceBuilding && selectedResourceBuilding.level + 1}
       </h3>
       <h3 className=" py-2 px-4 w-full text-center blueText !font-medium darkGreenBg">
         {title}

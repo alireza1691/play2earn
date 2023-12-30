@@ -12,7 +12,7 @@ type SelectedBuildingContextProviderProps = {
 type SelectedResourceBuildingType = {
   tokenId : number
   level: number
-  // earnedAmount: number
+  earnedAmount: number
   type: "GoldMine" | "Farm"
 }
 

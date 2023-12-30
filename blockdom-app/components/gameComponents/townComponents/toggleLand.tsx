@@ -6,6 +6,6 @@ export default function ToggleLand() {
 
     const { setOwnedLands, ownedLands, setInViewLand, inViewLand } = useUserDataContext();
   return (
-    <div className='z-10 absolute top-20 p-2 darkGreenBg w-[12rem] left-5'>{ownedLands && ownedLands[0].tokenId}</div>
+    <div className='z-10 absolute bottom-10 p-2 darkGreenBg w-[12rem] left-1/2 -translate-x-1/2'>{ownedLands && ownedLands[0].tokenId}</div>
   )
 }

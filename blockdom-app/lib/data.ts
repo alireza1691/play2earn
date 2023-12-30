@@ -149,3 +149,13 @@
   export const warriors = ["spearman","maceman","swordsman","archer","spearman","knight"]
 
   export const defaultImageAddress = "/cards/LandCard.png"
+
+
+  export const baseBuildAmounts = {
+    townHall: { gold: 100, food: 100},
+    barracks: { gold: 100, food: 100},
+    wall: { gold: 100, food: 100},
+    trainingCamp: { gold: 100, food: 100},
+    goldMine: { gold: 100, food: 100},
+    Farm: { gold: 99, food: 100},
+  }

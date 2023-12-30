@@ -8,7 +8,6 @@ import { useSigner } from "@thirdweb-dev/react";
 import React from "react";
 
 export default function BuildingWindowButtons() {
-  const { setTransactionState, setTxError } = useBlockchainStateContext();
   const {
     selectedItem,
     setUpgradeMode,
@@ -18,6 +17,7 @@ export default function BuildingWindowButtons() {
   } = useSelectedBuildingContext();
   const { buildBuilding } = useBlockchainUtilsContext();
   const { inViewLand } = useUserDataContext();
+  const {selectedResourceBuilding} = useSelectedBuildingContext()
   const signer = useSigner();
 
   const relevantButton = () => {
@@ -61,29 +61,34 @@ export default function BuildingWindowButtons() {
         }
       }
 
-      // if (selectedItem.name == "Farm") {
-      //   if (townHallLevel > Number(inViewLand.)) {
-      //     return true
-      //   }
-      // }
-      // if (selectedItem.name == "GoldMine") {
-      //   if (townHallLevel > Number(inViewLand.)) {
-      //     return true
-      //   }
-      // }
+      if (selectedItem.name == "Farm") {
+        if (townHallLevel > Number(selectedResourceBuilding?.level)) {
+          return true
+        }
+      }
+      if (selectedItem.name == "GoldMine") {
+        if (townHallLevel > Number(selectedResourceBuilding?.level)) {
+          return true
+        }
+      }
     }
     return allowed;
   };
 
   async function mintResourceBuilding() {
     try {
-      if (signer && inViewLand) {
-        console.log(inViewLand?.tokenId);
-
-        await townSInst(signer).buildResourceBuilding(
-          inViewLand?.tokenId,
-          selectedItem?.name == "Farm" ? 0 : 1
-        );
+      if (signer && inViewLand && selectedResourceBuilding && selectedItem) {
+        console.log(inViewLand.tokenId);
+        if (selectedResourceBuilding.level == 0) {
+          await townSInst(signer).buildResourceBuilding(
+            inViewLand.tokenId,
+            selectedItem.name == "Farm" ? 0 : 1
+          );
+        }
+        if (selectedResourceBuilding.level > 0) {
+          await townSInst(signer).upgradeResourceBuilding(selectedResourceBuilding.tokenId,inViewLand.tokenId)
+        }
+  
       }
     } catch (error) {
       console.log(error);
