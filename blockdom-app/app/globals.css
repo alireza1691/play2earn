@@ -52,6 +52,10 @@
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
 }
+.greenButton:disabled {
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF] opacity-60  rounded-[0.8rem] text-[16px] font-medium    text-[#424040];
+
+}
 .redButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#FFBFB1] hover:to-[#FFBFB1]  text-[#424040] active:from-[#9C695E] active:to-[#9C695E];
 }

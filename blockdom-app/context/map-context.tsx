@@ -33,7 +33,7 @@ export default function MapContextProvider({children}:SelectedLandContextProvide
 export function useMapContext() {
     const context = useContext(MapContext)
     if (context === null) {
-        throw new Error("useSelectedWindowContext must be used within an useSelectedWindowContext")
+        throw new Error("useMapContext must be used within an useSelectedWindowContext")
     }
     return context
 }

@@ -8,46 +8,101 @@ import { townPInst } from '@/lib/instances';
 import { BigNumberish } from 'ethers';
 
 type ResourceBuildingObj = {
-  level: BigNumberish,
+  tokenId: number,
+  level: number,
   name: string
 }
 
 export default function TownResourceBuildings() {
-        const {setSelectedItem} = useSelectedBuildingContext()
+        const {setSelectedItem,setSelectedResourceBuilding} = useSelectedBuildingContext()
         const {inViewLand} = useUserDataContext()
         const farm = landItems[3]
         const goldMine = landItems[2]
-        const [farms, setFarms] = useState()
+        const [farms, setFarms] = useState <ResourceBuildingObj[] | null>(null)
+        const [goldMines, setGoldMines] = useState<ResourceBuildingObj[] | null>(null)
+
+        const GoldMineAndFarm = () =>{
+          if (inViewLand) {
+            
+          }
+          
+        }
 
         useEffect(() => {
-          const getFarmsData =async () => {
+          const getResourcesBuildings =async () => {
             if (inViewLand != null) {
               let resBuildings = inViewLand.buildedResourceBuildings
               if (resBuildings.length >0) {
-                let resBuildingsObj: ResourceBuildingObj[] = []
+                let farmsArray: ResourceBuildingObj[] = []
+                let goldMinesArray: ResourceBuildingObj[] = []
                 for (let index = 0; index < resBuildings.length; index++) {
                   const buildingStatus = await townPInst.getStatus(resBuildings[index])
-                  const obj = {level: buildingStatus.level, name: buildingStatus.buildingTypeIndex == 0 ? "Farm" : "GoldMine" }
-                  resBuildingsObj.push(obj)
+                  const obj = {tokenId: Number(resBuildings[index]), level: Number(buildingStatus.level), name: buildingStatus.buildingTypeIndex == 0 ? "Farm" : "GoldMine" }
+                 
+                  if ( buildingStatus.buildingTypeIndex == 0) {
+                    farmsArray.push(obj)
+                  } else{
+                    goldMinesArray.push(obj)
+                  }
+               
                 } 
+                setFarms(farmsArray)
+                setGoldMines(goldMinesArray)
               }
   
             }
           }
-          getFarmsData()
+          getResourcesBuildings()
         },[inViewLand])
       return (
         <>
-        <Image
-        className="z-10 cursor-pointer absolute top-[30rem] right-[10%]  w-[10%] h-auto"
-        src={farm.imageUrl}
-        width={580}
-        height={480}
-        alt="walls"
-        onClick={() => {
-          setSelectedItem(farm);
-        }} 
-      />
+        {farms && farms.length == 0&&
+             <Image
+             className="z-10 cursor-pointer absolute top-[30rem] right-[10%]  w-[10%] h-auto"
+             src={farm.imageUrl}
+             width={580}
+             height={480}
+             alt="walls"
+             onClick={() => {
+               setSelectedItem(farm);
+             }} 
+           />
+        }
+          {farms && farms.length > 0 &&
+          <>
+          <div className='z-10 flex flex-col -right-[15rem]   ml-auto absolute top-[10rem]'>
+          {farms.map((item,key) => (
+            <React.Fragment key={key}>
+            <Image
+             className="z-10 cursor-pointer   right-[20%]  w-[20%] h-auto"
+             src={farm.imageUrl}
+             width={580}
+             height={480}
+             alt="walls"
+             onClick={() => {
+               setSelectedItem(farm);
+               setSelectedResourceBuilding({tokenId:item.tokenId, level: item.level ,type: "Farm"})
+             }} 
+           />
+             <Image
+             className="z-10 cursor-pointer  right-[20%]  w-[20%] h-auto opacity-40"
+             src={farm.imageUrl}
+             width={580}
+             height={480}
+             alt="walls"
+             onClick={() => {
+               setSelectedItem(farm);
+               setSelectedResourceBuilding({tokenId:0, level:0 ,type:"Farm"})
+             }} 
+           />
+            </React.Fragment>
+          ))}
+          </div>
+     
+         
+           </>
+        }
+   
               <Image
         className=" cursor-pointer absolute top-[5rem] left-[20%]  w-[10%] h-auto"
         src={goldMine.imageUrl}

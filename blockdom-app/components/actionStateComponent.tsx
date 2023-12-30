@@ -42,7 +42,7 @@ export default function ActionStateComponent() {
   return (
     <>
       {transactionState && (
-        <div className=" absolute z999 md:w-[25.5rem] md:h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
+        <div className=" absolute z999  md:w-[25.5rem] md:h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
           {/* <h3 className='px-[10%]  mt-4 text-center !text-white font-semibold'>{title()}</h3> */}
           <h3 className="px-[10%]  mt-4 text-center !text-white font-semibold">
             {title()}
@@ -84,8 +84,7 @@ export default function ActionStateComponent() {
               </div>
             </div>
           )}
-          {transactionState != "waitingBlockchainConfirmation" &&
-          transactionState != "waitingUserApproval"  ? (
+          {transactionState != "waitingBlockchainConfirmation"  ? (
             <div className="mt-auto px-3 py-3 flex flex-shrink">
               {" "}
               <button

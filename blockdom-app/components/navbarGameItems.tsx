@@ -9,6 +9,8 @@ import MyLandActiveIcon from "@/svg/myLandActiveIcon";
 import MyLandIcon from "@/svg/myLandIcon";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { HiChevronDown } from "react-icons/hi";
+
 
 export default function NavbarGameItems() {
   const { selectedParcel, setSelectedParcel, setSelectedLand } = useMapContext();
@@ -66,6 +68,7 @@ export default function NavbarGameItems() {
       >
         {currentRoute == "/myLand" ? <MyLandActiveIcon /> : <MyLandIcon />}
         My land
+
       </a>) :(
         <a
           className={` brightness-50 flex flex-col justify-center items-center   p-2 rounded-lg  text-sm font-semibold leading-6 `}

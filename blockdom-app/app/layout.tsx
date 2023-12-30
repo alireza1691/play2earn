@@ -12,6 +12,8 @@ import MapContextProvider from "@/context/map-context";
 import UserDataContextProvider from "@/context/user-data-context";
 import BlockchainStateContextProvider from "@/context/blockchain-state-context";
 import ActionStateComponent from "@/components/actionStateComponent";
+import { useAddress } from "@thirdweb-dev/react";
+import BlockchainUtilsContextProvider from "@/context/blockchain-utils-context";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,26 +37,29 @@ export default function RootLayout({
       >
         <div className="bg-[#7CFF99] absolute dark:bg-[#7FDDAD]  -top-[20rem] z-0 left-[10rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[5rem] dark:blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-70  dark:opacity-50 lg:left-[10rem] lg:w-[22.5rem]"></div>
         <ThirdwebProvider>
+        <BlockchainStateContextProvider>
           <UserDataContextProvider>
         <MapContextProvider>
         <ApiDataProvider>
-          <BlockchainStateContextProvider>
+      
         <SelectedWindowContextProvider>
           <SelectedBuildingContextProvider>
           <ThemeContextProvider>
             <ActiveSectionContextProvider>
+              <BlockchainUtilsContextProvider>
                 <ActionStateComponent/>
-                <Navbar />
+                <Navbar/>
                 {children}
-         
+                </BlockchainUtilsContextProvider>
             </ActiveSectionContextProvider>
           </ThemeContextProvider>
           </SelectedBuildingContextProvider>
         </SelectedWindowContextProvider>
-        </BlockchainStateContextProvider>
+       
         </ApiDataProvider>
         </MapContextProvider>
         </UserDataContextProvider>
+        </BlockchainStateContextProvider>
         </ThirdwebProvider>
       </body>
     </html>

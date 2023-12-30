@@ -89,7 +89,7 @@ export default function Parcels() {
               <div
                 key={key}
                 className={` grid w-fit grid-cols-10 gap-[1px] ${
-                  key == 4 ? " " : "blur-sm brightness-50 "
+                  key == 4 ? " " : " brightness-50 "
                 }
               ${parcelBg(parcel.x, parcel.y)}
                `}

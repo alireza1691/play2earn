@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useSelectedBuildingContext } from '@/context/selected-building-context';
 
 export default function TownHall() {
-
+  
     const {setSelectedItem} = useSelectedBuildingContext()
     const townHall = landItems[0]
   return (

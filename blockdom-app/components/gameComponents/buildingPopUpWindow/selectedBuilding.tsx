@@ -3,12 +3,12 @@ import { useSelectedBuildingContext } from "@/context/selected-building-context"
 import { useUserDataContext } from "@/context/user-data-context";
 
 import React from "react";
-import BuildingWindowButtons from "./buildingPopUpWindow/buildingWindowButtons";
-import BuildingWindowDetails from "./buildingPopUpWindow/buildingWindowDetails";
-import BuildingWindowHeader from "./buildingPopUpWindow/buildingWindowHeader";
-import BuildingWindowImage from "./buildingPopUpWindow/buildingWindowImage";
+import BuildingWindowButtons from "./buildingWindowButtons";
+import BuildingWindowDetails from "./buildingWindowDetails";
+import BuildingWindowHeader from "./buildingWindowHeader";
+import BuildingWindowImage from "./buildingWindowImage";
 
-import SelectedBuildingActive from "./buildingPopUpWindow/selectedBuildingActive";
+import SelectedBuildingActive from "./selectedBuildingActive";
 
 export default function SelectedBuilding() {
   const {
@@ -23,7 +23,7 @@ export default function SelectedBuilding() {
           selectedItem &&
           activeMode &&
           "!-left-[50rem]"
-        } transition-all !flex-shrink-0 flex flex-col buildingWindow`}
+        } !z-30 transition-all !flex-shrink-0 flex flex-col buildingWindow`}
       >
         <BuildingWindowHeader />
         <BuildingWindowImage />

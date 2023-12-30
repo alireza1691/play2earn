@@ -11,7 +11,7 @@ export default function TownWalls() {
     <div>
       {" "}
       <Image
-        className="z-10 absolute top-[10rem] left-1/2 -translate-x-1/2 w-[65%] h-auto"
+        className="absolute top-[10rem] left-1/2 -translate-x-1/2 w-[65%] h-auto"
         src={wall.imageUrl}
         width={580}
         height={480}

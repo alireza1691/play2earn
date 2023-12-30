@@ -1,3 +1,5 @@
+import { useBlockchainStateContext } from "@/context/blockchain-state-context";
+import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { townSInst } from "@/lib/instances";
@@ -6,6 +8,7 @@ import { useSigner } from "@thirdweb-dev/react";
 import React from "react";
 
 export default function BuildingWindowButtons() {
+  const { setTransactionState, setTxError } = useBlockchainStateContext();
   const {
     selectedItem,
     setUpgradeMode,
@@ -13,8 +16,10 @@ export default function BuildingWindowButtons() {
     activeMode,
     upgradeMode,
   } = useSelectedBuildingContext();
+  const { buildBuilding } = useBlockchainUtilsContext();
   const { inViewLand } = useUserDataContext();
   const signer = useSigner();
+
   const relevantButton = () => {
     if (selectedItem?.name == "Townhall") {
       return "Approve";
@@ -31,6 +36,43 @@ export default function BuildingWindowButtons() {
     if (selectedItem?.name == "TrainingCamp") {
       return "Edit army";
     }
+  };
+
+  const isAllowed = (): boolean => {
+    let allowed = false;
+    if (inViewLand && selectedItem) {
+      if (selectedItem.name == "Townhall") {
+        return true;
+      }
+      const townHallLevel = Number(inViewLand.townhallLvl);
+      if (selectedItem.name == "Barracks") {
+        if (townHallLevel > Number(inViewLand.barracksLvl)) {
+          return true;
+        }
+      }
+      if (selectedItem.name == "TrainingCamp") {
+        if (townHallLevel > Number(inViewLand.trainingCampLvl)) {
+          return true;
+        }
+      }
+      if (selectedItem.name == "Wall") {
+        if (townHallLevel > Number(inViewLand.wallLvl)) {
+          return true;
+        }
+      }
+
+      // if (selectedItem.name == "Farm") {
+      //   if (townHallLevel > Number(inViewLand.)) {
+      //     return true
+      //   }
+      // }
+      // if (selectedItem.name == "GoldMine") {
+      //   if (townHallLevel > Number(inViewLand.)) {
+      //     return true
+      //   }
+      // }
+    }
+    return allowed;
   };
 
   async function mintResourceBuilding() {
@@ -51,6 +93,8 @@ export default function BuildingWindowButtons() {
   async function upgrade() {
     if (selectedItem?.name == "GoldMine" || selectedItem?.name == "Farm") {
       await mintResourceBuilding();
+    } else {
+      buildBuilding();
     }
   }
 
@@ -66,9 +110,21 @@ export default function BuildingWindowButtons() {
           >
             Back
           </button>
-          <button onClick={() => upgrade()} className="greenButton !w-1/2">
-            Confirm upgrade
-          </button>
+          {inViewLand && inViewLand.remainedBuildTime == 0 && isAllowed() && (
+            <button onClick={() => upgrade()} className="greenButton !w-1/2">
+              Confirm upgrade
+            </button>
+          )}
+          {inViewLand && inViewLand.remainedBuildTime == 0 && !isAllowed() && (
+            <button className="greenButton !w-1/2" disabled>
+              Upgrade townhall
+            </button>
+          )}
+          {inViewLand && Number(inViewLand.remainedBuildTime) > 0 && (
+            <button className="greenButton !w-1/2" disabled>
+              Worker is busy
+            </button>
+          )}
         </>
       )}
       {!upgradeMode && !activeMode && (

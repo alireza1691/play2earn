@@ -928,6 +928,10 @@ contract TownV3 is Ownable, Barracks{
         return landData[landTokenId].goodsBalance;
     }
 
+    function getBMTbalance(address userAddress) external view returns(uint256) {
+        return BMTBalance[userAddress];
+    }
+
 
     // function getBarracksRequiredGoods(uint256 landId) view public returns (uint256[2] memory) {
     //     uint256[2] memory requiredComs;

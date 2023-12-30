@@ -26,9 +26,9 @@ const BarracksActiveComponent = () => {
 
   return (
     <section
-      className={` ${activeMode == false && " !top-[100rem]"} ${
-        selectedItem && selectedItem.name != "Barracks" && "!top-[100rem]"
-      } barracksActiveBg flex flex-col absolute h-[85%] w-[95%] left-1/2 -translate-x-1/2 z-10 top-[4.5rem]`}
+      className={` ${activeMode == false && " !left-[-50rem]"} ${
+        selectedItem && selectedItem.name != "Barracks" && "!left-[-50rem]"
+      } z998 barracksActiveBg flex flex-col absolute h-[85%] w-[95%] left-1/2 -translate-x-1/2  top-[4.5rem]`}
     >
       <div className=" flex flex-row justify-between py-2 px-3 !text-white items-center flex-shrink-0">
         <h3>Barracks</h3>

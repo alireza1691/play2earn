@@ -1,14 +1,16 @@
 import BalanceContainer from "@/components/gameComponents/townComponents/balanceContainer";
 import Notifications from "@/components/gameComponents/notifications";
-import SelectedBuilding from "@/components/gameComponents/selectedBuilding";
+import SelectedBuilding from "@/components/gameComponents/buildingPopUpWindow/selectedBuilding";
 import Town from "@/components/gameComponents/townComponents/town";
 import Image from "next/image";
 import React from "react";
+import ToggleLand from "@/components/gameComponents/townComponents/toggleLand";
 
 export default function MyLand() {
   return (
     <>
     <BalanceContainer/>
+    <ToggleLand/>
     <Notifications/>
       <div className=" w-screen h-screen overflow-hidden relative">
         <div className=" w-[100vw] h-[100vh]   overflow-scroll custom-scrollbar  items-center justify-center  relative ">

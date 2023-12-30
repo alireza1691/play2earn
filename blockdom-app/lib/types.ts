@@ -67,6 +67,7 @@ export type InViewLandType = {
   trainingCampLvl : BigNumberish,
   buildedResourceBuildings: BigNumberish[],
   goodsBalance: [BigNumberish,BigNumberish]
+  remainedBuildTime: BigNumberish
 }
 export type landDataResType = {
 barracksLevel:BigNumberish,

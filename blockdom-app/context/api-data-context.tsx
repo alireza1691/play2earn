@@ -58,7 +58,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
 const useApiData = () => {
   const context = useContext(ApiDataContext);
   if (!context) {
-    throw new Error('useApiData must be used within an ApiDataProvider');
+    throw new Error('useApiDataContext must be used within an ApiDataProvider');
   }
   return context;
 };

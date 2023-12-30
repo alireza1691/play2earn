@@ -39,7 +39,7 @@ export default function Navbar() {
           const defaultLandData: landDataResType = await townPInst.getLandIdData(
             Number(ownedl[0].tokenId)
           );
-    
+            const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(Number(ownedl[0].tokenId))
           const defaultLand: InViewLandType = {
             tokenId: Number(ownedl[0].tokenId),
             townhallLvl: defaultLandData.townhallLevel,
@@ -48,6 +48,7 @@ export default function Navbar() {
             trainingCampLvl: defaultLandData.trainingCampLevel,
             goodsBalance: [ defaultLandData.goodsBalance[0],  defaultLandData.goodsBalance[1]],
             buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
+            remainedBuildTime: remainedWorkerBusyTime,
           };
           setInViewLand(defaultLand)
           console.log("default land:", defaultLand);
@@ -130,3 +131,8 @@ export default function Navbar() {
     </>
   );
 }
+
+let b=1
+const c = "wew"
+
+export {b,c} 
