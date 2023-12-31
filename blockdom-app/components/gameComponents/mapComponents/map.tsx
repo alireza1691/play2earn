@@ -76,11 +76,12 @@ export default function Map() {
           <div className=" grid grid-cols-3 z-10 w-[1920px] h-[110rem]   xl:h-[160rem] xl:w-[2560px]   ">
             {gridImages.map((col, key) => (
               <Image
+              key={key}
                 className=" !w-[160rem]"
                 src={col}
                 width={1024}
                 height={1024}
-                alt="map"
+                alt="map parcel"
                 // quality={100}
               />
             ))}
