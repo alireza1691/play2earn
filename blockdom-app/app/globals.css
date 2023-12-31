@@ -1,3 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body{
+  font-family:'Roboto',sans-serif
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -71,6 +76,15 @@
 .goodsBalanceKeeper {
   @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden;
 }
+.logBg {
+  border-radius: 10px;
+/* border: 1px solid #98FBD7; */
+background: rgba(6, 41, 29, 0.50);
+border: 1px solid rgba(6, 41, 29, 0.50); 
+}
+.logBg:hover {
+  border: 1px solid #98FBD7; 
+}
 
 .darkShadow {
   box-shadow: -0.2rem 0.15rem 0.3rem 0.04rem rgba(0, 0, 0, 0.3);
@@ -79,7 +93,15 @@
   @apply bg-[#21302A]/60  backdrop-blur-md;
 }
 .battleLogWindowBg {
-  @apply bg-[#21302A]/90  backdrop-blur-md border border-[#D4D4D4]/30;
+  border-radius: 10px;
+border: 1px solid rgba(212, 212, 212, 0.35);
+background: rgba(33, 48, 42, 0.60);
+backdrop-filter: blur(10px);
+}
+.logResultBg{
+  border-radius: 6px;
+border: 1px solid #42713A;
+background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
 }
 
 /* .attackWindowBg {

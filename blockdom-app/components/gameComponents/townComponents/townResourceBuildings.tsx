@@ -61,25 +61,32 @@ export default function TownResourceBuildings() {
   }, [inViewLand, farms, goldMines]);
   return (
     <>
+       <div className="z-10 flex flex-col left-[60rem]   ml-auto absolute top-[10rem]">
       {farms && farms.length == 0 && (
         <Image
-          className="z-10 cursor-pointer absolute top-[30rem] right-[10%]  w-[10%] h-auto"
+          className="z-10 cursor-pointer   w-[20%] h-auto"
           src={farm.imageUrl}
           width={580}
           height={480}
           alt="walls"
           onClick={() => {
             setSelectedItem(farm);
+            setSelectedResourceBuilding({
+              tokenId: 0,
+              level: 0,
+              type: "Farm",
+              earnedAmount: 0,
+            });
           }}
         />
       )}
       {farms && farms.length > 0 && (
         <>
-          <div className="z-10 flex flex-col left-[60rem]   ml-auto absolute top-[10rem]">
+       
             {farms.map((item, key) => (
               <React.Fragment key={key}>
                 <Image
-                  className="z-10 cursor-pointer   right-[20%]  w-[20%] h-auto"
+                  className="z-10 cursor-pointer   w-[20%] h-auto"
                   src={farm.imageUrl}
                   width={580}
                   height={480}
@@ -95,7 +102,7 @@ export default function TownResourceBuildings() {
                   }}
                 />
                 <Image
-                  className="z-10 cursor-pointer  right-[20%]  w-[20%] h-auto opacity-40"
+                  className="z-10 cursor-pointer    w-[20%] h-auto opacity-40"
                   src={farm.imageUrl}
                   width={580}
                   height={480}
@@ -106,26 +113,78 @@ export default function TownResourceBuildings() {
                       tokenId: 0,
                       level: 0,
                       type: "Farm",
-                      earnedAmount:0
+                      earnedAmount: 0,
                     });
                   }}
                 />
               </React.Fragment>
             ))}
-          </div>
+      
         </>
       )}
+          </div>
+          <div className="z-10 flex flex-row left-[12.5rem]   ml-auto absolute top-[5rem]">
+      {goldMines && goldMines.length == 0 && (
+        <Image
+          className=" cursor-pointer   w-[20%] h-auto"
+          src={goldMine.imageUrl}
+          width={580}
+          height={480}
+          alt="walls"
+          onClick={() => {
+            setSelectedItem(goldMine);
+            setSelectedResourceBuilding({
+              tokenId: 0,
+              level: 0,
+              type: "GoldMine",
+              earnedAmount: 0,
+            });
+          }}
+        />
+      )}
 
-      <Image
-        className=" cursor-pointer absolute top-[5rem] left-[20%]  w-[10%] h-auto"
-        src={goldMine.imageUrl}
-        width={580}
-        height={480}
-        alt="walls"
-        onClick={() => {
-          setSelectedItem(goldMine);
-        }}
-      />
+      {goldMines && goldMines.length > 0 && (
+      <>
+          {goldMines.map((item, key) => (
+            <React.Fragment key={key}>
+              <Image
+                className=" cursor-pointer    w-[20%] h-auto"
+                src={goldMine.imageUrl}
+                width={580}
+                height={480}
+                alt="walls"
+                onClick={() => {
+                  setSelectedItem(goldMine);
+                  setSelectedResourceBuilding({
+                    tokenId: item.tokenId,
+                    level: item.level,
+                    type: "GoldMine",
+                    earnedAmount: item.earnedAmount,
+                  });
+                }}
+              />
+              <Image
+                className=" cursor-pointer  w-[20%] h-auto"
+                src={goldMine.imageUrl}
+                width={580}
+                height={480}
+                alt="walls"
+                onClick={() => {
+                  setSelectedItem(goldMine);
+                  setSelectedResourceBuilding({
+                    tokenId: 0,
+                    level: 0,
+                    type: "GoldMine",
+                    earnedAmount: 0,
+                  });
+                }}
+              />
+            </React.Fragment>
+          ))}
+      </>
+      )}
+      </div>
     </>
+    
   );
 }
