@@ -158,7 +158,7 @@ export default function Parcels() {
               <div
                 key={key}
                 className={`grid w-fit grid-cols-10 gap-[2px] ${
-                  key == 4 ? "" : "blur-sm brightness-50"
+                  key == 4 ? "" : " brightness-50"
                 } ${parcelBg(parcel.x, parcel.y)}`}
               >
                 {parcelLands(parcel.x, parcel.y).map((land) => (
@@ -176,8 +176,14 @@ export default function Parcels() {
                     }}
                     className={`${
                       key == 4
-                        ? "cursor-pointer hover:backdrop-brightness-50 active:backdrop-brightness-110 backdrop-brightness-75 transition-all"
-                        : " bg-yellow-300/10 cursor-default"
+                        ? `${
+                          getOwnerFromEvents(land) != zeroAddress &&
+                          "bg-black/20"
+                        } cursor-pointer hover:backdrop-brightness-50 active:backdrop-brightness-110 backdrop-brightness-75 transition-all`
+                        : `${
+                          getOwnerFromEvents(land) != zeroAddress &&
+                          "bg-black/30"
+                        }  cursor-default`
                     } text-black text-[8px] h-[52px] w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >
                     {key == 4 && land}

@@ -1,5 +1,9 @@
 import { useMapContext } from '@/context/map-context';
 import { SelectedParcelType } from '@/lib/types';
+import BottomArr from '@/svg/bottomArr';
+import LeftArr from '@/svg/leftArr';
+import RightArr from '@/svg/rightArr';
+import TopArr from '@/svg/topArr';
 import Image from 'next/image';
 import React from 'react'
 
@@ -12,7 +16,8 @@ export default function ParcelSwitchArrows() {
   return (
     <>
     {selectedParcel && (
-     <div className=" absolute w-[42rem] h-[42rem] left-[29rem]  top-[29rem] md:h-[40rem] md:w-[40rem] md:top-[30rem] md:left-[800px] 2xl:left-[1140px] 2xl:top-[46rem] 2xl:w-[47rem] 2xl:h-[43rem] ">
+      <>
+     <div className="hidden md:flex  absolute w-[42rem] h-[42rem] left-[29rem]  top-[29rem] md:h-[40rem] md:w-[40rem] md:top-[30rem] md:left-[800px] 2xl:left-[1140px] 2xl:top-[46rem] 2xl:w-[47rem] 2xl:h-[43rem] ">
 
      <a
        onClick={() => {
@@ -24,9 +29,9 @@ export default function ParcelSwitchArrows() {
        }}
        className={` ${
          selectedParcel.y >= 190
-           ? "brightness-50  opacity-50 "
+           ? " hidden"
            : "cursor-pointer"
-       } invisible md:visible   z-40 md:right-[4rem] md:top-[9.5rem] 2xl:top-[7.5rem] absolute`}
+       }   z-40 md:right-[4rem] md:top-[9.5rem] 2xl:top-[7.5rem] absolute`}
      >
        <Image
          src={"/svgs/gameItems/topRightArrow.svg"}
@@ -46,9 +51,9 @@ export default function ParcelSwitchArrows() {
        }}
        className={`${
          selectedParcel.x <= 100
-           ? "brightness-50  opacity-50"
+           ? " hidden"
            : "cursor-pointer"
-       } invisible md:visible   z-40 md:left-[3rem] md:top-[10.5rem] 2xl:top-[8rem] absolute`}
+       }   z-40 md:left-[3rem] md:top-[10.5rem] 2xl:top-[8rem] absolute`}
      >
        <Image
          src={"/svgs/gameItems/topLeftArrow.svg"}
@@ -67,9 +72,9 @@ export default function ParcelSwitchArrows() {
        }}
        className={`${
          selectedParcel.y <= 100
-           ? "brightness-50  opacity-50"
+           ? " hidden"
            : "cursor-pointer"
-       } invisible md:visible  z-40  md:left-[2.5rem] md:bottom-[9.5rem] absolute`}
+       }   z-40  md:left-[2.5rem] md:bottom-[9.5rem] absolute`}
      >
        <Image
          src={"/svgs/gameItems/bottomLeftArrow.svg"}
@@ -88,9 +93,9 @@ export default function ParcelSwitchArrows() {
        }}
        className={` ${
          selectedParcel.x >= 190
-           ? "brightness-50  opacity-50"
+           ? " hidden"
            : "cursor-pointer"
-       }  invisible md:visible  z-40 md:right-[4rem] bottom-[11rem] absolute`}
+       }  z-40 md:right-[4rem] bottom-[11rem] absolute`}
      >
        <Image
          src={"/svgs/gameItems/bottomRightArrow.svg"}
@@ -100,6 +105,78 @@ export default function ParcelSwitchArrows() {
        />
      </a>
      </div>
+          <div className="  md:hidden  absolute w-[42rem] h-[42rem] left-[28.5rem]  top-[29.5rem] md:h-[40rem] md:w-[40rem] md:top-[30rem] md:left-[800px] 2xl:left-[1140px] 2xl:top-[46rem] 2xl:w-[47rem] 2xl:h-[43rem] ">
+          <a
+      onClick={() => {
+        selectedParcel.x >= 110 &&
+          setSelectedParcel({
+ 
+            x: selectedParcel.x - 10,
+            y: selectedParcel.y
+          });
+      }}
+      className={`${
+        selectedParcel.x <= 100
+           ? "hidden"
+           : "cursor-pointer"
+       }  z-40 left-[0rem] top-[20.5rem] absolute `}
+     >
+      <LeftArr />
+    
+     </a>
+     <a
+       onClick={() => {
+        selectedParcel.y < 190 &&
+          setSelectedParcel({
+            x: selectedParcel.x,
+            y: selectedParcel.y + 10,
+          });
+      }}
+      className={` ${
+        selectedParcel.y >= 190
+           ? "hidden"
+           : "cursor-pointer"
+       }  z-40 left-[19.5rem] top-[0.5rem] absolute `}
+     >
+      <TopArr />
+    
+     </a>
+     <a
+        onClick={() => {
+          selectedParcel.x < 190 &&
+             setSelectedParcel({
+               x: selectedParcel.x + 10,
+               y: selectedParcel.y
+             });
+         }}
+         className={` ${
+           selectedParcel.x >= 190
+           ? "hidden"
+           : "cursor-pointer"
+       }  z-40 right-0 top-[20.5rem] absolute `}
+     >
+      <RightArr />
+    
+     </a>
+     <a
+      onClick={() => {
+        selectedParcel.y >= 110 &&
+          setSelectedParcel({
+            x: selectedParcel.x,
+            y: selectedParcel.y - 10,
+          });
+      }}
+      className={`${
+        selectedParcel.y <= 100
+           ? "hidden"
+           : "cursor-pointer"
+       }  z-40 left-[19.5rem] bottom-0 absolute `}
+     >
+      <BottomArr />
+    
+     </a>
+          </div>
+          </>
     )}
 
     </>

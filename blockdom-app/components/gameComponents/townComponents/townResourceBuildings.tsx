@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { townPInst } from "@/lib/instances";
+import { formatEther } from "ethers/lib/utils";
 
 type ResourceBuildingObj = {
   tokenId: number;
@@ -43,7 +44,7 @@ export default function TownResourceBuildings() {
               tokenId: Number(resBuildings[index]),
               level: Number(buildingStatus.level),
               name: buildingStatus.buildingTypeIndex == 0 ? "Farm" : "GoldMine",
-              earnedAmount: Number(currentRevenue),
+              earnedAmount: Number(formatEther(currentRevenue)),
             };
 
             if (buildingStatus.buildingTypeIndex == 0) {

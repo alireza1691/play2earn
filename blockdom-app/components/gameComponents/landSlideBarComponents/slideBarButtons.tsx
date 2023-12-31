@@ -55,13 +55,21 @@ export default function SlideBarButtons() {
         )}
       </div>
       <div className=" flex flex-col md:flex-row  w-full gap-2">
-        {selectedLand && !selectedLand.isMinted && (
+        {selectedLand && !selectedLand.isMinted && priceFormatEther ? (
           <button
             onClick={() => mint(selectedLand,priceFormatEther)}
             className="greenButton !w-full mt-2"
           >
             Mint
           </button>
+        ):(
+          
+            <button
+              disabled
+              className="greenButton !w-full mt-2"
+            >
+              Mint
+            </button>
         )}
         {selectedLand && selectedLand.isMinted && !isOwnedLand && (
           <button className="outlineGreenButton !w-full  md:!w-[50%]">

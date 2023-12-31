@@ -12,6 +12,7 @@ import DualProgressBar from "../daulProgressBar";
 import CoinIcon from "@/svg/coinIcon";
 import ProgressBar from "../progressBar";
 import CapacityProgressBar from "../capacityProgressBar";
+import { formatEther } from "ethers/lib/utils";
 
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem, upgradeMode } =
@@ -122,7 +123,7 @@ const ResourceContainer = () => {
           <ProgressBar amount={selectedResourceBuilding ? selectedResourceBuilding.level * 16.5 : 0} />
 
           <h3 className="mt-4 font-semibold  flex flex-row  items-center">
-            <FoodIcon /> 4 earned
+            <FoodIcon />  {selectedResourceBuilding && selectedResourceBuilding.earnedAmount }
           </h3>
           <ProgressBar amount={50} />
         </>

@@ -6,6 +6,7 @@ import { townSInst } from "@/lib/instances";
 import TopDuobleArrow from "@/svg/topDuobleArrow";
 import { useSigner } from "@thirdweb-dev/react";
 import React from "react";
+import SelectedBuilding from "./selectedBuilding";
 
 export default function BuildingWindowButtons() {
   const {
@@ -15,7 +16,7 @@ export default function BuildingWindowButtons() {
     activeMode,
     upgradeMode,
   } = useSelectedBuildingContext();
-  const { buildBuilding } = useBlockchainUtilsContext();
+  const { buildBuilding,claim } = useBlockchainUtilsContext();
   const { inViewLand } = useUserDataContext();
   const {selectedResourceBuilding} = useSelectedBuildingContext()
   const signer = useSigner();
@@ -134,13 +135,31 @@ export default function BuildingWindowButtons() {
       )}
       {!upgradeMode && !activeMode && (
         <>
-          {" "}
-          <button
+          { selectedItem?.name != "Farm" && selectedItem?.name != "GoldMine" ?   <button
             onClick={() => setActiveMode(true)}
             className="greenButton !py-2 !w-[70%]"
           >
             {relevantButton()}
+          </button>:(
+            <>{selectedResourceBuilding && selectedResourceBuilding.earnedAmount > 0 ?
+              <button
+              onClick={() => claim()}
+              className="greenButton !py-2 !w-[70%]"
+            >
+              {relevantButton()}
+            </button>
+            :
+            <button
+            className="greenButton !py-2 !w-[70%]"
+            disabled
+          >
+            {relevantButton()}
           </button>
+            }
+            </>
+          ) }
+          
+       
           <button
             onClick={() => setUpgradeMode(true)}
             className="outlineGreenButton !py-1 !w-[30%] flex justify-center hover:brightness-150"
@@ -166,3 +185,4 @@ export default function BuildingWindowButtons() {
   );
 }
 // discharge
+

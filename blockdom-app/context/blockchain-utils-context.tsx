@@ -25,6 +25,7 @@ type BlockchainUtilsProviderProps = {
 
 type BlockchainUtilsContextType = {
   buildBuilding: () => Promise<void>;
+  claim: () => Promise<void>;
   mint: (
     selectedLand: SelectedLandType,
     priceFormatEther: BigNumberish | null
@@ -40,7 +41,7 @@ export default function BlockchainUtilsContextProvider({
 }: BlockchainUtilsProviderProps) {
   const { setTransactionState, setTxError } = useBlockchainStateContext();
   const {
-    selectedItem,
+    selectedItem, selectedResourceBuilding
   } = useSelectedBuildingContext();
   const {inViewLand} = useUserDataContext()
 
@@ -131,110 +132,171 @@ export default function BlockchainUtilsContextProvider({
   const mint = async(    selectedLand: SelectedLandType,
     priceFormatEther: BigNumberish | null) => {
 
-    const mintTx = async () =>{
-      let status= 0
-      if (signer && selectedLand) {
-        const landsInst = landsSInst(signer);
-        const landCoordinatesObject = landObjectFromTokenId(
-          selectedLand.coordinate
-        );
-        console.log("minting...");
-        
-        const tx = await landsInst.mintLand(
-          landCoordinatesObject.x,
-          landCoordinatesObject.y,
-          {
-            value: priceFormatEther,
+
+      if (signer && chainId == validChainId && selectedLand) {
+        try {
+          const landsInst = landsSInst(signer);
+          const landCoordinatesObject = landObjectFromTokenId(
+            selectedLand.coordinate
+          );
+          console.log("minting...");
+          setTransactionState("waitingUserApproval")
+          const tx = await landsInst.mintLand(
+            landCoordinatesObject.x,
+            landCoordinatesObject.y,
+            {
+              value: priceFormatEther,
+            }
+          );
+          
+          setTransactionState("waitingBlockchainConfirmation");
+    
+          const receipt = await tx.wait();
+          if (receipt.status === 1) {
+            console.log(receipt.status === 1);
+    
+            setTransactionState("confirmed");
           }
-        );
-        
-        setTransactionState("waitingBlockchainConfirmation");
-  
-        const receipt = await tx.wait();
-  
-        status = receipt.status
+        } catch (error) {
+          console.log("Reverted :",error);
+      
+          setTransactionState("txRejected");
+          if (error instanceof Error) {
+            setTxError(error);
+          } else {
+            // Handle other types of errors
+            const customError = new Error("An unknown error occurred");
+            setTxError(customError);
+          }
+        }
+       
    
       }
-      return status
-    }
+ 
+  }
+  const claim = async () => {
+    validateWallet();
+    validateChain();
 
-    txHandler(mintTx)
+      if ( signer && chainId && chainId == validChainId && selectedResourceBuilding) {
+        try {
+          const townInst = townSInst(signer)
+          setTransactionState("waitingUserApproval")
+          const tx = await townInst.claimRevenue(selectedResourceBuilding.tokenId)
+          setTransactionState("waitingBlockchainConfirmation");
+          const receipt = await tx.wait();
+          if (receipt.status === 1) {
+            console.log(receipt.status === 1);
+    
+            setTransactionState("confirmed");
+          }
+          
+        } catch (error) {
+          console.log("Reverted :",error);
+      
+          setTransactionState("txRejected");
+          if (error instanceof Error) {
+            setTxError(error);
+          } else {
+            // Handle other types of errors
+            const customError = new Error("An unknown error occurred");
+            setTxError(customError);
+          }
+        }
+
+      }
+
   }
 
 
   const buildBuilding = async() => {
+ 
+    validateWallet();
+    validateChain();
 
-  const buildTx = async () =>{
-      let status= 0
-      if (signer && selectedItem && inViewLand) {
-        const townInst = townSInst(signer);
+      if (signer && chainId && chainId == validChainId && selectedItem && inViewLand) {
+        try {
+          const townInst = townSInst(signer);
+          setTransactionState("waitingUserApproval")
+            let tx
+            if (selectedItem.name == "Barracks") {
+              console.log("upgrading barracks");
+              tx = await townInst.buildBarracks(inViewLand.tokenId);
+            }
+            if (selectedItem.name == "Townhall") {
+              console.log("upgrading townhall");
+              tx = await townInst.buildTownhall(inViewLand.tokenId);
+            }
+            if (selectedItem.name == "TrainingCamp") {
+              console.log("upgrading training camp");
+              
+              tx = await townInst.buildTrainingCamp(inViewLand.tokenId);
+            }
+            if (selectedItem.name == "Wall") {
+              console.log("upgrading walls");
+              tx = await townInst.buildWalls(inViewLand.tokenId);
+            }
+            setTransactionState("waitingBlockchainConfirmation");
+           
+            const receipt = await tx.wait();
+            if (receipt.status === 1) {
+              console.log(receipt.status === 1);
       
-        let tx
-        if (selectedItem.name == "Barracks") {
-          console.log("upgrading barracks");
-          tx = await townInst.buildBarracks(inViewLand.tokenId);
+              setTransactionState("confirmed");
+            }
+            
+        } catch (error) {
+          console.log("Reverted :",error);
+      
+          setTransactionState("txRejected");
+          if (error instanceof Error) {
+            setTxError(error);
+          } else {
+            // Handle other types of errors
+            const customError = new Error("An unknown error occurred");
+            setTxError(customError);
+          }
         }
-        if (selectedItem.name == "Townhall") {
-          console.log("upgrading townhall");
-          tx = await townInst.buildTownhall(inViewLand.tokenId);
-        }
-        if (selectedItem.name == "TrainingCamp") {
-          console.log("upgrading training camp");
-          
-          tx = await townInst.buildTrainingCamp(inViewLand.tokenId);
-        }
-        if (selectedItem.name == "Wall") {
-          console.log("upgrading walls");
-          tx = await townInst.buildWalls(inViewLand.tokenId);
-        }
-        // if (selectedItem.name == "Barracks") {
-        //   console.log("upgrading barracks");
-        //   tx = await townInst.buildBarracks(inViewLand.tokenId);
-        // }
-
-        setTransactionState("waitingBlockchainConfirmation");
-  
-        const receipt = await tx.wait();
-  
-        status = receipt.status
+      
    
       }
-      return status
-    }
-
-    txHandler(buildTx)
+  
   }
 
-const txHandler = async (enteredFunction: () => Promise<number>) => {
-  validateWallet();
-  validateChain();
-  if (chainId && chainId == validChainId  && signer) {
-    setTransactionState("waitingUserApproval");
-    try {
-      // Call the provided function
-      const txStatus: number = await enteredFunction();
-      setTransactionState("waitingBlockchainConfirmation");
+// const txHandler = async (enteredFunction: () => Promise<number>) => {
+//   validateWallet();
+//   validateChain();
+//   console.log("wallet is connected and chain is correct chain");
+  
+//   if (chainId && chainId == validChainId  && signer) {
+//     setTransactionState("waitingUserApproval");
+//     try {
+//       // Call the provided function
+//       const txStatus: number = await enteredFunction();
+//       setTransactionState("waitingBlockchainConfirmation");
 
-      if (txStatus === 1) {
-        console.log(txStatus === 1);
+//       if (txStatus === 1) {
+//         console.log(txStatus === 1);
 
-        setTransactionState("confirmed");
-      }
-    } catch (error) {
-      setTransactionState("txRejected");
-      if (error instanceof Error) {
-        setTxError(error);
-      } else {
-        // Handle other types of errors
-        const customError = new Error("An unknown error occurred");
-        setTxError(customError);
-      }
-    }
-  }
-}
+//         setTransactionState("confirmed");
+//       }
+//     } catch (error) {
+//       console.log("reverted");
+      
+//       setTransactionState("txRejected");
+//       if (error instanceof Error) {
+//         setTxError(error);
+//       } else {
+//         // Handle other types of errors
+//         const customError = new Error("An unknown error occurred");
+//         setTxError(customError);
+//       }
+//     }
+//   }
+// }
 
   return (
-    <BlockchainUtilsContext.Provider value={{buildBuilding, mint}}>
+    <BlockchainUtilsContext.Provider value={{buildBuilding, mint, claim}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );
