@@ -28,27 +28,29 @@ export default function Log() {
         <div className=" flex flex-row  h-full flex-grow  items-center gap-6 ">
           <div className=" flex flex-row gap-1">
             {warriors.map((warrior, key) => (
-              <Image
-                key={key}
-                src={"/svgs/images/warriorCard.svg"}
-                className="!w-[40px] h-auto"
-                width={40}
-                height={20}
-                alt="warrior"
-              />
+              <React.Fragment key={key}>
+                <Image
+                  src={"/svgs/images/warriorCard.svg"}
+                  className="!w-[40px] h-auto"
+                  width={40}
+                  height={20}
+                  alt="warrior"
+                />
+              </React.Fragment>
             ))}
           </div>
           <WinIcon />
           <div className=" flex flex-row gap-1">
             {warriors.map((warrior, key) => (
-              <Image
-                key={key}
-                src={"/svgs/images/warriorCard.svg"}
-                className="!w-[40px] h-auto"
-                width={40}
-                height={20}
-                alt="warrior"
-              />
+              <React.Fragment key={key}>
+                <Image
+                  src={"/svgs/images/warriorCard.svg"}
+                  className="!w-[40px] h-auto"
+                  width={40}
+                  height={20}
+                  alt="warrior"
+                />
+              </React.Fragment>
             ))}
           </div>
         </div>
