@@ -17,7 +17,7 @@ type ResourceBuildingObj = {
 export default function TownResourceBuildings() {
   const { setSelectedItem, setSelectedResourceBuilding } =
     useSelectedBuildingContext();
-  const { inViewLand, setFarms, setGoldMines, farms, goldMines } =
+  const { inViewLand, setFarms, setGoldMines, farms, goldMines,buildedResBuildings } =
     useUserDataContext();
   const farm = landItems[3];
   const goldMine = landItems[2];
@@ -28,34 +28,45 @@ export default function TownResourceBuildings() {
 
   useEffect(() => {
     const getResourcesBuildings = async () => {
-      if (inViewLand != null) {
-        let resBuildings = inViewLand.buildedResourceBuildings;
-        if (resBuildings.length > 0) {
-          let farmsArray: ResourceBuildingObj[] = [];
-          let goldMinesArray: ResourceBuildingObj[] = [];
-          for (let index = 0; index < resBuildings.length; index++) {
-            const buildingStatus = await townPInst.getStatus(
-              resBuildings[index]
-            );
+      if (inViewLand != null && buildedResBuildings) {
+        let farmsArray: ResourceBuildingObj[] = [];
+        let goldMinesArray: ResourceBuildingObj[] = [];
+        if (buildedResBuildings.farms.length > 0) { 
+          for (let index = 0; index < buildedResBuildings.farms.length; index++) {
             const currentRevenue = await townPInst.getCurrentRevenue(
-              resBuildings[index]
+              buildedResBuildings.farms[index].tokenId
             );
             const obj = {
-              tokenId: Number(resBuildings[index]),
-              level: Number(buildingStatus.level),
-              name: buildingStatus.buildingTypeIndex == 0 ? "Farm" : "GoldMine",
+              tokenId: buildedResBuildings.farms[index].tokenId,
+              level: buildedResBuildings.farms[index].level,
+              name: "Farm" ,
               earnedAmount: Number(formatEther(currentRevenue)),
             };
-
-            if (buildingStatus.buildingTypeIndex == 0) {
-              farmsArray.push(obj);
-            } else {
-              goldMinesArray.push(obj);
-            }
+            farmsArray.push(obj)
           }
-          setFarms(farmsArray);
-          setGoldMines(goldMinesArray);
+          setFarms(farmsArray)
+          console.log("Farms:",farmsArray);
+          
         }
+        if (buildedResBuildings.goldMines.length > 0) { 
+          for (let index = 0; index < buildedResBuildings.goldMines.length; index++) {
+            const currentRevenue = await townPInst.getCurrentRevenue(
+              buildedResBuildings.goldMines[index].tokenId
+            );
+            const obj = {
+              tokenId: buildedResBuildings.farms[index].tokenId,
+              level: buildedResBuildings.farms[index].level,
+              name: "GoldMine" ,
+              earnedAmount: Number(formatEther(currentRevenue)),
+            };
+            farmsArray.push(obj)
+          }
+          setGoldMines(goldMinesArray)
+          console.log("Gold mines:",farmsArray);
+        }
+
+
+    
       }
     };
     getResourcesBuildings();

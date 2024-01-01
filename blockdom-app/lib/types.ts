@@ -79,3 +79,10 @@ trainingCampLevel:BigNumberish,
 wallLevel:BigNumberish
 }
 
+export type MintedResourceBuildingType = {
+  type: number,
+  tokenId: number,
+  land: number,
+  level: number
+}
+

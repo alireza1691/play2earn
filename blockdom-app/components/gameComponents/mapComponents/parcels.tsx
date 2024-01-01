@@ -11,12 +11,10 @@ import {
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useApiData } from "@/context/api-data-context";
 import { useMapContext } from "@/context/map-context";
-import { MintedLand } from "@/lib/types";
 
 export default function Parcels() {
   const { setSelectedWindowComponent } = useSelectedWindowContext();
-  const [mintedLands, setMintedLands] = useState<MintedLand[] | null>(null);
-  const { apiData, loading } = useApiData();
+  const { apiData, loading , mintedLands} = useApiData();
   const { selectedParcel, setSelectedLand } = useMapContext();
 
   const getOwnerFromEvents = (tokenId: number): string => {
@@ -52,7 +50,7 @@ export default function Parcels() {
       return "bg-[url(/map/Outer8.png)] bg-cover";
     }
     if (x > 90 && x < 200 && y > 90 && y < 200) {
-      return "bg-[url(/map/centerParcel.png)] bg-cover";
+      return "bg-[url(/map/Base.png)] bg-cover";
     }
     if (x == 200 && y == 90) {
       return "bg-[url(/map/Outer7.png)] bg-cover";
@@ -71,8 +69,6 @@ export default function Parcels() {
   useEffect(() => {
     const getData = () => {
       if (apiData) {
-        const mintedLandsFromEvents = getMintedLandsFromEvents(apiData.result);
-        setMintedLands(mintedLandsFromEvents);
       }
     };
     getData();

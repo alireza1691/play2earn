@@ -7,8 +7,7 @@ import React, { useEffect, useMemo, useState } from "react";
 
 export default function Map() {
   const { selectedParcel, setSelectedParcel } = useMapContext();
-  const [mintedLands, setMintedLands] = useState<MintedLand[]|null>(null)
-  const { apiData, loading} = useApiData();
+  const { apiData, loading ,mintedLands} = useApiData();
 
 
   const allParcels = useMemo(() => {
@@ -61,8 +60,6 @@ export default function Map() {
   useEffect(()=> {
     const getData =() => {
       if (apiData) {
-        const mintedLandsFromEvents = getMintedLandsFromEvents(apiData.result )
-        setMintedLands(mintedLandsFromEvents)
       }
     }
     getData()

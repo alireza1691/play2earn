@@ -131,6 +131,8 @@ export default function BlockchainUtilsContextProvider({
 
   const mint = async(    selectedLand: SelectedLandType,
     priceFormatEther: BigNumberish | null) => {
+      validateWallet()
+      validateChain()
 
 
       if (signer && chainId == validChainId && selectedLand) {
@@ -172,6 +174,10 @@ export default function BlockchainUtilsContextProvider({
        
    
       }
+      else {
+        setTransactionState(null)
+        
+      }
  
   }
   const claim = async () => {
@@ -204,6 +210,9 @@ export default function BlockchainUtilsContextProvider({
           }
         }
 
+      }       else {
+        setTransactionState(null)
+        
       }
 
   }
@@ -259,6 +268,9 @@ export default function BlockchainUtilsContextProvider({
         }
       
    
+      }       else {
+        setTransactionState(null)
+        
       }
   
   }

@@ -1,5 +1,7 @@
 
-import { ApiDataResultType, MintedLand, selectedParcelType } from "./types";
+import { Contract, ethers } from "ethers";
+import { townABI } from "./instances";
+import { ApiDataResultType, MintedLand, MintedResourceBuildingType, selectedParcelType } from "./types";
 
 
 export const inViewParcels = (
@@ -94,7 +96,6 @@ export const landObjectFromTokenId = (coordinates:number) => {
   
 
 export function getMintedLandsFromEvents(events: ApiDataResultType) {
-  console.log(events);
   
   let mintedLands = [];
   if (events?.length > 1) {
@@ -120,6 +121,54 @@ export function getMintedLandsFromEvents(events: ApiDataResultType) {
  
   console.log("Here are all minted lands:", mintedLands);
   return mintedLands;
+}
+export function getResBuildingsFromEvents (events: ApiDataResultType) {
+  let mintedBuildings :MintedResourceBuildingType[] = []
+  if (events.length > 0  ) {
+
+    const iface = new ethers.utils.Interface(townABI)
+    const eventSig = iface.getEventTopic("Build")
+    const upgradeEventSignature = iface.getEventTopic("Upgrade")
+    const upgradedBuildings = getUpgradeEvents(events,upgradeEventSignature)
+  
+    for (let index = 0; index < events.length; index++) {
+ 
+      console.log(eventSig === events[index].topics[0]);
+      if (eventSig === events[index].topics[0]) {
+        console.log("here is matched event:",events[index].topics); 
+        console.log( parseInt(events[index].topics[2]));
+        const buildingTypeIndex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[index].data)[0];
+       
+        const upgradedEventsOfThisBuilding =  upgradedBuildings.filter(tokenId => tokenId === parseInt(events[index].topics[2]));
+        const mintedBuilding = {land: parseInt(events[index].topics[2]), tokenId: parseInt(events[index].topics[1]),type: Number(buildingTypeIndex) ,level: upgradedEventsOfThisBuilding.length +1}   /// ***** Repalce type here
+        mintedBuildings.push(mintedBuilding)
+      }
+    
+    }
+  }
+  console.log("Minted buildings:", mintedBuildings);
+  return mintedBuildings
+  
+  
+}
+
+function getUpgradeEvents(events: ApiDataResultType, signature: string) {
+  let upgradedBuildingsByTokenId : number[] = []
+  if (events.length > 0) {
+    for (let index = 0; index < events.length; index++) {
+      if (events[index].topics[0] == signature) {
+        upgradedBuildingsByTokenId.push(parseInt(events[index].topics[1]))
+      }  
+    }
+  }
+  return upgradedBuildingsByTokenId
+}
+
+export function getOwnedBuildings(mintedBuildings: MintedResourceBuildingType[], inViewLand: number) {
+  const ownedLands = mintedBuildings.filter(token => token.land === inViewLand);
+  const farms =  ownedLands.filter(token => token.type === 0);
+  const goldMines =  ownedLands.filter(token => token.type === 1);
+  return {farms: farms, goldMines: goldMines}
 }
 
 export function getOwnedLands(mintedLands : MintedLand[],connectedAddress: string) {

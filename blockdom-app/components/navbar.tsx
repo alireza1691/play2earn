@@ -10,7 +10,7 @@ import LightLogo from "@/svg/lightLogo";
 import NavDropdownMobileScreen from "./navDropdownMobileScreen";
 import NavbarLandingItems from "./navbarLandingItems";
 import NavbarGameItems from "./navbarGameItems";
-import { getMintedLandsFromEvents, getOwnedLands } from "@/lib/utils";
+import { getMintedLandsFromEvents, getOwnedBuildings, getOwnedLands, getResBuildingsFromEvents } from "@/lib/utils";
 import { useApiData } from "@/context/api-data-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { townPInst } from "@/lib/instances";
@@ -19,8 +19,8 @@ import { InViewLandType, landDataResType } from "@/lib/types";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { apiData } = useApiData();
-  const { setOwnedLands, ownedLands, setInViewLand } = useUserDataContext();
+  const { apiData, townApiData, mintedLands,buildedResourceBuildings } = useApiData();
+  const { setOwnedLands,  setInViewLand,setBuildedResBuildings} = useUserDataContext();
   const address = useAddress();
 
   const { theme, toggleTheme } = useTheme();
@@ -29,13 +29,16 @@ export default function Navbar() {
 
   useEffect(() => {
     const data = async () => {
-      if (address && apiData) {
+      if (address && apiData &&  mintedLands) {
+      
         const ownedl = getOwnedLands(
-          getMintedLandsFromEvents(apiData?.result),
+          mintedLands,
           address
         );
+
+        
         setOwnedLands(ownedl);
-        if (ownedl.length>0) {
+        if (ownedl.length>0 && mintedLands && buildedResourceBuildings) {
           const defaultLandData: landDataResType = await townPInst.getLandIdData(
             Number(ownedl[0].tokenId)
           );
@@ -52,8 +55,11 @@ export default function Navbar() {
           };
           setInViewLand(defaultLand)
           console.log("default land:", defaultLand);
-     
+
+          const resBildingsOfDefaultLand = getOwnedBuildings(buildedResourceBuildings,Number(ownedl[0].tokenId))
+          setBuildedResBuildings(resBildingsOfDefaultLand)
         }
+      
       
 
       }
@@ -62,7 +68,7 @@ export default function Navbar() {
       }
     };
     data();
-  }, [address, apiData,setInViewLand, setOwnedLands]);
+  }, [address, apiData,setInViewLand, setOwnedLands, buildedResourceBuildings]);
 
   return (
     <>
