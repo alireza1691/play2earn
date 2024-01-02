@@ -5,6 +5,7 @@ import Town from "@/components/gameComponents/townComponents/town";
 import Image from "next/image";
 import React from "react";
 import ToggleLand from "@/components/gameComponents/townComponents/toggleLand";
+import BottomBar from "@/components/gameComponents/townComponents/bottomBar";
 
 export default function MyLand() {
   return (
@@ -30,7 +31,8 @@ export default function MyLand() {
       </div>
 
       <SelectedBuilding />
-      <div className=" w-full z-30 h-[4rem] fixed bottom-0 bg-gradient-to-r from-[#A9FFDE] to-[#7ECFB3] dark:from-[#34594B]/60 dark:to-[#213830]/60 sm:hidden dark:bg-[#000000] "></div>
+
+     {/* <BottomBar/> */}
       <div className=" hidden sm:flex w-full h-[3rem] fixed bottom-0 bg-gradient-to-t from-black via-black"></div>
     </>
   );

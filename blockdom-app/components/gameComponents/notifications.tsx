@@ -7,7 +7,7 @@ import { IoIosArrowUp } from "react-icons/io";
 export default function Notifications() {
     const [isNotifActive,setIsNotifActive] = useState(false)
   return (
-    <div className={`z-30 absolute flex flex-col top-20 right-10 w-52 `}>
+    <div className={`z-30 absolute flex flex-col top-[70px] sm:right-10 sm:w-52 w-full sm:px-0 px-3`}>
         {/* <div className= {`px-3 py-2 greenBg blueText transition-all cursor-pointer duration-500 dropdown ${isNotifActive ? "open:max-h-full":""} `}>
                 <a onClick={() => setIsNotifActive(!isNotifActive)}>Notifications</a>
                 <p className=' transition-all'>{isNotifActive && "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iure voluptas eligendi optio expedita mollitia cupiditate, totam ex. Vitae sequi mollitia corrupti, id nisi atque ipsa libero temporibus magnam in! Sint!"}</p>

@@ -139,7 +139,7 @@ abstract contract Lands is ERC721, Ownable {
     //  ******************************************************************************
 
 
-    uint256 private constant defaultLandPrice = 20000000 gwei; // Equal 0.02 ether
+    uint256 private constant defaultLandPrice = 1 gwei; 
     // mapping (uint256 => Land) public tokenIdLand;
     // mapping (address => uint8) private difficultyCost;
 

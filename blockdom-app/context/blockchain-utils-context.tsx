@@ -41,7 +41,7 @@ export default function BlockchainUtilsContextProvider({
 }: BlockchainUtilsProviderProps) {
   const { setTransactionState, setTxError } = useBlockchainStateContext();
   const {
-    selectedItem, selectedResourceBuilding
+    selectedItem, selectedResourceBuilding,setSelectedResourceBuilding
   } = useSelectedBuildingContext();
   const {inViewLand} = useUserDataContext()
 
@@ -195,6 +195,8 @@ export default function BlockchainUtilsContextProvider({
             console.log(receipt.status === 1);
     
             setTransactionState("confirmed");
+            setSelectedResourceBuilding({...selectedResourceBuilding,
+              earnedAmount: 0})
           }
           
         } catch (error) {

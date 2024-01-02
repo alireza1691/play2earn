@@ -13,7 +13,7 @@ export default function LandSlideBarHeader() {
   return (
     <div className="px-1 py-2 flex flex-row justify-between relative z-10">
     <h3 className=" text-white ">
-      Land {selectedLand && selectedLand?.coordinate}
+      {selectedLand && selectedLand?.coordinate}
     </h3>
     {selectedLand?.isMinted && (
       <p className=' absolute left-1/2 -translate-x-1/2 blueText'>{ shortenAddress(selectedLand?.owner)}</p>

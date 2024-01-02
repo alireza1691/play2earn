@@ -10,17 +10,21 @@ import LightLogo from "@/svg/lightLogo";
 import NavDropdownMobileScreen from "./navDropdownMobileScreen";
 import NavbarLandingItems from "./navbarLandingItems";
 import NavbarGameItems from "./navbarGameItems";
-import { getMintedLandsFromEvents, getOwnedBuildings, getOwnedLands, getResBuildingsFromEvents } from "@/lib/utils";
+import {  getOwnedBuildings, getOwnedLands} from "@/lib/utils";
 import { useApiData } from "@/context/api-data-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { townPInst } from "@/lib/instances";
 import { InViewLandType, landDataResType } from "@/lib/types";
+import BackIcon from "@/svg/backIcon";
+import { useMapContext } from "@/context/map-context";
+import BalanceContainer from "./gameComponents/townComponents/balanceContainer";
 
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { apiData, townApiData, mintedLands,buildedResourceBuildings } = useApiData();
   const { setOwnedLands,  setInViewLand,setBuildedResBuildings} = useUserDataContext();
+  const { setSelectedParcel,setSelectedLand,selectedParcel} = useMapContext()
   const address = useAddress();
 
   const { theme, toggleTheme } = useTheme();
@@ -89,7 +93,20 @@ export default function Navbar() {
               {theme === "light" ? <DarkLogo /> : <LightLogo />}
             </a>
           </div>
-
+          {currentRoute == "/explore" &&    <a
+          onClick={() => {setSelectedParcel(null) , setSelectedLand(null)}}
+          className={`${
+            selectedParcel == null
+              ? " brightness-50"
+              : " text-gray-800 dark:text-gray-50 hover:bg-black/10 cursor-pointer "
+          } sm:hidden flex flex-col justify-center items-center transition-all  p-2 rounded-lg text-sm font-semibold leading-6`}
+        >
+          <BackIcon />
+          Back
+        </a>
+          }
+          {currentRoute == "myLand" && <BalanceContainer/>}
+       
           <div className=" ml-3 md:ml-5 flex md:hidden   ">
             <button
               className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-800 dark:text-gray-50 right-0 w-fit mr-2"
@@ -137,8 +154,3 @@ export default function Navbar() {
     </>
   );
 }
-
-let b=1
-const c = "wew"
-
-export {b,c} 

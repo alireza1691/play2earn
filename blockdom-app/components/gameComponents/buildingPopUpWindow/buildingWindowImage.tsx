@@ -10,10 +10,10 @@ export default function BuildingWindowImage() {
   return (
     <>
     
-    <div onClick={() => setIsImageSelected(!isImageSelected)}  className={`${!isImageSelected && ""} buildigImageContainer cursor-pointer relative !h-[30%] !w-[80%] ml-auto mr-auto`}>
+    <div onClick={() => setIsImageSelected(!isImageSelected)}  className={`${!isImageSelected && ""}\ buildigImageContainer cursor-pointer relative !h-[25%]  sm:!h-[30%] !w-[80%] ml-auto mr-auto`}>
     {selectedItem  && isImageSelected && (
   <Image
-          className="p-4 flex-shrink-0 top-0 !w-auto ml-auto mr-auto"
+          className="p-4 flex-shrink-0 top-0 !w-auto !h-full  object-contain ml-auto mr-auto mt-auto mb-auto"
           src={imageUrl}
           fill
           alt="selectedItemImage"

@@ -118,12 +118,12 @@ export default function BuildingWindowButtons() {
           </button>
           {inViewLand && inViewLand.remainedBuildTime == 0 && isAllowed() && (
             <button onClick={() => upgrade()} className="greenButton !w-1/2">
-              Confirm upgrade
+              Upgrade
             </button>
           )}
           {inViewLand && inViewLand.remainedBuildTime == 0 && !isAllowed() && (
             <button className="greenButton !w-1/2" disabled>
-              Upgrade townhall
+              Upgrade
             </button>
           )}
           {inViewLand && Number(inViewLand.remainedBuildTime) > 0 && (
@@ -161,7 +161,8 @@ export default function BuildingWindowButtons() {
           
        
           <button
-            onClick={() => setUpgradeMode(true)}
+            onClick={() => {setUpgradeMode(true),console.log("upgrade mode actived");
+            }}
             className="outlineGreenButton !py-1 !w-[30%] flex justify-center hover:brightness-150"
           >
             <TopDuobleArrow />

@@ -47,7 +47,7 @@ export default function LandSlideBarCard() {
       }, [imageUrl, selectedLand,ownedLands, setIsOwnedLands]);
     
   return (
-    <div className=" flex justify-center mt-2 h-[35%]  ">
+    <div className=" flex justify-center mt- h-[35%] mb-3 flex-shrink ">
     {imageUrl && (
       <div className=" w-auto  h-auto !p-2 cardBg !rounded-lg darkShadow">
         <Image

@@ -13,10 +13,12 @@ import CoinIcon from "@/svg/coinIcon";
 import ProgressBar from "../progressBar";
 import CapacityProgressBar from "../capacityProgressBar";
 import { formatEther } from "ethers/lib/utils";
+import { useUserDataContext } from "@/context/user-data-context";
 
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem, upgradeMode } =
     useSelectedBuildingContext();
+ 
 
   const relevantContainer = () => {
     if (selectedItem?.name == "Townhall") {
@@ -39,48 +41,7 @@ export default function BuildingWindowDetails() {
 
   return (
     <>
-      {/* {selectedItem?.name == "Barracks" && (
-    <div className="h-[30%] overflow-y-scroll custom-scrollbar warriorsGridBg rounded-md w-[80%] ml-auto mr-auto ">
-          
-  
-    <div className="h-full flex flex-col w-full py-3">
-  
-        <div className="px-3 h-full ">
-          <div className=" flex flex-col h-[20%]">
-            <h3 className="gap-2 text-[14px] font-bold flex flex-row items-center">
-              {" "}
-              <ArmyCapacityIcon /> 100/250 Units{" "}
-            </h3>
-            <Progress
-              color="default"
-              aria-label="Loading..."
-              value={70}
-              classNames={{
-                indicator: "!bg-[#98DDFB]",
-                track: "bg-gray-800/20 border border-gray-300/30 darkShadow",
-              }}
-            />
-          </div>
-          <div className="mt-6 grid grid-cols-3 h-[80%] px-2   gap-3  ">
-            {warriors.map((warrior, key) => (
-              <div key={key} className={"cardBg w-full "}>
-                <Image
-                  src={"/images/warriorTest.png"}
-                  width={50}
-                  height={80}
-                  alt="warrior"
-                  className="w-full h-auto"
-                />
-                <p className=" text-[10px] text-center">{warrior}<br></br>100</p>
-              
-              </div>
-            ))}
-          </div>
-        </div>
-        </div>
-    </div>
-      )}
- */}
+    
       <div className="flex flex-grow">
         {Container && <Container />} {/* Use the component in JSX */}
       </div>
@@ -89,13 +50,14 @@ export default function BuildingWindowDetails() {
 }
 
 const ResourceContainer = () => {
+  const {farms} = useUserDataContext()
   const { upgradeMode, activeMode, selectedResourceBuilding } = useSelectedBuildingContext();
   return (
     <div className=" w-[85%] ml-auto mr-auto flex flex-col mt-4 !text-white">
       {upgradeMode &&selectedResourceBuilding&& (
         <>
           <div className=" flex flex-col gap-3">
-            <UpgradeHeader currentLevel={1} title="Upgrade trait" />
+            <UpgradeHeader currentLevel={selectedResourceBuilding.level} title="Upgrade trait" />
             <div className=" flex flex-col">
               <h3 className=" flex flex-row items-center gap-2 font-medium">
                 <FoodIcon />{selectedResourceBuilding.level == 0 ? 0 : 8 ** selectedResourceBuilding.level}<span className=" blueText !font-medium">+ 8</span>
@@ -125,7 +87,7 @@ const ResourceContainer = () => {
           <h3 className="mt-4 font-semibold  flex flex-row  items-center">
             <FoodIcon />  {selectedResourceBuilding && selectedResourceBuilding.earnedAmount }
           </h3>
-          <ProgressBar amount={50} />
+          <ProgressBar amount={selectedResourceBuilding && selectedResourceBuilding.earnedAmount * 100 / ((2 ** selectedResourceBuilding.level-1) * 80 )|| 0} />
         </>
       )}
     </div>
@@ -170,9 +132,9 @@ const BarracksContainer = () => {
       {upgradeMode && (
         <>
           <UpgradeHeader title="New troop" currentLevel={1} />
-          <div className="cardBg w-fit ml-auto mr-auto mt-10 ">
+          <div className=" w-fit ml-auto mr-auto mt-auto mb-auto h-auto py-1">
             <Image
-              className={`w-[120px] !h-auto !px-[4px] !pb-[6px] !pt-[2px]`}
+              className={`w-[80px] glassBg !h-auto px-1 py-[5px]`}
               src={"/images/warriorTest.png"}
               width={60}
               height={120}
@@ -269,9 +231,9 @@ const TownhallContainer = () => {
                 currentLevel={1}
                 title="Upgrades unlocks at next level"
               />
-              <div className="grid grid-cols-4 gap-4">
+              <div className="flex flex-row gap-4 overflow-scroll px-2 py-2 bg-black/20 rounded-md  ">
                 {unlocks.map((item, key) => (
-                  <a key={key} className="glassBg flex text-[12px] h-20 px-2 text-center justify-center items-center ">
+                  <a key={key} className="flex-1 glassBg flex text-[12px] min-w-16 !h-20 px-2 text-center justify-center items-center  ">
                     {item}
                   </a>
                 ))}

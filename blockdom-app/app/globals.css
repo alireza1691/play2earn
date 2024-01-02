@@ -45,6 +45,19 @@ body{
   background: rgba(6, 41, 29, 0.5);
   box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
 }
+.navBalBg{
+display:flex;
+width: 83.866px;
+padding: 5px 8px;
+
+justify-content: center;
+align-items: center;
+gap: 4.608px;
+border-radius: 2.949px;
+border: 0.461px solid rgba(135, 240, 229, 0.60);
+background: rgba(6, 41, 29, 0.50);
+box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
+}
 .greenBg {
   border-radius: 10px;
   border: 1px solid rgba(212, 212, 212, 0.35);
@@ -52,7 +65,7 @@ body{
   backdrop-filter: blur(10px);
 }
 .buildingWindow {
-  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[82.5%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm;
+  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80.5%] sm:h-[80vh] bg-[#21302A]/60 backdrop-blur-sm;
 }
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
@@ -510,3 +523,8 @@ box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.19), -2px -2px 5px 0px rgba(255, 255
   }
 }
 
+.slideBarBg{
+  border-radius: 15.05px;
+background: linear-gradient(212deg, rgba(255, 255, 255, 0.44) -5.43%, rgba(255, 255, 255, 0.17) 30.19%, rgba(255, 255, 255, 0.33) 57.82%, rgba(255, 255, 255, 0.00) 72.56%, rgba(255, 255, 255, 0.21) 112.48%);
+box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+}

@@ -70,7 +70,7 @@ export default function TownResourceBuildings() {
       }
     };
     getResourcesBuildings();
-  }, [inViewLand, farms, goldMines]);
+  }, [inViewLand, ]);
   return (
     <>
        <div className="z-10 flex flex-col left-[60rem]   ml-auto absolute top-[10rem]">
@@ -113,7 +113,10 @@ export default function TownResourceBuildings() {
                     });
                   }}
                 />
-                <Image
+          
+              </React.Fragment>
+            ))}
+                  <Image
                   className="z-10 cursor-pointer    w-[20%] h-auto opacity-40"
                   src={farm.imageUrl}
                   width={580}
@@ -129,8 +132,6 @@ export default function TownResourceBuildings() {
                     });
                   }}
                 />
-              </React.Fragment>
-            ))}
       
         </>
       )}

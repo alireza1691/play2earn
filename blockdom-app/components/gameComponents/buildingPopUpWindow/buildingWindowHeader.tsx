@@ -5,7 +5,7 @@ import CloseIcon from "@/svg/closeIcon";
 import { useUserDataContext } from "@/context/user-data-context";
 
 export default function BuildingWindowHeader() {
-  const { selectedItem, setSelectedItem, setActiveMode, setUpgradeMode,activeMode } = useSelectedBuildingContext();
+  const { selectedItem, setSelectedItem, setActiveMode, setUpgradeMode,activeMode,selectedResourceBuilding } = useSelectedBuildingContext();
   const { inViewLand} = useUserDataContext()
 
   const handleClose = () => {
@@ -27,6 +27,11 @@ export default function BuildingWindowHeader() {
       }
       if ( selectedItem?.name == "TrainingCamp") {
         return (Number(inViewLand.trainingCampLvl))
+      }
+      if (selectedItem?.name == "Farm"|| selectedItem?.name == "GoldMine" ) {
+        if (selectedResourceBuilding) {
+          return selectedResourceBuilding.level
+        }
       }
     }
   }

@@ -40,7 +40,7 @@ export default function SlideBarButtons() {
     useSelectedWindowContext();
 
   return (
-    <div className="w-full mt-auto flex flex-col py-3">
+    <div className="w-full mt-auto flex flex-col py-3 flex-shrink">
       {" "}
       <div className="w-full ">
         {" "}
@@ -55,21 +55,22 @@ export default function SlideBarButtons() {
         )}
       </div>
       <div className=" flex flex-col md:flex-row  w-full gap-2">
-        {selectedLand && !selectedLand.isMinted && priceFormatEther ? (
+        <>
+        {selectedLand && !selectedLand.isMinted && priceFormatEther && (
           <button
             onClick={() => mint(selectedLand,priceFormatEther)}
             className="greenButton !w-full mt-2"
           >
             Mint
           </button>
-        ):(
-          
-            <button
-              disabled
-              className="greenButton !w-full mt-2"
-            >
-              Mint
-            </button>
+        )}
+        {selectedLand && !selectedLand.isMinted && !priceFormatEther && (
+          <button
+          disabled
+            className="greenButton !w-full mt-2"
+          >
+            Mint
+          </button>
         )}
         {selectedLand && selectedLand.isMinted && !isOwnedLand && (
           <button className="outlineGreenButton !w-full  md:!w-[50%]">
@@ -96,6 +97,7 @@ export default function SlideBarButtons() {
             Visit land
           </button>
         )}
+        </>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import BlockchainStateContextProvider from "@/context/blockchain-state-context";
 import ActionStateComponent from "@/components/actionStateComponent";
 import { useAddress } from "@thirdweb-dev/react";
 import BlockchainUtilsContextProvider from "@/context/blockchain-utils-context";
+import BottomBar from "@/components/gameComponents/townComponents/bottomBar";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -50,6 +51,7 @@ export default function RootLayout({
                 <ActionStateComponent/>
                 <Navbar/>
                 {children}
+                <BottomBar/>
                 </BlockchainUtilsContextProvider>
             </ActiveSectionContextProvider>
           </ThemeContextProvider>
