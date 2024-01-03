@@ -22,8 +22,8 @@ import BalanceContainer from "./gameComponents/townComponents/balanceContainer";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { apiData, townApiData, mintedLands,buildedResourceBuildings } = useApiData();
-  const { setOwnedLands,  setInViewLand,setBuildedResBuildings} = useUserDataContext();
+  const { apiData,  mintedLands,buildedResourceBuildings,setArmyTypes,armyTypes } = useApiData();
+  const { setOwnedLands,  setInViewLand,setBuildedResBuildings, inViewLand} = useUserDataContext();
   const { setSelectedParcel,setSelectedLand,selectedParcel} = useMapContext()
   const address = useAddress();
 
@@ -33,6 +33,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const data = async () => {
+
+    
       if (address && apiData &&  mintedLands) {
       
         const ownedl = getOwnedLands(
@@ -59,6 +61,10 @@ export default function Navbar() {
           };
           setInViewLand(defaultLand)
           console.log("default land:", defaultLand);
+          if (!armyTypes ) {
+            const typesOfWarriors = await townPInst.getArmy(Number(ownedl[0].tokenId))
+            console.log("user army:",typesOfWarriors);
+          }
 
           const resBildingsOfDefaultLand = getOwnedBuildings(buildedResourceBuildings,Number(ownedl[0].tokenId))
           setBuildedResBuildings(resBildingsOfDefaultLand)

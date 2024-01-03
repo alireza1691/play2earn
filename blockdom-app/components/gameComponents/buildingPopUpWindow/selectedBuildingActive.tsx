@@ -5,7 +5,7 @@ import CloseIcon from "@/svg/closeIcon";
 import CoinIcon from "@/svg/coinIcon";
 import DamageIcon from "@/svg/damageIcon";
 import HpIcon from "@/svg/hpIcon";
-import { Slider } from "@nextui-org/react";
+import { Input, Slider } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 import BuildingWindowButtons from "./buildingWindowButtons";
@@ -24,7 +24,7 @@ const BarracksActiveComponent = () => {
   const { selectedItem, setSelectedItem, activeMode, setActiveMode } =
     useSelectedBuildingContext();
 
-    const barracksLvl = 2
+  const barracksLvl = 2;
 
   return (
     <section
@@ -56,18 +56,27 @@ const BarracksActiveComponent = () => {
         </div>
         <div className="w-[30%] hidden sm:flex"></div>
       </div>
-      <div className="sm:pb-3 sm:px-2 rounded-md darkShadow sm:shadow-none bg-black/20 sm:bg-transparent py-2 flex flex-col overflow-scroll sm:overflow-auto sm:grid sm:grid-cols-2 gap-4 w-[85%] ml-auto mr-auto flex-grow mt-6 ">
+      <div className="md:pb-3 md:px-2 rounded-md darkShadow md:shadow-none bg-black/20 md:bg-transparent py-2 flex flex-col overflow-y-auto custom-scrollbar  md:grid md:grid-cols-2 gap-4 w-[85%] ml-auto mr-auto flex-grow mt-6 ">
         {warriors.map((warrior, key) => (
-          <div key={key} className={`flex flex-col gap-1  !rounded-lg  relative ${key >= barracksLvl&& "opacity-50"}`}>
-            {key >= barracksLvl&& <div className="flex  justify-center z-10 absolute  w-full h-full rounded-md backdrop-brightness-75 bg-black/60 ">
-            <h3 className=" text-center text-[#98FBD7] text-[14px] mt-2" >Unlock at <span className=" font-bold">level {key+1}</span> </h3>
-            </div>}
+          <div
+            key={key}
+            className={`flex flex-col gap-1  !rounded-lg  relative  ${
+              key >= barracksLvl && "opacity-50"
+            }`}
+          >
+            {key >= barracksLvl && (
+              <div className="flex  justify-center z-10 absolute  w-full h-full rounded-md backdrop-brightness-75 bg-black/60 ">
+                <h3 className=" text-center text-[#98FBD7] text-[14px] mt-2">
+                  Unlock at <span className=" font-bold">level {key + 1}</span>{" "}
+                </h3>
+              </div>
+            )}
             <div className=" glassBg darkShadow blueText !font-normal text-center py-2 mt-0">
               {warrior}
             </div>
             <div className=" flex flex-row relative h-full glassBg">
               <Image
-                className="py-1 px-1 rounded-lg !h-[100%] w-auto"
+                className="py-1 px-1 rounded-lg !h-auto w-[35%]"
                 src={"/images/warriorTest.png"}
                 width={100}
                 height={150}
@@ -106,12 +115,17 @@ const BarracksActiveComponent = () => {
                     </p>
                   </div>
                 </div>
+                <div className=" flex flex-row px-2 gap-1">
+               
+        <input className=" bg-black/20 w-full rounded-md focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40" placeholder="Enter amount" />
+        <button className="greenButton !rounded-md !text-[12px] !py-1 px-2">Recruit</button>
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <div className=" flex-shrink flex flex-row justify-center gap-3 mb-2 mt-4">
+      <div className=" flex-shrink flex flex-row justify-center gap-3 mb-2 mt-4 ">
         <button
           onClick={() => setActiveMode(false)}
           className="!w-[12.5rem] redButton"
@@ -155,26 +169,26 @@ const TrainingCampActiveComponent = () => {
               width={60}
               alt="warrior"
             />
-             <Slider
-      color="foreground"
-      label={warrior}
-      step={1}
-      maxValue={100}
-      minValue={0}
-      defaultValue={0}
-      // getValue={(warrior) => `${warrior} of 100`}
-      // className="max-w-md "
-      onChangeEnd={() => {
-        ("");
-      }}
-     classNames={{
-      base:" l text-white",
-      filler:"-ml-3 bg-[#9BFCD4] rounded-l-full ",
-      track:" bg-gray-400/30 darkShadow border border-gray-300/30  ",
-      thumb:" bg-[#9BFCD4]",
-      label: "ml-3"
-      
-     }}/>
+            <Slider
+              color="foreground"
+              label={warrior}
+              step={1}
+              maxValue={100}
+              minValue={0}
+              defaultValue={0}
+              // getValue={(warrior) => `${warrior} of 100`}
+              // className="max-w-md "
+              onChangeEnd={() => {
+                ("");
+              }}
+              classNames={{
+                base: " l text-white",
+                filler: "-ml-3 bg-[#9BFCD4] rounded-l-full ",
+                track: " bg-gray-400/30 darkShadow border border-gray-300/30  ",
+                thumb: " bg-[#9BFCD4]",
+                label: "ml-3",
+              }}
+            />
           </div>
         ))}
       </div>

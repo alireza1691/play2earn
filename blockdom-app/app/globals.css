@@ -528,3 +528,7 @@ box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.19), -2px -2px 5px 0px rgba(255, 255
 background: linear-gradient(212deg, rgba(255, 255, 255, 0.44) -5.43%, rgba(255, 255, 255, 0.17) 30.19%, rgba(255, 255, 255, 0.33) 57.82%, rgba(255, 255, 255, 0.00) 72.56%, rgba(255, 255, 255, 0.21) 112.48%);
 box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
 }
+input::placeholder {
+  color: #98fbd7; /* Replace with the color you want */
+  opacity: 0.5;
+}

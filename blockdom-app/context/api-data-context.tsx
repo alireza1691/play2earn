@@ -2,7 +2,7 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { apiKey, landsAddress, townAddress } from '@/lib/blockchainData';
-import { APICallData, MintedLand, MintedResourceBuildingType } from '@/lib/types';
+import { APICallData, ArmyType, MintedLand, MintedResourceBuildingType } from '@/lib/types';
 import { getMintedLandsFromEvents, getOwnedLands, getResBuildingsFromEvents } from '@/lib/utils';
 
 
@@ -18,6 +18,8 @@ interface ApiDataContextProps {
   townApiData: APICallData | null;
   mintedLands: MintedLand[] | null;
   buildedResourceBuildings: MintedResourceBuildingType[] | null
+  armyTypes: ArmyType[] | null
+  setArmyTypes: React.Dispatch<React.SetStateAction<ArmyType[] | null>>
 }
 
 const ApiDataContext = createContext<ApiDataContextProps | undefined>(undefined);
@@ -28,6 +30,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [mintedLands, setMintedLands] = useState< MintedLand[] | null>(null)
   const [buildedResourceBuildings, setBuildedResourceBuildings] = useState<MintedResourceBuildingType[] | null>(null)
+  const [armyTypes, setArmyTypes] = useState <ArmyType[] | null>(null)
 
   
 
@@ -62,7 +65,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   }, []); // Run the effect only once on mount
 
   return (
-    <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings}}>
+    <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings, armyTypes, setArmyTypes}}>
       {children}
     </ApiDataContext.Provider>
   );

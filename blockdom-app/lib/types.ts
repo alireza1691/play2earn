@@ -86,3 +86,11 @@ export type MintedResourceBuildingType = {
   level: number
 }
 
+export type ArmyType = {
+  attackPower: number,
+  defensePower:number,
+  hp: number,
+  requiredGold: number,
+  requiredFood:number,
+}
+
