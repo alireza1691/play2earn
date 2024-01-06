@@ -15,15 +15,15 @@ export default function MyLand() {
     <Notifications/>
       <div className=" w-screen h-screen overflow-hidden relative">
         <div className=" w-[100vw] h-[100vh]   overflow-scroll custom-scrollbar  items-center justify-center  relative ">
-          <div className="w-[80rem] h-[60rem]  2xl:h-[80rem] absolute xl:w-[95rem] 2xl:w-[120rem] ">
-            <Image
+          <div className=" bg-green-300/40  2xl:h-[80rem] absolute w-[1920px] h-[110rem]   xl:h-[130rem] xl:w-[2560px]  ">
+            {/* <Image
               className=" absolute h-full w-full  object-cover "
               src={"/testBg.png"}
               width={1024}
               height={720}
               alt="bg"
               quality={30}
-            />
+            /> */}
 
             <Town />
           </div>

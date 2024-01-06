@@ -8,7 +8,7 @@ export default function TownBarracks() {
     const barracks = landItems[1]
   return (
     <Image
-    className="z-10 cursor-pointer absolute top-[25rem] right-[30%]  w-[10%] h-auto"
+    className="z-10 cursor-pointer absolute top-[32rem] -translate-x-72 left-1/2  w-[10rem] h-auto"
     src={barracks.imageUrl}
     width={580}
     height={480}

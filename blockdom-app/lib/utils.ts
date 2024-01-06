@@ -180,3 +180,24 @@ export function getOwnedLands(mintedLands : MintedLand[],connectedAddress: strin
 
 export const zeroAddress = "0x0000000000000000000000000000000000000000"
 
+export const farmImage = (level:number) => {
+  return `/buildings/farmLv${level}.png`
+}
+export const goldMineImage = (level:number) => {
+  return `/buildings/goldMineLv${level}.png`
+}
+export const townHallImage = (level:number) => {
+  return `/buildings/townHallLv${level}.png`
+}
+export const barracksImage = (level:number) => {
+  return `/buildings/barracksLv${level}.png`
+}
+export const trainingCampImage = (level:number) => {
+  return `/buildings/armyCampLv${level}.png`
+}
+export const marketImage = (level:number) => {
+  return `/buildings/marketLv${level}.png`
+}
+export const wareHouseImage = (level:number) => {
+  return `/buildings/wareHouseLv${level}.png`
+}

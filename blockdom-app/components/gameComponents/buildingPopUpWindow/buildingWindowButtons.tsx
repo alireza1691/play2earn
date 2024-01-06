@@ -16,7 +16,7 @@ export default function BuildingWindowButtons() {
     activeMode,
     upgradeMode,
   } = useSelectedBuildingContext();
-  const { buildBuilding,claim } = useBlockchainUtilsContext();
+  const { buildBuilding,claim,mintResourceBuilding } = useBlockchainUtilsContext();
   const { inViewLand } = useUserDataContext();
   const {selectedResourceBuilding} = useSelectedBuildingContext()
   const signer = useSigner();
@@ -32,7 +32,7 @@ export default function BuildingWindowButtons() {
       return "Claim resources";
     }
     if (selectedItem?.name == "Wall") {
-      return "Approve";
+      return "Upgrade";
     }
     if (selectedItem?.name == "TrainingCamp") {
       return "Edit army";
@@ -76,31 +76,13 @@ export default function BuildingWindowButtons() {
     return allowed;
   };
 
-  async function mintResourceBuilding() {
-    try {
-      if (signer && inViewLand && selectedResourceBuilding && selectedItem) {
-        console.log(inViewLand.tokenId);
-        if (selectedResourceBuilding.level == 0) {
-          await townSInst(signer).buildResourceBuilding(
-            inViewLand.tokenId,
-            selectedItem.name == "Farm" ? 0 : 1
-          );
-        }
-        if (selectedResourceBuilding.level > 0) {
-          await townSInst(signer).upgradeResourceBuilding(selectedResourceBuilding.tokenId,inViewLand.tokenId)
-        }
-  
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+ 
 
   async function upgrade() {
     if (selectedItem?.name == "GoldMine" || selectedItem?.name == "Farm") {
       await mintResourceBuilding();
     } else {
-      buildBuilding();
+      await buildBuilding();
     }
   }
 
@@ -135,13 +117,14 @@ export default function BuildingWindowButtons() {
       )}
       {!upgradeMode && !activeMode && (
         <>
-          { selectedItem?.name != "Farm" && selectedItem?.name != "GoldMine" ?   <button
+          { selectedItem?.name != "Farm" && selectedItem?.name != "GoldMine" && selectedItem?.name != "Wall" ?   <button
             onClick={() => setActiveMode(true)}
             className="greenButton !py-2 !w-[70%]"
           >
             {relevantButton()}
           </button>:(
-            <>{selectedResourceBuilding && selectedResourceBuilding.earnedAmount > 0 ?
+            <>
+            { selectedResourceBuilding  && selectedResourceBuilding.earnedAmount > 0 ?
               <button
               onClick={() => claim()}
               className="greenButton !py-2 !w-[70%]"
@@ -149,24 +132,33 @@ export default function BuildingWindowButtons() {
               {relevantButton()}
             </button>
             :
-            <button
+            <>
+            {selectedItem.name != "Wall" &&    <button
             className="greenButton !py-2 !w-[70%]"
             disabled
           >
             {relevantButton()}
-          </button>
+          </button>}
+        
+          </>
             }
             </>
           ) }
+          {selectedItem?.name == "Wall" &&  <button
+              onClick={() => claim()}
+              className="greenButton !py-2 !w-full"
+            >
+              {relevantButton()}
+            </button>}
           
-       
-          <button
+       {selectedItem?.name != "Wall" &&   <button
             onClick={() => {setUpgradeMode(true),console.log("upgrade mode actived");
             }}
             className="outlineGreenButton !py-1 !w-[30%] flex justify-center hover:brightness-150"
           >
             <TopDuobleArrow />
-          </button>
+          </button>}
+        
         </>
       )}
       {activeMode && (

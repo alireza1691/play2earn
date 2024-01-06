@@ -68,6 +68,7 @@ export type InViewLandType = {
   buildedResourceBuildings: BigNumberish[],
   goodsBalance: [BigNumberish,BigNumberish]
   remainedBuildTime: BigNumberish
+  army: BigNumberish[]
 }
 export type landDataResType = {
 barracksLevel:BigNumberish,

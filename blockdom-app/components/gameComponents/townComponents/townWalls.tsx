@@ -11,7 +11,7 @@ export default function TownWalls() {
     <div>
       {" "}
       <Image
-        className="absolute top-[10rem] left-1/2 -translate-x-1/2 w-[65%] h-auto"
+        className="absolute top-[20rem] left-1/2 -translate-x-1/2 w-[65rem] h-auto"
         src={wall.imageUrl}
         width={580}
         height={480}
@@ -27,7 +27,7 @@ export default function TownWalls() {
         onClick={() => {
           wall.name && wall.level && wall.imageUrl && setSelectedItem(wall);
         }}
-        className="p-3 cursor-pointer text-black z-10 absolute left-1/2 -translate-x-1/2 top-[8rem]"
+        className="p-3 cursor-pointer text-black z-10 absolute left-1/2 -translate-x-1/2 top-[20rem]"
       >
         Wall lvl{wall.level}
       </a>

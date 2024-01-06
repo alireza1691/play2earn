@@ -10,75 +10,117 @@ import LightLogo from "@/svg/lightLogo";
 import NavDropdownMobileScreen from "./navDropdownMobileScreen";
 import NavbarLandingItems from "./navbarLandingItems";
 import NavbarGameItems from "./navbarGameItems";
-import {  getOwnedBuildings, getOwnedLands} from "@/lib/utils";
+import { getOwnedBuildings, getOwnedLands } from "@/lib/utils";
 import { useApiData } from "@/context/api-data-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { townPInst } from "@/lib/instances";
-import { InViewLandType, landDataResType } from "@/lib/types";
+import { InViewLandType, landDataResType, MintedLand } from "@/lib/types";
 import BackIcon from "@/svg/backIcon";
 import { useMapContext } from "@/context/map-context";
 import BalanceContainer from "./gameComponents/townComponents/balanceContainer";
 
-
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { apiData,  mintedLands,buildedResourceBuildings,setArmyTypes,armyTypes } = useApiData();
-  const { setOwnedLands,  setInViewLand,setBuildedResBuildings, inViewLand} = useUserDataContext();
-  const { setSelectedParcel,setSelectedLand,selectedParcel} = useMapContext()
+  const {
+    apiData,
+    mintedLands,
+    buildedResourceBuildings,
+    setArmyTypes,
+    armyTypes,
+    loading
+  } = useApiData();
+  const {
+    setOwnedLands,
+    setInViewLand,
+    setBuildedResBuildings,
+    inViewLand,
+    chosenLand,
+    setChosenLand,
+ setIsUserDataLoading
+  } = useUserDataContext();
+  const { setSelectedParcel, setSelectedLand, selectedParcel } =
+    useMapContext();
   const address = useAddress();
 
   const { theme, toggleTheme } = useTheme();
 
   const currentRoute = usePathname();
 
+  const handleInViewLand = async (land: MintedLand) => {
+  
+    try {
+      const defaultLandData: landDataResType = await townPInst.getLandIdData(
+        Number(land.tokenId)
+      );
+      const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(
+        Number(land.tokenId)
+      );
+      const typesOfWarriors = await townPInst.getArmy(Number(land.tokenId));
+      const defaultLand: InViewLandType = {
+        tokenId: Number(land.tokenId),
+        townhallLvl: defaultLandData.townhallLevel,
+        wallLvl: defaultLandData.wallLevel,
+        barracksLvl: defaultLandData.barracksLevel,
+        trainingCampLvl: defaultLandData.trainingCampLevel,
+        goodsBalance: [
+          defaultLandData.goodsBalance[0],
+          defaultLandData.goodsBalance[1],
+        ],
+        buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
+        remainedBuildTime: remainedWorkerBusyTime,
+        army: typesOfWarriors
+      };
+      setInViewLand(defaultLand);
+      console.log("default land:", defaultLand);
+      // if (!armyTypes) {
+      //   const typesOfWarriors = await townPInst.getArmy(Number(land.tokenId));
+      //   console.log("user army:", typesOfWarriors);
+      // }
+  
+      if (buildedResourceBuildings) {
+        const resBildingsOfDefaultLand = getOwnedBuildings(
+          buildedResourceBuildings,
+          Number(land.tokenId)
+        );
+        setBuildedResBuildings(resBildingsOfDefaultLand);
+
+      }
+      setIsUserDataLoading(false)
+    } catch (error) {
+      
+    }
+  
+  };
+
   useEffect(() => {
     const data = async () => {
-
-    
-      if (address && apiData &&  mintedLands) {
-      
-        const ownedl = getOwnedLands(
-          mintedLands,
-          address
-        );
-
-        
+      if (address && apiData && mintedLands) {
+        const ownedl = getOwnedLands(mintedLands, address);
         setOwnedLands(ownedl);
-        if (ownedl.length>0 && mintedLands && buildedResourceBuildings) {
-          const defaultLandData: landDataResType = await townPInst.getLandIdData(
-            Number(ownedl[0].tokenId)
-          );
-            const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(Number(ownedl[0].tokenId))
-          const defaultLand: InViewLandType = {
-            tokenId: Number(ownedl[0].tokenId),
-            townhallLvl: defaultLandData.townhallLevel,
-            wallLvl: defaultLandData.wallLevel,
-            barracksLvl: defaultLandData.barracksLevel,
-            trainingCampLvl: defaultLandData.trainingCampLevel,
-            goodsBalance: [ defaultLandData.goodsBalance[0],  defaultLandData.goodsBalance[1]],
-            buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
-            remainedBuildTime: remainedWorkerBusyTime,
-          };
-          setInViewLand(defaultLand)
-          console.log("default land:", defaultLand);
-          if (!armyTypes ) {
-            const typesOfWarriors = await townPInst.getArmy(Number(ownedl[0].tokenId))
-            console.log("user army:",typesOfWarriors);
-          }
-
-          const resBildingsOfDefaultLand = getOwnedBuildings(buildedResourceBuildings,Number(ownedl[0].tokenId))
-          setBuildedResBuildings(resBildingsOfDefaultLand)
+        if (!chosenLand && ownedl.length > 0) {
+          setChosenLand(ownedl[0]);
         }
-      
-      
-
+        if (!inViewLand) {
+          handleInViewLand(ownedl[0])
+        }
+        if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {
+          handleInViewLand(chosenLand)
+        }
       }
       if (!address) {
         setOwnedLands(null);
       }
     };
     data();
-  }, [address, apiData,setInViewLand, setOwnedLands, buildedResourceBuildings]);
+  }, [
+    address,
+    apiData,
+    setInViewLand,
+    setOwnedLands,
+    buildedResourceBuildings,
+    chosenLand,
+    inViewLand
+  ]);
 
   return (
     <>
@@ -99,20 +141,23 @@ export default function Navbar() {
               {theme === "light" ? <DarkLogo /> : <LightLogo />}
             </a>
           </div>
-          {currentRoute == "/explore" &&    <a
-          onClick={() => {setSelectedParcel(null) , setSelectedLand(null)}}
-          className={`${
-            selectedParcel == null
-              ? " brightness-50"
-              : " text-gray-800 dark:text-gray-50 hover:bg-black/10 cursor-pointer "
-          } sm:hidden flex flex-col justify-center items-center transition-all  p-2 rounded-lg text-sm font-semibold leading-6`}
-        >
-          <BackIcon />
-          Back
-        </a>
-          }
-          {currentRoute == "myLand" && <BalanceContainer/>}
-       
+          {currentRoute == "/explore" && (
+            <a
+              onClick={() => {
+                setSelectedParcel(null), setSelectedLand(null);
+              }}
+              className={`${
+                selectedParcel == null
+                  ? " brightness-50"
+                  : " text-gray-800 dark:text-gray-50 hover:bg-black/10 cursor-pointer "
+              } md:hidden flex flex-col justify-center items-center transition-all  p-2 rounded-lg text-sm font-semibold leading-6`}
+            >
+              <BackIcon />
+              Back
+            </a>
+          )}
+          {currentRoute == "myLand" && <BalanceContainer />}
+
           <div className=" ml-3 md:ml-5 flex md:hidden   ">
             <button
               className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-800 dark:text-gray-50 right-0 w-fit mr-2"

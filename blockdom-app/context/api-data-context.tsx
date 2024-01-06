@@ -32,17 +32,19 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const [buildedResourceBuildings, setBuildedResourceBuildings] = useState<MintedResourceBuildingType[] | null>(null)
   const [armyTypes, setArmyTypes] = useState <ArmyType[] | null>(null)
 
-  
+  const sepoliaAPIRequest= (address: string) =>{
+   return `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${address}&apikey=${apiKey}`
+  }   
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${landsAddress}&apikey=${apiKey}`
+          sepoliaAPIRequest(landsAddress)
         );
         const response2 = await axios.get(
-          `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${townAddress}&apikey=${apiKey}`
+          sepoliaAPIRequest(townAddress)
         );
         setApiData(response.data);
         console.log("Lands API response:",response);

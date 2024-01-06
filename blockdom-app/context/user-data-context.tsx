@@ -5,7 +5,7 @@ import {
   MintedLand,
   MintedResourceBuildingType,
 } from "@/lib/types";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 type ResourceBuildingObj = {
   tokenId: number;
@@ -40,6 +40,13 @@ type UserDataContextType = {
   setBuildedResBuildings: React.Dispatch<
     React.SetStateAction<BuildedResBuildingsType | null>
   >;
+  chosenLand: MintedLand | null
+  setChosenLand:  React.Dispatch<
+  React.SetStateAction<MintedLand | null>>
+  army: number | null 
+  setArmy: React.Dispatch<React.SetStateAction<number|null>>
+  isUserDataLoading: boolean
+  setIsUserDataLoading: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const UserDataContext = createContext<UserDataContextType | null>(null);
@@ -49,6 +56,7 @@ export default function UserDataContextProvider({
 }: UserDataContextProviderProps) {
   const [ownedLands, setOwnedLands] = useState<MintedLand[] | null>(null);
   const [inViewLand, setInViewLand] = useState<InViewLandType | null>(null);
+  const [chosenLand,setChosenLand] = useState<MintedLand | null>(null)
   const [isOwnedLand, setIsOwnedLands] = useState(false);
   const [buildedResBuildings, setBuildedResBuildings] =
     useState<BuildedResBuildingsType | null>(null);
@@ -56,7 +64,8 @@ export default function UserDataContextProvider({
   const [goldMines, setGoldMines] = useState<ResourceBuildingObj[] | null>(
     null
   );
-  const [army, setArmy] = useState();
+  const [army, setArmy] = useState<number | null>(null);
+  const [isUserDataLoading, setIsUserDataLoading] = useState <boolean>(true)
 
   return (
     <UserDataContext.Provider
@@ -73,6 +82,8 @@ export default function UserDataContextProvider({
         setGoldMines,
         buildedResBuildings,
         setBuildedResBuildings,
+        chosenLand,setChosenLand,army,setArmy,
+        isUserDataLoading,setIsUserDataLoading
       }}
     >
       {children}

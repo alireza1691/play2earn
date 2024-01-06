@@ -38,7 +38,7 @@ export default function BalanceContainer() {
   
   const workerStatus = ():string  => {
     if (inViewLand && Number(inViewLand.remainedBuildTime) == 0 ) {
-      "Ready"
+      return "Ready"
     } 
     if (inViewLand && Number(inViewLand.remainedBuildTime) > 0 ) {
       const remainedTime = Number(inViewLand.remainedBuildTime)

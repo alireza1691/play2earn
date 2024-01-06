@@ -9,7 +9,7 @@ export default function TownHall() {
     const townHall = landItems[0]
   return (
     <Image
-    className="z-10 cursor-pointer absolute top-[12.5rem] left-1/2 -translate-x-1/2 w-[12.5%] h-auto"
+    className="z-10 cursor-pointer absolute top-[22.5rem] left-1/2 -translate-x-1/2 w-[12rem] h-auto"
     src={townHall.imageUrl}
     width={580}
     height={480}

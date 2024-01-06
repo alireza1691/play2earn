@@ -116,9 +116,9 @@ export default function Intro() {
               </motion.button>
             </div>
           </div>
-          <div className=" h-full w-1/2 overflow-hidden border-l-2 border-gray-600/30 flex flex-col relative justify-center">
+          <div className="hidden h-full w-1/2 overflow-hidden border-l-2 border-gray-600/30 sm:flex flex-col relative justify-center">
             <Image
-              className=" hover:scale-125 hover:translate-y-12 hover:translate-x-8 transition ease-out duration-500 right-[6rem] w-fit h-fit absolute"
+              className=" hover:scale-125 hover:translate-y-12 hover:translate-x-8 transition ease-out duration-500 right-[6rem] sm:w-fit sm:h-fit absolute"
               src={"/images/world.png"}
               width={720}
               height={1024}

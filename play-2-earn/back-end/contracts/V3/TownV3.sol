@@ -761,7 +761,7 @@ abstract contract Town is Ownable, Barracks{
             revert MaxCapacity();
         }
 
-        _spendGoods(landTokenId,[VAR.BaseWarriorRequiredFood() * amount, warriorTypes()[typeIndex].price * amount]);
+        _spendGoods(landTokenId,[ VAR.BaseWarriorRequiredFood() * amount * (typeIndex == 5 ? 2 : 1), warriorTypes()[typeIndex].price * amount]);
         _addWarrior(typeIndex, amount, landTokenId);
         emit GoodsConsumption( [VAR.BaseWarriorRequiredFood() * amount, warriorTypes()[typeIndex].price * amount], landTokenId);
     }
