@@ -533,3 +533,8 @@ input::placeholder {
   color: #98fbd7; /* Replace with the color you want */
   opacity: 0.5;
 }
+
+.chainIdDropDownBg{
+  background: rgba(6, 41, 29, 0.90);
+  
+}

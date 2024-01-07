@@ -33,7 +33,7 @@ export default function MyLand() {
       <SelectedBuilding />
 
      {/* <BottomBar/> */}
-      <div className="z-30 hidden sm:flex w-full h-[3rem] fixed bottom-0 bg-gradient-to-t from-black via-black/60"></div>
+      <div className=" hidden sm:flex w-full h-[3rem] fixed bottom-0 bg-gradient-to-t from-black via-black"></div>
     </>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import { ConnectWallet, useAddress, useChainId } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { useTheme } from "@/context/theme-context";
@@ -18,6 +18,8 @@ import { InViewLandType, landDataResType, MintedLand } from "@/lib/types";
 import BackIcon from "@/svg/backIcon";
 import { useMapContext } from "@/context/map-context";
 import BalanceContainer from "./gameComponents/townComponents/balanceContainer";
+
+import ChainIdButton from "./chainIdButton";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,11 +43,12 @@ export default function Navbar() {
   const { setSelectedParcel, setSelectedLand, selectedParcel } =
     useMapContext();
   const address = useAddress();
+  const chainId = useChainId()
 
   const { theme, toggleTheme } = useTheme();
 
   const currentRoute = usePathname();
-
+ 
   const handleInViewLand = async (land: MintedLand) => {
   
     try {
@@ -173,12 +176,13 @@ export default function Navbar() {
           {currentRoute === "/" ? <NavbarLandingItems /> : <NavbarGameItems />}
 
           <div className=" !hidden md:!flex   justify-center items-center gap-3">
-            <button
+            {currentRoute == "/" ?   <button
               onClick={toggleTheme}
               className="  bg-[#06291D] text-white bg-opacity-50  w-[2.5rem] h-[2.5rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
             >
               {theme === "light" ? <BsSun /> : <BsMoon />}
-            </button>
+            </button> : <ChainIdButton/>}
+          
             <ConnectWallet
               className=" !bg-[#06291D] !bg-opacity-50  !p-3 "
               modalSize="wide"

@@ -153,7 +153,7 @@ const BarracksContainer = () => {
                 key={key}
                 className="relative cardBg py-1 justify-center items-center w-fit ml-auto mr-auto darkShadow"
               >
-                {inViewLand && inViewLand.barracksLvl <= key && (
+                {inViewLand && Number(inViewLand.barracksLvl) <= key && (
                   <p className=" !leading-4 w-full px-1 z-10 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center  left-1/2 absolute blueText !font-light !text-[12px]">
                     Available at<br></br>{" "}
                     <span className=" font font-semibold">Level {key + 1}</span>
