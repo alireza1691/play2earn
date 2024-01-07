@@ -162,7 +162,7 @@ const BarracksContainer = () => {
                 <Image
                   className={`${
                     inViewLand &&
-                    inViewLand.barracksLvl <= key &&
+                    Number(inViewLand.barracksLvl) <= key &&
                     "brightness-50"
                   } w-[80px] !h-auto`}
                   src={warrior.image}
