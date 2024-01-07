@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react'
 export default function LandSlideBarCard() {
     const [imageUrl, setImageUrl] = useState<null | string>(null);
   const { selectedLand, setSelectedLand } = useMapContext();
-  const { ownedLands, isOwnedLand, setIsOwnedLands } = useUserDataContext();
+  const { ownedLands } = useUserDataContext();
 
   const getImageUrl = async () => {
     try {      
@@ -27,24 +27,24 @@ export default function LandSlideBarCard() {
             if (!imageUrl && selectedLand) {
               getImageUrl()
             }
-            if (selectedLand && ownedLands) {
-              if (
-                ownedLands.some(
-                  (item) => item.tokenId == selectedLand.coordinate.toString()
-                )
-              ) {
-                setIsOwnedLands(true);
-              }
-            }
-            if (!selectedLand) {
-              setIsOwnedLands(false);
-            }
+            // if (selectedLand && ownedLands) {
+            //   if (
+            //     ownedLands.some(
+            //       (item) => item.tokenId == selectedLand.coordinate.toString()
+            //     )
+            //   ) {
+            //     setIsOwnedLand(true);
+            //   }
+            // }
+            // if (!selectedLand) {
+            //   setIsOwnedLand(false);
+            // }
           } catch (error) {
             console.log(error);
           }
         };
         fetchData();
-      }, [imageUrl, selectedLand,ownedLands, setIsOwnedLands]);
+      }, [imageUrl, selectedLand,ownedLands]);
     
   return (
     <div className=" flex justify-center mt- h-[35%] mb-3 flex-shrink ">

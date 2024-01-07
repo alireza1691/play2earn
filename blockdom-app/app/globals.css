@@ -77,6 +77,10 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
 .redButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#FFBFB1] hover:to-[#FFBFB1]  text-[#424040] active:from-[#9C695E] active:to-[#9C695E];
 }
+.redButton:disabled {
+  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] opacity-60  rounded-[0.8rem] text-[16px] font-medium    text-[#424040];
+
+}
 .closeIcon {
   @apply cursor-pointer rounded-md hover:bg-gray-500/20 p-1;
 }
@@ -84,7 +88,10 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
   @apply disabled:dark:border-[#F48475]/60 disabled:opacity-60 disabled:dark:hover:text-[#F48475] py-3 px-7 w-fit border font-medium dark:text-[#F48475] dark:border-[#F48475] text-[16px] dark:hover:text-[#FFBFB1] dark:hover:border-[#FFBFB1] rounded-[0.8rem] dark:active:border-[#9C695E] dark:active:text-[#9C695E] transition-all;
 }
 .outlineGreenButton {
-  @apply disabled:dark:border-[#98FBD7]/60 disabled:opacity-60 disabled:dark:hover:text-[#98FBD7]  py-3 px-7 w-fit border border-gray-800 hover:bg-gray-100 dark:hover:bg-transparent font-medium dark:text-[#98FBD7] dark:border-[#98FBD7] text-[16px] dark:hover:border-[#4DFBB9] dark:hover:text-[#4DFBB9]  rounded-[0.8rem] dark:active:border-[#1F6C4F] dark:active:text-[#1F6C4F] transition-all;
+  @apply disabled:dark:hover:text-[#98FBD7]  py-3 px-7 w-fit border border-gray-800 hover:bg-gray-100 dark:hover:bg-transparent font-medium dark:text-[#98FBD7] dark:border-[#98FBD7] text-[16px] dark:hover:border-[#4DFBB9] dark:hover:text-[#4DFBB9]  rounded-[0.8rem] dark:active:border-[#1F6C4F] dark:active:text-[#1F6C4F] transition-all;
+}
+.outlineGreenButton:disabled {
+  @apply opacity-40 ;
 }
 .goodsBalanceKeeper {
   @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden;

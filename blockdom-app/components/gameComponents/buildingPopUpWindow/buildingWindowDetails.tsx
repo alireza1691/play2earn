@@ -227,7 +227,7 @@ const TrainingCampContainer = () => {
                 <Image
                   className={`${
                     inViewLand &&
-                    inViewLand.barracksLvl <= key &&
+                    Number(inViewLand.barracksLvl) <= key &&
                     "brightness-50"
                   } w-[80px] !h-auto rounded-md`}
                   src={warrior.image}

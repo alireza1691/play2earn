@@ -1,19 +1,21 @@
+"use client"
 import Image from "next/image";
 import React from "react";
 import { IoMdDownload } from "react-icons/io";
 
 export default function Carousel() {
+
   return (
-    <section className=" px-6 md:px-20 my-[5rem]">
-      <div className="relative w-full rounded-xl overflow-hidden">
-        <Image
-          className=" bg-gray-300/20 brightness-50 object-cover blur-[0.1rem] w-full h-[30rem]"
+    <section  className=" px-6 md:px-20 my-[5rem]" id="carousel">
+      <div className="relative w-full rounded-xl overflow-hidden min-h-[30rem] bg-gray-600/20">
+        {/* <Image
+          className=" bg-gray-300/20 brightness-50 object-cover blur-[0.1rem] w-full min-h-[30rem]"
           src={"/icons/map.jpeg"}
           width={500}
           height={500}
           alt="carouselBackground"
-        />
-        <div className=" absolute left-4 top-6 max-w-[50%]">
+        /> */}
+        <div className="  left-4 top-6 max-w-[80%] lg:max-w-[50%] p-6">
           <h3 className=" font-bold text-[32px] text-white mb-6">
             Innovative tokenomics
           </h3>

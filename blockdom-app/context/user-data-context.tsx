@@ -28,8 +28,8 @@ type UserDataContextType = {
   setOwnedLands: React.Dispatch<React.SetStateAction<MintedLand[] | null>>;
   inViewLand: InViewLandType | null;
   setInViewLand: React.Dispatch<React.SetStateAction<InViewLandType | null>>;
-  isOwnedLand: boolean;
-  setIsOwnedLands: React.Dispatch<React.SetStateAction<boolean>>;
+  // isOwnedLand: boolean;
+  // setIsOwnedLand: React.Dispatch<React.SetStateAction<boolean>>;
   farms: ResourceBuildingObj[] | null;
   setFarms: React.Dispatch<React.SetStateAction<ResourceBuildingObj[] | null>>;
   goldMines: ResourceBuildingObj[] | null;
@@ -57,7 +57,7 @@ export default function UserDataContextProvider({
   const [ownedLands, setOwnedLands] = useState<MintedLand[] | null>(null);
   const [inViewLand, setInViewLand] = useState<InViewLandType | null>(null);
   const [chosenLand,setChosenLand] = useState<MintedLand | null>(null)
-  const [isOwnedLand, setIsOwnedLands] = useState(false);
+  // const [isOwnedLand, setIsOwnedLand] = useState(false);
   const [buildedResBuildings, setBuildedResBuildings] =
     useState<BuildedResBuildingsType | null>(null);
   const [farms, setFarms] = useState<ResourceBuildingObj[] | null>(null);
@@ -74,8 +74,8 @@ export default function UserDataContextProvider({
         setOwnedLands,
         inViewLand,
         setInViewLand,
-        isOwnedLand,
-        setIsOwnedLands,
+        // isOwnedLand,
+        // setIsOwnedLand,
         farms,
         setFarms,
         goldMines,

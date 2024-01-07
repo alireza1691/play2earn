@@ -27,7 +27,7 @@ export default function Roadmap() {
               <h3 className=" text-gray-400 px-3 py-2 -translate-x-1/2 -translate-y-1/4  absolute mt-[9.5rem] left-1/2 bg-gradient-to-br  from-[#1a2920] to-[#1c3827]  rounded-xl">
                 {step.stepNum}
               </h3>
-              <div className=" translate-y-3/4 lg:translate-y-0 group-odd:-left-[5.5rem] max-w-[120px]  md:max-w-[22.5rem] md: ml-auto md:mr-auto group-even:-right-[5.5rem] lg:group-odd:-left-0 lg:group-even:-right-0 lg:group-even:mt-[12.5rem] h-40 w-40 md:w-full relative">
+              <div className=" translate-y-[90%] lg:translate-y-0 group-odd:-left-[5.5rem] max-w-[120px]  md:max-w-[22.5rem] md: ml-auto md:mr-auto group-even:-right-[5.5rem] lg:group-odd:-left-0 lg:group-even:-right-0 lg:group-even:mt-[12.5rem] h-40 w-40 lg:w-[16rem] relative">
                 <h3 className=" text-[16px] text-[#2E4F3B] dark:text-[#A5F4B6] text-center font-[700]">
                   {step.title}
                 </h3>

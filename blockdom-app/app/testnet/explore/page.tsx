@@ -1,5 +1,5 @@
 import Slidebar from "@/components/gameComponents/landSlideBarComponents/landSlideBar";
-import Attack from "@/components/gameComponents/attack";
+import Attack from "@/components/gameComponents/attack/attack";
 import React from "react";
 
 import BattleLog from "@/components/gameComponents/battleLog/battleLogContainer";

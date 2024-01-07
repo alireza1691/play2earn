@@ -23,7 +23,8 @@ export default function NavbarLandingItems() {
       Dashboard
     </a>
     <a
-      onClick={() => {}}
+    download
+      href='/Blockdom Whitepaper.pdf'
       className="group flex flex-row gap-2 cursor-pointer transition-all p-2  text-sm font-semibold leading-6 text-gray-800 dark:text-gray-50"
     >
       Whitepaper
