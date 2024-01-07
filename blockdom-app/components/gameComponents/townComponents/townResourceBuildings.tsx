@@ -36,6 +36,8 @@ export default function TownResourceBuildings() {
         let farmsArray: ResourceBuildingObj[] = [];
         let goldMinesArray: ResourceBuildingObj[] = [];
         if (buildedResBuildings.farms.length > 0) {
+          console.log("buildedResBuildings",buildedResBuildings);
+          
           for (
             let index = 0;
             index < buildedResBuildings.farms.length;
@@ -72,10 +74,10 @@ export default function TownResourceBuildings() {
               name: "GoldMine",
               earnedAmount: Number(formatEther(currentRevenue)),
             };
-            farmsArray.push(obj);
+            goldMinesArray.push(obj);
           }
           setGoldMines(goldMinesArray);
-          console.log("Gold mines:", farmsArray);
+          console.log("Gold mines:", goldMinesArray);
         } else {
           setGoldMines([]);
         }
@@ -109,7 +111,7 @@ export default function TownResourceBuildings() {
             {farms.map((item, key) => (
               <React.Fragment key={key}>
                 <Image
-                  className="z-10 cursor-pointer  w-[10rem] h-auto"
+                  className="z-10 cursor-pointer   w-[10rem] h-auto"
                   src={farmImage(item.level)}
                   width={580}
                   height={480}
@@ -145,7 +147,7 @@ export default function TownResourceBuildings() {
           </>
         )}
       </div>
-      <div className="z-10 flex flex-row left-[30rem] ml-auto absolute top-[10rem]">
+      <div className="z-10 flex flex-row left-[30rem] ml-auto gap-10 absolute top-[10rem]">
         {goldMines && goldMines.length == 0 && (
           <Image
             className=" cursor-pointer  w-[10rem] h-auto opacity-40"

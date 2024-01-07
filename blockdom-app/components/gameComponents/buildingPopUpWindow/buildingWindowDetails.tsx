@@ -120,7 +120,7 @@ const ResourceContainer = () => {
           />
 
           <h3 className="mt-4 font-semibold  flex flex-row  items-center">
-            <FoodIcon />{" "}
+            <FoodIcon />{""}
             {selectedResourceBuilding && selectedResourceBuilding.earnedAmount}
           </h3>
           <ProgressBar
@@ -386,16 +386,5 @@ const UpgradeHeader = ({ title, currentLevel }: UpgradeHeaderProps) => {
   );
 };
 {
-  /* <Progress
-            // label="0 per hour"
-            value={16.5}
-            maxValue={100}
-            classNames={{
-              base: "max-w-md ",
-              track: " progress ",
-              indicator: " progressIndicator",
-              label: "tracking-wider font-medium text-default-600",
-              value: "text-foreground/60 ",
-            }}
-          /> */
+
 }

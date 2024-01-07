@@ -54,17 +54,6 @@ export const footerRow2 = [
   },
 ];
 
-// - Launching game on testnet<br></br>- Attracting community
-
-//   - Land presale on mainnet<br></br>- Marketing
-
-//   - Launching game on mainnet <br></br>- Partnerships
-
-//   - Updating game assets<br></br>- Tournaments{" "}
-
-//   - ERC721 Heroes<br></br>- Community challenges
-
-//   - Land presale on mainnet<br></br>- Marketing
 
 export const roadmapSteps = [
   {
@@ -140,11 +129,11 @@ export const questions = [
 ];
 
 export const landItems = [
-  { name: "Townhall", imageUrl: "/buildings/townhallLv1.png", level: 2 },
-  { name: "Barracks", imageUrl: "/buildings/barracksLv1.png", level: 2 },
-  { name: "GoldMine", imageUrl: "/buildings/goldMineLv0.png", level: 2 },
-  { name: "Farm", imageUrl: "/buildings/farmLv0.png", level: 2 },
-  { name: "Wall", imageUrl: "/testWalls.svg", level: 2 },
+  { name: "Townhall", imageUrl: "/buildings/townhallLv1.png"},
+  { name: "Barracks", imageUrl: "/buildings/barracksLv1.png"},
+  { name: "GoldMine", imageUrl: "/buildings/goldMineLv0.png" },
+  { name: "Farm", imageUrl: "/buildings/farmLv0.png"},
+  { name: "Wall", imageUrl: "/testWalls.svg" },
   {
     name: "TrainingCamp",
     imageUrl: "/buildings/trainingCampLv1.png",

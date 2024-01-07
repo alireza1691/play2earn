@@ -234,7 +234,7 @@ return cap
         >
           Back
         </button>
-        <button className="!w-[12.5rem] greenButton">Confirm</button>
+        {/* <button className="!w-[12.5rem] greenButton">Confirm</button> */}
       </div>
     </section>
   );

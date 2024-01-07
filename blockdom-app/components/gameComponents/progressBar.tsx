@@ -13,7 +13,7 @@ const ProgressBar: React.FC<DualProgressBarProps> = ({  amount }) => {
 
   return (
     <div className="dual-progress-bar">
-      <div className="progress-bar secondary" style={{ width: calculateWidth(amount) }} />
+      <div className="progress-bar secondary max-w-full" style={{ width: calculateWidth(amount) }} />
     </div>
   );
 };
