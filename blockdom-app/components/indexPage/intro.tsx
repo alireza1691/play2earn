@@ -56,7 +56,7 @@ export default function Intro() {
             <p className=" text-center text-[16px] text-gray-600 dark:text-gray-400  font-medium sm:text-left pt-4">
               Blockdom is a P2E game based on digital assets.
               <br></br>
-              Let's start your journey by minting an NFT land and establishing your kingdom on the blockchain.
+              Let&apos;s start your journey by minting an NFT land and establishing your kingdom on the blockchain.
               <br></br>
               <br></br>
               Enjoy free gameplay on the TESTNET and earn rewards on the MAINNET.

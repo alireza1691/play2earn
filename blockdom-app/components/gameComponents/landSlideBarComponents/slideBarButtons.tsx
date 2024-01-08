@@ -15,13 +15,15 @@ import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 
 
 export default function SlideBarButtons() {
-  const { selectedLand, } = useMapContext();
+  const { selectedLand,setSelectedLand } = useMapContext();
   const { ownedLands } = useUserDataContext();
   const {  mint } = useBlockchainUtilsContext()
   let signer = useSigner();
   const [priceFormatEther, setPriceFromatEther] = useState<BigNumberish | null>(
     null
   );
+  const {  setSelectedWindowComponent } =
+    useSelectedWindowContext();
 
   const isOwned = () =>{
     if (ownedLands && selectedLand) {
@@ -54,8 +56,6 @@ export default function SlideBarButtons() {
     
   }, [selectedLand]);
 
-  const {  setSelectedWindowComponent } =
-    useSelectedWindowContext();
 
   return (
     <div className="w-full mt-auto flex flex-col py-3 flex-shrink">
