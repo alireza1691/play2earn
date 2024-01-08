@@ -1,5 +1,5 @@
 import { useMapContext } from "@/context/map-context";
-import { warriors } from "@/lib/data";
+import { warriors, warriorsInfo } from "@/lib/data";
 import CoinIcon from "@/svg/coinIcon";
 import FoodIcon from "@/svg/foodIcon";
 import Image from "next/image";
@@ -23,7 +23,7 @@ export default function LandSlidebarContent() {
           </div>
 
           <div className="flex flex-row overflow-x-scroll sm:overflow-auto p-1 sm:p-0 rounded-t-md bg-black/20 sm:bg-inherit sm:grid sm:grid-cols-3 mt-2  sm:mt-4 gap-4 mr-auto ml-auto sm:h-auto h-full w-full custom-scrollbar">
-            {warriors.map((warrior, key) => (
+            {warriorsInfo.map((warrior, key) => (
               <div
                 key={key}
                 className="relative  sm:!rounded-md cardBg !pt-[2px] !px-[2px] sm:px-1 sm:pt-1 pb-[16px] sm:pb-6 justify-center items-center h-full  w-max ml-auto mr-auto darkShadow"
@@ -33,8 +33,8 @@ export default function LandSlidebarContent() {
                   10
                 </p>
                 <Image
-                  className={`sm:!w-[80px] !h-full !w-auto rounded-sm sm:rounded-md`}
-                  src={"/images/warriorTest.png"}
+                  className={`sm:!w-[80px] !h-auto !w-auto rounded-sm sm:rounded-md`}
+                  src={warrior.image}
                   width={60}
                   height={120}
                   alt="warrior image"
