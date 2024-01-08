@@ -143,7 +143,7 @@ return cap
           <div
             key={key}
             className={`flex flex-col gap-1  !rounded-lg  relative  ${
-              inViewLand && key >= inViewLand?.barracksLvl && "opacity-50"
+              inViewLand && key >= Number(inViewLand?.barracksLvl) && "opacity-50"
             }`}
           >
             { inViewLand && key >= inViewLand.barracksLvl && (
