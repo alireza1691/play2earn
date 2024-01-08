@@ -5,7 +5,7 @@ import DoubleSword from "@/svg/doubleSword";
 import Image from "next/image";
 import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp, IoIosArrowBack } from "react-icons/io";
-import AttackTargetInfo from "../attackTargetInfo";
+import AttackTargetInfo from "./attackTargetInfo";
 import WarriorsSliders from "./warriorsSliders";
 import AttackerComp from "./attackerComp";
 
@@ -47,19 +47,20 @@ export default function Attack() {
             </a>
           </div>
 
-          <div className=" flex flex-row justify-center md:justify-around h-[80%]">
+          <div className=" flex flex-col md:flex-row ml-auto mr-auto md:ml-0 md:mr-0 justify-center md:justify-around h-[80%]">
          <AttackerComp/>
             <div className="md:flex flex-col justify-center hidden md:visible">
               <DoubleSword />
             </div>
-            <div className=" md:flex flex-col items-center hidden md:visible w-[35%] max-w-[22.5rem]">
-              <Image
-                className="  w-[200px] h-auto max-h-[55%]"
-                src={"/cards/LandCard.png"}
-                height={364}
-                width={256}
-                alt="targetCard"
-              />
+            <div className=" md:flex flex-col items-center hidden md:visible w-[35%] max-w-[22.5rem] ">
+            <div className=" flex-shrink flex relative w-[180px] h-auto mb-6 md:mb-10">
+      <Image
+        className="h-full w-full  "
+        src={"/cards/LandCard.png"}
+        height={364}
+        width={256}
+        alt="card"
+      /></div>
               <AttackTargetInfo />
             </div>
           </div>

@@ -12,7 +12,7 @@ export default function WarriorsSliders() {
   const {ownedLands,inViewLand,chosenLand,setChosenLand} = useUserDataContext()
 
   return (
-    <div className=" flex flex-col mt-2 md:mt-6 w-full px-2 h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
+    <div className=" flex flex-col mt-2 md:mt-6 w-full max-w-[17.5rem] px-2 h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
       {warriors.map((warrior,key) => (
     <div key={key} className=" flex flex-row relative ">
     <Image

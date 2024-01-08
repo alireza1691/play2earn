@@ -13,7 +13,7 @@ export default function AttackerComp() {
     
   return (
     <div className=" flex flex-col items-center w-full px-4 md:px-1 md:w-[35%] max-w-[22.5rem]">
-    <div className=" relative w-auto  md:w-[200px] max-h-[55%] h-full ">
+    <div className=" flex-shrink flex relative h-[45%]  w-auto mb-6 md:mb-10 object-fill">
       <Image
         className="h-full w-full  "
         src={"/cards/LandCard.png"}
@@ -21,7 +21,7 @@ export default function AttackerComp() {
         width={256}
         alt="card"
       />
-      <div className=" bottom-0 absolute w-full">
+      <div className=" bottom-0 absolute w-full ">
         <ul
           onClick={() => setDropDown(!dropDown)}
           className={`${
@@ -36,7 +36,7 @@ export default function AttackerComp() {
           )}
         </ul>
         {dropDown && (
-          <div className="z-10 absolute w-[225px] mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
+          <div className="z-10   absolute w-[225px] mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
             {ownedLands && ownedLands.map((land, key) => (
               <li
                 key={key}
