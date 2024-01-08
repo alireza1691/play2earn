@@ -12,11 +12,12 @@ export default function LandSlidebarContent() {
       {!selectedLand?.isMinted && <></>}
       {selectedLand?.isMinted && (
         <div className=" flex flex-col flex-grow items-center justify-center mb-2">
-          <div className=" flex flex-row gap-3">
-            <h3 className="balBg px-5 py-2 flex flex-row items-center gap-3">
+          <div className=" flex flex-row gap-3 px-2 flex-shrink">
+            <h3 className="!text-[10px]   sm:!text-[14px] balBg px-3 sm:px-5 sm:py-2 flex flex-row items-center gap-3">
+              <div></div>
               <CoinIcon /> 10000
             </h3>
-            <h3 className="balBg px-5 py-2 flex flex-row items-center gap-3">
+            <h3 className="!text-[10px]  sm:!text-[14px] balBg px-5 sm:py-2 flex flex-row items-center gap-3">
               <FoodIcon /> 20000
             </h3>
           </div>
@@ -25,14 +26,14 @@ export default function LandSlidebarContent() {
             {warriors.map((warrior, key) => (
               <div
                 key={key}
-                className="relative min-w-[5rem] !rounded-md cardBg px-1 pt-1 pb-6 justify-center items-center h-full  w-max ml-auto mr-auto darkShadow"
+                className="relative  sm:!rounded-md cardBg !pt-[2px] !px-[2px] sm:px-1 sm:pt-1 pb-[16px] sm:pb-6 justify-center items-center h-full  w-max ml-auto mr-auto darkShadow"
               >
            
-                <p className=" absolute bottom-0 left-1/2 -translate-x-1/2 font-semibold text-[14px]">
+                <p className=" text-[10px] font-normal absolute bottom-0 left-1/2 -translate-x-1/2 sm:font-semibold sm:text-[14px]">
                   10
                 </p>
                 <Image
-                  className={`sm:!w-[80px] !h-full !w-auto rounded-md`}
+                  className={`sm:!w-[80px] !h-full !w-auto rounded-sm sm:rounded-md`}
                   src={"/images/warriorTest.png"}
                   width={60}
                   height={120}

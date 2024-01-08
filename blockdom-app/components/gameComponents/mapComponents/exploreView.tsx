@@ -29,7 +29,7 @@ export default function ExploreView() {
       {selectedParcel && (
         <>
           {/* <MapHandler setIsParcelSelected={setIsParcelSelected} /> */}
-          <div className="z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center flex justify-center ">
+          <div className="z-50 sm:z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center flex justify-center ">
             <h3 className="text-[#98FBD7] -z-10">
               {selectedParcel.x}-{selectedParcel.y}
             </h3>
