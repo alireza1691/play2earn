@@ -104,10 +104,13 @@ export default function Navbar() {
           setChosenLand(ownedl[0]);
         }
         if (!inViewLand) {
-          handleInViewLand(ownedl[0])
+          await handleInViewLand(ownedl[0])
+
         }
         if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {
-          handleInViewLand(chosenLand)
+          setIsUserDataLoading(true)
+          await handleInViewLand(chosenLand)
+         
         }
       }
       if (!address) {

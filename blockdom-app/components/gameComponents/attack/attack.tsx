@@ -6,7 +6,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp, IoIosArrowBack } from "react-icons/io";
 import AttackTargetInfo from "../attackTargetInfo";
-import WarriorsSliders from "../warriorsSliders";
+import WarriorsSliders from "./warriorsSliders";
 import AttackerComp from "./attackerComp";
 
 export default function Attack() {

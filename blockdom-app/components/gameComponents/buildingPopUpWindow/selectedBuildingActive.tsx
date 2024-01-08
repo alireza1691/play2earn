@@ -146,7 +146,7 @@ return cap
               inViewLand && key >= Number(inViewLand?.barracksLvl) && "opacity-50"
             }`}
           >
-            { inViewLand && key >= inViewLand.barracksLvl && (
+            { inViewLand && key >= Number(inViewLand.barracksLvl) && (
               <div className="flex  justify-center z-10 absolute  w-full h-full rounded-md backdrop-brightness-75 bg-black/60 ">
                 <h3 className=" text-center text-[#98FBD7] text-[14px] mt-2">
                   Unlock at <span className=" font-bold">level {key + 1}</span>{" "}

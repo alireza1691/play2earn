@@ -3,12 +3,12 @@ import { MintedLand } from '@/lib/types';
 import Image from 'next/image';
 import React, { useState } from 'react'
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
-import WarriorsSliders from '../warriorsSliders';
+import WarriorsSliders from './warriorsSliders';
 
 export default function AttackerComp() {
     const [dropDown, setDropDown] = useState<boolean>(false);
-    const {ownedLands,inViewLand} = useUserDataContext()
-    const [selectedLand, setSelectedLand] = useState<number | null>(inViewLand?.tokenId || null);
+    const {ownedLands,inViewLand,chosenLand,setChosenLand, setIsUserDataLoading} = useUserDataContext()
+    // const [selectedLand, setSelectedLand] = useState<number | null>(ownedLands && Number(ownedLands[0].tokenId));
 
     
   return (
@@ -28,7 +28,7 @@ export default function AttackerComp() {
             dropDown ? " " : "bg-[#06291D]/50"
           } transition-all active:opacity-60 ring-gray-600 group  cursor-pointer flex flex-row justify-between items-center bg-[#06291D]/50 text-[#98FBD7] font-medium text-[16px] w-full px-6 py-3 rounded-b-[1.02rem] backdrop-blur-sm`}
         >
-          {selectedLand}
+          {chosenLand?.tokenId}
           {dropDown ? (
             <IoIosArrowUp className="  group-active:-translate-y-1" />
           ) : (
@@ -41,7 +41,7 @@ export default function AttackerComp() {
               <li
                 key={key}
                 onClick={() => {
-                  setSelectedLand(Number(land.tokenId)), setDropDown(false);
+                  setChosenLand(land), setDropDown(false);
                 }}
                 className=" text-white cursor-pointer px-3 py-2 hover:bg-green-100/10 rounded-lg"
               >

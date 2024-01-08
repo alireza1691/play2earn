@@ -11,10 +11,11 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function ActionStateComponent() {
-  const { setTransactionState, transactionState, txError } = useBlockchainStateContext();
-  const {isUserDataLoading} = useUserDataContext()
-  const address = useAddress()
-  const pathname = usePathname()
+  const { setTransactionState, transactionState, txError } =
+    useBlockchainStateContext();
+  const { isUserDataLoading } = useUserDataContext();
+  const address = useAddress();
+  const pathname = usePathname();
 
   const title = (): string => {
     let titleString: string = "";
@@ -46,20 +47,22 @@ export default function ActionStateComponent() {
     return titleString;
   };
   return (
-    <>{
-      isUserDataLoading &&  address&& pathname == "/myLand"  &&    <div className=" absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
-         <div className="flex flex-grow relative">
-              {/* <Spinner color="success" size="lg" className='customSpinner ml-auto mr-auto absolute w-full mt-auto h-full '/> */}
-              <div className="flex ml-auto mr-auto w-full h-full  mt-auto mb-auto  absolute ">
-                <div className="spinner mt-auto mb-auto  ml-auto mr-auto "></div>
-              </div>
-              <div className="flex ml-auto mr-auto w-11 h-auto  mt-auto mb-auto  relative ">
-                <BlockdomLogo />
-              </div>
+    <>
+      {isUserDataLoading && address 
+      // && pathname == "/myLand"
+       && (
+        <div className=" absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
+          <div className="flex flex-grow relative">
+            {/* <Spinner color="success" size="lg" className='customSpinner ml-auto mr-auto absolute w-full mt-auto h-full '/> */}
+            <div className="flex ml-auto mr-auto w-full h-full  mt-auto mb-auto  absolute ">
+              <div className="spinner mt-auto mb-auto  ml-auto mr-auto "></div>
             </div>
-      </div>
-
-    }
+            <div className="flex ml-auto mr-auto w-11 h-auto  mt-auto mb-auto  relative ">
+              <BlockdomLogo />
+            </div>
+          </div>
+        </div>
+      )}
       {transactionState != null && (
         <div className=" absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
           {/* <h3 className='px-[10%]  mt-4 text-center !text-white font-semibold'>{title()}</h3> */}
@@ -103,7 +106,7 @@ export default function ActionStateComponent() {
               </div>
             </div>
           )}
-          {transactionState != "waitingBlockchainConfirmation"  ? (
+          {transactionState != "waitingBlockchainConfirmation" ? (
             <div className="mt-auto px-3 py-3 flex flex-shrink">
               {" "}
               <button

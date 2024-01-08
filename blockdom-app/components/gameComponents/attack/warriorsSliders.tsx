@@ -1,3 +1,4 @@
+import { useUserDataContext } from "@/context/user-data-context";
 import { warriors } from "@/lib/data";
 import { Slider } from "@nextui-org/react";
 import { Span } from "next/dist/trace";
@@ -7,6 +8,9 @@ import React from "react";
 
 
 export default function WarriorsSliders() {
+
+  const {ownedLands,inViewLand,chosenLand,setChosenLand} = useUserDataContext()
+
   return (
     <div className=" flex flex-col mt-2 md:mt-6 w-full px-2 h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
       {warriors.map((warrior,key) => (
@@ -19,7 +23,37 @@ export default function WarriorsSliders() {
       className=" w-auto  h-[60px] "
     />
     {/* classNames={{indicator: "bg-[#98DDFB]",track:"bg-gray-800/20 border border-gray-300/30 darkShadow"}}  */}
-    <Slider
+    {inViewLand && Number(inViewLand.barracksLvl) > key ? (
+      <Slider
+      color="foreground"
+      label={warrior}
+      step={1}
+      maxValue={Number(inViewLand.army[key])}
+      minValue={0}
+      defaultValue={0}
+      getValue={(existedAmount) => `${existedAmount} of ${Number(inViewLand.army[key])}`}
+      // className="max-w-md "
+      onChangeEnd={() => {
+        ("");
+      }}
+     classNames={{
+      base:" text-white",
+      filler:"-ml-3 bg-[#9BFCD4] rounded-l-full ",
+      track:" bg-gray-400/30 darkShadow border border-gray-300/30",
+      thumb:" bg-[#9BFCD4]",
+      
+     }}
+     renderThumb={(props) => (
+      <div
+        {...props}
+        className="group p-[2px] top-1/2 bg-gray-200/70 border-small border-default-200 dark:border-gray-300/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
+      >
+        <span className="transition-transform bg-[#9BFCD4] shadow-small  rounded-full w-5 h-5 block group-data-[dragging=true]:scale-90" />
+      </div>
+    )}
+    />
+    ):(<Slider
+    isDisabled
       color="foreground"
       label={warrior}
       step={1}
@@ -46,7 +80,8 @@ export default function WarriorsSliders() {
         <span className="transition-transform bg-[#9BFCD4] shadow-small  rounded-full w-5 h-5 block group-data-[dragging=true]:scale-90" />
       </div>
     )}
-    />
+    />)}
+    
   </div>
       ))}
 {/*   
