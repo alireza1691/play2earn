@@ -23,6 +23,7 @@ import ChainIdButton from "./chainIdButton";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [isTestnet,setIsTestnet] = useState()
   const {
     apiData,
     mintedLands,
@@ -48,6 +49,9 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   const currentRoute = usePathname();
+ 
+    const isTestnet = currentRoute.includes("/testnet/");
+
  
   const handleInViewLand = async (land: MintedLand) => {
   
@@ -103,19 +107,26 @@ export default function Navbar() {
         if (!chosenLand && ownedl.length > 0) {
           setChosenLand(ownedl[0]);
         }
-        if (!inViewLand) {
-          await handleInViewLand(ownedl[0])
-
+        if (isTestnet) {
+          if (!inViewLand) {
+            await handleInViewLand(ownedl[0])
+  
+          }
+          if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {
+            setIsUserDataLoading(true)
+            await handleInViewLand(chosenLand)
+           
+          }
+        }  else {
+          setInViewLand(null)
+          setIsUserDataLoading(false)
         }
-        if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {
-          setIsUserDataLoading(true)
-          await handleInViewLand(chosenLand)
-         
-        }
+  
       }
       if (!address) {
         setOwnedLands(null);
       }
+ 
     };
     data();
   }, [
@@ -125,7 +136,8 @@ export default function Navbar() {
     setOwnedLands,
     buildedResourceBuildings,
     chosenLand,
-    inViewLand
+    inViewLand,
+    chainId
   ]);
 
   return (

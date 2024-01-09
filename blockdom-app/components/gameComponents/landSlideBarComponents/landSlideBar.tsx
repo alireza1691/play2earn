@@ -26,7 +26,7 @@ export default function Slidebar() {
       <div
         className={`${
           selectedLand
-            ? "z-50 sm:z-30 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16"
+            ? "z-100 sm:z-30 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-16"
             : "!-left-[50rem]"
         }  ${selectedWindowComponent == "attack" && "hidden"} flex flex-col transition-all  top-[4.55rem] absolute h-[75%] sm:h-[85%] w-[90%] md:w-[22.5rem]  px-3 bg-[#21302A]/60 backdrop-blur-sm rounded-2xl `}
       >

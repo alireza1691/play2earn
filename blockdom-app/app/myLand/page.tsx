@@ -32,7 +32,7 @@ export default function MyLand() {
               alt="bg"
               quality={30}
             /> */}
-
+            <div className="flex z-20 h-screen w-screen bg-black/50 backdrop-blur-lg fixed"> <h3 className=" mt-auto mb-auto ml-auto mr-auto max-w-[15.5rem] sm:max-w-[22.5rem] text-center"> The Mainnet town will become available when the user count reaches a minimum of 500.</h3></div>
             <Town />
           </div>
         </div>

@@ -1,16 +1,19 @@
 "use client";
 import { useChainId, useSwitchChain } from "@thirdweb-dev/react";
-import { Sepolia, Arbitrum } from "@thirdweb-dev/chains";
+import { Sepolia, Arbitrum ,Polygon} from "@thirdweb-dev/chains";
 import React, { useState } from "react";
+import Router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function ChainIdButton() {
   const [isNotifActive, setIsNotifActive] = useState(false);
   const chainId = useChainId();
   const switchChain = useSwitchChain();
+  const router = useRouter()
 
   const switchMainnet = async () => {
     try {
-      await switchChain(Arbitrum.chainId);
+      await switchChain(Polygon.chainId);
     } catch (error) {
       console.log("Network change failed");
     }
@@ -30,7 +33,7 @@ export default function ChainIdButton() {
     if (chainId == Sepolia.chainId) {
       status = "Testnet";
     }
-    if (chainId == Arbitrum.chainId) {
+    if (chainId == Polygon.chainId) {
       status = "Mainnet";
     }
     return status;
@@ -38,7 +41,7 @@ export default function ChainIdButton() {
 
   return (
     <>
-      <div className=" flex flex-col absolute top-[0.45rem] right-[14rem] ">
+      <div className="hidden sm:flex flex-col absolute top-[0.45rem] right-[14rem] ">
         <button
           onClick={() => setIsNotifActive(!isNotifActive)}
           className={`${
@@ -55,15 +58,16 @@ export default function ChainIdButton() {
           <div
             className={` w-[12rem] absolute py-2 px-1 chainIdDropDownBg rounded-lg   max-h-40 gap-1 flex  flex-col`}
           >
-            <a onClick={() => {switchMainnet()}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
-              Arbitrum (Mainnet)
+            <a onClick={() => {switchMainnet(),router.push("/explore")}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
+              Polygon (Mainnet)
             </a>
-            <a onClick={() => {switchTestnet()}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
+            <a onClick={() => {switchTestnet(),router.push("/testnet/explore")}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
               Sepolia (Testnet)
             </a>
           </div>
         </div>
       </div>
+     
     </>
   );
 }

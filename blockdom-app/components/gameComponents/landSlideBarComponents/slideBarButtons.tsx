@@ -1,7 +1,7 @@
 import { useMapContext } from "@/context/map-context";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useUserDataContext } from "@/context/user-data-context";
-import {  landsPInst, landsSInst } from "@/lib/instances";
+import {  landsMainnetPInst, landsPInst, landsSInst } from "@/lib/instances";
 import {
 
   useSigner,
@@ -12,16 +12,20 @@ import React, { useEffect, useState } from "react";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
+import { usePathname } from "next/navigation";
 
 
 export default function SlideBarButtons() {
   const { selectedLand,setSelectedLand } = useMapContext();
   const { ownedLands } = useUserDataContext();
   const {  mint } = useBlockchainUtilsContext()
-  let signer = useSigner();
+
   const [priceFormatEther, setPriceFromatEther] = useState<BigNumberish | null>(
     null
   );
+
+  const pathname = usePathname()
+  const isTestnet = pathname.includes("/testnet/")
   const {  setSelectedWindowComponent } =
     useSelectedWindowContext();
 
@@ -44,7 +48,8 @@ export default function SlideBarButtons() {
   useEffect(() => {
     const getData = async () => {
       if (selectedLand?.isMinted == false) {
-        const inst = landsPInst;
+
+        const inst = isTestnet ? landsPInst : landsMainnetPInst;
 
         const price = await inst.getPrice();
         setPriceFromatEther(price);

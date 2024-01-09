@@ -117,7 +117,7 @@ error Lands__InvalidCoordinate();
 error Lands__LandAlreadyMinted();
 error Lands__InsufficientPrice();
 
-abstract contract Lands is ERC721, Ownable {
+contract Lands is ERC721, Ownable {
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -139,7 +139,7 @@ abstract contract Lands is ERC721, Ownable {
     //  ******************************************************************************
 
 
-    uint256 private constant defaultLandPrice = 20000000 gwei; // Equal 0.02 ether
+    uint256 private defaultLandPrice; // Equal 0.02 ether
     // mapping (uint256 => Land) public tokenIdLand;
     // mapping (address => uint8) private difficultyCost;
 
@@ -162,7 +162,8 @@ abstract contract Lands is ERC721, Ownable {
 
 
 
-    constructor() ERC721("Blockdom lands","BML") {
+    constructor(uint256 defaultPrice) ERC721("Blockdom lands","BML") Ownable(msg.sender) {
+        defaultLandPrice = defaultPrice;
     }
 
 
@@ -231,6 +232,15 @@ abstract contract Lands is ERC721, Ownable {
     //  ******************************************************************************
     //  ******************************************************************************
 
+    function withdraw(address payable _to) external onlyOwner {
+         uint256 balance = address(this).balance;
+         require(balance > 0, "No balance to withdraw");
+         payable(_to).transfer(balance);
+    }
+
+    function changePrice(uint256 price) external  onlyOwner{
+        defaultLandPrice = price;
+    }
 
 
 
@@ -247,7 +257,7 @@ abstract contract Lands is ERC721, Ownable {
     //     return tokenIdLand[tokenId];
     // }
 
-    function getPrice() pure public returns (uint256) {
+    function getPrice() view public returns (uint256) {
         return defaultLandPrice;
     }
 
@@ -293,9 +303,10 @@ abstract contract Lands is ERC721, Ownable {
 
 
     function _baseURI() internal  view virtual override   returns (string memory) {
-        return "https://gateway.pinata.cloud/ipfs/QmYsaPTHuQXwxHZT1xgzzauMpaBsvXGLT7Et4d7YpCrFQe";
+        return "https://gateway.pinata.cloud/ipfs/QmQjVmvqXn3qVTEZo1U6tJfvCAB85Uj5DnBaSbZRrNy7NE";
     }
 
 
+receive() external payable {}
    
 }

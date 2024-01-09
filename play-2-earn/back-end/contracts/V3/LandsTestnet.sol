@@ -293,7 +293,7 @@ abstract contract Lands is ERC721, Ownable {
 
 
     function _baseURI() internal  view virtual override   returns (string memory) {
-        return "https://gateway.pinata.cloud/ipfs/QmYsaPTHuQXwxHZT1xgzzauMpaBsvXGLT7Et4d7YpCrFQe";
+        return "https://gateway.pinata.cloud/ipfs/QmQjVmvqXn3qVTEZo1U6tJfvCAB85Uj5DnBaSbZRrNy7NE";
     }
 
 

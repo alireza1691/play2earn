@@ -18,7 +18,7 @@ export default function NavbarGameItems() {
 
   const router = useRouter();
   const currentRoute = usePathname();
-
+  const isTestnet = currentRoute.includes("/testnet/");
   useEffect(() => {
     
   },[ownedLands])
@@ -45,10 +45,10 @@ export default function NavbarGameItems() {
 
       <a
         onClick={() => {
-          router.push("/explore");
+          router.push(isTestnet ? "/testnet/explore" : "/explore");
         }}
         className={`${
-          currentRoute == "/explore"
+          currentRoute == "/explore" || currentRoute == "/testnet/explore"
             ? " brightness-100  bg-black/20 text-[#B9F8EE] "
             : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
         } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
@@ -56,9 +56,9 @@ export default function NavbarGameItems() {
         {currentRoute == "/explore" ? <ExploreActiveIcon /> : <ExploreIcon />}
         Explore
       </a>
-      {ownedLands && ownedLands.length > 0 ? (  <a
+      {ownedLands && ownedLands.length > 0 ? (  <a 
         onClick={() => {
-          router.push("/myLand");
+          router.push(isTestnet ? "/testnet/myLand" : "/myLand");
         }}
         className={`${
           currentRoute == "/myLand"
@@ -66,21 +66,21 @@ export default function NavbarGameItems() {
             : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
         } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
       >
-        {currentRoute == "/myLand" ? <MyLandActiveIcon /> : <MyLandIcon />}
+        {currentRoute == "/myLand" || currentRoute == "/testnet/myLand" ? <MyLandActiveIcon /> : <MyLandIcon />}
         My land
 
       </a>) :(
         <a
           className={` brightness-50 flex flex-col justify-center items-center   p-2 rounded-lg  text-sm font-semibold leading-6 `}
         >
-          {currentRoute == "/myLand" ? <MyLandActiveIcon /> : <MyLandIcon />}
+          {currentRoute == "/myLand"|| currentRoute == "/testnet/myLand"  ? <MyLandActiveIcon /> : <MyLandIcon />}
           My land
         </a>
       )}
     
       <a
         onClick={() => {
-          router.push("/battleLog");
+          router.push(isTestnet ? "/testnet/battleLog": "/battleLog");
         }}
         className={`${
           currentRoute == "/battleLog"

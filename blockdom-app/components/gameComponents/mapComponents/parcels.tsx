@@ -121,13 +121,13 @@ export default function Parcels() {
                             } `
                           : `cursor-default ${
                               getOwnerFromEvents(land) != zeroAddress &&
-                              "brightness-50 bg-black/50"
+                              "brightness-50 bg-black/30 blur-[0.1rem]"
                             } `
                       }   transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                     >
-                      {key == 4 && getOwnerFromEvents(land) != zeroAddress && (
-                        <div className="flex w-4/5 h-4/5 border-3 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-gray-800/20 border-gray-800/50 rounded-full absolute  ">
-                          <div className="!w-[10px] !h-[10px] p-2 rounded-md mt-auto mb-auto mr-auto ml-auto bg-gray-700/60"></div>
+                      { getOwnerFromEvents(land) != zeroAddress && (
+                        <div className="flex w-4/5 h-4/5 border-3 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-gray-800/20 border-gray-800/50 rounded-md absolute  ">
+                          <div className="!w-[10px] !h-[10px] p-2 rounded-sm mt-auto mb-auto mr-auto ml-auto bg-gray-700/60"></div>
                         </div>
                       )}
                       {/* {
@@ -178,7 +178,7 @@ export default function Parcels() {
                         } cursor-pointer hover:backdrop-brightness-50 active:backdrop-brightness-110 backdrop-brightness-75 transition-all`
                         : `${
                           getOwnerFromEvents(land) != zeroAddress &&
-                          "bg-black/30"
+                          "bg-black/30 "
                         }  cursor-default`
                     } text-black text-[8px] h-[52px] w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >

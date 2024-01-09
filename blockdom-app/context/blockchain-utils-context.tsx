@@ -1,6 +1,6 @@
 "use client";
 
-import { landsSInst, townSInst } from "@/lib/instances";
+import { landsMainnetSInst, landsSInst, townMainnetSInst, townSInst } from "@/lib/instances";
 import { SelectedLandType } from "@/lib/types";
 import {
   metamaskWallet,
@@ -11,11 +11,12 @@ import {
 } from "@thirdweb-dev/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useBlockchainStateContext } from "./blockchain-state-context";
-import { Sepolia } from "@thirdweb-dev/chains";
+import { Sepolia, Polygon } from "@thirdweb-dev/chains";
 import { landObjectFromTokenId } from "@/lib/utils";
 import { BigNumberish } from "ethers";
 import { useSelectedBuildingContext } from "./selected-building-context";
 import { useUserDataContext } from "./user-data-context";
+import { usePathname } from "next/navigation";
 
 type BlockchainUtilsProviderProps = {
   children: React.ReactNode;
@@ -47,16 +48,21 @@ export default function BlockchainUtilsContextProvider({
   } = useSelectedBuildingContext();
   const { inViewLand } = useUserDataContext();
 
+  const pathname = usePathname()
+  const isTestnet = pathname.includes("/testnet/")
+  
   const signer = useSigner();
   const connectWithMetamask = useConnect();
   const chainId = useChainId();
-  const validChainId = Sepolia.chainId;
+  const testnetChainId = Sepolia.chainId;
+  const mainnetChainId = Polygon.chainId
   const switchChain = useSwitchChain();
   const metamaskConfig = metamaskWallet();
 
+
   const handleConnectWithMetamask = async () => {
     try {
-      await connectWithMetamask(metamaskConfig, { chainId: validChainId });
+      await connectWithMetamask(metamaskConfig, { chainId: isTestnet ? testnetChainId : mainnetChainId });
       // Connection successful
     } catch (error) {
       console.log("Error connecting with MetaMask:", error);
@@ -77,10 +83,10 @@ export default function BlockchainUtilsContextProvider({
   };
 
   const validateChain = async () => {
-    if (chainId && chainId != validChainId) {
+    if (chainId && chainId != testnetChainId) {
       try {
         setTransactionState("waitingWalletConnection");
-        await switchChain(validChainId);
+        await switchChain(isTestnet ? testnetChainId : mainnetChainId);
       } catch (error) {
         setTransactionState("connectionRejected");
         console.log(error);
@@ -94,7 +100,7 @@ export default function BlockchainUtilsContextProvider({
     try {
       if (signer && inViewLand) {
         setTransactionState("waitingUserApproval");
-        const tx = await townSInst(signer).recruit(inViewLand.tokenId,index,amount)
+        const tx = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).recruit(inViewLand.tokenId,index,amount)
         setTransactionState("waitingBlockchainConfirmation");
         const receipt = await tx.wait();
         if (receipt.status === 1) {
@@ -128,13 +134,13 @@ export default function BlockchainUtilsContextProvider({
         let tx;
         if (selectedResourceBuilding.level == 0) {
           setTransactionState("waitingUserApproval");
-          tx = await townSInst(signer).buildResourceBuilding(
+          tx = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).buildResourceBuilding(
             inViewLand.tokenId,
             selectedResourceBuilding.type == "Farm" ? 0 : 1
           );
         } else {
           setTransactionState("waitingUserApproval");
-          tx = await townSInst(signer).upgradeResourceBuilding(
+          tx = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).upgradeResourceBuilding(
             selectedResourceBuilding.tokenId,
             inViewLand.tokenId
           );
@@ -170,9 +176,11 @@ export default function BlockchainUtilsContextProvider({
     validateWallet();
     validateChain();
 
-    if (signer && chainId == validChainId && selectedLand) {
+
+    if (signer  && selectedLand) {
       try {
-        const landsInst = landsSInst(signer);
+        const landsInst = isTestnet ? landsSInst(signer) : landsMainnetSInst(signer);
+        
         const landCoordinatesObject = landObjectFromTokenId(
           selectedLand.coordinate
         );
@@ -217,11 +225,11 @@ export default function BlockchainUtilsContextProvider({
     if (
       signer &&
       chainId &&
-      chainId == validChainId &&
+      chainId == testnetChainId &&
       selectedResourceBuilding
     ) {
       try {
-        const townInst = townSInst(signer);
+        const townInst = (isTestnet ? townSInst(signer) : townMainnetSInst(signer));
         setTransactionState("waitingUserApproval");
         const tx = await townInst.claimRevenue(
           selectedResourceBuilding.tokenId
@@ -261,12 +269,12 @@ export default function BlockchainUtilsContextProvider({
     if (
       signer &&
       chainId &&
-      chainId == validChainId &&
+      chainId == testnetChainId &&
       selectedItem &&
       inViewLand
     ) {
       try {
-        const townInst = townSInst(signer);
+        const townInst = (isTestnet ? townSInst(signer) : townMainnetSInst(signer));
         setTransactionState("waitingUserApproval");
         let tx;
         if (selectedItem.name == "Barracks") {

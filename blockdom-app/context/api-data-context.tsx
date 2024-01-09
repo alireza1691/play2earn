@@ -1,9 +1,10 @@
 "use client"
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { apiKey, landsAddress, townAddress } from '@/lib/blockchainData';
+import { apiKey, arbitrumApiKey, landsAddress, landsMainnetAddress, polygonApiKey, townAddress } from '@/lib/blockchainData';
 import { APICallData, ArmyType, MintedLand, MintedResourceBuildingType } from '@/lib/types';
 import { getMintedLandsFromEvents, getOwnedLands, getResBuildingsFromEvents } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
 
 
@@ -31,28 +32,63 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const [mintedLands, setMintedLands] = useState< MintedLand[] | null>(null)
   const [buildedResourceBuildings, setBuildedResourceBuildings] = useState<MintedResourceBuildingType[] | null>(null)
   const [armyTypes, setArmyTypes] = useState <ArmyType[] | null>(null)
+  const [isTestnetNetwork,setIsTestnetNetwork] = useState<boolean|null>(null)
+
+  const currentRoute = usePathname()
+
+  // const isTestnet = () =>{
+  //   if ( currentRoute == "/testnet/explore" ||currentRoute == "/testnet/myLand" ||currentRoute == "/testnet/battleLog"  ) {
+  //    return true
+  //   } 
+  //   else {return false}
+   
+  // }
+  const isTestnet = currentRoute.includes("/testnet/");
 
   const sepoliaAPIRequest= (address: string) =>{
    return `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${address}&apikey=${apiKey}`
   }   
+  const polygonAPIRequest = (address: string) => {
+    // return `https://api.polygonscan.com/api
+    // ?module=logs
+    // &action=getLogs
+    // &address=${address}
+    // &apikey=${polygonApiKey} `
+    return `https://api.polygonscan.com/api?module=logs&action=getLogs&address=${address}&apikey=${polygonApiKey}`;
+
+  }
 
 
   useEffect(() => {
     const fetchData = async () => {
+      
+      setIsTestnetNetwork(isTestnet)
       try {
-        const response = await axios.get(
-          sepoliaAPIRequest(landsAddress)
-        );
-        const response2 = await axios.get(
-          sepoliaAPIRequest(townAddress)
-        );
-        setApiData(response.data);
-        console.log("Lands API response:",response);
-        console.log("Town API response:",response2);
-        const mintedLands = getMintedLandsFromEvents(response.data.result)
-        setMintedLands (mintedLands)
-        const mintedResourcesBuildings =  getResBuildingsFromEvents(response2.data.result)
-        setBuildedResourceBuildings(mintedResourcesBuildings)
+        if (isTestnet ) {
+          const response = await axios.get(
+            sepoliaAPIRequest(landsAddress)
+          );
+          const response2 = await axios.get(
+            sepoliaAPIRequest(townAddress)
+          );
+          setApiData(response.data);
+          console.log("Lands API response:",response);
+          console.log("Town API response:",response2);
+          const mintedLands = getMintedLandsFromEvents(response.data.result)
+          setMintedLands (mintedLands)
+          const mintedResourcesBuildings =  getResBuildingsFromEvents(response2.data.result)
+          setBuildedResourceBuildings(mintedResourcesBuildings)
+    
+        } else {
+          const response = await axios.get(
+            polygonAPIRequest(landsMainnetAddress)
+          );
+          setApiData(response.data);
+          console.log("Mainnet lands API response:",response);
+          const mintedLands = getMintedLandsFromEvents(response.data.result)
+          setMintedLands (mintedLands)
+        }
+    
   
    
         
@@ -64,7 +100,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
     };
 
     fetchData();
-  }, []); // Run the effect only once on mount
+  }, [isTestnet]); // Run the effect only once on mount
 
   return (
     <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings, armyTypes, setArmyTypes}}>
