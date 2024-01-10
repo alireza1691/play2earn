@@ -5,6 +5,7 @@ import { landsPInst } from '@/lib/instances';
 import CloseIcon from '@/svg/closeIcon';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
+import LandCard from '../landCard';
 
 export default function LandSlideBarCard() {
     const [imageUrl, setImageUrl] = useState<null | string>(null);
@@ -49,15 +50,16 @@ export default function LandSlideBarCard() {
   return (
     <div className=" flex justify-center mt- h-[35%] mb-3 flex-shrink ">
     {imageUrl && (
-      <div className=" w-auto  h-auto !p-2 cardBg !rounded-lg darkShadow">
-        <Image
-          src={imageUrl}
-          width={256}
-          height={364}
-          alt="card"
-          className=" h-full w-auto "
-        />
-      </div>
+      // <div className=" w-auto  h-auto !p-2 cardBg !rounded-lg darkShadow">
+      //   <Image
+      //     src={imageUrl}
+      //     width={256}
+      //     height={364}
+      //     alt="card"
+      //     className=" h-full w-auto "
+      //   />
+      // </div>
+      <LandCard tokenId={selectedLand?.coordinate || 0}/>
     )}
   </div>
   )

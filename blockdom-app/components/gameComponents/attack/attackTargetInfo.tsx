@@ -48,14 +48,14 @@ export default function AttackTargetInfo() {
     getInfo()
    },[selectedLand])
   return (
-    <div className=" flex flex-col w-full mt-5 max-w-[17.5rem]">
-      <div className=" h-[4.5rem] w-full bronzeBg rounded-xl  flex flex-col darkShadow">
+    <div className=" flex flex-col w-full mt-5 ">
+      {/* <div className=" h-[4.5rem] w-full bronzeBg rounded-xl  flex flex-col darkShadow">
         <h3 className="ml-8  font-bold text-[24px]">Target</h3>
         <p className="ml-8 w-full flex flex-row gap-3 text-[#98FBD7]">
           <WalletIcon /> {shortenAddress(selectedLand?.owner || zeroAddress) }
           <CopyIcon />
         </p>
-      </div>
+      </div> */}
       <div className=" flex flex-row gap-4 mt-4">
         <div className="goodsBalanceKeeper balBg w-1/2 darkShadow flex flex-row items-center ga-4"><CoinIcon/> <h3>{info && info.gold || 0 }</h3></div>
         <div className="goodsBalanceKeeper balBg w-1/2 darkShadow flex flex-row items-center ga-4"><FoodIcon/> <h3>{info && info.food || 0 }</h3></div>
