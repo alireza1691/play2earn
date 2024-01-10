@@ -1,15 +1,24 @@
+import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { warriors, warriorsInfo } from "@/lib/data";
-import { Slider } from "@nextui-org/react";
+import { Slider, SliderValue } from "@nextui-org/react";
 import { Span } from "next/dist/trace";
 import Image from "next/image";
 import React from "react";
+import { isArray, isNumber } from "util";
 
 
 
 export default function WarriorsSliders() {
 
   const {ownedLands,inViewLand,chosenLand,setChosenLand} = useUserDataContext()
+  const {selectedArmy, setSelectedArmy} = useSelectedWindowContext()
+
+  const updateAmountAtIndex = (index: number, value: number) => {
+    setSelectedArmy((prevSelectedArmy) =>
+    prevSelectedArmy.map((prevValue, i) => (i === index ? value : prevValue))
+  );
+  };
 
   return (
     <div className=" mt-auto flex flex-col gap-1 flex-grow md:mt-6 w-full max-w-[17.5rem] h-[30%] px-2 sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
@@ -28,14 +37,13 @@ export default function WarriorsSliders() {
       color="foreground"
       label={warrior.name}
       step={1}
+      // onChange={(value)=>updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)}
       maxValue={Number(inViewLand.army[key])}
       minValue={0}
       defaultValue={0}
       getValue={(existedAmount) => `${existedAmount} of ${Number(inViewLand.army[key])}`}
       // className="max-w-md "
-      onChangeEnd={() => {
-        ("");
-      }}
+      onChangeEnd={(value: SliderValue)=> {updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)}}
      classNames={{
       base:" text-white",
       filler:"-ml-3 bg-[#9BFCD4] rounded-l-full ",

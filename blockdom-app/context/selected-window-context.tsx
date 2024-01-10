@@ -22,16 +22,19 @@ type SelectedBuildingContextProviderProps = {
 type SelectedBuildingContextType = {
     selectedWindowComponent: itemType | null,
     setSelectedWindowComponent: React.Dispatch<React.SetStateAction<itemType|null>>
+    selectedArmy:number[],
+    setSelectedArmy: React.Dispatch<React.SetStateAction<number[]>>
 }
 
 const StatesContext = createContext<SelectedBuildingContextType | null>(null)
 
 export default function SelectedWindowContextProvider({children}:SelectedBuildingContextProviderProps) {
       const [selectedWindowComponent, setSelectedWindowComponent] =  useState< itemType | null >(null)
+      const [selectedArmy,setSelectedArmy] = useState<number[]>([0,0,0,0,0,0])
         
 
       return(
-        <StatesContext.Provider value={{ selectedWindowComponent, setSelectedWindowComponent}}>
+        <StatesContext.Provider value={{ selectedWindowComponent, setSelectedWindowComponent,selectedArmy,setSelectedArmy}}>
             {children}
         </StatesContext.Provider>
       )

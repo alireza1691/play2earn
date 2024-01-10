@@ -135,8 +135,6 @@ export function getResBuildingsFromEvents (events: ApiDataResultType) {
  
       console.log(eventSig === events[index].topics[0]);
       if (eventSig === events[index].topics[0]) {
-        console.log("here is matched event:",events[index].topics); 
-        console.log( parseInt(events[index].topics[2]));
         const buildingTypeIndex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[index].data)[0];
        
         const upgradedEventsOfThisBuilding =  upgradedBuildings.filter(tokenId => tokenId === parseInt(events[index].topics[2]));
