@@ -36,9 +36,12 @@ export default function NavDropdownMobileScreen({
       <div className="mt-10 flow-root">
         <div className="-my-6 divide-y divide-gray-500/10">
           <div className="space-y-2 py-6 flex flex-col">
+          <ChainIdButton/>
             <div className=" flex flex-row items-center justify-between w-full mb-4">
+           
+          
               <ConnectWallet
-                className=" !bg-[#06291D] !bg-opacity-50 !rounded-r-none !p-3  md:!hidden !w-[80%] "
+                className={` !bg-[#06291D] !bg-opacity-50 mb-3 !rounded-r-none !p-3    ${currentRoute == "/" ?"!w-[80%]" : "!w-[100%]"} `}
                 modalSize="wide"
                 theme={theme === "dark" ? "dark" : "light"}
                 welcomeScreen={{
@@ -51,7 +54,7 @@ export default function NavDropdownMobileScreen({
                   },
                 }}
               />
-              
+             
               {currentRoute == "/" &&       <button
                 onClick={toggleTheme}
                 className="   bg-[#06291D] text-white bg-opacity-50  !w-[2.6rem] !h-[2.6rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
@@ -60,9 +63,7 @@ export default function NavDropdownMobileScreen({
               </button>}
             
             </div>
-            <div className=" relative !ml-13 w-full">
-            <ChainIdButton/>
-            </div>
+         
        
             {currentRoute == "/" && (
               <>

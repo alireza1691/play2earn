@@ -38,30 +38,30 @@ export default function ChainIdButton() {
     }
     return status;
   };
-
+  // !bg-[#06291D]/30 
   return (
     <>
-      <div className="hidden sm:flex flex-col absolute top-[0.45rem] right-[14rem] ">
+      <div className="flex flex-col  top-[0.45rem] right-[14rem] ">
         <button
           onClick={() => setIsNotifActive(!isNotifActive)}
           className={`${
-            isNotifActive ? "!bg-black/30" :" hover:brightness-110 "
-          } !bg-[#06291D] !bg-opacity-50 py-3 px-3 rounded-xl `}
+            isNotifActive ? "!bg-black/20  " :" hover:brightness-110 "
+          } border border-[#98FBD7] text-[14px] text-[#98FBD7] !bg-opacity-50 py-[12px] px-3 rounded-xl `}
         >
           {chainIdStatus()}
         </button>
         <div
-          className={`overflow-hidden transition-max-height duration-300 mt-1 ${
+          className={`overflow-hidden transition-max-height duration-300  ${
             isNotifActive ? "max-h-40" : "hidden "
           }`}
         >
           <div
-            className={` w-[12rem] absolute py-2 px-1 chainIdDropDownBg rounded-lg   max-h-40 gap-1 flex  flex-col`}
+            className={` darkShadow w-[12rem] absolute py-2 px-1 chainIdDropDownBg rounded-lg   max-h-40 gap-1 flex  flex-col`}
           >
-            <a onClick={() => {switchMainnet(),router.push("/explore")}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
+            <a onClick={() => {switchMainnet(),router.push("/explore"),setIsNotifActive(false)}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
               Polygon (Mainnet)
             </a>
-            <a onClick={() => {switchTestnet(),router.push("/testnet/explore")}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
+            <a onClick={() => {switchTestnet(),router.push("/testnet/explore"),setIsNotifActive(false)}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
               Sepolia (Testnet)
             </a>
           </div>
