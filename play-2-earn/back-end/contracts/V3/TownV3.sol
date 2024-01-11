@@ -810,9 +810,7 @@ abstract contract Town is Ownable, Barracks{
         dispatchedArmies[from].push(DispatchedArmy(warriorAmounts, block.timestamp+remainingTime, target,[uint256(0),0], false, 100));
     }
 
-    function getDispatchedArmies(uint256 landTokenId) view public returns (DispatchedArmy[] memory) {
-        return dispatchedArmies[landTokenId] ;
-    }
+
 
     function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external  returns(bool, uint256, uint256){
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
@@ -883,6 +881,12 @@ abstract contract Town is Ownable, Barracks{
     //  ******************************************************************************
     //  ******************************************************************************
     //  ******************************************************************************
+    function getDispatchedArmies(uint256 landTokenId) view public returns (DispatchedArmy[] memory) {
+        return dispatchedArmies[landTokenId] ;
+    }
+    function getDispatchTime(uint256 from, uint256 to) pure public returns (uint256 distance ,uint256 time) {
+       return Utils.calculateDistance(from, to,1);
+    }
 
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {
         ResourceBuildingStatus memory buildingStatus = getStatus(buildingTokenId);

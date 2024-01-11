@@ -17,6 +17,8 @@ import { BigNumberish } from "ethers";
 import { useSelectedBuildingContext } from "./selected-building-context";
 import { useUserDataContext } from "./user-data-context";
 import { usePathname } from "next/navigation";
+import { useSelectedWindowContext } from "./selected-window-context";
+import { useMapContext } from "./map-context";
 
 type BlockchainUtilsProviderProps = {
   children: React.ReactNode;
@@ -31,6 +33,7 @@ type BlockchainUtilsContextType = {
   ) => Promise<void>;
   mintResourceBuilding: () => Promise<void>;
   recruitArmy:(index: number, amount:number) => Promise<void>;
+  dispatchArmy:  () => Promise<void>;
 };
 
 const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
@@ -46,8 +49,9 @@ export default function BlockchainUtilsContextProvider({
     selectedResourceBuilding,
     setSelectedResourceBuilding,
   } = useSelectedBuildingContext();
-  const { inViewLand } = useUserDataContext();
-
+  const { inViewLand, chosenLand } = useUserDataContext();
+  const {selectedArmy} = useSelectedWindowContext()
+  const {selectedLand} = useMapContext()
   const pathname = usePathname()
   const isTestnet = pathname.includes("/testnet/")
   
@@ -94,6 +98,37 @@ export default function BlockchainUtilsContextProvider({
     }
   };
 
+ async function dispatchArmy() {
+  validateWallet()
+  validateChain()
+  try {
+    if (signer && chosenLand && selectedArmy && selectedLand) {
+      const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+      setTransactionState("waitingUserApproval");
+      const tx = await instance.dispatchArmy(selectedArmy,Number(chosenLand.tokenId),selectedLand.coordinate)
+      setTransactionState("waitingBlockchainConfirmation");
+      const receipt = await tx.wait();
+      if (receipt.status === 1) {
+        console.log(receipt.status === 1);
+
+        setTransactionState("confirmed");
+      }
+    } else {
+      setTransactionState(null);
+    }
+  } catch (error) {
+    console.log("Reverted :", error);
+
+    setTransactionState("txRejected");
+    if (error instanceof Error) {
+      setTxError(error);
+    } else {
+      // Handle other types of errors
+      const customError = new Error("An unknown error occurred");
+      setTxError(customError);
+    }
+  }
+ }
   async function recruitArmy(index: number, amount:number) {
     validateWallet()
     validateChain()
@@ -321,7 +356,7 @@ export default function BlockchainUtilsContextProvider({
 
 
   return (
-    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy }}>
+    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );

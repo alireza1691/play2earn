@@ -11,10 +11,12 @@ import AttackerComp from "./attackerComp";
 import LandCard from "../landCard";
 import { useMapContext } from "@/context/map-context";
 import { useUserDataContext } from "@/context/user-data-context";
+import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 
 export default function Attack() {
   const {selectedLand} = useMapContext()
   const {chosenLand} = useUserDataContext()
+  const { dispatchArmy } = useBlockchainUtilsContext()
  
   const { selectedWindowComponent, setSelectedWindowComponent } =
     useSelectedWindowContext();
@@ -71,7 +73,7 @@ export default function Attack() {
           </div>
           <div className="p-1 md:p-3 justify-center flex mt-auto ">
             {" "}
-            <button className="redButton mt-auto !w-full md:!w-[30rem]">
+            <button onClick={() => dispatchArmy()} className="redButton mt-auto !w-full md:!w-[30rem]">
               Confirm attack
             </button>
           </div>

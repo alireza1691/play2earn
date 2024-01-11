@@ -96,6 +96,10 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
 .goodsBalanceKeeper {
   @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden;
 }
+.balHighlight{
+  /* background: rgba(12, 69, 49, 0.6); */
+  background: linear-gradient(90deg,transparent, #98FBD7,transparent);
+}
 .logBg {
   border-radius: 10px;
 /* border: 1px solid #98FBD7; */
