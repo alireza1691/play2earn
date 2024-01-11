@@ -12,14 +12,26 @@ import LandCard from "../landCard";
 import { useMapContext } from "@/context/map-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Attack() {
   const {selectedLand} = useMapContext()
   const {chosenLand} = useUserDataContext()
   const { dispatchArmy } = useBlockchainUtilsContext()
- 
-  const { selectedWindowComponent, setSelectedWindowComponent } =
+  const currentRoute = usePathname()
+  const router = useRouter()
+  const isTestnet = currentRoute.includes("/testnet/")
+
+  const { selectedWindowComponent, setSelectedWindowComponent,selectedArmy } =
     useSelectedWindowContext();
+
+    const biggerThanZero = () => {
+      let total = 0 
+      for (let index = 0; index < selectedArmy.length; index++) {
+        total += selectedArmy[index]
+      }
+      return total > 0
+    }
 
   const Lands = [101101, 105105];
   return (
@@ -73,7 +85,7 @@ export default function Attack() {
           </div>
           <div className="p-1 md:p-3 justify-center flex mt-auto ">
             {" "}
-            <button onClick={() => dispatchArmy()} className="redButton mt-auto !w-full md:!w-[30rem]">
+            <button disabled={!biggerThanZero()} onClick={() => {dispatchArmy()}} className="redButton mt-auto !w-full md:!w-[30rem]">
               Confirm attack
             </button>
           </div>
@@ -83,3 +95,4 @@ export default function Attack() {
     </>
   );
 }
+// ,router.push(isTestnet ? "/testnet/battleLog" :  "/battleLog" )

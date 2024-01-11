@@ -1,6 +1,6 @@
 
 
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { links } from "./data";
 
 export type selectedParcelType = {
@@ -95,3 +95,11 @@ export type ArmyType = {
   requiredFood:number,
 }
 
+export type DispatchedArmy = {
+  amounts: BigNumber[];
+  remainedTime: BigNumber;
+  target: BigNumber;
+  lootedAmounts: [BigNumber, BigNumber];
+  isReturning: boolean;
+  remainedArmybyPercent: BigNumber;
+};

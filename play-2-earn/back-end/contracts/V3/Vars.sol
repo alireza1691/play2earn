@@ -4,8 +4,8 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 abstract contract Vars is Ownable{
 
-    uint256 private constant withdrawalFee = 10;
-    uint256 private constant swapFee = 5;
+    // uint256 private constant withdrawalFee = 10;
+    // uint256 private constant swapFee = 5;
     uint256 private constant workerGoldPerHour = 10 ether;
     uint256 private constant baseBuildTimestamp = 3 hours;
     uint256 private constant baseTownhallBuildTimestamp = 6 hours;
@@ -13,9 +13,9 @@ abstract contract Vars is Ownable{
     uint8 private constant baseArmyCapacity = 50;
     uint256 private constant baseGoodCapacityOfBuilding = 40 ether;
     uint256 private constant baseWarriorRequiredFood = 3 ether;
-    uint256 private constant baseFoodRevenuePer3hours = 1 ether;
-    uint256 private constant baseGoldRevenuePer3hours = 1 ether;
-      uint256 private constant trnasferCostPercentage = 7;
+    uint256 private constant baseFoodRevenuePer3hours = 2 ether;
+    uint256 private constant baseGoldRevenuePer3hours = 2 ether;
+      // uint256 private constant trnasferCostPercentage = 7;
         struct WarriorInfo {
         uint8 attackPower;
         uint8 defPower;
@@ -39,12 +39,12 @@ abstract contract Vars is Ownable{
 function WarriorTypes() view public returns (WarriorInfo[] memory) {
         return warriorTypes;
     }
-    function WithdrawalFee() pure public returns (uint256) {
-        return withdrawalFee;
-    }
-      function SwapFee() pure public returns (uint256) {
-        return swapFee;
-    }
+    // function WithdrawalFee() pure public returns (uint256) {
+    //     return withdrawalFee;
+    // }
+    //   function SwapFee() pure public returns (uint256) {
+    //     return swapFee;
+    // }
       function WorkerGoldPerHour() pure public returns (uint256) {
         return workerGoldPerHour;
     }
@@ -72,8 +72,8 @@ function WarriorTypes() view public returns (WarriorInfo[] memory) {
       function BaseGoldRevenuePer3hours() pure public returns (uint256) {
         return baseGoldRevenuePer3hours;
     }
-       function TrnasferCostPercentage() pure public returns (uint256) {
-        return trnasferCostPercentage;
-    }
+    //    function TrnasferCostPercentage() pure public returns (uint256) {
+    //     return trnasferCostPercentage;
+    // }
   
 }

@@ -34,6 +34,7 @@ type BlockchainUtilsContextType = {
   mintResourceBuilding: () => Promise<void>;
   recruitArmy:(index: number, amount:number) => Promise<void>;
   dispatchArmy:  () => Promise<void>;
+  dispatchedArmyAction : (dispatchedArmyIndex: number,isReturning:boolean) => Promise<void>;
 };
 
 const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
@@ -41,7 +42,7 @@ const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
 );
 
 export default function BlockchainUtilsContextProvider({
-  children,
+  children
 }: BlockchainUtilsProviderProps) {
   const { setTransactionState, setTxError } = useBlockchainStateContext();
   const {
@@ -97,6 +98,74 @@ export default function BlockchainUtilsContextProvider({
       }
     }
   };
+
+  
+
+  // async function joinArmy(dispatchedArmyIndex: number) {
+  //   validateWallet()
+  //   validateChain()
+    
+  //   try {
+  //     if (signer && chosenLand) {
+  //       const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+  //       setTransactionState("waitingUserApproval");
+  //       const tx = await instance.joinDispatchedArmy(Number(chosenLand.tokenId),dispatchedArmyIndex)
+  //       setTransactionState("waitingBlockchainConfirmation");
+  //       const receipt = await tx.wait();
+  //       if (receipt.status === 1) {
+  //         console.log(receipt.status === 1);
+  
+  //         setTransactionState("confirmed");
+  //       }
+  //     } else {
+  //       setTransactionState(null);
+  //     }
+  //   } catch (error) {
+  //     console.log("Reverted :", error);
+  
+  //     setTransactionState("txRejected");
+  //     if (error instanceof Error) {
+  //       setTxError(error);
+  //     } else {
+  //       // Handle other types of errors
+  //       const customError = new Error("An unknown error occurred");
+  //       setTxError(customError);
+  //     }
+  //   }
+  // }
+
+  async function dispatchedArmyAction(dispatchedArmyIndex: number,isReturning:boolean) {
+    validateWallet()
+    validateChain()
+    
+    try {
+      if (signer && chosenLand) {
+        const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+        setTransactionState("waitingUserApproval");
+        const tx = isReturning ? await instance.joinDispatchedArmy(Number(chosenLand.tokenId),dispatchedArmyIndex) : await instance.war(Number(chosenLand.tokenId),dispatchedArmyIndex)
+        setTransactionState("waitingBlockchainConfirmation");
+        const receipt = await tx.wait();
+        if (receipt.status === 1) {
+          console.log(receipt.status === 1);
+  
+          setTransactionState("confirmed");
+        }
+      } else {
+        setTransactionState(null);
+      }
+    } catch (error) {
+      console.log("Reverted :", error);
+  
+      setTransactionState("txRejected");
+      if (error instanceof Error) {
+        setTxError(error);
+      } else {
+        // Handle other types of errors
+        const customError = new Error("An unknown error occurred");
+        setTxError(customError);
+      }
+    }
+  }
 
  async function dispatchArmy() {
   validateWallet()
@@ -356,7 +425,7 @@ export default function BlockchainUtilsContextProvider({
 
 
   return (
-    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy}}>
+    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );
