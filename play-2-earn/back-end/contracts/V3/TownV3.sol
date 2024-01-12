@@ -359,7 +359,7 @@ abstract contract Barracks is Ownable{
 
 
 
-abstract contract Town is Ownable, Barracks{
+abstract contract Town is Barracks{
 
     //  ******************************************************************************
     //  ******************************************************************************

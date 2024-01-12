@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function ActionStateComponent() {
-  const { setTransactionState, transactionState, txError } =
+  const { setTransactionState, transactionState, txError, setReloadHandler } =
     useBlockchainStateContext();
   const { isUserDataLoading } = useUserDataContext();
   const address = useAddress();
@@ -110,7 +110,8 @@ export default function ActionStateComponent() {
             <div className="mt-auto px-3 py-3 flex flex-shrink">
               {" "}
               <button
-                onClick={() => setTransactionState(null)}
+                onClick={() => {setTransactionState(null), transactionState == "confirmed" && window.location.reload();
+                 }}
                 className=" !py-2 !w-full outlineGreenButton"
               >
                 Close

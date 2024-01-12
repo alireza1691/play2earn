@@ -197,6 +197,16 @@ const TrainingCampContainer = () => {
   const { upgradeMode, activeMode } =
     useSelectedBuildingContext();
   const { inViewLand } = useUserDataContext();
+  const totalArmyAmount = () => {
+    let totalArmy = 0
+    if (inViewLand) {
+      for (let index = 0; index < inViewLand.army.length; index++) {
+        totalArmy += Number(inViewLand.army[index])
+      }
+    }
+ return totalArmy
+    
+  }
 
   return (
     <div className="w-[80%] ml-auto mr-auto mt-4 flex flex-col">
@@ -205,7 +215,7 @@ const TrainingCampContainer = () => {
           <div className=" flex flex-col">
             <div className=" flex flex-row items-center font-semibold !text-white gap-3">
               {" "}
-              <ArmyCapacityIcon /> 1000 units
+              <ArmyCapacityIcon /> {totalArmyAmount()} units
             </div>
             <CapacityProgressBar amount={50} />
           </div>

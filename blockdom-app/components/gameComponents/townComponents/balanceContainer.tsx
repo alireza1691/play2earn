@@ -8,6 +8,7 @@ import SmBMTIcon from '@/svg/smBMTIcon'
 import SmCoinIcon from '@/svg/smCoinIcon'
 import SmFoodIcon from '@/svg/smFoodIcon'
 import SmHammerIcon from '@/svg/smHammerIcon'
+import { BigNumber, BigNumberish } from 'ethers'
 import { formatEther, parseEther } from 'ethers/lib/utils'
 import React from 'react'
 
@@ -51,17 +52,24 @@ export default function BalanceContainer() {
 
   }
 
+  const convertNumber = (number: BigNumberish) => {
+    const numberAsString = formatEther(number)
+    const numebrAsNumber = Number(numberAsString)
+    const formattedNumber = numebrAsNumber.toFixed(1)
+    return formattedNumber
+  }
+
 
   return (
     <>
     <div className='hidden z-30 sm:flex flex-col p-1 absolute top-16 left-5 gap-4'>
       <div className=' greenBg'>
-      <h3 className='text-[#87F0E5] font-bold text-[18px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 '><BMTIcon/>{inViewLand && formatEther(inViewLand.goodsBalance[1]) }</h3>
+      <h3 className='text-[#87F0E5] font-bold text-[18px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 '><BMTIcon/>{inViewLand && convertNumber(inViewLand.goodsBalance[1]) }</h3>
 
       </div>
       <div className=' greenBg'>
-      <h3 className='text-[#87F0E5] font-bold text-[18px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 w-[12rem] '><FoodIcon/>{inViewLand && formatEther(inViewLand.goodsBalance[0])}</h3>
-        <h3 className='text-[#87F0E5] font-bold text-[18px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 '><CoinIcon/>{inViewLand && formatEther(inViewLand.goodsBalance[1])}</h3>
+      <h3 className='text-[#87F0E5] font-bold text-[18px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 w-[12rem] '><FoodIcon/>{inViewLand && convertNumber(inViewLand.goodsBalance[0])}</h3>
+        <h3 className='text-[#87F0E5] font-bold text-[18px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 '><CoinIcon/>{inViewLand && convertNumber(inViewLand.goodsBalance[1])}</h3>
         <h3 className='text-[#87F0E5] font-bold text-[14px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1 '><HammerIcon/>{workerStatus()}</h3>
         
       </div>
@@ -69,12 +77,12 @@ export default function BalanceContainer() {
     </div>
     <div className='flex sm:hidden z999 gap-1 left-1/2 top-1 fixed flex-row -translate-x-1/2'>
       <div className=' flex flex-col'>
-      <h3 className='text-[#87F0E5] font-semibold text-[11px] navBalBg '><SmCoinIcon/>{inViewLand && formatEther(inViewLand.goodsBalance[0])}</h3>
-        <h3 className='text-[#87F0E5] font-bold text-[11px] navBalBg  '><SmFoodIcon/>{inViewLand && formatEther(inViewLand.goodsBalance[1])}</h3>
+      <h3 className='text-[#87F0E5] font-semibold text-[11px] navBalBg '><SmCoinIcon/>{inViewLand && convertNumber(inViewLand.goodsBalance[0])}</h3>
+        <h3 className='text-[#87F0E5] font-bold text-[11px] navBalBg  '><SmFoodIcon/>{inViewLand && convertNumber(inViewLand.goodsBalance[1])}</h3>
    
       </div>
       <div className=' flex flex-col'>
-      <h3 className='text-[#87F0E5] font-bold text-[11px] navBalBg  '><SmBMTIcon/>{inViewLand && formatEther(inViewLand.goodsBalance[0])}</h3>
+      <h3 className='text-[#87F0E5] font-bold text-[11px] navBalBg  '><SmBMTIcon/>{inViewLand && convertNumber(inViewLand.goodsBalance[0])}</h3>
         <h3 className='text-[#87F0E5] font-bold text-[8px] navBalBg h-full'><SmHammerIcon/>{workerStatus()}</h3>
    
       </div>

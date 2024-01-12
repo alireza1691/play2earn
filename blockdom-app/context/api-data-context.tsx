@@ -5,6 +5,7 @@ import { apiKey, arbitrumApiKey, landsAddress, landsMainnetAddress, polygonApiKe
 import { APICallData, ArmyType, MintedLand, MintedResourceBuildingType } from '@/lib/types';
 import { getMintedLandsFromEvents, getOwnedLands, getResBuildingsFromEvents } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import { useBlockchainStateContext } from './blockchain-state-context';
 
 
 
@@ -32,7 +33,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const [mintedLands, setMintedLands] = useState< MintedLand[] | null>(null)
   const [buildedResourceBuildings, setBuildedResourceBuildings] = useState<MintedResourceBuildingType[] | null>(null)
   const [armyTypes, setArmyTypes] = useState <ArmyType[] | null>(null)
-  const [isTestnetNetwork,setIsTestnetNetwork] = useState<boolean|null>(null)
+  // const [isTestnetNetwork,setIsTestnetNetwork] = useState<boolean|null>(null)
 
   const currentRoute = usePathname()
 
@@ -62,7 +63,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       
-      setIsTestnetNetwork(isTestnet)
+      // setIsTestnetNetwork(isTestnet)
       try {
         if (isTestnet ) {
           const response = await axios.get(

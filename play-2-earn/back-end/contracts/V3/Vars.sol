@@ -27,7 +27,7 @@ abstract contract Vars is Ownable{
   
     WarriorInfo[] warriorTypes;
 
-    constructor()  {
+    constructor()  Ownable(msg.sender) {
         warriorTypes.push(WarriorInfo( 45, 30, 70, "Maceman",7 ether));
         warriorTypes.push(WarriorInfo( 20, 60, 70, "Spearman",8 ether));
         warriorTypes.push(WarriorInfo( 60, 70, 90,"Swordsman",15 ether));

@@ -20,6 +20,7 @@ import { useMapContext } from "@/context/map-context";
 import BalanceContainer from "./gameComponents/townComponents/balanceContainer";
 
 import ChainIdButton from "./chainIdButton";
+import { useBlockchainStateContext } from "@/context/blockchain-state-context";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
