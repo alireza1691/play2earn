@@ -47,6 +47,8 @@ type UserDataContextType = {
   setArmy: React.Dispatch<React.SetStateAction<number|null>>
   isUserDataLoading: boolean
   setIsUserDataLoading: React.Dispatch<React.SetStateAction<boolean>>
+  BMTBalance: number | null 
+  setBMTBalance : React.Dispatch<React.SetStateAction<number | null >>
 };
 
 const UserDataContext = createContext<UserDataContextType | null>(null);
@@ -55,6 +57,7 @@ export default function UserDataContextProvider({
   children,
 }: UserDataContextProviderProps) {
   const [ownedLands, setOwnedLands] = useState<MintedLand[] | null>(null);
+  const [BMTBalance, setBMTBalance] = useState<null | number>(null)
   const [inViewLand, setInViewLand] = useState<InViewLandType | null>(null);
   const [chosenLand,setChosenLand] = useState<MintedLand | null>(null)
   // const [isOwnedLand, setIsOwnedLand] = useState(false);
@@ -83,7 +86,7 @@ export default function UserDataContextProvider({
         buildedResBuildings,
         setBuildedResBuildings,
         chosenLand,setChosenLand,army,setArmy,
-        isUserDataLoading,setIsUserDataLoading
+        isUserDataLoading,setIsUserDataLoading,BMTBalance,setBMTBalance
       }}
     >
       {children}

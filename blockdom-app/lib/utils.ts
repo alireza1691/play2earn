@@ -1,5 +1,6 @@
 
-import { Contract, ethers } from "ethers";
+import { BigNumberish, Contract, ethers } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 import { townABI } from "./instances";
 import { ApiDataResultType, MintedLand, MintedResourceBuildingType, selectedParcelType } from "./types";
 
@@ -174,6 +175,13 @@ export function getOwnedLands(mintedLands : MintedLand[],connectedAddress: strin
   return ownedLands
 }
 
+
+export const formattedNumber = (number: BigNumberish) => {
+  const numberAsString = formatEther(number)
+  const numebrAsNumber = Number(numberAsString)
+  const fixedNumber = numebrAsNumber.toFixed(1)
+  return fixedNumber
+}
 
 
 export const zeroAddress = "0x0000000000000000000000000000000000000000"

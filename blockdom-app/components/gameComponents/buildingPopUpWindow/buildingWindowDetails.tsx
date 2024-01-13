@@ -1,7 +1,8 @@
 "use client";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import { HiSwitchVertical } from "react-icons/hi";
 
 import ArmyCapacityIcon from "@/svg/armyCapacityIcon";
 import { baseBuildAmounts, warriors, warriorsInfo } from "@/lib/data";
@@ -12,8 +13,12 @@ import DualProgressBar from "../daulProgressBar";
 import CoinIcon from "@/svg/coinIcon";
 import ProgressBar from "../progressBar";
 import CapacityProgressBar from "../capacityProgressBar";
-import { formatEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import { useUserDataContext } from "@/context/user-data-context";
+import TopDuobleArrow from "@/svg/topDuobleArrow";
+import { formattedNumber } from "@/lib/utils";
+import SmFoodIcon from "@/svg/smFoodIcon";
+import SmCoinIcon from "@/svg/smCoinIcon";
 
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem, upgradeMode } =
@@ -120,7 +125,8 @@ const ResourceContainer = () => {
           />
 
           <h3 className="mt-4 font-semibold  flex flex-row  items-center">
-            <FoodIcon />{""}
+            <FoodIcon />
+            {""}
             {selectedResourceBuilding && selectedResourceBuilding.earnedAmount}
           </h3>
           <ProgressBar
@@ -187,30 +193,31 @@ const BarracksContainer = () => {
               alt="warrior image"
             />
           </div>
-          <UpgradeContainer goldAmount={baseBuildAmounts.barracks.gold} foodAmount={baseBuildAmounts.barracks.food} />
+          <UpgradeContainer
+            goldAmount={baseBuildAmounts.barracks.gold}
+            foodAmount={baseBuildAmounts.barracks.food}
+          />
         </>
       )}
     </div>
   );
 };
 const TrainingCampContainer = () => {
-  const { upgradeMode, activeMode } =
-    useSelectedBuildingContext();
+  const { upgradeMode, activeMode } = useSelectedBuildingContext();
   const { inViewLand } = useUserDataContext();
   const totalArmyAmount = () => {
-    let totalArmy = 0
+    let totalArmy = 0;
     if (inViewLand) {
       for (let index = 0; index < inViewLand.army.length; index++) {
-        totalArmy += Number(inViewLand.army[index])
+        totalArmy += Number(inViewLand.army[index]);
       }
     }
- return totalArmy
-    
-  }
+    return totalArmy;
+  };
 
   return (
     <div className="w-[80%] ml-auto mr-auto mt-4 flex flex-col">
-      {!upgradeMode && !activeMode && inViewLand &&(
+      {!upgradeMode && !activeMode && inViewLand && (
         <>
           <div className=" flex flex-col">
             <div className=" flex flex-row items-center font-semibold !text-white gap-3">
@@ -259,19 +266,31 @@ const TrainingCampContainer = () => {
               <ArmyCapacityIcon /> 100<span className="blueText">+ 100 </span>
               Army capacity
             </div>
-            <DualProgressBar currentLevel={ Number(inViewLand?.trainingCampLvl)} />
+            <DualProgressBar
+              currentLevel={Number(inViewLand?.trainingCampLvl)}
+            />
           </div>
 
-          <UpgradeContainer foodAmount={baseBuildAmounts.trainingCamp.food} goldAmount={baseBuildAmounts.trainingCamp.gold} />
+          <UpgradeContainer
+            foodAmount={baseBuildAmounts.trainingCamp.food}
+            goldAmount={baseBuildAmounts.trainingCamp.gold}
+          />
         </>
       )}
     </div>
   );
 };
 
+type ActiveInputType = "Deposit/Withdraw" | "Buy/Sell" | "Transfer";
 const TownhallContainer = () => {
   const { upgradeMode, activeMode } = useSelectedBuildingContext();
-  const { inViewLand } = useUserDataContext();
+  const { inViewLand, BMTBalance } = useUserDataContext();
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [isDeposit, setIsDeposit] = useState(true);
+  const [isBuy, setIsBuy] = useState(true);
+  const [isGoldSelected, setIsGoldSelected] = useState(true);
+  const [activeInput, setActiveInput] =
+    useState<ActiveInputType>("Deposit/Withdraw");
 
   const unlocks = [
     "Knight",
@@ -287,7 +306,7 @@ const TownhallContainer = () => {
           <>
             <div className=" flex flex-col gap-3">
               <UpgradeHeader
-                currentLevel={ Number(inViewLand.townhallLvl)}
+                currentLevel={Number(inViewLand.townhallLvl)}
                 title="Upgrades unlocks at next level"
               />
               <div className="flex flex-row gap-4 overflow-scroll px-2 py-2 bg-black/20 rounded-md  ">
@@ -301,10 +320,79 @@ const TownhallContainer = () => {
                 ))}
               </div>
             </div>
-            <UpgradeContainer goldAmount={baseBuildAmounts.townHall.gold} foodAmount={baseBuildAmounts.townHall.food} />
+            <UpgradeContainer
+              goldAmount={baseBuildAmounts.townHall.gold}
+              foodAmount={baseBuildAmounts.townHall.food}
+            />
           </>
         )}
-        {!upgradeMode && !activeMode && <></>}
+        {!upgradeMode && !activeMode && (
+          <>
+          
+          <div className={`flex flex-col  p-1 rounded-md ${ activeInput == "Deposit/Withdraw"? "border border-[#98fbd7]" : "hover:border hover:border-[#98fbd7] brightness-50"}`}>
+              <a onClick={() => setActiveInput("Deposit/Withdraw")} className="blueText mt-3 text-center cursor-pointer darkGreenBg p-2 justify-around">
+              Deposit/Withdraw
+              </a>
+              <div className=" flex flex-row items-center mt-3">
+                <input
+                  type="number"
+                  onChange={(event) =>
+                    setDepositAmount(Number(event.target.value))
+                  }
+                  className=" bg-black/20 w-full rounded-l-md focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40 h-full"
+                  placeholder="Enter amount"
+                />
+                <a
+                  onClick={() => setIsDeposit(!isDeposit)}
+                  className=" text-[14px] w-[10rem] text-center border h-full border-[#98fbd7]/40 rounded-r-md p-1 cursor-pointer hover:bg-white/10 transition-all flex flex-row items-center gap-2"
+                >
+                  <HiSwitchVertical />
+                  {isDeposit ? "Deposit" : "Withdraw"}
+                </a>
+              </div>
+              <p className=" text-[12px] text-white/70">
+                Balance: {BMTBalance && formattedNumber(BMTBalance)}
+              </p>
+            </div>
+            <div className={`mt-2 flex flex-col  p-1 rounded-md ${ activeInput == "Buy/Sell" ? "border border-[#98fbd7]" : "hover:border hover:border-[#98fbd7] brightness-50"}`}>
+              <a onClick={() => setActiveInput("Buy/Sell")} className="blueText mt-3 text-center cursor-pointer darkGreenBg p-2 justify-around">
+                Buy/Sell
+              </a>
+              <div className=" flex flex-row items-center mt-3">
+                <a
+                  onClick={() => setIsGoldSelected(!isGoldSelected)}
+                  className=" items-center justify-center text-[14px] w-[3rem] text-center border h-full border-[#98fbd7]/40 rounded-l-md p-1 cursor-pointer hover:bg-white/10 transition-all flex flex-row  gap-2"
+                >
+                  {isGoldSelected ? <SmCoinIcon /> : <SmFoodIcon />}
+                </a>
+                <input
+                  type="number"
+                  onChange={(event) =>
+                    setDepositAmount(Number(event.target.value))
+                  }
+                  className=" bg-black/20 w-full  focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40 h-full"
+                  placeholder={depositAmount.toString()}
+                  disabled
+                />
+                <a
+                  onClick={() => setIsBuy(!isBuy)}
+                  className=" text-[14px] w-[10rem] text-center border h-full border-[#98fbd7]/40 rounded-r-md p-1 cursor-pointer hover:bg-white/10 transition-all flex flex-row items-center gap-2"
+                >
+                  <HiSwitchVertical />
+                  {isBuy ? "Buy" : "Sell"}
+                </a>
+            
+              </div>
+              <p className=" text-[12px] text-white/70">
+              {isGoldSelected}  Balance: {BMTBalance && formattedNumber(BMTBalance)}
+              </p>
+            </div>
+            <div className="mt-3 ml-auto mr-auto ">
+            <button className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
+            </div>
+           
+          </>
+        )}
       </div>
     </>
   );
@@ -328,7 +416,10 @@ const WallContainer = () => {
             />
             <DualProgressBar currentLevel={Number(inViewLand.wallLvl)} />
           </div>
-          <UpgradeContainer foodAmount={baseBuildAmounts.wall.food} goldAmount={baseBuildAmounts.wall.gold}/>
+          <UpgradeContainer
+            foodAmount={baseBuildAmounts.wall.food}
+            goldAmount={baseBuildAmounts.wall.gold}
+          />
         </>
       )}
     </div>
@@ -396,5 +487,4 @@ const UpgradeHeader = ({ title, currentLevel }: UpgradeHeaderProps) => {
   );
 };
 {
-
 }

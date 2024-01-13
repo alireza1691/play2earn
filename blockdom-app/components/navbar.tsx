@@ -40,7 +40,7 @@ export default function Navbar() {
     inViewLand,
     chosenLand,
     setChosenLand,
- setIsUserDataLoading
+ setIsUserDataLoading,setBMTBalance
   } = useUserDataContext();
   const { setSelectedParcel, setSelectedLand, selectedParcel } =
     useMapContext();
@@ -63,7 +63,7 @@ export default function Navbar() {
       const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(
         Number(land.tokenId)
       );
-      const typesOfWarriors = await townPInst.getArmy(Number(land.tokenId));
+      const warriors = await townPInst.getArmy(Number(land.tokenId));
       const defaultLand: InViewLandType = {
         tokenId: Number(land.tokenId),
         townhallLvl: defaultLandData.townhallLevel,
@@ -76,7 +76,7 @@ export default function Navbar() {
         ],
         buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
         remainedBuildTime: remainedWorkerBusyTime,
-        army: typesOfWarriors
+        army: warriors
       };
       setInViewLand(defaultLand);
       console.log("default land:", defaultLand);
@@ -127,7 +127,10 @@ export default function Navbar() {
       if (!address) {
         setOwnedLands(null);
       }
- 
+      if(address){
+        const connectedWalletBal = await townPInst.getBMTbalance(address)
+        setBMTBalance(connectedWalletBal)
+      }
     };
     data();
   }, [

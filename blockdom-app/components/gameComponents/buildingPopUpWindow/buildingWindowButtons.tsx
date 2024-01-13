@@ -23,7 +23,7 @@ export default function BuildingWindowButtons() {
 
   const relevantButton = () => {
     if (selectedItem?.name == "Townhall") {
-      return "Approve";
+      return "Clan";
     }
     if (selectedItem?.name == "Barracks") {
       return "Train army";
@@ -117,7 +117,7 @@ export default function BuildingWindowButtons() {
       )}
       {!upgradeMode && !activeMode && (
         <>
-          { selectedItem?.name != "Farm" && selectedItem?.name != "GoldMine" && selectedItem?.name != "Wall" ?   <button
+          { selectedItem?.name != "Farm" && selectedItem?.name != "GoldMine" && selectedItem?.name != "Wall" && selectedItem?.name != "Townhall" ?   <button
             onClick={() => setActiveMode(true)}
             className="greenButton !py-2 !w-[70%]"
           >
