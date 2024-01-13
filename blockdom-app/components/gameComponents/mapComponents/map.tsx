@@ -3,23 +3,34 @@ import { useMapContext } from "@/context/map-context";
 import { MintedLand, SelectedParcelType } from "@/lib/types";
 import { coordinatesObject, getMintedLandsFromEvents, parcelLands, zeroAddress } from "@/lib/utils";
 import Image from "next/image";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, } from "react";
+
+const allParcels =() => {
+  let parcelLandsArray = [];
+  for (let y = 9; y > -1; y--) {
+    for (let x = 0; x < 10; x++) {
+      const item = parcelLands((x + 10) * 10, (y + 10) * 10);
+      parcelLandsArray.push(item);
+    }
+  }
+  return parcelLandsArray;
+};
 
 export default function Map() {
   const { selectedParcel, setSelectedParcel } = useMapContext();
   const { apiData, loading ,mintedLands} = useApiData();
 
-
-  const allParcels = useMemo(() => {
-    let parcelLandsArray = [];
-    for (let y = 9; y > -1; y--) {
-      for (let x = 0; x < 10; x++) {
-        const item = parcelLands((x + 10) * 10, (y + 10) * 10);
-        parcelLandsArray.push(item);
-      }
-    }
-    return parcelLandsArray;
-  }, []);
+  // const memoizedParcels = useMemo(allParcels, []);
+  // const allParcels = useMemo(() => {
+  //   let parcelLandsArray = [];
+  //   for (let y = 9; y > -1; y--) {
+  //     for (let x = 0; x < 10; x++) {
+  //       const item = parcelLands((x + 10) * 10, (y + 10) * 10);
+  //       parcelLandsArray.push(item);
+  //     }
+  //   }
+  //   return parcelLandsArray;
+  // }, []);
 
   const getOwnerFromEvents =(tokenId:number):string =>{
     let isPresent: boolean
@@ -85,7 +96,7 @@ export default function Map() {
             </div>
 
           <div className=" gap-1 top-[34rem] left-[34rem] xl:left-[44.5rem] xl:top-[45rem] z-10 absolute  grid grid-cols-10    !h-max !w-max  ">
-            {allParcels.map((parcel, key) => (
+            {allParcels().map((parcel, key) => (
               <div key={key} className={parcelStyleMapView}>
                 <a
                   onClick={() => {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect} from "react";
 import { Tooltip } from "@nextui-org/react";
 import {
   getMintedLandsFromEvents,

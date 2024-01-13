@@ -829,7 +829,7 @@ abstract contract Town is Barracks{
 
     function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external  returns(bool, uint256, uint256){
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
-        require(dArmy.isReturning = false, "Army is returning");
+        require(dArmy.isReturning == false, "Army is returning");
         require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");
         uint256 attackerPower ;
         uint256 attackerHp;
@@ -859,6 +859,7 @@ abstract contract Town is Barracks{
 
     function joinDispatchedArmy(uint256 landTokenId, uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId){
         DispatchedArmy storage dArmy =  dispatchedArmies[landTokenId][dispatchedArmyIndex];
+        require(dArmy.isReturning == false, "Army has not returned");
         require(dArmy.amounts[0] > 0 || dArmy.amounts[1] > 0, "Dispatched Army does not exist");
         _addEnteredBatchWarriorByPercent(dArmy.amounts,dArmy.remainedArmybyPercent, landTokenId);
         landData[landTokenId].goodsBalance[0] += dArmy.lootedAmounts[0];

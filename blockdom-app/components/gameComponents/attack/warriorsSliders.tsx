@@ -21,7 +21,9 @@ export default function WarriorsSliders() {
   };
 
   return (
-    <div className=" mt-auto flex flex-col gap-1 flex-grow md:mt-6 w-full max-w-[17.5rem] h-[30%] px-2 sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
+    <>
+    {inViewLand && 
+    <div className=" mt-auto flex flex-col gap-1 flex-grow md:mt-6 w-full max-w-[17.5rem] h-[30%] max-h-[25rem] px-2 sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
       {warriorsInfo.map((warrior,key) => (
     <div key={key} className=" flex flex-row relative ">
     <Image
@@ -92,98 +94,9 @@ export default function WarriorsSliders() {
     
   </div>
       ))}
-{/*   
-      <div className=" flex flex-row relative">
-        <Image
-          src={"/cards/warriorMiniCard.png"}
-          alt="warriorCard"
-          width={50}
-          height={80}
-        />
-        <Slider
-          color="foreground"
-          label="Spearman"
-          step={1}
-          maxValue={100}
-          minValue={0}
-          defaultValue={0}
-          className="max-w-md "
-          // getValue={(warrior) => `${warrior} of 100`}
 
-          onChangeEnd={() => {
-            ("");
-          }}
-        />
-      </div>{" "}
-      <div className=" flex flex-row relative">
-        <Image
-          src={"/cards/warriorMiniCard.png"}
-          alt="warriorCard"
-          width={50}
-          height={80}
-        />
-        <Slider
-          color="foreground"
-          label="Spearman"
-          step={1}
-          maxValue={100}
-          minValue={0}
-          defaultValue={0}
-          className="max-w-md "
-          // getValue={(warrior) => `${warrior} of 100`}
-
-          onChangeEnd={() => {
-            ("");
-          }}
-          isDisabled
-        />
-      </div>
-      <div className=" flex flex-row relative">
-        <Image
-          src={"/cards/warriorMiniCard.png"}
-          alt="warriorCard"
-          width={50}
-          height={80}
-        />
-        <Slider
-          color="foreground"
-          label="Spearman"
-          step={1}
-          maxValue={100}
-          minValue={0}
-          defaultValue={0}
-          className="max-w-md "
-          // getValue={(warrior) => `${warrior} of 100`}
-
-          onChangeEnd={() => {
-            ("");
-          }}
-          isDisabled
-        />
-      </div>
-      <div className=" flex flex-row relative">
-        <Image
-          src={"/cards/warriorMiniCard.png"}
-          alt="warriorCard"
-          width={50}
-          height={80}
-        />
-        <Slider
-          color="foreground"
-          label="Spearman"
-          step={1}
-          maxValue={100}
-          minValue={0}
-          defaultValue={0}
-          className="max-w-md "
-          // getValue={(warrior) => `${warrior} of 100`}
-
-          onChangeEnd={() => {
-            ("");
-          }}
-          isDisabled
-        />
-      </div> */}
     </div>
+    }
+    </>
   );
 }

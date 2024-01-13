@@ -31,10 +31,11 @@ export default function AttackTargetInfo() {
 
    useEffect(() => {
     const getInfo =async () =>{
-      if (selectedLand) {
+      if (selectedLand && selectedLand.isMinted) {
         
         try {
-          const goods = await townPInst.getGoodsBal(selectedLand.coordinate)
+           const landData = await townPInst.getLandIdData(selectedLand.coordinate)
+           const goods = landData.goodsBalance
           const army = await townPInst.getArmy(selectedLand.coordinate)
           
           const infoObj = {gold: formatEther(goods[1]) ,food:  formatEther(goods[0]) ,army: army  }
