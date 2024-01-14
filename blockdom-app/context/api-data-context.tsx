@@ -2,8 +2,8 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { apiKey, arbitrumApiKey, landsAddress, landsMainnetAddress, polygonApiKey, townAddress } from '@/lib/blockchainData';
-import { APICallData, ArmyType, MintedLand, MintedResourceBuildingType } from '@/lib/types';
-import { getMintedLandsFromEvents, getOwnedLands, getResBuildingsFromEvents } from '@/lib/utils';
+import { APICallData, ArmyType, MintedLand, MintedResourceBuildingType, WarLogType } from '@/lib/types';
+import { getMintedLandsFromEvents, getOwnedLands, getResBuildingsFromEvents, getWarLogsFromEvents } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { useBlockchainStateContext } from './blockchain-state-context';
 
@@ -22,6 +22,7 @@ interface ApiDataContextProps {
   buildedResourceBuildings: MintedResourceBuildingType[] | null
   armyTypes: ArmyType[] | null
   setArmyTypes: React.Dispatch<React.SetStateAction<ArmyType[] | null>>
+  battleLogs: WarLogType[] | null
 }
 
 const ApiDataContext = createContext<ApiDataContextProps | undefined>(undefined);
@@ -33,7 +34,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const [mintedLands, setMintedLands] = useState< MintedLand[] | null>(null)
   const [buildedResourceBuildings, setBuildedResourceBuildings] = useState<MintedResourceBuildingType[] | null>(null)
   const [armyTypes, setArmyTypes] = useState <ArmyType[] | null>(null)
-  // const [isTestnetNetwork,setIsTestnetNetwork] = useState<boolean|null>(null)
+  const [battleLogs,setBattleLogs] = useState <WarLogType[] | null>(null)
 
   const currentRoute = usePathname()
 
@@ -79,6 +80,9 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
           setMintedLands (mintedLands)
           const mintedResourcesBuildings =  getResBuildingsFromEvents(response2.data.result)
           setBuildedResourceBuildings(mintedResourcesBuildings)
+          const warLogs = getWarLogsFromEvents(response2.data.result)
+          setBattleLogs(warLogs)
+          
     
         } else {
           const response = await axios.get(
@@ -104,7 +108,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   }, [isTestnet]); // Run the effect only once on mount
 
   return (
-    <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings, armyTypes, setArmyTypes}}>
+    <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings, armyTypes, setArmyTypes, battleLogs}}>
       {children}
     </ApiDataContext.Provider>
   );

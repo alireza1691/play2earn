@@ -103,3 +103,11 @@ export type DispatchedArmy = {
   isReturning: boolean;
   remainedArmybyPercent: BigNumber;
 };
+
+
+export type WarLogType = {
+  from: number,
+  to: number,
+  lootedAmounts: number[],
+  success: boolean
+}

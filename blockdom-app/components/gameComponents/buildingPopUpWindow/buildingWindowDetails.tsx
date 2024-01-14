@@ -285,12 +285,35 @@ type ActiveInputType = "Deposit/Withdraw" | "Buy/Sell" | "Transfer";
 const TownhallContainer = () => {
   const { upgradeMode, activeMode } = useSelectedBuildingContext();
   const { inViewLand, BMTBalance } = useUserDataContext();
-  const [depositAmount, setDepositAmount] = useState(0);
+  const [enteredAmount, setEnteredAmount] = useState(0);
   const [isDeposit, setIsDeposit] = useState(true);
   const [isBuy, setIsBuy] = useState(true);
   const [isGoldSelected, setIsGoldSelected] = useState(true);
   const [activeInput, setActiveInput] =
     useState<ActiveInputType>("Deposit/Withdraw");
+
+    const isDisable = () => {
+
+      if (activeInput == "Buy/Sell") {
+        if (isBuy && enteredAmount >  Number(formattedNumber(BMTBalance || 0))) {
+          return true
+        }
+        if (!isBuy && isGoldSelected && enteredAmount >  Number(formattedNumber(inViewLand?.goodsBalance[1] || 0))) {
+          return true
+        }
+        if (!isBuy && !isGoldSelected && enteredAmount >  Number(formattedNumber(inViewLand?.goodsBalance[0] || 0))) {
+          return true
+        }
+      }
+      if (activeInput == "Deposit/Withdraw") {
+        if (!isDeposit && enteredAmount >  Number(formattedNumber(BMTBalance || 0))) {
+          return true
+        }
+      }
+      else {
+        return false
+      }
+    }
 
   const unlocks = [
     "Knight",
@@ -337,7 +360,7 @@ const TownhallContainer = () => {
                 <input
                   type="number"
                   onChange={(event) =>
-                    setDepositAmount(Number(event.target.value))
+                    setEnteredAmount(Number(event.target.value))
                   }
                   className=" bg-black/20 w-full rounded-l-md focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40 h-full"
                   placeholder="Enter amount"
@@ -368,11 +391,11 @@ const TownhallContainer = () => {
                 <input
                   type="number"
                   onChange={(event) =>
-                    setDepositAmount(Number(event.target.value))
+                    setEnteredAmount(Number(event.target.value))
                   }
                   className=" bg-black/20 w-full  focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40 h-full"
-                  placeholder={depositAmount.toString()}
-                  disabled
+                  placeholder={enteredAmount.toString()}
+                  
                 />
                 <a
                   onClick={() => setIsBuy(!isBuy)}
@@ -384,11 +407,14 @@ const TownhallContainer = () => {
             
               </div>
               <p className=" text-[12px] text-white/70">
-              {isGoldSelected}  Balance: {BMTBalance && formattedNumber(BMTBalance)}
+                {isBuy && `BMT Balance: ${BMTBalance && formattedNumber(BMTBalance)}`}
+                {!isBuy && isGoldSelected && `Gold Balance: ${inViewLand && formattedNumber(inViewLand.goodsBalance[1])}`}
+                {!isBuy && !isGoldSelected && `Food Balance: ${inViewLand && formattedNumber(inViewLand.goodsBalance[0])}`}
+
               </p>
             </div>
             <div className="mt-3 ml-auto mr-auto ">
-            <button className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
+            <button disabled={isDisable()} className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
             </div>
            
           </>

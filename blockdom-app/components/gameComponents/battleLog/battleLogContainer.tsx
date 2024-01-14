@@ -6,7 +6,7 @@ import { DispatchedArmy } from "@/lib/types";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import BattleLogTabs from "./battleLogTabs";
-import Log from "./log";
+import Log from "./ongoingLog";
 import Logs from "./logs";
 
 export default function BattleLogContainer() {

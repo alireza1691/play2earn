@@ -90,7 +90,7 @@ export default function TownResourceBuildings() {
       <div className="z-10 flex flex-col left-[10rem]  gap-10   absolute top-[20rem]">
         {farms && farms.length == 0 && (
           <Image
-            className="z-10 cursor-pointer opacity-40  w-[10rem] h-auto"
+            className="z-10 cursor-pointer  w-[10rem] h-auto"
             src={farmImage(0)}
             width={580}
             height={480}
@@ -129,7 +129,7 @@ export default function TownResourceBuildings() {
               </React.Fragment>
             ))}
             <Image
-              className="z-10 cursor-pointer   w-[10rem] h-auto opacity-40"
+              className="z-10 cursor-pointer   w-[10rem] h-auto "
               src={farmImage(0)}
               width={580}
               height={480}
@@ -150,7 +150,7 @@ export default function TownResourceBuildings() {
       <div className="z-10 flex flex-row left-[30rem] ml-auto gap-10 absolute top-[10rem]">
         {goldMines && goldMines.length == 0 && (
           <Image
-            className=" cursor-pointer  w-[10rem] h-auto opacity-40"
+            className=" cursor-pointer  w-[10rem] h-auto "
             src={goldMineImage(0)}
             width={580}
             height={480}
@@ -190,7 +190,7 @@ export default function TownResourceBuildings() {
               </React.Fragment>
             ))}
             <Image
-              className=" cursor-pointer w-[10rem] h-auto opacity-40 gap-20"
+              className=" cursor-pointer w-[10rem] h-auto gap-20"
               src={goldMineImage(0)}
               width={580}
               height={480}

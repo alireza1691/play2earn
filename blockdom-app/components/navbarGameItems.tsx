@@ -61,7 +61,7 @@ export default function NavbarGameItems() {
           router.push(isTestnet ? "/testnet/myLand" : "/myLand");
         }}
         className={`${
-          currentRoute == "/myLand"
+          currentRoute == "/myLand" || currentRoute == "/testnet/myLand"
             ? " brightness-100  bg-black/20 text-[#B9F8EE] "
             : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
         } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
@@ -78,12 +78,13 @@ export default function NavbarGameItems() {
         </a>
       )}
     
+    {ownedLands && ownedLands.length > 0 ? ( 
       <a
         onClick={() => {
           router.push(isTestnet ? "/testnet/battleLog": "/battleLog");
         }}
         className={`${
-          currentRoute == "/battleLog"
+          currentRoute == "/battleLog"|| currentRoute == "/testnet/battleLog"
             ? " brightness-100  bg-black/20 text-[#B9F8EE] "
             : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
         } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
@@ -95,6 +96,19 @@ export default function NavbarGameItems() {
         )}
         Battle log
       </a>
+    ) : (
+      <a
+ 
+        className={` brightness-50 flex flex-col justify-center items-center transition-all  p-2 rounded-lg  text-sm font-semibold leading-6 `}
+      >
+        {currentRoute == "/battleLog" ? (
+          <BattleLogActiveIcon />
+        ) : (
+          <BattleLogIcon />
+        )}
+        Battle log
+      </a>
+    )}
     </div>
   );
 }

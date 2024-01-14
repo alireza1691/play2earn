@@ -15,6 +15,7 @@ abstract contract Vars is Ownable{
     uint256 private constant baseWarriorRequiredFood = 3 ether;
     uint256 private constant baseFoodRevenuePer3hours = 2 ether;
     uint256 private constant baseGoldRevenuePer3hours = 2 ether;
+    uint256 private constant baseWarriorLootCapacity = 30 ether;
       // uint256 private constant trnasferCostPercentage = 7;
         struct WarriorInfo {
         uint8 attackPower;
@@ -50,6 +51,9 @@ function WarriorTypes() view public returns (WarriorInfo[] memory) {
     }
       function BaseBuildTimestamp() pure public returns (uint256) {
         return baseBuildTimestamp;
+    }
+      function BaseWarriorLootCapacity() pure public returns (uint256) {
+        return baseWarriorLootCapacity;
     }
       function BaseTownhallBuildTimestamp() pure public returns (uint256) {
         return baseTownhallBuildTimestamp;

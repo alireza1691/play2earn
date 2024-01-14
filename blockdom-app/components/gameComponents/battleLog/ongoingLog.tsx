@@ -18,7 +18,7 @@ type LogProps = {
   dispatchedArmy: DispatchedArmy,
   dispatchIndex: number
 }
-export default function Log({dispatchedArmy,dispatchIndex}:LogProps) {
+export default function OngoingLog({dispatchedArmy,dispatchIndex}:LogProps) {
   // const [dispatchedArmies, setDispatchedArmies] = useState<
   //   DispatchedArmy[] | null
   // >(null);
@@ -96,53 +96,13 @@ export default function Log({dispatchedArmy,dispatchIndex}:LogProps) {
           </div>
         </div>
       </div>
-      {logStatus == "Attack" && <AttackLogAction />}
+      {/* {logStatus == "Attack" && <AttackLogAction />} */}
       {logStatus == "Ongoing" && <OngoingLogAction dispatchedArmy={dispatchedArmy} dispatchIndex={dispatchIndex}/>}
-      {logStatus == "Defense" && <DefenseLogAction />}
+      {/* {logStatus == "Defense" && <DefenseLogAction />} */}
     </div>
   );
 }
 
-export const AttackLogAction = () => {
-  return (
-    <div className=" ml-auto  h-full flex flex-col md:flex-row gap-2 py-2 px-2">
-      <div className=" flex flex-col gap-2 w-[182px]">
-        <div className="balBg  px-4 py-2 flex flex-row justify-start gap-4 items-center">
-          {" "}
-          <CoinIcon /> <p>12312</p>
-        </div>
-        <div className="balBg  px-4 py-2 flex flex-row justify-start gap-4 items-center">
-          <FoodIcon />
-          <p>12312234</p>{" "}
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 w-[182px]">
-        <a className="logResultBg px-3 text-center py-3">You won</a>
-        <a className="logResultBg px-3 text-center  py-3">You won</a>
-      </div>
-    </div>
-  );
-};
-export const DefenseLogAction = () => {
-  return (
-    <div className=" ml-auto  h-full flex flex-col md:flex-row gap-2 py-2 px-2">
-      <div className=" flex flex-col gap-2 w-[182px]">
-        <div className="balBg  px-4 py-2 flex flex-row justify-start gap-4 items-center">
-          {" "}
-          <CoinIcon /> <p>12312</p>
-        </div>
-        <div className="balBg  px-4 py-2 flex flex-row justify-start gap-4 items-center">
-          <FoodIcon />
-          <p>12312234</p>{" "}
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 w-[182px]">
-        <a className="logResultBg px-3 text-center py-3">You won</a>
-        <a className="logResultBg px-3 text-center  py-3">You won</a>
-      </div>
-    </div>
-  );
-};
 
 type OngoingLogProps ={
   dispatchedArmy:DispatchedArmy | null

@@ -154,7 +154,7 @@ library Utils {
     }
 }
 
-abstract contract Barracks is Ownable{
+contract Barracks is Ownable{
 
     Vars VAR;
 
@@ -220,7 +220,7 @@ abstract contract Barracks is Ownable{
     //  ******************************************************************************
 
 
-    constructor(/*address heroesContract*/ address varsAddress){
+    constructor(/*address heroesContract*/ address varsAddress) Ownable(msg.sender){
         VAR = Vars(varsAddress);
         // HEROES = IHeroes(heroesContract);
         // warriorTypes.push(WarriorInfo( 45, 30, 70, "Maceman",7 ether));
@@ -359,7 +359,7 @@ abstract contract Barracks is Ownable{
 
 
 
-abstract contract Town is Barracks{
+contract Town is Barracks{
 
     //  ******************************************************************************
     //  ******************************************************************************
@@ -831,6 +831,7 @@ abstract contract Town is Barracks{
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         require(dArmy.isReturning == false, "Army is returning");
         require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");
+        uint256 totalAttackerArmy ;
         uint256 attackerPower ;
         uint256 attackerHp;
         (,uint256 defenderPower, uint256 defenderHp,) = getArmyInfo(dArmy.target);
@@ -838,6 +839,7 @@ abstract contract Town is Barracks{
         for (uint i = 0; i < dArmy.amounts.length; i++) {
             attackerPower += dArmy.amounts[i] * warriorTypes()[i].attackPower;
             attackerHp += dArmy.amounts[i] * warriorTypes()[i].hp;
+            totalAttackerArmy += dArmy.amounts[i];
         }
 
         (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = Utils.calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
@@ -845,11 +847,12 @@ abstract contract Town is Barracks{
         // Updating Army of each user condsidering losses.
         _reduceBatchWarriorByPercent(remainedDefenderArmy, dArmy.target);
         dArmy.isReturning = true;
-        dArmy.remainedArmybyPercent = block.timestamp + remainedAttackerArmy;
+        dArmy.remainedArmybyPercent =  remainedAttackerArmy;
         (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,1);
-        dArmy.remainedTime = remainingTime;
+        dArmy.remainedTime = block.timestamp + remainingTime;
         if (success) {
-            uint256[2] memory amounts = _removeDefenderGoods(dArmy.target, remainedAttackerArmy-remainedDefenderArmy);
+            uint256 maxLootCapacity = (totalAttackerArmy * remainedAttackerArmy/ 100) * VAR.BaseWarriorLootCapacity(); 
+            uint256[2] memory amounts = _removeDefenderGoods(dArmy.target, remainedAttackerArmy-remainedDefenderArmy,maxLootCapacity);
             dArmy.lootedAmounts = amounts;
         }
   
@@ -859,7 +862,7 @@ abstract contract Town is Barracks{
 
     function joinDispatchedArmy(uint256 landTokenId, uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId){
         DispatchedArmy storage dArmy =  dispatchedArmies[landTokenId][dispatchedArmyIndex];
-        require(dArmy.isReturning == false, "Army has not returned");
+        require(dArmy.isReturning == true, "Army has not returned");
         require(dArmy.amounts[0] > 0 || dArmy.amounts[1] > 0, "Dispatched Army does not exist");
         _addEnteredBatchWarriorByPercent(dArmy.amounts,dArmy.remainedArmybyPercent, landTokenId);
         landData[landTokenId].goodsBalance[0] += dArmy.lootedAmounts[0];
@@ -977,9 +980,12 @@ abstract contract Town is Barracks{
     }
 
 
-    function _removeDefenderGoods(uint256 targetLandId, uint256 lootPercentage) internal returns (uint256[2] memory lootAmounts) {
+    function _removeDefenderGoods(uint256 targetLandId, uint256 lootPercentage, uint256 maxCap) internal returns (uint256[2] memory lootAmounts) {
         for (uint i = 0; i < 2; i++) {
             uint256 lootAmount = landData[targetLandId].goodsBalance[i] * lootPercentage / 100;
+            if (lootAmount > maxCap/2) {
+                lootAmount = maxCap/2;
+            }
             lootAmounts[i] = lootAmount;
             landData[targetLandId].goodsBalance[i] -= lootAmount;
         } 

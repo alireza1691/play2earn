@@ -171,3 +171,5 @@ export const warriorsInfo = [
 
 
 export const baseTrainingCampCapacity = 50
+
+export const battleLogTabs = [ "Ongoing", "Attacks", "Defenses"] as const;

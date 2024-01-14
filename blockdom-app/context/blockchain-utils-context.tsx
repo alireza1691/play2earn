@@ -142,8 +142,8 @@ export default function BlockchainUtilsContextProvider({
       if (signer && chosenLand) {
         const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
         setTransactionState("waitingUserApproval");
-        console.log("is returning:", isReturning ? "war" : "join");
-        
+        // const tx = await instance.war(Number(chosenLand.tokenId),dispatchedArmyIndex)
+
         const tx = isReturning ? await instance.joinDispatchedArmy(Number(chosenLand.tokenId),dispatchedArmyIndex) : await instance.war(Number(chosenLand.tokenId),dispatchedArmyIndex)
         setTransactionState("waitingBlockchainConfirmation");
         const receipt = await tx.wait();
