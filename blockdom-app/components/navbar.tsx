@@ -26,11 +26,10 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // const [isTestnet,setIsTestnet] = useState()
   const {
-    apiData,
+
     mintedLands,
     buildedResourceBuildings,
-    setArmyTypes,
-    armyTypes,
+
     loading
   } = useApiData();
   const {
@@ -40,7 +39,8 @@ export default function Navbar() {
     inViewLand,
     chosenLand,
     setChosenLand,
- setIsUserDataLoading,setBMTBalance
+ setIsUserDataLoading,setBMTBalance,
+ landUpdateTrigger,setLandUpdateTrigger
   } = useUserDataContext();
   const { setSelectedParcel, setSelectedLand, selectedParcel } =
     useMapContext();
@@ -57,12 +57,16 @@ export default function Navbar() {
   const handleInViewLand = async (land: MintedLand) => {
   
     try {
+      
       const defaultLandData: landDataResType = await townPInst.getLandIdData(
         Number(land.tokenId)
       );
+      console.log("instances fetched");
       const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(
         Number(land.tokenId)
       );
+      
+      
       const warriors = await townPInst.getArmy(Number(land.tokenId));
       const defaultLand: InViewLandType = {
         tokenId: Number(land.tokenId),
@@ -80,11 +84,6 @@ export default function Navbar() {
       };
       setInViewLand(defaultLand);
       console.log("default land:", defaultLand);
-      // if (!armyTypes) {
-      //   const typesOfWarriors = await townPInst.getArmy(Number(land.tokenId));
-      //   console.log("user army:", typesOfWarriors);
-      // }
-  
       if (buildedResourceBuildings) {
         const resBildingsOfDefaultLand = getOwnedBuildings(
           buildedResourceBuildings,
@@ -95,6 +94,7 @@ export default function Navbar() {
       }
       setIsUserDataLoading(false)
     } catch (error) {
+      console.log("We have a trouble with getting inViewLand");
       
     }
   
@@ -102,18 +102,29 @@ export default function Navbar() {
 
   useEffect(() => {
     const data = async () => {
-      if (address && apiData && mintedLands) {
+      if (address  && mintedLands) {
+      
+       
         const ownedl = getOwnedLands(mintedLands, address);
         setOwnedLands(ownedl);
         if (!chosenLand && ownedl.length > 0) {
+      
+          
           setChosenLand(ownedl[0]);
         }
-        if (isTestnet) {
-          if (!inViewLand) {
+        if (isTestnet) { 
+          if (!inViewLand && !chosenLand) {
+            console.log("1");
             await handleInViewLand(ownedl[0])
-  
+          
           }
-          if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {
+          if (landUpdateTrigger && chosenLand) {
+            console.log("land data triggered");
+            await handleInViewLand(ownedl[0])
+            console.log("land data updated by trigger");
+            setLandUpdateTrigger(false)
+          }
+          if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {  
             setIsUserDataLoading(true)
             await handleInViewLand(chosenLand)
            
@@ -122,7 +133,7 @@ export default function Navbar() {
           setInViewLand(null)
           setIsUserDataLoading(false)
         }
-  
+    
       }
       if (!address) {
         setOwnedLands(null);
@@ -135,13 +146,10 @@ export default function Navbar() {
     data();
   }, [
     address,
-    apiData,
-    setInViewLand,
-    setOwnedLands,
-    buildedResourceBuildings,
     chosenLand,
     inViewLand,
-    chainId
+    chainId,
+    landUpdateTrigger
   ]);
 
   return (

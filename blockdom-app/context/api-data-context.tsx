@@ -23,6 +23,7 @@ interface ApiDataContextProps {
   armyTypes: ArmyType[] | null
   setArmyTypes: React.Dispatch<React.SetStateAction<ArmyType[] | null>>
   battleLogs: WarLogType[] | null
+  setApiTrigger: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ApiDataContext = createContext<ApiDataContextProps | undefined>(undefined);
@@ -35,6 +36,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const [buildedResourceBuildings, setBuildedResourceBuildings] = useState<MintedResourceBuildingType[] | null>(null)
   const [armyTypes, setArmyTypes] = useState <ArmyType[] | null>(null)
   const [battleLogs,setBattleLogs] = useState <WarLogType[] | null>(null)
+  const [apiTrigger, setApiTrigger] = useState<boolean>(false)
 
   const currentRoute = usePathname()
 
@@ -62,9 +64,8 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
 
 
   useEffect(() => {
+
     const fetchData = async () => {
-      
-      // setIsTestnetNetwork(isTestnet)
       try {
         if (isTestnet ) {
           const response = await axios.get(
@@ -74,9 +75,9 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
             sepoliaAPIRequest(townAddress)
           );
           setApiData(response.data);
-          console.log("Lands API response:",response);
-          console.log("Town API response:",response2);
-          const mintedLands = getMintedLandsFromEvents(response.data.result)
+          console.log("Lands testnet API response:",response);
+          console.log("Town testnet API response:",response2);
+          const mintedLands = getMintedLandsFromEvents(response.data.result)       
           setMintedLands (mintedLands)
           const mintedResourcesBuildings =  getResBuildingsFromEvents(response2.data.result)
           setBuildedResourceBuildings(mintedResourcesBuildings)
@@ -102,13 +103,24 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
       } finally {
         setLoading(false);
       }
+
     };
 
     fetchData();
-  }, [isTestnet]); // Run the effect only once on mount
+
+    if (apiTrigger) {
+      const fetchDataWithDelay = () => {
+        setTimeout(() => {
+          fetchData();
+        }, 3000); // 3 seconds delay (adjust as needed)
+      };
+      fetchDataWithDelay()
+      setApiTrigger(false)
+    }
+  }, [isTestnet, apiTrigger]); // Run the effect only once on mount
 
   return (
-    <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings, armyTypes, setArmyTypes, battleLogs}}>
+    <ApiDataContext.Provider value={{ apiData, loading ,townApiData, mintedLands,buildedResourceBuildings, armyTypes, setArmyTypes, battleLogs,setApiTrigger}}>
       {children}
     </ApiDataContext.Provider>
   );

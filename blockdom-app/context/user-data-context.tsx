@@ -49,6 +49,8 @@ type UserDataContextType = {
   setIsUserDataLoading: React.Dispatch<React.SetStateAction<boolean>>
   BMTBalance: number | null 
   setBMTBalance : React.Dispatch<React.SetStateAction<number | null >>
+  landUpdateTrigger: boolean
+  setLandUpdateTrigger: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 const UserDataContext = createContext<UserDataContextType | null>(null);
@@ -60,7 +62,6 @@ export default function UserDataContextProvider({
   const [BMTBalance, setBMTBalance] = useState<null | number>(null)
   const [inViewLand, setInViewLand] = useState<InViewLandType | null>(null);
   const [chosenLand,setChosenLand] = useState<MintedLand | null>(null)
-  // const [isOwnedLand, setIsOwnedLand] = useState(false);
   const [buildedResBuildings, setBuildedResBuildings] =
     useState<BuildedResBuildingsType | null>(null);
   const [farms, setFarms] = useState<ResourceBuildingObj[] | null>(null);
@@ -69,6 +70,7 @@ export default function UserDataContextProvider({
   );
   const [army, setArmy] = useState<number | null>(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState <boolean>(true)
+  const [landUpdateTrigger, setLandUpdateTrigger] = useState<boolean>(false)
 
   return (
     <UserDataContext.Provider
@@ -77,8 +79,8 @@ export default function UserDataContextProvider({
         setOwnedLands,
         inViewLand,
         setInViewLand,
-        // isOwnedLand,
-        // setIsOwnedLand,
+        landUpdateTrigger,
+        setLandUpdateTrigger,
         farms,
         setFarms,
         goldMines,

@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 
 
 export default function SlideBarButtons() {
-  const { selectedLand,setSelectedLand } = useMapContext();
+  const { selectedLand } = useMapContext();
   const { ownedLands } = useUserDataContext();
   const {  mint } = useBlockchainUtilsContext()
 

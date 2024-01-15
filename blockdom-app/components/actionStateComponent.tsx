@@ -1,4 +1,5 @@
 "use client";
+import { useApiData } from "@/context/api-data-context";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import BlockdomLogo from "@/svg/blockdomLogo";
@@ -13,7 +14,8 @@ import React from "react";
 export default function ActionStateComponent() {
   const { setTransactionState, transactionState, txError, setReloadHandler } =
     useBlockchainStateContext();
-  const { isUserDataLoading } = useUserDataContext();
+  const { isUserDataLoading,setLandUpdateTrigger } = useUserDataContext();
+  const {setApiTrigger} = useApiData()
   const address = useAddress();
   const pathname = usePathname();
 
@@ -42,6 +44,10 @@ export default function ActionStateComponent() {
       if (transactionState == "connectionRejected") {
         titleString =
           "Connection rejected. Connect your wallet to correct network and try again";
+      }
+      if (transactionState == "connected") {
+        titleString =
+          "Your wallet is currently connected to the right network. Please retry the action.";
       }
     }
     return titleString;
@@ -110,7 +116,7 @@ export default function ActionStateComponent() {
             <div className="mt-auto px-3 py-3 flex flex-shrink">
               {" "}
               <button
-                onClick={() => {setTransactionState(null), transactionState == "confirmed" && window.location.reload();
+                onClick={() => {setTransactionState(null), transactionState == "confirmed",setApiTrigger(true),setLandUpdateTrigger(true) ;
                  }}
                 className=" !py-2 !w-full outlineGreenButton"
               >

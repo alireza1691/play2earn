@@ -1,7 +1,7 @@
 "use client";
 
 import { landsMainnetSInst, landsSInst, townMainnetSInst, townSInst } from "@/lib/instances";
-import { SelectedLandType } from "@/lib/types";
+import { InViewLandType, SelectedLandType } from "@/lib/types";
 import {
   metamaskWallet,
   useChainId,
@@ -13,12 +13,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useBlockchainStateContext } from "./blockchain-state-context";
 import { Sepolia, Polygon } from "@thirdweb-dev/chains";
 import { landObjectFromTokenId } from "@/lib/utils";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish, ethers, utils } from "ethers";
 import { useSelectedBuildingContext } from "./selected-building-context";
 import { useUserDataContext } from "./user-data-context";
 import { usePathname } from "next/navigation";
 import { useSelectedWindowContext } from "./selected-window-context";
 import { useMapContext } from "./map-context";
+import { useApiData } from "./api-data-context";
 
 type BlockchainUtilsProviderProps = {
   children: React.ReactNode;
@@ -47,12 +48,11 @@ export default function BlockchainUtilsContextProvider({
   const { setTransactionState, setTxError } = useBlockchainStateContext();
   const {
     selectedItem,
-    selectedResourceBuilding,
-    setSelectedResourceBuilding,
+    selectedResourceBuilding, setSelectedResourceBuilding
   } = useSelectedBuildingContext();
-  const { inViewLand, chosenLand } = useUserDataContext();
+  const { inViewLand, chosenLand,setInViewLand} = useUserDataContext();
   const {selectedArmy} = useSelectedWindowContext()
-  const {selectedLand} = useMapContext()
+  const {selectedLand,setSelectedLand} = useMapContext()
   const pathname = usePathname()
   const isTestnet = pathname.includes("/testnet/")
   
@@ -80,6 +80,7 @@ export default function BlockchainUtilsContextProvider({
       try {
         setTransactionState("waitingWalletConnection");
         await handleConnectWithMetamask();
+        setTransactionState("connected")
       } catch (error) {
         console.log(error);
         setTransactionState("connectionRejected");
@@ -92,6 +93,7 @@ export default function BlockchainUtilsContextProvider({
       try {
         setTransactionState("waitingWalletConnection");
         await switchChain(isTestnet ? testnetChainId : mainnetChainId);
+        setTransactionState("connected")
       } catch (error) {
         setTransactionState("connectionRejected");
         console.log(error);
@@ -258,6 +260,8 @@ export default function BlockchainUtilsContextProvider({
           console.log(receipt.status === 1);
 
           setTransactionState("confirmed");
+          const updatedObj = {...selectedResourceBuilding,level : selectedResourceBuilding.level ++}
+          setSelectedResourceBuilding(updatedObj)
         }
       } else {
         setTransactionState(null);
@@ -307,6 +311,8 @@ export default function BlockchainUtilsContextProvider({
           console.log(receipt.status === 1);
 
           setTransactionState("confirmed");
+          setSelectedLand({coordinate: selectedLand.coordinate, isMinted: true, owner: await signer.getAddress()})
+
         }
       } catch (error) {
         console.log("Reverted :", error);
@@ -346,10 +352,7 @@ export default function BlockchainUtilsContextProvider({
           console.log(receipt.status === 1);
 
           setTransactionState("confirmed");
-          setSelectedResourceBuilding({
-            ...selectedResourceBuilding,
-            earnedAmount: 0,
-          });
+       
         }
       } catch (error) {
         console.log("Reverted :", error);
@@ -383,22 +386,29 @@ export default function BlockchainUtilsContextProvider({
         const townInst = (isTestnet ? townSInst(signer) : townMainnetSInst(signer));
         setTransactionState("waitingUserApproval");
         let tx;
+        let updatedObj :InViewLandType = inViewLand
         if (selectedItem.name == "Barracks") {
           console.log("upgrading barracks");
           tx = await townInst.buildBarracks(inViewLand.tokenId);
+          updatedObj = {...inViewLand,barracksLvl: ethers.BigNumber.from(inViewLand.barracksLvl).add(1) }
         }
         if (selectedItem.name == "Townhall") {
           console.log("upgrading townhall");
           tx = await townInst.buildTownhall(inViewLand.tokenId);
+          updatedObj = {...inViewLand,townhallLvl: ethers.BigNumber.from(inViewLand.townhallLvl).add(1) }
+
         }
         if (selectedItem.name == "TrainingCamp") {
           console.log("upgrading training camp");
-
           tx = await townInst.buildTrainingCamp(inViewLand.tokenId);
+          updatedObj = {...inViewLand,trainingCampLvl: ethers.BigNumber.from(inViewLand.trainingCampLvl).add(1) }
+
         }
         if (selectedItem.name == "Wall") {
           console.log("upgrading walls");
           tx = await townInst.buildWalls(inViewLand.tokenId);
+          updatedObj = {...inViewLand,wallLvl: ethers.BigNumber.from(inViewLand.wallLvl).add(1) }
+
         }
         setTransactionState("waitingBlockchainConfirmation");
 
@@ -407,6 +417,7 @@ export default function BlockchainUtilsContextProvider({
           console.log(receipt.status === 1);
 
           setTransactionState("confirmed");
+          setInViewLand(updatedObj)
         }
       } catch (error) {
         console.log("Reverted :", error);

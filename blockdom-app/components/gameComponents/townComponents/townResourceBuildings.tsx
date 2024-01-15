@@ -69,8 +69,8 @@ export default function TownResourceBuildings() {
               buildedResBuildings.goldMines[index].tokenId
             );
             const obj = {
-              tokenId: buildedResBuildings.farms[index].tokenId,
-              level: buildedResBuildings.farms[index].level,
+              tokenId: buildedResBuildings.goldMines[index].tokenId,
+              level: buildedResBuildings.goldMines[index].level,
               name: "GoldMine",
               earnedAmount: Number(formatEther(currentRevenue)),
             };

@@ -758,22 +758,44 @@ contract Town is Barracks{
 
     }
 
-    function recruit(uint256 landTokenId, uint256 typeIndex, uint256 amount) external onlyLandOwner(landTokenId){
-        if (typeIndex >= warriorTypes().length) {
-            revert InvalidItem();
-        }
-        if (typeIndex + 1 > landData[landTokenId].barracksLevel) {
-            revert BarracksLevelLowerThanWarrior();
+    // function recruit(uint256 landTokenId, uint256 typeIndex, uint256 amount) external onlyLandOwner(landTokenId){
+    //     if (typeIndex >= warriorTypes().length) {
+    //         revert InvalidItem();
+    //     }
+    //     if (typeIndex + 1 > landData[landTokenId].barracksLevel) {
+    //         revert BarracksLevelLowerThanWarrior();
+    //     }
+    //     (,,,uint256 currentArmy) = getArmyInfo(landTokenId);
+
+    //     if ((landData[landTokenId].trainingCampLevel > 0 ?(landData[landTokenId].trainingCampLevel * VAR.BaseArmyCapacity()) : 10) < currentArmy + amount) {
+    //         revert MaxCapacity();
+    //     }
+
+    //     _spendGoods(landTokenId,[ VAR.BaseWarriorRequiredFood() * amount * (typeIndex == 5 ? 2 : 1), warriorTypes()[typeIndex].price * amount]);
+    //     _addWarrior(typeIndex, amount, landTokenId);
+    //     emit GoodsConsumption( [VAR.BaseWarriorRequiredFood() * amount, warriorTypes()[typeIndex].price * amount], landTokenId);
+    // }
+
+    function recruit(uint256 landTokenId,uint256[6] memory amounts) external onlyLandOwner(landTokenId){
+        uint256 totalAmount;
+        uint256 totalPrice;
+        uint256 totalFood;
+        for (uint i = 0; i < amounts.length; i++) {
+            uint256 requiredBarracksLevel = i + 1;
+            if (amounts[i] > 0 && landData[landTokenId].barracksLevel < requiredBarracksLevel) {
+                revert BarracksLevelLowerThanWarrior();
+            }
+            totalAmount += amounts[i];
+            totalPrice += warriorTypes()[i].price * amounts[i];
+            totalFood += VAR.BaseWarriorRequiredFood() * totalAmount * (i == 5 ? 2 : 1);
+            _addWarrior(i, amounts[i], landTokenId); 
         }
         (,,,uint256 currentArmy) = getArmyInfo(landTokenId);
-
-        if ((landData[landTokenId].trainingCampLevel > 0 ?(landData[landTokenId].trainingCampLevel * VAR.BaseArmyCapacity()) : 10) < currentArmy + amount) {
+        if ((landData[landTokenId].trainingCampLevel > 0 ?(landData[landTokenId].trainingCampLevel * VAR.BaseArmyCapacity()) : 10) < currentArmy + totalAmount) {
             revert MaxCapacity();
         }
+        _spendGoods(landTokenId,[ totalFood, totalPrice]);
 
-        _spendGoods(landTokenId,[ VAR.BaseWarriorRequiredFood() * amount * (typeIndex == 5 ? 2 : 1), warriorTypes()[typeIndex].price * amount]);
-        _addWarrior(typeIndex, amount, landTokenId);
-        emit GoodsConsumption( [VAR.BaseWarriorRequiredFood() * amount, warriorTypes()[typeIndex].price * amount], landTokenId);
     }
 
 
@@ -811,7 +833,7 @@ contract Town is Barracks{
     //     }
     //     emit Attack(attackerId, targetId, success, lootAmounts);
     // }
-    function dispatchArmy(uint256[] memory warriorAmounts,uint256 from,  uint256 target) external {
+    function dispatchArmy(uint256[] memory warriorAmounts,uint256 from,  uint256 target) external onlyLandOwner(from) {
         require(warriorAmounts.length == warriorTypes().length, "Lengths does not match");
         (,uint256 remainingTime) =  Utils.calculateDistance(from, target,1);
         (,,,uint256 totalArmy) = getArmyInfo(from);
@@ -825,9 +847,21 @@ contract Town is Barracks{
         dispatchedArmies[from].push(DispatchedArmy(warriorAmounts, block.timestamp+remainingTime, target,[uint256(0),0], false, 100));
     }
 
+    function retreat(uint256 landTokenId ,uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId) returns(bool, uint256, uint256) {
+                DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
+        require(dArmy.isReturning == false, "Army is returning");
+        require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");
+        uint256 dispatchedArmyAmount ;
+        for (uint i = 0; i < dArmy.amounts.length; i++) {
+            dispatchedArmyAmount += dArmy.amounts[i];
+        }
+        uint256 retreatCost = VAR.RetreatCostPerWarrior() * dispatchedArmyAmount;
+        require(landData[landTokenId].goodsBalance[1] >= retreatCost);
+        landData[landTokenId].goodsBalance[1] -= retreatCost;
+        landData[dArmy.target].goodsBalance[1] += retreatCost;
+    }
 
-
-    function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external  returns(bool, uint256, uint256){
+    function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId) returns(bool, uint256, uint256){
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         require(dArmy.isReturning == false, "Army is returning");
         require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");

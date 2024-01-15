@@ -2,6 +2,7 @@
 import { useMapContext } from "@/context/map-context";
 import { warriors, warriorsInfo } from "@/lib/data";
 import { townMainnetPInst, townPInst } from "@/lib/instances";
+import { formattedNumber } from "@/lib/utils";
 import CoinIcon from "@/svg/coinIcon";
 import FoodIcon from "@/svg/foodIcon";
 import { BigNumber } from "ethers";
@@ -16,7 +17,7 @@ type SelectedLandDataType = {
   army: BigNumber[];
 };
 export default function LandSlidebarContent() {
-  const { selectedLand, setSelectedLand } = useMapContext();
+  const { selectedLand } = useMapContext();
   const [data, setData] = useState<SelectedLandDataType | null>(null);
 
   const pathname = usePathname();
@@ -31,12 +32,15 @@ export default function LandSlidebarContent() {
             "selected land coordinate:",
             selectedLand.coordinate
           );
-          console.log(isTestnet);
 
           const inst = isTestnet ? townPInst : townMainnetPInst;
+       
+          if (isTestnet) {
+                
           const army: BigNumber[] = await inst.getArmy(
             selectedLand?.coordinate
           );
+          
           const landData = await inst.getLandIdData(selectedLand?.coordinate);
           const dataObj: SelectedLandDataType = {
             army: army,
@@ -46,6 +50,9 @@ export default function LandSlidebarContent() {
           console.log("here is the data:", dataObj);
 
           setData(dataObj);
+          }
+
+      
         } catch (error) {
           console.log(error);
         }
@@ -62,10 +69,10 @@ export default function LandSlidebarContent() {
             <div className=" flex flex-row gap-3 px-2 flex-shrink">
               <h3 className="!text-[10px]   sm:!text-[14px] balBg px-3 sm:px-5 sm:py-2 flex flex-row items-center gap-3">
                 <div></div>
-                <CoinIcon /> {formatEther(data?.gold || 0)}
+                <CoinIcon /> {formattedNumber(data?.gold || 0)}
               </h3>
               <h3 className="!text-[10px]  sm:!text-[14px] balBg px-5 sm:py-2 flex flex-row items-center gap-3">
-                <FoodIcon /> {formatEther(data?.food || 0)}
+                <FoodIcon /> {formattedNumber(data?.food || 0)}
               </h3>
             </div>
             <div className="w-full overflow-x-scroll h-auto p-2 bg-black/20 rounded-md custom-scrollbar">

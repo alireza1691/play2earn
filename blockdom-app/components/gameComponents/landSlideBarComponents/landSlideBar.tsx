@@ -15,8 +15,7 @@ import { useSelectedWindowContext } from "@/context/selected-window-context";
 export default function Slidebar() {
   const [imageUrl, setImageUrl] = useState<null | string>(null);
 
-  const { selectedLand, setSelectedLand } = useMapContext();
-  const { ownedLands } = useUserDataContext();
+  const { selectedLand } = useMapContext();
 
   const {  selectedWindowComponent } =
   useSelectedWindowContext();

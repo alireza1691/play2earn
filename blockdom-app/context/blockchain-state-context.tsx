@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState } from "react";
 
- const states = ["waitingWalletConnection","waitingUserApproval","waitingBlockchainConfirmation","confirmed","failedConfirmation","txRejected","connectionRejected"] as const
+ const states = ["waitingWalletConnection","connected","waitingUserApproval","waitingBlockchainConfirmation","confirmed","failedConfirmation","txRejected","connectionRejected"] as const
  type TxStateType = typeof states[number]
 
  type TxError = Error

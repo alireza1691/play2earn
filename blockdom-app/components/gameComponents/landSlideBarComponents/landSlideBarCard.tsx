@@ -9,7 +9,7 @@ import LandCard from '../landCard';
 
 export default function LandSlideBarCard() {
     const [imageUrl, setImageUrl] = useState<null | string>(null);
-  const { selectedLand, setSelectedLand } = useMapContext();
+  const { selectedLand} = useMapContext();
   const { ownedLands } = useUserDataContext();
 
   const getImageUrl = async () => {
@@ -28,18 +28,6 @@ export default function LandSlideBarCard() {
             if (!imageUrl && selectedLand) {
               getImageUrl()
             }
-            // if (selectedLand && ownedLands) {
-            //   if (
-            //     ownedLands.some(
-            //       (item) => item.tokenId == selectedLand.coordinate.toString()
-            //     )
-            //   ) {
-            //     setIsOwnedLand(true);
-            //   }
-            // }
-            // if (!selectedLand) {
-            //   setIsOwnedLand(false);
-            // }
           } catch (error) {
             console.log(error);
           }

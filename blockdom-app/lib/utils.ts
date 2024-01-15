@@ -174,7 +174,6 @@ export function getResBuildingsFromEvents(events: ApiDataResultType) {
     const upgradedBuildings = getUpgradeEvents(events, upgradeEventSignature);
 
     for (let index = 0; index < events.length; index++) {
-      console.log(eventSig === events[index].topics[0]);
       if (eventSig === events[index].topics[0]) {
         const buildingTypeIndex = ethers.utils.defaultAbiCoder.decode(
           ["uint256"],
@@ -194,7 +193,7 @@ export function getResBuildingsFromEvents(events: ApiDataResultType) {
       }
     }
   }
-  console.log("Minted buildings:", mintedBuildings);
+
   return mintedBuildings;
 }
 
