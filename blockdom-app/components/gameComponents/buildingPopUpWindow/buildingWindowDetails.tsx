@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { HiSwitchVertical } from "react-icons/hi";
 
 import ArmyCapacityIcon from "@/svg/armyCapacityIcon";
-import { baseBuildAmounts, warriors, warriorsInfo } from "@/lib/data";
+import { baseBuildAmounts, townHallUnlocks, warriors, warriorsInfo } from "@/lib/data";
 import FoodIcon from "@/svg/foodIcon";
 import { IoIosArrowDown } from "react-icons/io";
 import DoubleArrow from "@/svg/doubleArrow";
@@ -315,13 +315,13 @@ const TownhallContainer = () => {
       }
     }
 
-  const unlocks = [
-    "Knight",
-    "+Gold mine",
-    "+Farm",
-    "Wall lvl2",
-    "Barracks lvl2",
-  ];
+  // const unlocks = [
+  //   "Knight",
+  //   "+Gold mine",
+  //   "+Farm",
+  //   "Wall lvl2",
+  //   "Barracks lvl2",
+  // ];
   return (
     <>
       <div className=" w-[85%] ml-auto mr-auto flex flex-col mt-4 !text-white">
@@ -333,10 +333,10 @@ const TownhallContainer = () => {
                 title="Upgrades unlocks at next level"
               />
               <div className="flex flex-row gap-4 overflow-scroll px-2 py-2 bg-black/20 rounded-md  ">
-                {unlocks.map((item, key) => (
+                {townHallUnlocks[Number(inViewLand.townhallLvl)].map((item, key) => (
                   <a
                     key={key}
-                    className="flex-1 glassBg flex text-[12px] min-w-16 !h-20 px-2 text-center justify-center items-center  "
+                    className="flex-1 glassBg flex text-[10px] min-w-16 !h-20 px-2 text-center justify-center items-center  "
                   >
                     {item}
                   </a>

@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-abstract contract Vars is Ownable{
+contract Vars is Ownable{
 
     // uint256 private constant withdrawalFee = 10;
     // uint256 private constant swapFee = 5;

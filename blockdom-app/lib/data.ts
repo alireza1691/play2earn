@@ -54,7 +54,6 @@ export const footerRow2 = [
   },
 ];
 
-
 export const roadmapSteps = [
   {
     stepNum: 1,
@@ -129,10 +128,10 @@ export const questions = [
 ];
 
 export const landItems = [
-  { name: "Townhall", imageUrl: "/buildings/townhallLv1.png"},
-  { name: "Barracks", imageUrl: "/buildings/barracksLv1.png"},
+  { name: "Townhall", imageUrl: "/buildings/townhallLv1.png" },
+  { name: "Barracks", imageUrl: "/buildings/barracksLv1.png" },
   { name: "GoldMine", imageUrl: "/buildings/goldMineLv0.png" },
-  { name: "Farm", imageUrl: "/buildings/farmLv0.png"},
+  { name: "Farm", imageUrl: "/buildings/farmLv0.png" },
   { name: "Wall", imageUrl: "/testWalls.svg" },
   {
     name: "TrainingCamp",
@@ -161,15 +160,71 @@ export const baseBuildAmounts = {
 };
 
 export const warriorsInfo = [
-  { name: "Spearman", attPw: 20, defPw: 60, hp: 70, price: 7, foodCost: 3,image: "/warriors/Spearman.png" },
-  { name: "Maceman", attPw: 45, defPw: 30, hp: 70, price: 8, foodCost: 3,image: "/warriors/Maceman.png"  },
-  { name: "Swordsman", attPw: 60, defPw: 70, hp: 90, price: 15, foodCost: 3,image: "/warriors/Swordsman.png"  },
-  { name: "Archer", attPw: 50, defPw: 50, hp: 70, price: 10, foodCost: 3,image: "/warriors/Archer.png"  },
-  { name: "Shieldman", attPw: 45, defPw: 80, hp: 110, price: 22, foodCost: 3,image: "/warriors/Shieldman.png"  },
-  { name: "Knight", attPw: 80, defPw: 60, hp: 100, price: 30, foodCost: 6,image: "/warriors/Knight.png"  },
+  {
+    name: "Spearman",
+    attPw: 20,
+    defPw: 60,
+    hp: 70,
+    price: 7,
+    foodCost: 3,
+    image: "/warriors/Spearman.png",
+  },
+  {
+    name: "Maceman",
+    attPw: 45,
+    defPw: 30,
+    hp: 70,
+    price: 8,
+    foodCost: 3,
+    image: "/warriors/Maceman.png",
+  },
+  {
+    name: "Swordsman",
+    attPw: 60,
+    defPw: 70,
+    hp: 90,
+    price: 15,
+    foodCost: 3,
+    image: "/warriors/Swordsman.png",
+  },
+  {
+    name: "Archer",
+    attPw: 50,
+    defPw: 50,
+    hp: 70,
+    price: 10,
+    foodCost: 3,
+    image: "/warriors/Archer.png",
+  },
+  {
+    name: "Shieldman",
+    attPw: 45,
+    defPw: 80,
+    hp: 110,
+    price: 22,
+    foodCost: 3,
+    image: "/warriors/Shieldman.png",
+  },
+  {
+    name: "Knight",
+    attPw: 80,
+    defPw: 60,
+    hp: 100,
+    price: 30,
+    foodCost: 6,
+    image: "/warriors/Knight.png",
+  },
 ];
 
+export const baseTrainingCampCapacity = 50;
 
-export const baseTrainingCampCapacity = 50
+export const battleLogTabs = ["Ongoing", "Attacks", "Defenses"] as const;
 
-export const battleLogTabs = [ "Ongoing", "Attacks", "Defenses"] as const;
+export const townHallUnlocks = [
+  ["Spearman", "+ Gold mine", "+ Farm", "+ Upgrade level"],
+  ["Maceman", "+ Gold mine", "+ Farm", "+ Upgrade level"],
+  ["Swordsman", "+ Gold mine", "+ Farm", "+ Upgrade level"],
+  ["Archer", "+ Gold mine", "+ Farm", "+ Upgrade level"],
+  ["Shieldman", "+ Gold mine", "+ Farm", "+ Upgrade level"],
+  ["Knight", "+ Gold mine", "+ Farm", "+ Upgrade level"],
+];

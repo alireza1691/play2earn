@@ -191,6 +191,9 @@ contract Barracks is Ownable{
     
   struct DispatchedArmy {
         uint256[] amounts;
+        uint256 totalArmyAmount;
+        uint256 totalPower;
+        uint256 totalHp;
         uint256 remainedTime;
         uint256 target;
         uint256[2] lootedAmounts;
@@ -838,17 +841,22 @@ contract Town is Barracks{
         (,uint256 remainingTime) =  Utils.calculateDistance(from, target,1);
         (,,,uint256 totalArmy) = getArmyInfo(from);
         _spendGoods(from, [totalArmy,0]);
+        uint256 totalArmyAmount;
+        uint256 totalPower;
+        uint256 totalHp;
         for (uint i = 0; i < warriorAmounts.length; i++) {
             if (warriorAmounts[i] > 0) {
                 landArmy[from][i] -= warriorAmounts[i];
             }
-    
+            totalArmyAmount += warriorAmounts[i];
+            totalPower += warriorTypes()[i].attackPower * warriorAmounts[i];
+            totalHp += warriorTypes()[i].hp * warriorAmounts[i];
         }
-        dispatchedArmies[from].push(DispatchedArmy(warriorAmounts, block.timestamp+remainingTime, target,[uint256(0),0], false, 100));
+        dispatchedArmies[from].push(DispatchedArmy(warriorAmounts, totalArmyAmount, totalPower, totalHp, block.timestamp+remainingTime, target,[uint256(0),0], false, 100));
     }
 
     function retreat(uint256 landTokenId ,uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId) returns(bool, uint256, uint256) {
-                DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
+        DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         require(dArmy.isReturning == false, "Army is returning");
         require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");
         uint256 dispatchedArmyAmount ;
@@ -859,24 +867,19 @@ contract Town is Barracks{
         require(landData[landTokenId].goodsBalance[1] >= retreatCost);
         landData[landTokenId].goodsBalance[1] -= retreatCost;
         landData[dArmy.target].goodsBalance[1] += retreatCost;
+        dArmy.isReturning = true;
+        (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,1);
+        dArmy.remainedTime = block.timestamp + remainingTime;
     }
 
     function war(uint256 landTokenId ,uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId) returns(bool, uint256, uint256){
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         require(dArmy.isReturning == false, "Army is returning");
         require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");
-        uint256 totalAttackerArmy ;
-        uint256 attackerPower ;
-        uint256 attackerHp;
+
         (,uint256 defenderPower, uint256 defenderHp,) = getArmyInfo(dArmy.target);
         defenderPower += defenderPower * (landData[dArmy.target].wallLevel * 5 /100);
-        for (uint i = 0; i < dArmy.amounts.length; i++) {
-            attackerPower += dArmy.amounts[i] * warriorTypes()[i].attackPower;
-            attackerHp += dArmy.amounts[i] * warriorTypes()[i].hp;
-            totalAttackerArmy += dArmy.amounts[i];
-        }
-
-        (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = Utils.calculateWar(attackerPower, attackerHp, defenderPower, defenderHp);
+        (bool success, uint256 remainedAttackerArmy, uint256 remainedDefenderArmy) = Utils.calculateWar(dArmy.totalPower, dArmy.totalHp, defenderPower, defenderHp);
 
         // Updating Army of each user condsidering losses.
         _reduceBatchWarriorByPercent(remainedDefenderArmy, dArmy.target);
@@ -885,7 +888,7 @@ contract Town is Barracks{
         (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,1);
         dArmy.remainedTime = block.timestamp + remainingTime;
         if (success) {
-            uint256 maxLootCapacity = (totalAttackerArmy * remainedAttackerArmy/ 100) * VAR.BaseWarriorLootCapacity(); 
+            uint256 maxLootCapacity = (dArmy.totalArmyAmount * remainedAttackerArmy/ 100) * VAR.BaseWarriorLootCapacity(); 
             uint256[2] memory amounts = _removeDefenderGoods(dArmy.target, remainedAttackerArmy-remainedDefenderArmy,maxLootCapacity);
             dArmy.lootedAmounts = amounts;
         }
