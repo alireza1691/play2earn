@@ -19,7 +19,7 @@ export default function SelectedBuilding() {
   return (
     <>
       <section
-        className={`${selectedItem == null && "!-left-[50rem]"} ${
+        className={`${selectedItem == null && "!-left-[120rem]"} ${
           selectedItem &&
           activeMode &&
           "!-left-[50rem]"

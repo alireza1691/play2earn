@@ -15,7 +15,6 @@ export default function AttackerComp() {
     setChosenLand,
     setIsUserDataLoading,
   } = useUserDataContext();
-  // const [selectedLand, setSelectedLand] = useState<number | null>(ownedLands && Number(ownedLands[0].tokenId));
 
   return (
     <div className="relative flex flex-col gap-3 items-center w-full px-4 md:px-1 md:w-[35%] max-w-[22.5rem]">

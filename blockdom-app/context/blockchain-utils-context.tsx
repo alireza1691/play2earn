@@ -4,6 +4,8 @@ import { landsMainnetSInst, landsSInst, townMainnetSInst, townSInst } from "@/li
 import { InViewLandType, SelectedLandType } from "@/lib/types";
 import {
   metamaskWallet,
+  Transaction,
+  TransactionResult,
   useChainId,
   useConnect,
   useSigner,
@@ -13,13 +15,14 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useBlockchainStateContext } from "./blockchain-state-context";
 import { Sepolia, Polygon } from "@thirdweb-dev/chains";
 import { landObjectFromTokenId } from "@/lib/utils";
-import { BigNumber, BigNumberish, ethers, utils } from "ethers";
+import { BigNumber, BigNumberish, ContractTransaction, ethers, utils } from "ethers";
 import { useSelectedBuildingContext } from "./selected-building-context";
 import { useUserDataContext } from "./user-data-context";
 import { usePathname } from "next/navigation";
 import { useSelectedWindowContext } from "./selected-window-context";
 import { useMapContext } from "./map-context";
 import { useApiData } from "./api-data-context";
+import { TransactionTypes } from "ethers/lib/utils";
 
 type BlockchainUtilsProviderProps = {
   children: React.ReactNode;
@@ -101,7 +104,74 @@ export default function BlockchainUtilsContextProvider({
     }
   };
 
-  
+  const handleError = (error: unknown) =>{
+    console.log("Reverted :", error);
+
+    setTransactionState("txRejected");
+    if (error instanceof Error) {
+      setTxError(error);
+    } else {
+      // Handle other types of errors
+      const customError = new Error("An unknown error occurred");
+      setTxError(customError);
+    }
+  }
+
+  const handleResult = async (tx:ContractTransaction) => {
+    let success = false
+    setTransactionState("waitingBlockchainConfirmation");
+    const receipt = await tx.wait();
+    if (receipt.status === 1) {
+      console.log(receipt.status === 1);
+      setTransactionState("confirmed");
+      success = true
+    }
+    return success
+  }
+
+  const approve = async () =>{
+    validateWallet()
+    validateChain()
+    try {
+      if (signer) {
+        
+      } else {
+        setTransactionState(null);
+      } 
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  const deposit = async (amount: number) =>{
+    validateWallet()
+    validateChain()
+    try {
+      if (signer) {
+      const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+      setTransactionState("waitingUserApproval");
+      const tx: ContractTransaction = await instance.deposit(amount)
+      await handleResult(tx)
+      } else {
+        setTransactionState(null);
+      } 
+    } catch (error) {
+      handleError(error)
+    }
+  }
+  const withdraw = async () =>{
+    validateWallet()
+    validateChain()
+    try {
+      if (signer) {
+        
+      } else {
+        setTransactionState(null);
+      } 
+    } catch (error) {
+      handleError(error)
+    }
+  }
 
   // async function joinArmy(dispatchedArmyIndex: number) {
   //   validateWallet()
@@ -146,28 +216,13 @@ export default function BlockchainUtilsContextProvider({
         setTransactionState("waitingUserApproval");
         // const tx = await instance.war(Number(chosenLand.tokenId),dispatchedArmyIndex)
 
-        const tx = isReturning ? await instance.joinDispatchedArmy(Number(chosenLand.tokenId),dispatchedArmyIndex) : await instance.war(Number(chosenLand.tokenId),dispatchedArmyIndex)
-        setTransactionState("waitingBlockchainConfirmation");
-        const receipt = await tx.wait();
-        if (receipt.status === 1) {
-          console.log(receipt.status === 1);
-  
-          setTransactionState("confirmed");
-        }
+        const tx:ContractTransaction = isReturning ? await instance.joinDispatchedArmy(Number(chosenLand.tokenId),dispatchedArmyIndex) : await instance.war(Number(chosenLand.tokenId),dispatchedArmyIndex)
+        await handleResult(tx)
       } else {
         setTransactionState(null);
       }
     } catch (error) {
-      console.log("Reverted :", error);
-  
-      setTransactionState("txRejected");
-      if (error instanceof Error) {
-        setTxError(error);
-      } else {
-        // Handle other types of errors
-        const customError = new Error("An unknown error occurred");
-        setTxError(customError);
-      }
+      handleError(error)
     }
   }
 
@@ -178,28 +233,13 @@ export default function BlockchainUtilsContextProvider({
     if (signer && chosenLand && selectedArmy && selectedLand) {
       const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
       setTransactionState("waitingUserApproval");
-      const tx = await instance.dispatchArmy(selectedArmy,Number(chosenLand.tokenId),selectedLand.coordinate)
-      setTransactionState("waitingBlockchainConfirmation");
-      const receipt = await tx.wait();
-      if (receipt.status === 1) {
-        console.log(receipt.status === 1);
-
-        setTransactionState("confirmed");
-      }
+      const tx:ContractTransaction  = await instance.dispatchArmy(selectedArmy,Number(chosenLand.tokenId),selectedLand.coordinate)
+      await handleResult(tx)
     } else {
       setTransactionState(null);
     }
   } catch (error) {
-    console.log("Reverted :", error);
-
-    setTransactionState("txRejected");
-    if (error instanceof Error) {
-      setTxError(error);
-    } else {
-      // Handle other types of errors
-      const customError = new Error("An unknown error occurred");
-      setTxError(customError);
-    }
+    handleError(error)
   }
  }
   async function recruitArmy(index: number, amount:number) {
@@ -208,28 +248,13 @@ export default function BlockchainUtilsContextProvider({
     try {
       if (signer && inViewLand) {
         setTransactionState("waitingUserApproval");
-        const tx = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).recruit(inViewLand.tokenId,index,amount)
-        setTransactionState("waitingBlockchainConfirmation");
-        const receipt = await tx.wait();
-        if (receipt.status === 1) {
-          console.log(receipt.status === 1);
-
-          setTransactionState("confirmed");
-        }
+        const tx:ContractTransaction = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).recruit(inViewLand.tokenId,index,amount)
+        await handleResult(tx)
       } else {
         setTransactionState(null);
       }
     } catch (error) {
-      console.log("Reverted :", error);
-
-      setTransactionState("txRejected");
-      if (error instanceof Error) {
-        setTxError(error);
-      } else {
-        // Handle other types of errors
-        const customError = new Error("An unknown error occurred");
-        setTxError(customError);
-      }
+      handleError(error)
     }
   }
 
@@ -239,7 +264,7 @@ export default function BlockchainUtilsContextProvider({
     try {
       if (signer && inViewLand && selectedResourceBuilding) {
         console.log(inViewLand.tokenId);
-        let tx;
+        let tx: ContractTransaction;
         if (selectedResourceBuilding.level == 0) {
           setTransactionState("waitingUserApproval");
           tx = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).buildResourceBuilding(
@@ -253,13 +278,8 @@ export default function BlockchainUtilsContextProvider({
             inViewLand.tokenId
           );
         }
-        setTransactionState("waitingBlockchainConfirmation");
-
-        const receipt = await tx.wait();
-        if (receipt.status === 1) {
-          console.log(receipt.status === 1);
-
-          setTransactionState("confirmed");
+        const success = await handleResult(tx)
+        if (success) {
           const updatedObj = {...selectedResourceBuilding,level : selectedResourceBuilding.level ++}
           setSelectedResourceBuilding(updatedObj)
         }
@@ -267,16 +287,7 @@ export default function BlockchainUtilsContextProvider({
         setTransactionState(null);
       }
     } catch (error) {
-      console.log("Reverted :", error);
-
-      setTransactionState("txRejected");
-      if (error instanceof Error) {
-        setTxError(error);
-      } else {
-        // Handle other types of errors
-        const customError = new Error("An unknown error occurred");
-        setTxError(customError);
-      }
+      handleError(error)
     }
   }
   const mint = async (
@@ -296,35 +307,20 @@ export default function BlockchainUtilsContextProvider({
         );
         console.log("minting...");
         setTransactionState("waitingUserApproval");
-        const tx = await landsInst.mintLand(
+        const tx:ContractTransaction = await landsInst.mintLand(
           landCoordinatesObject.x,
           landCoordinatesObject.y,
           {
             value: priceFormatEther,
           }
         );
+          const success = await handleResult(tx)
+          if (success) {
+            setSelectedLand({coordinate: selectedLand.coordinate, isMinted: true, owner: await signer.getAddress()})
 
-        setTransactionState("waitingBlockchainConfirmation");
-
-        const receipt = await tx.wait();
-        if (receipt.status === 1) {
-          console.log(receipt.status === 1);
-
-          setTransactionState("confirmed");
-          setSelectedLand({coordinate: selectedLand.coordinate, isMinted: true, owner: await signer.getAddress()})
-
-        }
+          }
       } catch (error) {
-        console.log("Reverted :", error);
-
-        setTransactionState("txRejected");
-        if (error instanceof Error) {
-          setTxError(error);
-        } else {
-          // Handle other types of errors
-          const customError = new Error("An unknown error occurred");
-          setTxError(customError);
-        }
+        handleError(error)
       }
     } else {
       setTransactionState(null);
@@ -346,25 +342,9 @@ export default function BlockchainUtilsContextProvider({
         const tx = await townInst.claimRevenue(
           selectedResourceBuilding.tokenId
         );
-        setTransactionState("waitingBlockchainConfirmation");
-        const receipt = await tx.wait();
-        if (receipt.status === 1) {
-          console.log(receipt.status === 1);
-
-          setTransactionState("confirmed");
-       
-        }
+        await handleResult(tx)
       } catch (error) {
-        console.log("Reverted :", error);
-
-        setTransactionState("txRejected");
-        if (error instanceof Error) {
-          setTxError(error);
-        } else {
-          // Handle other types of errors
-          const customError = new Error("An unknown error occurred");
-          setTxError(customError);
-        }
+        handleError(error)
       }
     } else {
       setTransactionState(null);
@@ -385,7 +365,7 @@ export default function BlockchainUtilsContextProvider({
       try {
         const townInst = (isTestnet ? townSInst(signer) : townMainnetSInst(signer));
         setTransactionState("waitingUserApproval");
-        let tx;
+        let tx:ContractTransaction | undefined;
         let updatedObj :InViewLandType = inViewLand
         if (selectedItem.name == "Barracks") {
           console.log("upgrading barracks");
@@ -410,26 +390,12 @@ export default function BlockchainUtilsContextProvider({
           updatedObj = {...inViewLand,wallLvl: ethers.BigNumber.from(inViewLand.wallLvl).add(1) }
 
         }
-        setTransactionState("waitingBlockchainConfirmation");
-
-        const receipt = await tx.wait();
-        if (receipt.status === 1) {
-          console.log(receipt.status === 1);
-
-          setTransactionState("confirmed");
+        if (tx) {
+          await handleResult(tx)
           setInViewLand(updatedObj)
         }
       } catch (error) {
-        console.log("Reverted :", error);
-
-        setTransactionState("txRejected");
-        if (error instanceof Error) {
-          setTxError(error);
-        } else {
-          // Handle other types of errors
-          const customError = new Error("An unknown error occurred");
-          setTxError(customError);
-        }
+        handleError(error)
       }
     } else {
       setTransactionState(null);

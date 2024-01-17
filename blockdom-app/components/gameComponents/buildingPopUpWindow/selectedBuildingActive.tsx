@@ -110,8 +110,8 @@ return cap
 
   return (
     <section
-      className={` ${activeMode == false && " !left-[-50rem]"} ${
-        selectedItem && selectedItem.name != "Barracks" && "!left-[-50rem]"
+      className={` ${activeMode == false && " !left-[-120rem]"} ${
+        selectedItem && selectedItem.name != "Barracks" && "!left-[-120rem]"
       } z-30 barracksActiveBg flex flex-col absolute  w-[95%] left-1/2 -translate-x-1/2  top-[4.43rem] h-[80.5%] sm:h-[80vh]`}
     >
       <div className=" flex flex-row justify-between py-2 px-3 !text-white items-center flex-shrink-0">

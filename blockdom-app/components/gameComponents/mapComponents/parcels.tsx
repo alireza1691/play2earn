@@ -97,7 +97,7 @@ export default function Parcels() {
                     color={"default"}
                     content={separatedCoordinate(land.toString())}
                     className={`capitalize p-2 rounded-xl text-[12px] text-white !bg-[#06291D]/60 ${
-                      key != 4 && "invisible"
+                      key != 4 && "hidden"
                     }`}
                   >
                     <a

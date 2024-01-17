@@ -16,9 +16,11 @@ const allParcels =() => {
   return parcelLandsArray;
 };
 
-export default function Map() {
+export default function Map({searchParams}:{[key: string]: string | string [] | undefined}) {
   const { selectedParcel, setSelectedParcel } = useMapContext();
   const { apiData, loading ,mintedLands} = useApiData();
+
+  
 
   // const memoizedParcels = useMemo(allParcels, []);
   // const allParcels = useMemo(() => {

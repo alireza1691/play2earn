@@ -102,14 +102,14 @@ export default function Navbar() {
 
   useEffect(() => {
     const data = async () => {
-      if (address  && mintedLands) {
+      console.log(address);
       
-       
+      if (address  && mintedLands) {
+        console.log("minted lands an addres fetched. getting in view lands...");
+        
         const ownedl = getOwnedLands(mintedLands, address);
         setOwnedLands(ownedl);
         if (!chosenLand && ownedl.length > 0) {
-      
-          
           setChosenLand(ownedl[0]);
         }
         if (isTestnet) { 
