@@ -64,23 +64,23 @@ export const roadmapSteps = [
   },
   {
     stepNum: 2,
-    title: "Mainnet & Community",
+    title: "Mainnet & Asset updates",
     description:
-      "Launching the game on the mainnet. Expanding our community and attracting active users.",
+      "Launching the game on the mainnet and updating game assets for fairness and coherence based on statistics,. Expanding our community and attracting active users.",
     releaseTime: " Q2 2024",
   },
   {
     stepNum: 3,
-    title: "Assets updates & Partnerships",
+    title: "Heroes & Partnerships",
     description:
-      "Updating game assets for fairness and coherence based on statistics, and forming partnerships to expand the platform as a prominent gaming destination.",
+      "Introducing 1000 exclusive heroes for users to mint, attach to their land, and include in their armies. Forming partnerships to expand the platform as a prominent gaming destination.",
     releaseTime: "Q3 2024",
   },
   {
     stepNum: 4,
-    title: "Heroes & Tournoments",
+    title: "Application & tournaments",
     description:
-      "Introducing 1000 exclusive heroes for users to mint, attach to their land, and include in their armies. Additionally, planning tournaments to enhance excitement and provide diverse earning opportunities in the game.",
+      "Launching both IOS & andriod applications, aditionally Planning tournaments to enhance excitement and provide diverse earning opportunities in the game.",
     releaseTime: "Q4 2024",
   },
   // {

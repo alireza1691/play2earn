@@ -54,6 +54,9 @@ export default function ActionStateComponent() {
   };
   return (
     <>
+    {pathname != "/" && 
+    <>
+ 
       {isUserDataLoading && address 
       // && pathname == "/myLand"
        && (
@@ -128,6 +131,8 @@ export default function ActionStateComponent() {
           )}
         </div>
       )}
+      </>
+      }
     </>
   );
 }
