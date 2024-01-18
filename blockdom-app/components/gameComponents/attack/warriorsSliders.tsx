@@ -18,12 +18,14 @@ export default function WarriorsSliders() {
     setSelectedArmy((prevSelectedArmy) =>
     prevSelectedArmy.map((prevValue, i) => (i === index ? value : prevValue))
   );
+  console.log(selectedArmy);
+  
   };
 
   return (
     <>
     {inViewLand && 
-    <div className=" mt-auto flex flex-col gap-1 flex-grow md:mt-6 w-full max-w-[17.5rem] h-[30%] max-h-[25rem] px-2 sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
+    <div className=" flex flex-col gap-1 flex-grow md:mt-6 w-full max-w-[17.5rem] h-[20dvh] max-h-[20dvh] sm:max-h-[25rem] px-2 !sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
       {warriorsInfo.map((warrior,key) => (
     <div key={key} className=" flex flex-row relative ">
     <Image
@@ -39,6 +41,7 @@ export default function WarriorsSliders() {
       color="foreground"
       label={warrior.name}
       step={1}
+      isDisabled={Number(inViewLand.army[key]) == 0}
       // onChange={(value)=>updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)}
       maxValue={Number(inViewLand.army[key])}
       minValue={0}
@@ -70,7 +73,7 @@ export default function WarriorsSliders() {
       maxValue={100}
       minValue={0}
       defaultValue={0}
-      // getValue={(warrior) => `${warrior} of 100`}
+      getValue={() => `Locked`}
       // className="max-w-md "
       onChangeEnd={() => {
         ("");

@@ -17,6 +17,7 @@ contract Vars is Ownable{
     uint256 private constant baseGoldRevenuePer3hours = 2 ether;
     uint256 private constant baseWarriorLootCapacity = 30 ether;
     uint256 private constant retreatCostPerWarrior = 5 ether;
+    uint256 private constant dispatchCostPerWarrior = 1 ether;
       // uint256 private constant trnasferCostPercentage = 7;
         struct WarriorInfo {
         uint8 attackPower;
@@ -47,6 +48,11 @@ function WarriorTypes() view public returns (WarriorInfo[] memory) {
     //   function SwapFee() pure public returns (uint256) {
     //     return swapFee;
     // }
+
+    
+     function DispatchCostPerWarrior() pure public returns (uint256) {
+      return dispatchCostPerWarrior;
+    }
 
     function RetreatCostPerWarrior() pure public returns (uint256) {
       return retreatCostPerWarrior;

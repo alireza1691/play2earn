@@ -282,6 +282,7 @@ const TrainingCampContainer = () => {
 };
 
 type ActiveInputType = "Deposit/Withdraw" | "Buy/Sell" | "Transfer";
+
 const TownhallContainer = () => {
   const { upgradeMode, activeMode } = useSelectedBuildingContext();
   const { inViewLand, BMTBalance } = useUserDataContext();
@@ -332,7 +333,7 @@ const TownhallContainer = () => {
                 currentLevel={Number(inViewLand.townhallLvl)}
                 title="Upgrades unlocks at next level"
               />
-              <div className="flex flex-row gap-4 overflow-scroll px-2 py-2 bg-black/20 rounded-md  ">
+              <div className="flex flex-row gap-4 overflow-x-scroll px-2 py-2 bg-black/20 rounded-md  custom-scrollbar">
                 {townHallUnlocks[Number(inViewLand.townhallLvl)].map((item, key) => (
                   <a
                     key={key}

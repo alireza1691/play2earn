@@ -1,6 +1,7 @@
 "use client";
 import { useApiData } from "@/context/api-data-context";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
+import { useMapContext } from "@/context/map-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import BlockdomLogo from "@/svg/blockdomLogo";
 import DoneIcon from "@/svg/doneIcon";
@@ -11,13 +12,14 @@ import { useAddress } from "@thirdweb-dev/react";
 import { usePathname } from "next/navigation";
 import React from "react";
 
-export default function ActionStateComponent() {
+export default function PopUpState() {
   const { setTransactionState, transactionState, txError, setReloadHandler } =
     useBlockchainStateContext();
   const { isUserDataLoading,setLandUpdateTrigger } = useUserDataContext();
   const {setApiTrigger} = useApiData()
   const address = useAddress();
   const pathname = usePathname();
+  const {selectedLand} = useMapContext()
 
   const title = (): string => {
     let titleString: string = "";
@@ -52,15 +54,31 @@ export default function ActionStateComponent() {
     }
     return titleString;
   };
+
+
+  const isLoading = () =>{
+    var isLoading = false
+    if (pathname == "/myLand" ||pathname == "testnet/myLand") {
+      isLoading =true
+    }
+    if (pathname == "/explore" || pathname == "testnet/explore") {
+      if (selectedLand) {
+        isLoading = true
+      }
+    }
+    return isLoading
+  }
+
+
   return (
     <>
     {pathname != "/" && 
     <>
  
       {isUserDataLoading && address 
-      // && pathname == "/myLand"
+      && isLoading() 
        && (
-        <div className=" absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
+        <div className=" popUpStatus">
           <div className="flex flex-grow relative">
             {/* <Spinner color="success" size="lg" className='customSpinner ml-auto mr-auto absolute w-full mt-auto h-full '/> */}
             <div className="flex ml-auto mr-auto w-full h-full  mt-auto mb-auto  absolute ">
@@ -71,9 +89,23 @@ export default function ActionStateComponent() {
             </div>
           </div>
         </div>
-      )}
+      )}{isUserDataLoading && address 
+        && pathname == "/myLand"
+         && (
+          <div className=" popUpStatus">
+            <div className="flex flex-grow relative">
+              {/* <Spinner color="success" size="lg" className='customSpinner ml-auto mr-auto absolute w-full mt-auto h-full '/> */}
+              <div className="flex ml-auto mr-auto w-full h-full  mt-auto mb-auto  absolute ">
+                <div className="spinner mt-auto mb-auto  ml-auto mr-auto "></div>
+              </div>
+              <div className="flex ml-auto mr-auto w-11 h-auto  mt-auto mb-auto  relative ">
+                <BlockdomLogo />
+              </div>
+            </div>
+          </div>
+        )}
       {transactionState != null && (
-        <div className=" absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col">
+        <div className="popUpStatus">
           {/* <h3 className='px-[10%]  mt-4 text-center !text-white font-semibold'>{title()}</h3> */}
           <h3 className="px-[10%]  mt-4 text-center !text-white font-semibold">
             {title()}

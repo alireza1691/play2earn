@@ -11,11 +11,10 @@ import { ApiDataProvider } from "@/context/api-data-context";
 import MapContextProvider from "@/context/map-context";
 import UserDataContextProvider from "@/context/user-data-context";
 import BlockchainStateContextProvider from "@/context/blockchain-state-context";
-import ActionStateComponent from "@/components/actionStateComponent";
-import { useAddress } from "@thirdweb-dev/react";
 import BlockchainUtilsContextProvider from "@/context/blockchain-utils-context";
 import BottomBar from "@/components/gameComponents/townComponents/bottomBar";
 import GlobalErrorBoundary from "@/components/errorBoundary";
+import PopUpState from "@/components/popUpState";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -50,7 +49,7 @@ export default function RootLayout({
           <ThemeContextProvider>
             <ActiveSectionContextProvider>
               <BlockchainUtilsContextProvider>
-                <ActionStateComponent/>
+                <PopUpState/>
                 <Navbar/>
                 {children}
                 <BottomBar/>

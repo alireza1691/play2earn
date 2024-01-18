@@ -32,7 +32,7 @@ const BarracksActiveComponent = () => {
   const { inViewLand } = useUserDataContext();
   const { recruitArmy } = useBlockchainUtilsContext();
 
-  const [enteredAmount, setEnteredAmount] = useState<EnteredAmountsType>([null,null,null,null,null,null]);
+  const [enteredAmount, setEnteredAmount] = useState<number[]>([0,0,0,0,0,0]);
   const [error,setError] = useState<string | null>(null)
   const [isValidAmount,setIsValidAmount] = useState<boolean | null>(null)
 
@@ -206,9 +206,9 @@ return cap
                   />
                   {isValidAmount && isValidAmount ==true? (
                     <button
-                      onClick={() => {
-                        enteredAmount[key] != null && recruitArmy(key, enteredAmount[key] || 0);
-                      }}
+                      // onClick={() => {
+                      //   enteredAmount[key] != null && recruitArmy(key, enteredAmount[key] || 0);
+                      // }}
                       className="greenButton !rounded-md !text-[12px] !py-1 px-2"
                     >
                       Recruit
@@ -234,7 +234,9 @@ return cap
         >
           Back
         </button>
-        {/* <button className="!w-[12.5rem] greenButton">Confirm</button> */}
+        <button onClick={() => {
+                        enteredAmount && recruitArmy( enteredAmount );
+                      }} className="!w-[12.5rem] greenButton">Confirm</button>
       </div>
     </section>
   );

@@ -852,6 +852,7 @@ contract Town is Barracks{
             totalPower += warriorTypes()[i].attackPower * warriorAmounts[i];
             totalHp += warriorTypes()[i].hp * warriorAmounts[i];
         }
+        _spendGoods(from, [totalArmyAmount * VAR.DispatchCostPerWarrior(),0]);
         dispatchedArmies[from].push(DispatchedArmy(warriorAmounts, totalArmyAmount, totalPower, totalHp, block.timestamp+remainingTime, target,[uint256(0),0], false, 100));
     }
 

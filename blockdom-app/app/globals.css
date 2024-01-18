@@ -72,6 +72,9 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
   width: 7rem;
   filter: blur(5px);
 }
+.popUpStatus{
+  @apply absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col
+}
 .buildingWindow {
   @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80dvh] max-h-[80rem] bg-[#21302A]/60 backdrop-blur-sm;
 }

@@ -145,6 +145,7 @@ export default function Navbar() {
     };
     data();
   }, [
+    mintedLands,
     address,
     chosenLand,
     inViewLand,

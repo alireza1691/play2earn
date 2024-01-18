@@ -36,7 +36,7 @@ type BlockchainUtilsContextType = {
     priceFormatEther: BigNumberish | null
   ) => Promise<void>;
   mintResourceBuilding: () => Promise<void>;
-  recruitArmy:(index: number, amount:number) => Promise<void>;
+  recruitArmy:( amounts:number[]) => Promise<void>;
   dispatchArmy:  () => Promise<void>;
   dispatchedArmyAction : (dispatchedArmyIndex: number,isReturning:boolean) => Promise<void>;
 };
@@ -242,13 +242,30 @@ export default function BlockchainUtilsContextProvider({
     handleError(error)
   }
  }
-  async function recruitArmy(index: number, amount:number) {
+  // async function recruitArmy(index: number, amount:number) {
+  //   validateWallet()
+  //   validateChain()
+  //   try {
+  //     if (signer && inViewLand) {
+  //       setTransactionState("waitingUserApproval");
+  //       const tx:ContractTransaction = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).recruit(inViewLand.tokenId,index,amount)
+  //       await handleResult(tx)
+  //     } else {
+  //       setTransactionState(null);
+  //     }
+  //   } catch (error) {
+  //     handleError(error)
+  //   }
+  // }
+
+  async function recruitArmy( amounts:number[]) {
     validateWallet()
     validateChain()
     try {
       if (signer && inViewLand) {
         setTransactionState("waitingUserApproval");
-        const tx:ContractTransaction = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).recruit(inViewLand.tokenId,index,amount)
+        const inst = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+        const tx:ContractTransaction = await inst.recruit(inViewLand.tokenId,amounts)
         await handleResult(tx)
       } else {
         setTransactionState(null);
