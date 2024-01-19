@@ -15,8 +15,8 @@ import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { formatUnits } from "ethers/lib/utils";
 
-type InputAmountType = number|null
-type EnteredAmountsType = InputAmountType[]
+type InputAmountType = number | null;
+type EnteredAmountsType = InputAmountType[];
 
 export default function SelectedBuildingActive() {
   return (
@@ -32,81 +32,68 @@ const BarracksActiveComponent = () => {
   const { inViewLand } = useUserDataContext();
   const { recruitArmy } = useBlockchainUtilsContext();
 
-  const [enteredAmount, setEnteredAmount] = useState<number[]>([0,0,0,0,0,0]);
-  const [error,setError] = useState<string | null>(null)
-  const [isValidAmount,setIsValidAmount] = useState<boolean | null>(null)
+  const [enteredAmount, setEnteredAmount] = useState<number[]>([
+    0, 0, 0, 0, 0, 0,
+  ]);
 
-  const updateAmountAtIndex = (index: number, value: number) => {
+  const handleEnteredAmount = (amount: number, index: number) => {
+
     setEnteredAmount((prevAmounts) =>
-      prevAmounts.map((amount, i) => (i === index ? value : amount))
+      prevAmounts.map((value, i) => (i === index ? amount : value))
     );
   };
-  const handleEnteredAmount = (amount: number ,price: number, foodCost: number, index:number) => {
-    // setEnteredAmount(...enteredAmount, enteredAmount[index] = amount)
-    updateAmountAtIndex(index,amount)
-    if (!inViewLand || !amount) {
-      setIsValidAmount(false) ;
-    }
+
+  type TotalNumbersType = {
+    totalArmy: number;
+    totalRequiredGold: number;
+    totalRequiredFood: number;
+    foodBal: number;
+    goldBal: number;
+  };
+
+  const totalAmounts = (): TotalNumbersType => {
+    let totalAmount = 0;
+    let totalRequiredGold = 0;
+    let totalRequiredFood = 0;
+    let foodBal = 0;
+    let goldBal = 0;
     if (inViewLand) {
-      const totalRequiredGold = price * amount
-      const totalRequiredFood = foodCost * amount;
-      const foodBalance = Number(formatUnits(inViewLand.goodsBalance[0]));
-      const goldBalance = Number(formatUnits(inViewLand.goodsBalance[1]));
+      for (let i = 0; i < enteredAmount.length; i++) {
+        totalRequiredGold += enteredAmount[i] * warriorsInfo[i].price;
+        totalRequiredFood += enteredAmount[i] * warriorsInfo[i].foodCost;
+        totalAmount += enteredAmount[i];
+      }
+      foodBal = Number(formatUnits(inViewLand.goodsBalance[0]));
+      goldBal = Number(formatUnits(inViewLand.goodsBalance[1]));
+    }
+    return {
+      totalArmy: totalAmount,
+      totalRequiredGold: totalRequiredGold,
+      totalRequiredFood: totalRequiredFood,
+      foodBal: foodBal,
+      goldBal: goldBal,
+    };
+  };
 
-    
-      if (foodBalance < totalRequiredFood) {
-        setError("Insufficient food");
-        setIsValidAmount(false) ;
-      }
-      if (foodBalance >= totalRequiredFood ) {
-        setIsValidAmount(true) ;
-      }
-    
-      if (goldBalance < totalRequiredGold) {
-        console.log("Insufficient gold");
-        setError("Insufficient gold");
-        setIsValidAmount(false) ;
-      }
-      if (goldBalance >= totalRequiredGold) {
-        setIsValidAmount(true) ;
-      }
-    
-      if (capacity() < amount) {
-        console.log("Amount is higher than remaining capacity");
-        setError("Amount is higher than remaining capacity");
-        setIsValidAmount(false) ;
-      }
-      if (amount == 0) {
-        setError(null)
-        setIsValidAmount(false) ;
+  const capacity = () => {
+    let cap = 0;
+    if (inViewLand) {
+      cap =
+        2 ** (Number(inViewLand.barracksLvl) - 1) * baseTrainingCampCapacity;
+    }
+    return cap;
+  };
+
+  const totalArmy = () => {
+    let armyAmount = 0;
+    if (inViewLand) {
+      for (let index = 0; index < inViewLand.army.length; index++) {
+        const element = Number(inViewLand.army[index]);
+        armyAmount += element;
       }
     }
-
-
-   
-    }
-
-    const capacity = () => {
-      let cap = 0
-      if (inViewLand) {
-       cap =  2**(Number(inViewLand.barracksLvl) - 1) * baseTrainingCampCapacity
-      }
-return cap
-    }
-
-    const totalArmy= () => {
-      let armyAmount= 0
-      if (inViewLand){
-    
-        for (let index = 0; index < inViewLand.army.length; index++) {
-          const element = Number(inViewLand.army[index]);
-          armyAmount += element
-        }
-      }
-      return armyAmount
-    }
-  
-
+    return armyAmount;
+  };
 
   return (
     <section
@@ -134,7 +121,7 @@ return cap
               <span className="lightBlue">{totalArmy()}</span>/{capacity()}
             </h3>
           </div>
-          <CapacityProgressBar amount={totalArmy()*100 / capacity()} />
+          <CapacityProgressBar amount={(totalArmy() * 100) / capacity()} />
         </div>
         <div className="w-[30%] hidden sm:flex"></div>
       </div>
@@ -143,10 +130,12 @@ return cap
           <div
             key={key}
             className={`flex flex-col gap-1  !rounded-lg  relative  ${
-              inViewLand && key >= Number(inViewLand?.barracksLvl) && "opacity-50"
+              inViewLand &&
+              key >= Number(inViewLand?.barracksLvl) &&
+              "opacity-50"
             }`}
           >
-            { inViewLand && key >= Number(inViewLand.barracksLvl) && (
+            {inViewLand && key >= Number(inViewLand.barracksLvl) && (
               <div className="flex  justify-center z-10 absolute  w-full h-full rounded-md backdrop-brightness-75 bg-black/60 ">
                 <h3 className=" text-center text-[#98FBD7] text-[14px] mt-2">
                   Unlock at <span className=" font-bold">level {key + 1}</span>{" "}
@@ -197,18 +186,18 @@ return cap
                     </p>
                   </div>
                 </div>
-                <div className=" flex flex-row px-2 gap-1">
+                <div className=" flex flex-row px-2 gap-1 mt-auto mb-3 ">
                   <input
                     type="number"
-                    onChange={(event) => handleEnteredAmount(Number(event.target.value),warrior.price,warrior.foodCost,key)}
+                    onChange={(event) =>
+                      handleEnteredAmount(Number(event.target.value), key)
+                    }
                     className=" bg-black/20 w-full rounded-md focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40"
                     placeholder="Enter amount"
                   />
-                  {isValidAmount && isValidAmount ==true? (
+                  {/* {isValidAmount && isValidAmount ==true? (
                     <button
-                      // onClick={() => {
-                      //   enteredAmount[key] != null && recruitArmy(key, enteredAmount[key] || 0);
-                      // }}
+                
                       className="greenButton !rounded-md !text-[12px] !py-1 px-2"
                     >
                       Recruit
@@ -220,7 +209,7 @@ return cap
                     >
                       Recruit
                     </button>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -234,9 +223,20 @@ return cap
         >
           Back
         </button>
-        <button onClick={() => {
-                        enteredAmount && recruitArmy( enteredAmount );
-                      }} className="!w-[12.5rem] greenButton">Confirm</button>
+        <button
+          disabled={
+            totalAmounts().foodBal <= totalAmounts().totalRequiredFood ||
+            totalAmounts().goldBal <= totalAmounts().totalRequiredGold || 
+            totalAmounts().totalArmy == 0 || 
+            totalAmounts().totalArmy > capacity() - totalArmy()
+          }
+          onClick={() => {
+            enteredAmount && recruitArmy(enteredAmount);
+          }}
+          className="!w-[12.5rem] greenButton"
+        >
+          Confirm
+        </button>
       </div>
     </section>
   );
