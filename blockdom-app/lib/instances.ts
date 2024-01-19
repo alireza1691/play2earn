@@ -1,8 +1,9 @@
 "use client";
 import { ethers} from "ethers";
-import { landsAddress, landsMainnetAddress, townAddress, townMainnetAddress } from "./blockchainData";
+import { landsAddress, landsMainnetAddress, townAddress, townMainnetAddress, tokenAddress } from "./blockchainData";
 import  landsAbiJsonFile  from "../abis/landsABI.json";
 import  townAbiJsonFile from "../abis/townAbi.json";
+import tokenABI from "../abis/BMT.json"
 
 
 
@@ -21,6 +22,9 @@ export const mainnetProvider = new ethers.providers.JsonRpcProvider(
 
 export const landsABI = landsAbiJsonFile.abi
 export const townABI = townAbiJsonFile.abi
+export const BMTABI = tokenABI.abi
+
+export const bmtPInst = new ethers.Contract(tokenAddress, BMTABI, provider);
 
 export const landsPInst = new ethers.Contract(landsAddress, landsABI, provider);
 export const landsMainnetPInst = new ethers.Contract(landsMainnetAddress, landsABI, mainnetProvider);
@@ -45,3 +49,9 @@ export const townSInst = (signer: Signer) => {
   const instance = new ethers.Contract(townAddress, townABI, signer);
 return instance
 };
+
+export const BMTSInst = (signer: Signer) => {
+  const instance = new ethers.Contract(tokenAddress, BMTABI, signer);
+return instance
+};
+

@@ -1,7 +1,7 @@
 "use client";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiSwitchVertical } from "react-icons/hi";
 
 import ArmyCapacityIcon from "@/svg/armyCapacityIcon";
@@ -19,6 +19,12 @@ import TopDuobleArrow from "@/svg/topDuobleArrow";
 import { formattedNumber } from "@/lib/utils";
 import SmFoodIcon from "@/svg/smFoodIcon";
 import SmCoinIcon from "@/svg/smCoinIcon";
+import { bmtPInst } from "@/lib/instances";
+import { useAddress } from "@thirdweb-dev/react";
+import { townAddress } from "@/lib/blockchainData";
+import BigNumber from "bignumber.js";
+import { BigNumberish } from "ethers";
+import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 
 export default function BuildingWindowDetails() {
   const { selectedItem, setSelectedItem, upgradeMode } =
@@ -286,12 +292,20 @@ type ActiveInputType = "Deposit/Withdraw" | "Buy/Sell" | "Transfer";
 const TownhallContainer = () => {
   const { upgradeMode, activeMode } = useSelectedBuildingContext();
   const { inViewLand, BMTBalance } = useUserDataContext();
+  const {approve, deposit} = useBlockchainUtilsContext()
   const [enteredAmount, setEnteredAmount] = useState(0);
   const [isDeposit, setIsDeposit] = useState(true);
   const [isBuy, setIsBuy] = useState(true);
   const [isGoldSelected, setIsGoldSelected] = useState(true);
   const [activeInput, setActiveInput] =
     useState<ActiveInputType>("Deposit/Withdraw");
+    const [approvedAmount,setApprovedAmount ] = useState(0)
+    const address = useAddress()
+
+    const handleApprove = async () =>{
+      const approvedAm = await approve(enteredAmount)
+      setApprovedAmount(approvedAm)
+    }
 
     const isDisable = () => {
 
@@ -316,13 +330,23 @@ const TownhallContainer = () => {
       }
     }
 
-  // const unlocks = [
-  //   "Knight",
-  //   "+Gold mine",
-  //   "+Farm",
-  //   "Wall lvl2",
-  //   "Barracks lvl2",
-  // ];
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          if (address) {
+            const inst = bmtPInst
+            const allowance:BigNumberish = await inst.allowance(address, townAddress)
+            console.log("allowance:",formatEther(allowance));
+            setApprovedAmount(Number(formatEther(allowance)))
+            
+          }
+        } catch (error) {
+          
+        }
+      }
+      getData()
+    },[address])
+
   return (
     <>
       <div className=" w-[85%] ml-auto mr-auto flex flex-col mt-4 !text-white">
@@ -414,8 +438,15 @@ const TownhallContainer = () => {
 
               </p>
             </div>
-            <div className="mt-3 ml-auto mr-auto ">
-            <button disabled={isDisable()} className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
+            <div className="mt-3 ml-auto mr-auto flex flex-row gap-3 ">
+              {isDeposit && activeInput == "Deposit/Withdraw" ?
+              <>
+                <button onClick={() => handleApprove()} disabled={approvedAmount > 0} className="greenButton !py-2 !px-3 !text-[14px]">Approve</button>
+                <button onClick={() => deposit(approvedAmount)} disabled={approvedAmount <= 0} className="greenButton !py-2 !px-3 !text-[14px]">Execute</button>
+                </>
+              :
+              <button disabled={isDisable()} className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
+              }
             </div>
            
           </>

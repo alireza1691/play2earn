@@ -1,6 +1,6 @@
 "use client";
 
-import { landsMainnetSInst, landsSInst, townMainnetSInst, townSInst } from "@/lib/instances";
+import { BMTSInst, landsMainnetSInst, landsSInst, townMainnetSInst, townSInst } from "@/lib/instances";
 import { InViewLandType, SelectedLandType } from "@/lib/types";
 import {
   metamaskWallet,
@@ -22,7 +22,8 @@ import { usePathname } from "next/navigation";
 import { useSelectedWindowContext } from "./selected-window-context";
 import { useMapContext } from "./map-context";
 import { useApiData } from "./api-data-context";
-import { TransactionTypes } from "ethers/lib/utils";
+import { parseEther, TransactionTypes } from "ethers/lib/utils";
+import { townAddress } from "@/lib/blockchainData";
 
 type BlockchainUtilsProviderProps = {
   children: React.ReactNode;
@@ -39,6 +40,8 @@ type BlockchainUtilsContextType = {
   recruitArmy:( amounts:number[]) => Promise<void>;
   dispatchArmy:  () => Promise<void>;
   dispatchedArmyAction : (dispatchedArmyIndex: number,isReturning:boolean) => Promise<void>;
+  approve:  (amount: number) => Promise<number>;
+  deposit: (amount: number) => Promise<void>;
 };
 
 const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
@@ -129,20 +132,28 @@ export default function BlockchainUtilsContextProvider({
     return success
   }
 
-  const approve = async () =>{
+  const approve = async (amount: number) =>{
+    let approvedAmount = 0
     validateWallet()
     validateChain()
     try {
       if (signer) {
-        
+        const instance = BMTSInst(signer)
+        setTransactionState("waitingUserApproval");
+        const tx: ContractTransaction = await instance.approve( townAddress, parseEther(amount.toString()))
+        const success = await handleResult(tx)
+        if (success) {
+          approvedAmount = amount
+        }
       } else {
         setTransactionState(null);
       } 
     } catch (error) {
       handleError(error)
     }
+    return approvedAmount
   }
-
+  
   const deposit = async (amount: number) =>{
     validateWallet()
     validateChain()
@@ -150,7 +161,7 @@ export default function BlockchainUtilsContextProvider({
       if (signer) {
       const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
       setTransactionState("waitingUserApproval");
-      const tx: ContractTransaction = await instance.deposit(amount)
+      const tx: ContractTransaction = await instance.deposit(parseEther(amount.toString()))
       await handleResult(tx)
       } else {
         setTransactionState(null);
@@ -421,7 +432,7 @@ export default function BlockchainUtilsContextProvider({
 
 
   return (
-    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction}}>
+    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, approve,deposit}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );

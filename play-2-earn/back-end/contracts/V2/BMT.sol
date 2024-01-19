@@ -10,4 +10,8 @@ contract BMT is ERC20, Ownable {
     constructor() ERC20 ("BMT", "BM token") Ownable(msg.sender) {
         _mint(msg.sender, 1000000000 ether);
     }
+
+    function faucet() external{
+        _mint(msg.sender, 1000 ether);
+    }
 }

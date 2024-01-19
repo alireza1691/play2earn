@@ -129,7 +129,6 @@ library Utils {
     function calculateDistance(uint256 fromTokenId, uint256 toTokenId, uint speed) internal  pure returns (uint distance, uint estimatedTime) {
         (uint256 fromX, uint256 fromY) = separateCoordinates(fromTokenId) ;
         (uint256 toX, uint256 toY) = separateCoordinates(toTokenId) ;
-        speed = 5;
         // Calculate the Euclidean distance between the two coordinates using the Pythagorean theorem
         uint deltaX = toX > fromX ? toX - fromX : fromX - toX;
         uint deltaY = toY > fromY ? toY - fromY : fromY - toY;
@@ -838,7 +837,7 @@ contract Town is Barracks{
     // }
     function dispatchArmy(uint256[] memory warriorAmounts,uint256 from,  uint256 target) external onlyLandOwner(from) {
         require(warriorAmounts.length == warriorTypes().length, "Lengths does not match");
-        (,uint256 remainingTime) =  Utils.calculateDistance(from, target,1);
+        (,uint256 remainingTime) =  Utils.calculateDistance(from, target,5);
         (,,,uint256 totalArmy) = getArmyInfo(from);
         _spendGoods(from, [totalArmy,0]);
         uint256 totalArmyAmount;
@@ -856,7 +855,7 @@ contract Town is Barracks{
         dispatchedArmies[from].push(DispatchedArmy(warriorAmounts, totalArmyAmount, totalPower, totalHp, block.timestamp+remainingTime, target,[uint256(0),0], false, 100));
     }
 
-    function retreat(uint256 landTokenId ,uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId) returns(bool, uint256, uint256) {
+    function retreat(uint256 landTokenId ,uint256 dispatchedArmyIndex) external onlyLandOwner(landTokenId) {
         DispatchedArmy storage dArmy = dispatchedArmies[landTokenId][dispatchedArmyIndex];
         require(dArmy.isReturning == false, "Army is returning");
         require(dArmy.remainedTime <= block.timestamp , "Not arrived yet");
@@ -869,7 +868,7 @@ contract Town is Barracks{
         landData[landTokenId].goodsBalance[1] -= retreatCost;
         landData[dArmy.target].goodsBalance[1] += retreatCost;
         dArmy.isReturning = true;
-        (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,1);
+        (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,5);
         dArmy.remainedTime = block.timestamp + remainingTime;
     }
 
@@ -886,7 +885,7 @@ contract Town is Barracks{
         _reduceBatchWarriorByPercent(remainedDefenderArmy, dArmy.target);
         dArmy.isReturning = true;
         dArmy.remainedArmybyPercent =  remainedAttackerArmy;
-        (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,1);
+        (,uint256 remainingTime) =  Utils.calculateDistance(landTokenId, dArmy.target,5);
         dArmy.remainedTime = block.timestamp + remainingTime;
         if (success) {
             uint256 maxLootCapacity = (dArmy.totalArmyAmount * remainedAttackerArmy/ 100) * VAR.BaseWarriorLootCapacity(); 
@@ -927,8 +926,9 @@ contract Town is Barracks{
     function getDispatchedArmies(uint256 landTokenId) view public returns (DispatchedArmy[] memory) {
         return dispatchedArmies[landTokenId] ;
     }
-    function getDispatchTime(uint256 from, uint256 to) pure public returns (uint256 distance ,uint256 time) {
-       return Utils.calculateDistance(from, to,1);
+    function getDispatchTime(uint256 from, uint256 to) pure public returns (uint256 estimatedTime) {
+        (,uint256 time) = Utils.calculateDistance(from, to,5);
+       estimatedTime = time / 1 minutes ;
     }
 
     function getCurrentRevenue(uint256 buildingTokenId) public view returns(uint256) {

@@ -31,6 +31,7 @@ export default function Attack() {
 
   const [phoneDefenderSlide, setPhoneDefenderSlide] = useState(false);
   const [foodBal, setFoodBal] = useState<number | null>(null);
+  const [estimatedTime,setEstimatedTime] = useState(0)
 
   const totalSelectedArmy = () => {
     let total = 0;
@@ -43,18 +44,24 @@ export default function Attack() {
   useEffect(() => {
     const getBal = async () => {
       setFoodBal(null);
-      const inst = isTestnet ? townPInst : townMainnetPInst;
-      if (isTestnet && chosenLand) {
+     
+      if (isTestnet && chosenLand && selectedLand) {
+        const inst = isTestnet ? townPInst : townMainnetPInst;
         const res: landDataResType = await inst.getLandIdData(
           chosenLand.tokenId
         );
+          console.log(Number(chosenLand.tokenId), selectedLand.coordinate);
+          
+        const estimatedTime = await inst.getDispatchTime(Number(chosenLand.tokenId),selectedLand.coordinate)
+        console.log("estimated time:",Number(estimatedTime));
+        
         console.log("food:", Number(formatEther(res.goodsBalance[0])));
-
+        setEstimatedTime(Number(estimatedTime))
         setFoodBal(Number(formatEther(res.goodsBalance[0])));
       }
     };
     getBal();
-  }, [isTestnet, chosenLand]);
+  }, [isTestnet, chosenLand,selectedLand]);
 
   return (
     <>
@@ -104,7 +111,7 @@ export default function Attack() {
             {" "}
             <div className=" w-full p-2 justify-between flex flex-col md:flex-row ">
               <p className=" text-center"> Required food:    {totalSelectedArmy()}</p>
-        <p className=" text-center">Estimated time: 70 mintes</p>
+        <p className=" text-center">Estimated time: {estimatedTime} mintes</p>
             </div>
             <button
               disabled={
