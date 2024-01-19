@@ -292,7 +292,7 @@ type ActiveInputType = "Deposit/Withdraw" | "Buy/Sell" | "Transfer";
 const TownhallContainer = () => {
   const { upgradeMode, activeMode } = useSelectedBuildingContext();
   const { inViewLand, BMTBalance } = useUserDataContext();
-  const {approve, deposit} = useBlockchainUtilsContext()
+  const {approve, deposit, withdraw,convert} = useBlockchainUtilsContext()
   const [enteredAmount, setEnteredAmount] = useState(0);
   const [isDeposit, setIsDeposit] = useState(true);
   const [isBuy, setIsBuy] = useState(true);
@@ -305,6 +305,15 @@ const TownhallContainer = () => {
     const handleApprove = async () =>{
       const approvedAm = await approve(enteredAmount)
       setApprovedAmount(approvedAm)
+    }
+
+    const buttonAction = async() =>{
+      if (activeInput == "Deposit/Withdraw" && !isDeposit) {
+        withdraw(enteredAmount)
+      }
+      if (activeInput == "Buy/Sell") {
+      convert(enteredAmount, isGoldSelected ? 1 : 0, isBuy)
+      }
     }
 
     const isDisable = () => {
@@ -445,7 +454,7 @@ const TownhallContainer = () => {
                 <button onClick={() => deposit(approvedAmount)} disabled={approvedAmount <= 0} className="greenButton !py-2 !px-3 !text-[14px]">Execute</button>
                 </>
               :
-              <button disabled={isDisable()} className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
+              <button onClick={() => buttonAction()} disabled={isDisable()} className="greenButton !py-2 !px-3 !text-[14px]">Submit</button>
               }
             </div>
            

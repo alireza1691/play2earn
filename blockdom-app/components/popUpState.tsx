@@ -151,7 +151,7 @@ export default function PopUpState() {
             <div className="mt-auto px-3 py-3 flex flex-shrink">
               {" "}
               <button
-                onClick={() => {setTransactionState(null), transactionState == "confirmed",setApiTrigger(true),setLandUpdateTrigger(true) ;
+                onClick={() => {setTransactionState(null), transactionState == "confirmed" && setApiTrigger(true), transactionState == "confirmed" && setLandUpdateTrigger(true) ;
                  }}
                 className=" !py-2 !w-full outlineGreenButton"
               >

@@ -42,6 +42,8 @@ type BlockchainUtilsContextType = {
   dispatchedArmyAction : (dispatchedArmyIndex: number,isReturning:boolean) => Promise<void>;
   approve:  (amount: number) => Promise<number>;
   deposit: (amount: number) => Promise<void>;
+  withdraw: (amount: number) => Promise<void>;
+  convert: (amount: number, index:number, isBuy: boolean) => Promise<void>;
 };
 
 const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
@@ -120,6 +122,7 @@ export default function BlockchainUtilsContextProvider({
     }
   }
 
+
   const handleResult = async (tx:ContractTransaction) => {
     let success = false
     setTransactionState("waitingBlockchainConfirmation");
@@ -131,6 +134,24 @@ export default function BlockchainUtilsContextProvider({
     }
     return success
   }
+
+  const convert = async (amount:number, index: number, isbuy:boolean) =>{
+    validateWallet()
+    validateChain()
+    try {
+      if (signer && inViewLand) {
+        const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+        setTransactionState("waitingUserApproval");
+        const tx: ContractTransaction = isbuy ? await instance.buyGood(inViewLand.tokenId , index, parseEther(amount.toString())) : await instance.sellGood(inViewLand.tokenId , index, parseEther(amount.toString()))
+        handleResult(tx)
+      } else {
+        setTransactionState(null);
+      } 
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
 
   const approve = async (amount: number) =>{
     let approvedAmount = 0
@@ -170,12 +191,15 @@ export default function BlockchainUtilsContextProvider({
       handleError(error)
     }
   }
-  const withdraw = async () =>{
+  const withdraw = async (amount: number) =>{
     validateWallet()
     validateChain()
     try {
       if (signer) {
-        
+        const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
+      setTransactionState("waitingUserApproval");
+      const tx: ContractTransaction = await instance.withdraw(parseEther(amount.toString()))
+      await handleResult(tx)
       } else {
         setTransactionState(null);
       } 
@@ -253,21 +277,6 @@ export default function BlockchainUtilsContextProvider({
     handleError(error)
   }
  }
-  // async function recruitArmy(index: number, amount:number) {
-  //   validateWallet()
-  //   validateChain()
-  //   try {
-  //     if (signer && inViewLand) {
-  //       setTransactionState("waitingUserApproval");
-  //       const tx:ContractTransaction = await (isTestnet ? townSInst(signer) : townMainnetSInst(signer)).recruit(inViewLand.tokenId,index,amount)
-  //       await handleResult(tx)
-  //     } else {
-  //       setTransactionState(null);
-  //     }
-  //   } catch (error) {
-  //     handleError(error)
-  //   }
-  // }
 
   async function recruitArmy( amounts:number[]) {
     validateWallet()
@@ -432,7 +441,7 @@ export default function BlockchainUtilsContextProvider({
 
 
   return (
-    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, approve,deposit}}>
+    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, approve,deposit,withdraw,convert}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );

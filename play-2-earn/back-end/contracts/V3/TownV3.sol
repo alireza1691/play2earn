@@ -633,7 +633,7 @@ contract Town is Barracks{
                 if (landData[landTokenId].goodsBalance[goodIndex] <= amount) {
                     revert InsufficientGoods();
                 } else {
-                    totalAmount += (amount * getGoodsPrice()[goodIndex])/ 1 ether;
+                    totalAmount += (amount * 1 ether )/ getGoodsPrice()[goodIndex];
                     landData[landTokenId].goodsBalance[goodIndex] -= amount;
                     totalExistedGood[goodIndex] -= amount;
                 }
