@@ -16,7 +16,7 @@ export default function TownTrainingCamp() {
     <>
     {/* {Number(inViewLand?.trainingCampLvl) > 0 ?  */}
         <Image
-    className="z-20 cursor-pointer absolute top-[47rem] left-[51%]  w-[10rem] h-auto translate-x-1/2"
+    className="z-20 cursor-pointer absolute top-[54.5rem] left-[50.5%] xl:left-[51%]  w-[10rem] h-auto translate-x-1/2"
     src={trainingCampImage(Number(inViewLand?.trainingCampLvl) || 0) }
     width={580}
     height={480}
@@ -26,7 +26,7 @@ export default function TownTrainingCamp() {
     }}
   /> 
      <Image
-    className="z-10 cursor-pointer absolute top-[50.5rem] -translate-x-1/2 left-[57.5%]  w-[10rem] h-auto"
+    className="z-10 cursor-pointer absolute top-[58rem] -translate-x-1/2 left-[57%] xl:left-[56%]  w-[10rem] h-auto"
     src={"/buildings/shadow.png"}
     width={580}
     height={480}

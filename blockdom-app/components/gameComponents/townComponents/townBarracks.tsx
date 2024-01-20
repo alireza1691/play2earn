@@ -13,7 +13,7 @@ export default function TownBarracks() {
   return (
 <>
  <Image
-    className="z-20 cursor-pointer absolute top-[47rem] -translate-x-1/2 left-[40.5%]  w-[10rem] h-auto"
+    className="z-20 cursor-pointer absolute top-[54.5rem] -translate-x-1/2 left-[41%] xl:left-[42.5%]  w-[10rem] h-auto"
     src={barracksImage(Number(inViewLand?.barracksLvl )|| 0)}
     width={580}
     height={480}
@@ -25,7 +25,7 @@ export default function TownBarracks() {
   
  
       <Image
-    className="z-10 cursor-pointer absolute top-[50.5rem] -translate-x-1/2 left-[39%]  w-[10rem] h-auto"
+    className="z-10 cursor-pointer absolute top-[58rem] -translate-x-1/2 left-[39.5%] xl:left-[41%]  w-[10rem] h-auto"
     src={"/buildings/shadow.png"}
     width={580}
     height={480}

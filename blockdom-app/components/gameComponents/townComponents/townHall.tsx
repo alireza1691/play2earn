@@ -13,7 +13,7 @@ export default function TownHall() {
     <>
 
         <Image
-          className="z-20 cursor-pointer absolute top-[39.5rem] left-1/2 -translate-x-1/2 w-[12rem] h-auto"
+          className="z-20 cursor-pointer absolute top-[47rem] left-1/2 -translate-x-1/2 w-[12rem] h-auto"
           src={townHallImage(Number(inViewLand?.townhallLvl) || 0)}
           width={580}
           height={480}
@@ -23,7 +23,7 @@ export default function TownHall() {
           }}
         />
           <Image
-    className="z-10 absolute top-[44.5rem] -translate-x-1/2 left-[47.5%]  w-[10rem] h-auto"
+    className="z-10 absolute top-[52rem] -translate-x-1/2 left-[47.5%] xl:left-[48%]  w-[10rem] h-auto"
     src={"/buildings/shadow.png"}
     width={580}
     height={480}

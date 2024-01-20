@@ -14,7 +14,7 @@ export default function TownWalls() {
     <>
       {" "}
       <Image
-        className="z-10 absolute top-[27.5rem] left-1/2 -translate-x-1/2 w-[55rem] h-auto"
+        className="z-10 absolute top-[35rem] left-1/2 -translate-x-1/2 w-[55rem] h-auto"
         src={wallImage(Number(inViewLand?.wallLvl || 0))}
         width={1024}
         height={1024}
@@ -24,7 +24,7 @@ export default function TownWalls() {
       />
       {Number(inViewLand?.wallLvl) > 0 && 
               <Image
-              className=" absolute top-[40rem] left-[48%] -translate-x-1/2 w-[55rem] h-auto"
+              className=" absolute top-[47.5rem] left-[48%] -translate-x-1/2 w-[55rem] h-auto"
               src={"/buildings/walls/wallsShadow.png"}
               width={1024}
               height={1024}

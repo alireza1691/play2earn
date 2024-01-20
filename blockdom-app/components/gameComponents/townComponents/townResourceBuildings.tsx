@@ -87,7 +87,7 @@ export default function TownResourceBuildings() {
   }, [inViewLand, buildedResBuildings]);
   return (
     <>
-      <div className="z-10 flex flex-col left-[15rem]  gap-10   absolute top-[30rem] ">
+      <div className="z-10 flex flex-col left-[25rem]  gap-4   absolute top-[30rem] xl:left-[40rem] ">
         {farms && farms.length == 0 && (
           <div className=" relative">
           <Image
@@ -175,7 +175,7 @@ export default function TownResourceBuildings() {
           </>
         )}
       </div>
-      <div className="z-10 flex flex-row left-[30rem] ml-auto gap-10 absolute top-[20rem]">
+      <div className="z-10 flex flex-col left-[87rem] ml-auto gap-4 absolute  xl:left-[110rem] top-[30rem]">
         {goldMines && goldMines.length == 0 && (
           <div className=" relative">
           <Image
