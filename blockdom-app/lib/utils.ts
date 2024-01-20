@@ -261,3 +261,10 @@ export const marketImage = (level: number) => {
 export const wareHouseImage = (level: number) => {
   return `/buildings/wareHouseLv${level}.png`;
 };
+export const wallImage = (level: number) => {
+  return `/buildings/walls/Full${level}.png`;
+};
+export const gateImage = (level: number) => {
+  return `/buildings/walls/Gate${level}.png`;
+};
+

@@ -87,10 +87,11 @@ export default function TownResourceBuildings() {
   }, [inViewLand, buildedResBuildings]);
   return (
     <>
-      <div className="z-10 flex flex-col left-[10rem]  gap-10   absolute top-[20rem]">
+      <div className="z-10 flex flex-col left-[15rem]  gap-10   absolute top-[30rem] ">
         {farms && farms.length == 0 && (
+          <div className=" relative">
           <Image
-            className="z-10 cursor-pointer  w-[10rem] h-auto"
+            className="z-10 cursor-pointer  w-[7rem] h-auto"
             src={farmImage(0)}
             width={580}
             height={480}
@@ -105,13 +106,22 @@ export default function TownResourceBuildings() {
               });
             }}
           />
+          <Image
+          className="-z-10 cursor-pointer -translate-x-6 -translate-y-[4.5rem]  absolute   w-[10rem] h-auto"
+          src={"/buildings/shadow.png"}
+          width={580}
+          height={480}
+          alt="shadow"
+          quality={10}
+        />
+        </div>
         )}
         {farms && farms.length > 0 && (
           <>
             {farms.map((item, key) => (
-              <React.Fragment key={key}>
+              <div key={key} className="relative">
                 <Image
-                  className="z-10 cursor-pointer   w-[10rem] h-auto"
+                  className="z-10 cursor-pointer   w-[7rem] h-auto"
                   src={farmImage(item.level)}
                   width={580}
                   height={480}
@@ -126,10 +136,19 @@ export default function TownResourceBuildings() {
                     });
                   }}
                 />
-              </React.Fragment>
+                    <Image
+          className="-z-10 cursor-pointer -translate-x-6 -translate-y-[4.5rem]  absolute   w-[10rem] h-auto"
+          src={"/buildings/shadow.png"}
+          width={580}
+          height={480}
+          alt="shadow"
+          quality={10}
+        />
+              </div>
             ))}
+            <div className=" relative">
             <Image
-              className="z-10 cursor-pointer   w-[10rem] h-auto "
+              className="z-10 cursor-pointer   w-[7rem] h-auto "
               src={farmImage(0)}
               width={580}
               height={480}
@@ -144,13 +163,23 @@ export default function TownResourceBuildings() {
                 });
               }}
             />
+                        <Image
+          className="-z-10 cursor-pointer -translate-x-6 -translate-y-[4.5rem]  absolute   w-[10rem] h-auto"
+          src={"/buildings/shadow.png"}
+          width={580}
+          height={480}
+          alt="shadow"
+          quality={10}
+        />
+            </div>
           </>
         )}
       </div>
-      <div className="z-10 flex flex-row left-[30rem] ml-auto gap-10 absolute top-[10rem]">
+      <div className="z-10 flex flex-row left-[30rem] ml-auto gap-10 absolute top-[20rem]">
         {goldMines && goldMines.length == 0 && (
+          <div className=" relative">
           <Image
-            className=" cursor-pointer  w-[10rem] h-auto "
+            className=" cursor-pointer  w-[7rem] h-auto "
             src={goldMineImage(0)}
             width={580}
             height={480}
@@ -165,14 +194,24 @@ export default function TownResourceBuildings() {
               });
             }}
           />
+                       <Image
+          className="-z-10 cursor-pointer -translate-x-6 -translate-y-[4.5rem]  absolute   w-[10rem] h-auto"
+          src={"/buildings/shadow.png"}
+          width={580}
+          height={480}
+          alt="shadow"
+          quality={10}
+        />
+            </div>
+      
         )}
 
         {goldMines && goldMines.length > 0 && (
           <>
             {goldMines.map((item, key) => (
-              <React.Fragment key={key}>
+              <div key={key} className="relative">
                 <Image
-                  className=" cursor-pointer  w-[10rem] h-auto"
+                  className=" cursor-pointer  w-[7rem] h-auto"
                   src={goldMineImage(item.level)}
                   width={580}
                   height={480}
@@ -187,10 +226,20 @@ export default function TownResourceBuildings() {
                     });
                   }}
                 />
-              </React.Fragment>
+                             <Image
+          className="-z-10 cursor-pointer -translate-x-6 -translate-y-[4.5rem]  absolute   w-[10rem] h-auto"
+          src={"/buildings/shadow.png"}
+          width={580}
+          height={480}
+          alt="shadow"
+          quality={10}
+        />
+            </div>
+  
             ))}
+            <div className=" relative">
             <Image
-              className=" cursor-pointer w-[10rem] h-auto gap-20"
+              className=" cursor-pointer w-[7rem] h-auto gap-20"
               src={goldMineImage(0)}
               width={580}
               height={480}
@@ -205,6 +254,15 @@ export default function TownResourceBuildings() {
                 });
               }}
             />
+                         <Image
+          className="-z-10 cursor-pointer -translate-x-6 -translate-y-[4.5rem]  absolute   w-[10rem] h-auto"
+          src={"/buildings/shadow.png"}
+          width={580}
+          height={480}
+          alt="shadow"
+          quality={10}
+        />
+            </div>
           </>
         )}
       </div>

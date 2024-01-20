@@ -26,7 +26,7 @@ export default function MyLand() {
             /> */}
             <Image
               className="  opacity-80 absolute left-1/2 -translate-x-1/2  w-[1920px] h-[110rem]   xl:h-[130rem] xl:w-[2560px]  object-fit "
-              src={"/myLandBg3.jpg"}
+              src={"/townItems/Land.png"}
               width={2237}
               height={1640}
               alt="bg"

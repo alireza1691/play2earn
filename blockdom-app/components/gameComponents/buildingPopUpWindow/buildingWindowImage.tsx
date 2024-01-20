@@ -2,11 +2,43 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
+import { useUserDataContext } from "@/context/user-data-context";
+import { barracksImage, farmImage,  goldMineImage, townHallImage, trainingCampImage, wallImage } from "@/lib/utils";
 
 export default function BuildingWindowImage() {
   const [isImageSelected, setIsImageSelected] = useState(true);
-  const { selectedItem, setSelectedItem } = useSelectedBuildingContext();
+  const { selectedItem, setSelectedItem ,selectedResourceBuilding,upgradeMode}  = useSelectedBuildingContext();
   const imageUrl = selectedItem?.imageUrl || "";
+
+  const { inViewLand } = useUserDataContext();
+
+  const getImage = () =>{
+    if (selectedItem?.name == "Barracks") {
+      const level = Number((inViewLand?.barracksLvl || 0))
+      return barracksImage( upgradeMode ? level+1 : level)
+    }
+    if (selectedItem?.name == "Townhall") {
+      const level = Number(inViewLand?.townhallLvl || 0)
+      return townHallImage(upgradeMode ? level+1 : level)
+    }
+    if (selectedItem?.name ==  "TrainingCamp") {
+      const level = Number(inViewLand?.trainingCampLvl || 0)
+      return trainingCampImage(upgradeMode ? level+1 : level)
+    }
+    if (selectedItem?.name == "Wall") {
+      const level = Number(inViewLand?.wallLvl || 0)
+      return wallImage(upgradeMode ? level+1 : level)
+    }
+    if (selectedItem?.name == "Farm") {
+      const level = Number(selectedResourceBuilding?.level || 0)
+      return farmImage(upgradeMode ? level+1 : level)
+    }
+    // (selectedItem?.name == "GoldMine")
+    else  {
+      const level = Number(selectedResourceBuilding?.level || 0)
+      return goldMineImage(upgradeMode ? level+1 : level)
+    }
+  }
   return (
     <>
     
@@ -14,7 +46,7 @@ export default function BuildingWindowImage() {
     {selectedItem  && isImageSelected && (
   <Image
           className="p-4 flex-shrink-0 top-0 !w-auto !h-full  object-contain ml-auto mr-auto mt-auto mb-auto"
-          src={imageUrl}
+          src={getImage()}
           fill
           alt="selectedItemImage"
         />

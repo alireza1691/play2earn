@@ -11,9 +11,9 @@ export default function TownHall() {
   const townHall = landItems[0];
   return (
     <>
-      {Number(inViewLand?.townhallLvl) > 0 ? (
+
         <Image
-          className="z-10 cursor-pointer absolute top-[22.5rem] left-1/2 -translate-x-1/2 w-[12rem] h-auto"
+          className="z-20 cursor-pointer absolute top-[39.5rem] left-1/2 -translate-x-1/2 w-[12rem] h-auto"
           src={townHallImage(Number(inViewLand?.townhallLvl) || 0)}
           width={580}
           height={480}
@@ -22,31 +22,15 @@ export default function TownHall() {
             setSelectedItem(townHall);
           }}
         />
-      ) : (
-        <Tooltip
-          closeDelay={0}
-          content={
-            <div>
-              {" "}
-              <Image
-                className="w-[6rem] h-auto"
-                src={townHallImage(1)}
-                width={100}
-                height={100}
-                alt="townHall"
-              />
-              <h3 className=" py-3 text-center ">Townhall</h3>
-            </div>
-          }
-        >
-          <div
-            onClick={() => {
-              setSelectedItem(townHall);
-            }}
-            className="z-10 absolute buildPlace top-[25.5rem] left-[48%] -translate-x-1/2  h-[7rem] w-[7rem] cursor-pointer"
-          ></div>
-        </Tooltip>
-      )}
+          <Image
+    className="z-10 absolute top-[44.5rem] -translate-x-1/2 left-[47.5%]  w-[10rem] h-auto"
+    src={"/buildings/shadow.png"}
+    width={580}
+    height={480}
+    alt="shadow"
+
+  />
+     
     </>
   );
 }
