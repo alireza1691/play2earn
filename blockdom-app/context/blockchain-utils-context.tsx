@@ -44,6 +44,7 @@ type BlockchainUtilsContextType = {
   deposit: (amount: number) => Promise<void>;
   withdraw: (amount: number) => Promise<void>;
   convert: (amount: number, index:number, isBuy: boolean) => Promise<void>;
+  faucet: () => Promise<void>;
 };
 
 const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
@@ -143,6 +144,23 @@ export default function BlockchainUtilsContextProvider({
         const instance = isTestnet ? townSInst(signer) : townMainnetSInst(signer)
         setTransactionState("waitingUserApproval");
         const tx: ContractTransaction = isbuy ? await instance.buyGood(inViewLand.tokenId , index, parseEther(amount.toString())) : await instance.sellGood(inViewLand.tokenId , index, parseEther(amount.toString()))
+        handleResult(tx)
+      } else {
+        setTransactionState(null);
+      } 
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  const faucet = async () =>{
+    validateWallet()
+    validateChain()
+    try {
+      if (signer && inViewLand) {
+        const instance = isTestnet ? BMTSInst(signer) : BMTSInst(signer)
+        setTransactionState("waitingUserApproval");
+        const tx: ContractTransaction =  await instance.faucet()
         handleResult(tx)
       } else {
         setTransactionState(null);
@@ -441,7 +459,7 @@ export default function BlockchainUtilsContextProvider({
 
 
   return (
-    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, approve,deposit,withdraw,convert}}>
+    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim,mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, approve,deposit,withdraw,convert,faucet}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );

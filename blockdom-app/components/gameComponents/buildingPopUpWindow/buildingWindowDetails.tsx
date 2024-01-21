@@ -427,7 +427,7 @@ const TownhallContainer = () => {
                   onChange={(event) =>
                     setEnteredAmount(Number(event.target.value))
                   }
-                  className=" bg-black/20 w-full  focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40 h-full"
+                  className="appearance-none bg-black/20 w-full  focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40 h-full"
                   placeholder={enteredAmount.toString()}
                   
                 />
