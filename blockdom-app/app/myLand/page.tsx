@@ -1,11 +1,11 @@
-import BalanceContainer from "@/components/gameComponents/townComponents/balanceContainer";
+import BalanceContainer from "@/components/gameComponents/balanceContainer";
 import Notifications from "@/components/gameComponents/notifications";
 import SelectedBuilding from "@/components/gameComponents/buildingPopUpWindow/selectedBuilding";
 import Town from "@/components/gameComponents/townComponents/town";
 import Image from "next/image";
 import React from "react";
 import ToggleLand from "@/components/gameComponents/townComponents/toggleLand";
-import BottomBar from "@/components/gameComponents/townComponents/bottomBar";
+import BottomBar from "@/components/gameComponents/bottomBar";
 
 export default function MyLand() {
   return (

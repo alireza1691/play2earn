@@ -12,9 +12,10 @@ import MapContextProvider from "@/context/map-context";
 import UserDataContextProvider from "@/context/user-data-context";
 import BlockchainStateContextProvider from "@/context/blockchain-state-context";
 import BlockchainUtilsContextProvider from "@/context/blockchain-utils-context";
-import BottomBar from "@/components/gameComponents/townComponents/bottomBar";
+import BottomBar from "@/components/gameComponents/bottomBar";
 import GlobalErrorBoundary from "@/components/errorBoundary";
 import PopUpState from "@/components/popUpState";
+import BalanceContainer from "@/components/gameComponents/balanceContainer";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -51,6 +52,7 @@ export default function RootLayout({
               <BlockchainUtilsContextProvider>
                 <PopUpState/>
                 <Navbar/>
+                <BalanceContainer/>
                 {children}
                 <BottomBar/>
                 </BlockchainUtilsContextProvider>

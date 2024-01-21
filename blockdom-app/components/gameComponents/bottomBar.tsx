@@ -1,5 +1,7 @@
 "use client";
+import { useMapContext } from "@/context/map-context";
 import { useUserDataContext } from "@/context/user-data-context";
+import BackIcon from "@/svg/backIcon";
 import BattleLogActiveIcon from "@/svg/battleLogActiveIcon";
 import BattleLogIcon from "@/svg/battleLogIcon";
 import ExploreActiveIcon from "@/svg/exploreActiveIcon";
@@ -13,13 +15,25 @@ export default function BottomBar() {
   const router = useRouter();
   const currentRoute = usePathname();
   const { ownedLands } = useUserDataContext();
+  const {setSelectedParcel,setSelectedLand,selectedParcel} = useMapContext()
   return (
     <>
     {currentRoute != "/" && 
-      <div className=" w-full z-30 h-[4rem] fixed bottom-0 bg-gradient-to-r from-[#A9FFDE] to-[#7ECFB3] dark:from-[#34594B]/60 dark:to-[#213830]/60 md:hidden dark:bg-[#000000] flex flex-row  justify-around ">
+      <div className=" lg:hidden w-[94dvw] rounded-lg left-1/2 -translate-x-1/2 z-30 h-[4rem] fixed bottom-2  bottomBar flex flex-row  justify-around ">  <a
+      onClick={() => {setSelectedParcel(null) , setSelectedLand(null)}}
+      className={`${
+        selectedParcel == null
+          ? " brightness-50"
+          : " text-gray-800 dark:text-gray-50 hover:bg-black/10 cursor-pointer "
+      } flex flex-col justify-center items-center transition-all  p-2 rounded-lg text-sm font-semibold leading-6`}
+    >
+      <BackIcon />
+      Back
+    </a>
+    <h3 className=" mt-auto mb-auto">|</h3>
         <a
           onClick={() => {
-            router.push("/explore");
+            router.push(currentRoute.includes("testnet")?"/testnet/explore" : "/explore");
           }}
           className={`${
             currentRoute == "/explore"
@@ -33,7 +47,7 @@ export default function BottomBar() {
         {ownedLands && ownedLands.length > 0 ? (
           <a
             onClick={() => {
-              router.push("/myLand");
+              router.push(currentRoute.includes("testnet")?"/testnet/myLand" : "/myLand");
             }}
             className={`${
               currentRoute == "/myLand"
@@ -55,7 +69,7 @@ export default function BottomBar() {
 
         <a
           onClick={() => {
-            router.push("/battleLog");
+            router.push(currentRoute.includes("testnet")?"/testnet/battleLog" : "/battleLog");
           }}
           className={`${
             currentRoute == "/battleLog"

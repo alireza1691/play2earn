@@ -563,3 +563,9 @@ input::placeholder {
   background: rgba(6, 41, 29, 0.90);
   
 }
+
+.bottomBar{
+  border-radius: 14px;
+  border: 1px solid rgba(135, 240, 229, 0.60);
+  background: rgba(6, 41, 29, 0.50);
+}

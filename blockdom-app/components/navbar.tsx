@@ -17,7 +17,7 @@ import { townPInst } from "@/lib/instances";
 import { InViewLandType, landDataResType, MintedLand } from "@/lib/types";
 import BackIcon from "@/svg/backIcon";
 import { useMapContext } from "@/context/map-context";
-import BalanceContainer from "./gameComponents/townComponents/balanceContainer";
+import BalanceContainer from "./gameComponents/balanceContainer";
 
 import ChainIdButton from "./chainIdButton";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
@@ -175,21 +175,7 @@ export default function Navbar() {
             <div className="hidden md:flex"> <ChainIdButton/></div>
            
           </div>
-          {currentRoute == "/explore" && (
-            <a
-              onClick={() => {
-                setSelectedParcel(null), setSelectedLand(null);
-              }}
-              className={`${
-                selectedParcel == null
-                  ? " brightness-50"
-                  : " text-gray-800 dark:text-gray-50 hover:bg-black/10 cursor-pointer "
-              } md:hidden flex flex-col justify-center items-center transition-all  p-2 rounded-lg text-sm font-semibold leading-6`}
-            >
-              <BackIcon />
-              Back
-            </a>
-          )}
+   
           {currentRoute == "myLand" && <BalanceContainer />}
 
           <div className=" ml-3 md:ml-5 flex md:hidden   ">

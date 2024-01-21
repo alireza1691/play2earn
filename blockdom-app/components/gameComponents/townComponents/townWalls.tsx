@@ -38,7 +38,7 @@ export default function TownWalls() {
      onClick={() => {
       wall.name && inViewLand?.wallLvl && wall.imageUrl && setSelectedItem(wall);
     }}
-        className="p-3 hover:blur-sm hover:bg-white/10 h-24 w-52 rotate30 flex justify-center items-center  cursor-pointer  z-10 absolute left-[55.5%] -translate-x-1/2 top-[60rem]"
+        className="p-3 hover:blur-sm hover:bg-white/10 h-24 w-52 rotate30 flex justify-center items-center  cursor-pointer  z-10 absolute left-[54.5%] -translate-x-1/2 top-[68rem]"
       >
        {/* <h3 className="text-white text-center "> Wall lvl{Number(inViewLand?.wallLvl) ||0 }</h3> */}
       </button>

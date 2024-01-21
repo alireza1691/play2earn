@@ -39,7 +39,7 @@ export default function ExploreView() {
 
       <div
         ref={containerRef}
-        className="w-[100vw] h-[100vh]   overflow-scroll  items-center justify-center object-cover  relative"
+        className="w-[100vw] h-[100vh]   overflow-scroll custom-scrollbar  items-center justify-center object-cover  relative"
       >
         <Map />
         <ParcelSwitchArrows />
