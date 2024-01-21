@@ -28,7 +28,7 @@ export default function PopUpState() {
         titleString = "Connect your wallet to Sepolia network";
       }
       if (transactionState == "waitingUserApproval") {
-        titleString = "Approve transaction in your wallet";
+        titleString = "Approve the transaction in your wallet";
       }
       if (transactionState == "waitingBlockchainConfirmation") {
         titleString = "Confirming...";
@@ -49,7 +49,7 @@ export default function PopUpState() {
       }
       if (transactionState == "connected") {
         titleString =
-          "Your wallet is currently connected to the right network. Please retry the action.";
+          "Your wallet connected to the right network. Please retry the action.";
       }
     }
     return titleString;

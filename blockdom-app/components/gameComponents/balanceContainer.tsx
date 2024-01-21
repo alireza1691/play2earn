@@ -1,4 +1,5 @@
 "use client"
+import { useSelectedWindowContext } from '@/context/selected-window-context'
 import { useUserDataContext } from '@/context/user-data-context'
 import { formattedNumber } from '@/lib/utils'
 import BMTIcon from '@/svg/bmtIcon'
@@ -16,6 +17,7 @@ import React from 'react'
 
 export default function BalanceContainer() {
   const { inViewLand, BMTBalance} = useUserDataContext()
+  const {setSelectedWindowComponent} = useSelectedWindowContext()
 
   const pathname = usePathname()
 
@@ -62,7 +64,7 @@ export default function BalanceContainer() {
     {pathname != "/" && 
     <>
     <div className={`${pathname.includes("myLand") ? " " : "ml-4 "} z-30 flex flex-row absolute top-[80px] justify-around gap-4 w-full px-4 lg:w-auto`}>
-    <h3 className={`${pathname.includes("myLand") ? "flex-1" : "w-[10rem] absolute left-0 "} text-[#87F0E5] font-semibold text-[15px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1`}><BMTIcon/>{BMTBalance && formattedNumber(BMTBalance)}1</h3>
+    <button onClick={()=> setSelectedWindowComponent("tokenActions")} className={`${pathname.includes("myLand") ? "flex-1" : "w-[10rem] absolute left-0 "} cursor-pointer transition-all hover:bg-white/10 text-[#87F0E5] font-semibold text-[15px]  balBg flex flex-row gap-4 items-center justify-center px-4 py-1`}><BMTIcon/>{BMTBalance && formattedNumber(BMTBalance)}1</button>
     {pathname.includes("myLand") && 
     <>
       <h3 className='flex-1 text-[#87F0E5] font-semibold text-[15px] lg:w-[10rem]  balBg flex flex-row gap-2 items-center justify-center px-2 py-1  '><FoodIcon/>{inViewLand && formattedNumber(inViewLand.goodsBalance[0])}</h3>

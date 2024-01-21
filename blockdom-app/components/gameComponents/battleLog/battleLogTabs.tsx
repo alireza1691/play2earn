@@ -11,7 +11,7 @@ export default function BattleLogTabs() {
   return (
     <div className=" flex flex-row w-full justify-center gap-4">
               {battleLogTabs.map((tab, key) => (
-                <a
+                <button
                 onClick={() => setBattleLogTab(tab)}
                   className={` ${
                     battleLogTab == tab
@@ -21,7 +21,7 @@ export default function BattleLogTabs() {
                   key={key}
                 >
                   {tab}
-                </a>
+                </button>
               ))}
             </div>
   )

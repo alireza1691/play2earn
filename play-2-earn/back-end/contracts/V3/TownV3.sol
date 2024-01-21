@@ -443,11 +443,11 @@ contract Town is Barracks{
     uint256 private constant SwapFee = 5;
     uint256 private constant TrnasferCostPercentage = 5;
     // uint256 private constant WorkerGoldPerHour = 10 ether;
-    // uint256 private constant BaseBuildTimestamp = 3 hours;
-    // uint256 private constant BaseTownhallBuildTimestamp = 6 hours;
-    // uint8 private constant MaxResourceBuildingsCapacity = 8;
+    uint256 private constant BaseBuildTimestamp = 2 hours;
+    uint256 private constant BaseTownhallBuildTimestamp = 6 hours;
+    uint8 private constant MaxResourceBuildingsCapacity = 8;
     // uint8 private constant BaseArmyCapacity = 50;
-    // uint256 private constant BaseGoodCapacityOfBuilding = 80 ether;
+    uint256 private constant BaseGoodCapacityOfBuilding = 40 ether;
     // uint256 private constant BaseWarriorRequiredFood = 3 ether;
     // uint256 private constant BaseFoodRevenuePer3hours = 1 ether;
     // uint256 private constant BaseGoldRevenuePer3hours = 1 ether;
@@ -562,7 +562,7 @@ contract Town is Barracks{
             count ++;
            }
         }
-        if (count + 1 > VAR.MaxResourceBuildingsCapacity() / 2) {
+        if (count + 1 > MaxResourceBuildingsCapacity / 2) {
             revert MaxCapacity();
         }
         if (count + 1 > landData[landId].townhallLevel + 2) {
@@ -694,7 +694,7 @@ contract Town is Barracks{
             selecteduilding.requiredFood * (2 ** currentLevel)
         ]);
         tokenIdStatus[buildingTokenId].level = currentLevel+1 ;
-        landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (VAR.BaseBuildTimestamp() * (currentLevel+1));
+        landData[landTokenId].latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (currentLevel+1));
         emit Upgrade(buildingTokenId, currentLevel+1);
     }
 
@@ -704,14 +704,14 @@ contract Town is Barracks{
             revert TownhallUpgradeRequired();
         }
         _spendGoods(landTokenId,getRequiredGoods(BaseBararcksRequiredGoods,landProps.barracksLevel));
-        landProps.latestBuildTimeStamp  = block.timestamp + (VAR.BaseBuildTimestamp() * (landProps.barracksLevel + 1));
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (landProps.barracksLevel + 1));
         landProps.barracksLevel ++;
         emit UpgradeBarracks( landTokenId, landProps.barracksLevel + 1 );
     }
      function buildTownhall(uint256 landTokenId) public onlyLandOwner(landTokenId) isWorkerReady(landTokenId){
         LandIdData storage landProps = landData[landTokenId];
         _spendGoods(landTokenId,getRequiredGoods(BaseTownhallRequiredGoods,landProps.townhallLevel));
-        landProps.latestBuildTimeStamp  = block.timestamp + (VAR.BaseTownhallBuildTimestamp() * (landProps.townhallLevel + 1));
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseTownhallBuildTimestamp * (landProps.townhallLevel + 1));
         landProps.townhallLevel ++;
         emit UpgradeTownhall( landTokenId, landProps.townhallLevel + 1 );
     }
@@ -723,7 +723,7 @@ contract Town is Barracks{
         }
         _spendGoods(landTokenId,getRequiredGoods(BaseWallRequiredGoods, landProps.wallLevel));
  
-        landProps.latestBuildTimeStamp  = block.timestamp + (VAR.BaseBuildTimestamp() * (landProps.wallLevel + 1));
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (landProps.wallLevel + 1));
         landProps.wallLevel ++;
         emit UpgradeWalls( landTokenId, landProps.wallLevel + 1 );
     }
@@ -734,7 +734,7 @@ contract Town is Barracks{
         }
         _spendGoods(landTokenId,getRequiredGoods(BaseTrainingCampRequiredGoods, landProps.trainingCampLevel));
  
-        landProps.latestBuildTimeStamp  = block.timestamp + (VAR.BaseBuildTimestamp() * (landProps.trainingCampLevel + 1));
+        landProps.latestBuildTimeStamp  = block.timestamp + (BaseBuildTimestamp * (landProps.trainingCampLevel + 1));
         landProps.trainingCampLevel ++;
         emit UpgradeTrainingCamp( landTokenId, landProps.trainingCampLevel + 1 );
     }
@@ -745,7 +745,7 @@ contract Town is Barracks{
         uint256 requiredGold;
         if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
             remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
-            requiredGold = (remainedTimestamp / 1 hours) * VAR.WorkerGoldPerHour();
+            requiredGold = (remainedTimestamp / 1 minutes) * VAR.WorkerGoldPerMinute();
             if (landData[landTokenId].goodsBalance[0] >= requiredGold) {
                 landData[landTokenId].goodsBalance[1] -= requiredGold;
                 landData[landTokenId].latestBuildTimeStamp = block.timestamp - 1 minutes;
@@ -936,8 +936,8 @@ contract Town is Barracks{
         uint256 period = block.timestamp - (buildingStatus.latestActionTimestamp);
         uint256 baseRev = buildingStatus.buildingTypeIndex == 0 ? VAR.BaseFoodRevenuePer3hours() : VAR.BaseGoldRevenuePer3hours() ;
         uint256 rev = (period / 3 hours) * baseRev * (2 ** (buildingStatus.level - 1));
-        if (rev > VAR.BaseGoodCapacityOfBuilding() * buildingStatus.level ) {
-            rev = VAR.BaseGoodCapacityOfBuilding() * buildingStatus.level ;
+        if (rev > BaseGoodCapacityOfBuilding * buildingStatus.level ) {
+            rev = BaseGoodCapacityOfBuilding * buildingStatus.level ;
         }
         return rev;
        

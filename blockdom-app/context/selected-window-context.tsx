@@ -11,8 +11,15 @@ const windowComponentsList = [
     "emptyLand",
     "myLand",
     "battleLog",
-    "attackStatus"
+    "attackStatus",
+    "tokenActions"
 ] as const
+
+const tokenCompTabs = [
+    "deposit/withdraw",
+    "faucet"
+] as const
+
 type itemType = typeof windowComponentsList[number]
 
 
@@ -27,6 +34,8 @@ type SelectedBuildingContextType = {
     setSelectedArmy: React.Dispatch<React.SetStateAction<number[]>>
     battleLogTab: typeof battleLogTabs[number]
     setBattleLogTab: React.Dispatch<React.SetStateAction<typeof battleLogTabs[number]>>
+    tokenCompTab: typeof tokenCompTabs[number]
+    setTokenCompTab: React.Dispatch<React.SetStateAction<typeof tokenCompTabs[number]>>
 }
 
 const StatesContext = createContext<SelectedBuildingContextType | null>(null)
@@ -35,10 +44,11 @@ export default function SelectedWindowContextProvider({children}:SelectedBuildin
       const [selectedWindowComponent, setSelectedWindowComponent] =  useState< itemType | null >(null)
       const [selectedArmy,setSelectedArmy] = useState<number[]>([0,0,0,0,0,0])
       const [battleLogTab, setBattleLogTab] = useState<typeof battleLogTabs[number]>("Ongoing")
+      const [tokenCompTab,setTokenCompTab] = useState<typeof tokenCompTabs[number]>("deposit/withdraw")
         
 
       return(
-        <StatesContext.Provider value={{ selectedWindowComponent, setSelectedWindowComponent,selectedArmy,setSelectedArmy,battleLogTab,setBattleLogTab}}>
+        <StatesContext.Provider value={{ selectedWindowComponent, setSelectedWindowComponent,selectedArmy,setSelectedArmy,battleLogTab,setBattleLogTab,tokenCompTab,setTokenCompTab}}>
             {children}
         </StatesContext.Provider>
       )

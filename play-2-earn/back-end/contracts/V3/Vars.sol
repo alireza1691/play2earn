@@ -4,21 +4,14 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Vars is Ownable{
 
-    // uint256 private constant withdrawalFee = 10;
-    // uint256 private constant swapFee = 5;
-    uint256 private constant workerGoldPerHour = 10 ether;
-    uint256 private constant baseBuildTimestamp = 3 hours;
-    uint256 private constant baseTownhallBuildTimestamp = 6 hours;
-    uint8 private constant maxResourceBuildingsCapacity = 8;
-    uint8 private constant baseArmyCapacity = 50;
-    uint256 private constant baseGoodCapacityOfBuilding = 40 ether;
-    uint256 private constant baseWarriorRequiredFood = 3 ether;
-    uint256 private constant baseFoodRevenuePer3hours = 2 ether;
-    uint256 private constant baseGoldRevenuePer3hours = 2 ether;
-    uint256 private constant baseWarriorLootCapacity = 30 ether;
-    uint256 private constant retreatCostPerWarrior = 5 ether;
-    uint256 private constant dispatchCostPerWarrior = 1 ether;
-      // uint256 private constant trnasferCostPercentage = 7;
+    uint256 private  workerGoldPerMinute = 1 ether ;
+    uint256 private  baseArmyCapacity = 50;
+    uint256 private  baseWarriorRequiredFood = 3 ether;
+    uint256 private  baseFoodRevenuePer3hours = 2 ether;
+    uint256 private  baseGoldRevenuePer3hours = 2 ether;
+    uint256 private  baseWarriorLootCapacity = 30 ether;
+    uint256 private  retreatCostPerWarrior = 5 ether;
+    uint256 private  dispatchCostPerWarrior = 1 ether;
         struct WarriorInfo {
         uint8 attackPower;
         uint8 defPower;
@@ -39,52 +32,75 @@ contract Vars is Ownable{
         warriorTypes.push(WarriorInfo( 90, 60, 100,"Knight",30 ether));
     }
 
-function WarriorTypes() view public returns (WarriorInfo[] memory) {
+    function editWarrior(uint256 index,uint8[3] memory amounts, uint256 price) external onlyOwner {
+      require(index < 6, "Invalid warrior");
+      warriorTypes[index] = WarriorInfo(amounts[0],amounts[1],amounts[2],warriorTypes[index].name,price);
+    }
+
+    function changeVariable(uint256 newVarAmount, uint256 index) external onlyOwner {
+      if (index == 0) {
+        require(newVarAmount > 200000000 gwei && newVarAmount < 5 ether, "Amount is out of range");
+        workerGoldPerMinute = newVarAmount;
+      }
+      if (index == 1) {
+        require(newVarAmount > 20 && newVarAmount < 200, "Amount is out of range");
+        baseArmyCapacity  = newVarAmount;
+      }
+      if (index == 2) {
+        require(newVarAmount > 1 && newVarAmount < 10, "Amount is out of range");
+        baseWarriorRequiredFood  = newVarAmount;
+      }
+      if (index == 3) {
+        require(newVarAmount > 500000000 gwei && newVarAmount < 10 ether, "Amount is out of range");
+        baseFoodRevenuePer3hours  = newVarAmount;
+      }
+      if (index == 4) {
+        require(newVarAmount > 500000000 gwei && newVarAmount <  10 ether, "Amount is out of range");
+        baseGoldRevenuePer3hours  = newVarAmount;
+      }
+      if (index == 5) {
+        require(newVarAmount > 5 ether && newVarAmount < 100 ether, "Amount is out of range");
+        baseWarriorLootCapacity  = newVarAmount;
+      }
+      if (index == 6) {
+        require(newVarAmount > 1 ether && newVarAmount < 10 ether, "Amount is out of range");
+        retreatCostPerWarrior  = newVarAmount;
+      }
+      if (index == 7) {
+        require(newVarAmount > 200000000 && newVarAmount < 5 ether, "Amount is out of range");
+        dispatchCostPerWarrior  = newVarAmount;
+      }
+    }
+
+    function WarriorTypes() view public returns (WarriorInfo[] memory) {
         return warriorTypes;
     }
-    // function WithdrawalFee() pure public returns (uint256) {
-    //     return withdrawalFee;
-    // }
-    //   function SwapFee() pure public returns (uint256) {
-    //     return swapFee;
-    // }
-
-    
-     function DispatchCostPerWarrior() pure public returns (uint256) {
+    function DispatchCostPerWarrior() view public returns (uint256) {
       return dispatchCostPerWarrior;
     }
 
-    function RetreatCostPerWarrior() pure public returns (uint256) {
+    function RetreatCostPerWarrior() view public returns (uint256) {
       return retreatCostPerWarrior;
     }
-      function WorkerGoldPerHour() pure public returns (uint256) {
-        return workerGoldPerHour;
+    function WorkerGoldPerMinute() view public returns (uint256) {
+        return workerGoldPerMinute;
     }
-      function BaseBuildTimestamp() pure public returns (uint256) {
-        return baseBuildTimestamp;
-    }
-      function BaseWarriorLootCapacity() pure public returns (uint256) {
+
+    function BaseWarriorLootCapacity() view public returns (uint256) {
         return baseWarriorLootCapacity;
     }
-      function BaseTownhallBuildTimestamp() pure public returns (uint256) {
-        return baseTownhallBuildTimestamp;
-    }
-      function MaxResourceBuildingsCapacity() pure public returns (uint256) {
-        return maxResourceBuildingsCapacity;
-    }
-      function BaseArmyCapacity() pure public returns (uint256) {
+
+    function BaseArmyCapacity() view public returns (uint256) {
         return baseArmyCapacity;
     }
-      function BaseGoodCapacityOfBuilding() pure public returns (uint256) {
-        return baseGoodCapacityOfBuilding;
-    }
-      function BaseWarriorRequiredFood() pure public returns (uint256) {
+
+    function BaseWarriorRequiredFood() view public returns (uint256) {
         return baseWarriorRequiredFood;
     }
-      function BaseFoodRevenuePer3hours() pure public returns (uint256) {
+    function BaseFoodRevenuePer3hours() view public returns (uint256) {
         return baseFoodRevenuePer3hours;
     }
-      function BaseGoldRevenuePer3hours() pure public returns (uint256) {
+    function BaseGoldRevenuePer3hours() view public returns (uint256) {
         return baseGoldRevenuePer3hours;
     }
     //    function TrnasferCostPercentage() pure public returns (uint256) {

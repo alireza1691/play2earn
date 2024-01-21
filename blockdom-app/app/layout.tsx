@@ -16,6 +16,7 @@ import BottomBar from "@/components/gameComponents/bottomBar";
 import GlobalErrorBoundary from "@/components/errorBoundary";
 import PopUpState from "@/components/popUpState";
 import BalanceContainer from "@/components/gameComponents/balanceContainer";
+import TokenActionComp from "@/components/gameComponents/tokenActionComp";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -53,6 +54,7 @@ export default function RootLayout({
                 <PopUpState/>
                 <Navbar/>
                 <BalanceContainer/>
+                <TokenActionComp/>
                 {children}
                 <BottomBar/>
                 </BlockchainUtilsContextProvider>

@@ -569,3 +569,15 @@ input::placeholder {
   border: 1px solid rgba(135, 240, 229, 0.60);
   background: rgba(6, 41, 29, 0.50);
 }
+.tokenActionBg{
+  border-radius: 15px;
+border: 1px solid rgba(212, 212, 212, 0.35);
+background: rgba(6, 41, 29, 0.50);
+backdrop-filter: blur(10px);
+}
+
+.inputBg{
+  border-radius: 10px;
+border: 1px solid #2C3D33;
+background: #435C52;
+}
