@@ -51,7 +51,7 @@ export default function TokenActionComp() {
   return (
     <>
       {selectedWindowComponent == "tokenActions" && (
-        <section className="z-30 absolute h-[75dvh] w-[25rem] top-[9rem] left-10 tokenActionBg flex flex-col">
+        <section className="z-30 absolute h-[70dvh] lg:h-[80dvh] w-[91dvw] lg:w-[25rem] top-[8rem] lg:left-9 left-1/2 -translate-x-1/2 lg:-translate-x-0 tokenActionBg flex flex-col">
           <div className="h-[2rem] rounded-t-xl px-3 py-1 blueText bg-[#06291D80]/50 flex flex-row items-center justify-between">
             <h3>BMT</h3>
             <button

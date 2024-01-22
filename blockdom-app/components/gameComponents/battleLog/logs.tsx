@@ -62,7 +62,8 @@ export default function Logs() {
     
   }, [chosenLand,battleLogs]);
   return (
-    <>{
+    <>
+    {
       battleLogTab == "Ongoing" && dispatchedArmies?.map((dispatchLog,key) => (
             <OngoingLog key={key} dispatchedArmy={dispatchLog} dispatchIndex={key}/>
         ))

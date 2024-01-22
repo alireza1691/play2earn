@@ -97,11 +97,14 @@ export type ArmyType = {
 
 export type DispatchedArmy = {
   amounts: BigNumber[];
+  isReturning: boolean;
+  lootedAmounts: [BigNumber, BigNumber];
+  remainedArmyByPercent: BigNumber;
   remainedTime: BigNumber;
   target: BigNumber;
-  lootedAmounts: [BigNumber, BigNumber];
-  isReturning: boolean;
-  remainedArmybyPercent: BigNumber;
+  totalArmyAmount: BigNumber
+  totalHp: BigNumber
+  totalPower: BigNumber
 };
 
 
