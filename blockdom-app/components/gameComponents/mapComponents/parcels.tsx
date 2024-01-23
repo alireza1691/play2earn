@@ -11,11 +11,15 @@ import {
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useApiData } from "@/context/api-data-context";
 import { useMapContext } from "@/context/map-context";
+import Twlvl1 from "@/svg/mapIcons/twlv1";
+import { useAddress } from "@thirdweb-dev/react";
+import Twlvl1red from "@/svg/mapIcons/twlv1red";
 
 export default function Parcels() {
   const { setSelectedWindowComponent } = useSelectedWindowContext();
   const { apiData, loading , mintedLands} = useApiData();
   const { selectedParcel, setSelectedLand } = useMapContext();
+  const address = useAddress()
 
   const getOwnerFromEvents = (tokenId: number): string => {
     let isPresent: boolean;
@@ -117,7 +121,7 @@ export default function Parcels() {
                         key == 4
                           ? ` cursor-pointer  hover:backdrop-brightness-50 active:backdrop-brightness-110 backdrop-brightness-75 ${
                               getOwnerFromEvents(land) != zeroAddress &&
-                              "bg-black/10"
+                              "bg-black/20 "
                             } `
                           : `cursor-default ${
                               getOwnerFromEvents(land) != zeroAddress &&
@@ -126,9 +130,12 @@ export default function Parcels() {
                       }   transition-all duration-100 text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                     >
                       { getOwnerFromEvents(land) != zeroAddress && (
-                        <div className="flex w-4/5 h-4/5 border-3 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-gray-800/20 border-gray-800/50 rounded-md absolute  ">
-                          <div className="!w-[10px] !h-[10px] p-2 rounded-sm mt-auto mb-auto mr-auto ml-auto bg-gray-700/60"></div>
-                        </div>
+                        // <div className="flex w-4/5 h-4/5 border-3 left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 bg-gray-800/20 border-gray-800/50 rounded-md absolute  ">
+                        //   <div className="!w-[10px] !h-[10px] p-2 rounded-sm mt-auto mb-auto mr-auto ml-auto bg-gray-700/60"></div>
+                        // </div>
+                        <>
+                        {getOwnerFromEvents(land) != zeroAddress &&    <div className=" absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">{getOwnerFromEvents(land).toUpperCase() == address?.toUpperCase() ?  <Twlvl1/> :<Twlvl1red/> }</div>}
+                        </>
                       )}
                       {/* {
                       key == 4 &&
@@ -180,9 +187,11 @@ export default function Parcels() {
                           getOwnerFromEvents(land) != zeroAddress &&
                           "bg-black/30 "
                         }  cursor-default`
-                    } text-black text-[8px] h-[52px] w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
+                    } relative text-white/40 p-1 text-[8px] h-[52px] w-[52px] 2xl:h-[70px] 2xl:w-[70px]  shadow-md `}
                   >
-                    {key == 4 && land}
+                    {getOwnerFromEvents(land) != zeroAddress &&    <div className=" absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">{getOwnerFromEvents(land).toUpperCase() == address?.toUpperCase() ?  <Twlvl1/> :<Twlvl1red/> }</div>}
+                    <p className=" absolute bottom-0 left-1/2 -translate-x-1/2">{key == 4 && land}</p>
+                    
                   </a>
                 ))}
               </div>

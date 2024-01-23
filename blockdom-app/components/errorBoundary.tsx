@@ -43,8 +43,8 @@ class GlobalErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBound
   render(): React.ReactNode {
     if (this.state.hasError) {
       return(
-         
-      <div className="flex flex-grow">
+  
+      <div className="flex flex-grow ">
       {" "}
       <div className="flex ml-auto mr-auto w-12 h-auto  mt-auto mb-auto ">
         <FailedIcon />
@@ -53,6 +53,7 @@ class GlobalErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBound
         )}
       </div>
     </div>
+
       )
     }
 

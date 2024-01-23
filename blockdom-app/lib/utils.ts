@@ -268,3 +268,35 @@ export const gateImage = (level: number) => {
   return `/buildings/walls/Gate${level}.png`;
 };
 
+
+export function shortenAddress(address: string) {
+  const firstFour = address.slice(0, 4);
+  const lastFour = address.slice(-4);
+  return `${firstFour}...${lastFour}`;
+}
+
+
+export const getOwnerFromEvents = (tokenId: number, lands:MintedLand[]): string => {
+  let isPresent: boolean;
+  let ownerAddress: string = zeroAddress;
+  if (!lands) {
+    isPresent = false;
+  } else {
+    isPresent = lands.some(
+      (item) => item.tokenId === tokenId.toString()
+    );
+    if (isPresent) {
+      const land = lands.find(
+        (item) => item.tokenId === tokenId.toString()
+      );
+      ownerAddress = land?.owner ?? ownerAddress;
+    }
+  }
+  return ownerAddress;
+};
+
+export const tokenIdAsString = (tokenIdAsNumber:number ) => {
+  const middleIndex = Math.ceil(tokenIdAsNumber.toString().length / 2);
+  const formattedString = tokenIdAsNumber.toString().slice(0, middleIndex) + " " + tokenIdAsNumber.toString().slice(middleIndex);
+  return formattedString
+}

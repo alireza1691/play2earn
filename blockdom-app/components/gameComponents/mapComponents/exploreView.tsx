@@ -29,11 +29,12 @@ export default function ExploreView() {
       {selectedParcel && (
         <>
           {/* <MapHandler setIsParcelSelected={setIsParcelSelected} /> */}
-          <div className="z-50 sm:z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center flex justify-center ">
+          <div className="hidden md:flex z-50 sm:z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center justify-center ">
             <h3 className="text-[#98FBD7] -z-10">
               {selectedParcel.x}-{selectedParcel.y}
             </h3>
           </div>
+          <h3 className="blueText absolute top-[5.5rem] right-10 md:hidden z-50">   {selectedParcel.x}-{selectedParcel.y}</h3>
         </>
       )}
 

@@ -1,8 +1,10 @@
 "use client"
+import { useApiData } from "@/context/api-data-context";
 import { useMapContext } from "@/context/map-context";
 import { warriorsInfo } from "@/lib/data";
 import { townPInst } from "@/lib/instances";
-import { zeroAddress } from "@/lib/utils";
+import { MintedLand } from "@/lib/types";
+import { getOwnerFromEvents, shortenAddress, zeroAddress } from "@/lib/utils";
 import CoinIcon from "@/svg/coinIcon";
 import CopyIcon from "@/svg/copyIcon";
 import FoodIcon from "@/svg/foodIcon";
@@ -21,13 +23,10 @@ type EnemyInfoType = {
 export default function AttackTargetInfo() {
 
    const {selectedLand} = useMapContext()
+   const { mintedLands} = useApiData();
    const [info,setInfo] = useState< EnemyInfoType | null >()
 
-   function shortenAddress(address: string) {
-    const firstFour = address.slice(0, 4);
-    const lastFour = address.slice(-4);
-    return `${firstFour}...${lastFour}`;
-  }
+
 
    useEffect(() => {
     const getInfo =async () =>{
@@ -57,11 +56,15 @@ export default function AttackTargetInfo() {
           <CopyIcon />
         </p>
       </div> */}
+      <div className="bg-[#06291D80]/50  w-full rounded-lg border border-[#98FBD7]/70">
+        <div className=" flex flex-row items-center gap-3 p-3"><WalletIcon/><p className=" blueText !text-[14px] !font-normal">Owner: {selectedLand && mintedLands && shortenAddress(getOwnerFromEvents(selectedLand.coordinate, mintedLands))}</p></div>
+
+      </div>
       <div className=" flex flex-row gap-4 mt-4">
         <div className="goodsBalanceKeeper balBg w-1/2 darkShadow flex flex-row items-center ga-4"><CoinIcon/> <h3>{info && info.gold || 0 }</h3></div>
         <div className="goodsBalanceKeeper balBg w-1/2 darkShadow flex flex-row items-center ga-4"><FoodIcon/> <h3>{info && info.food || 0 }</h3></div>
       </div>
-      <div className=" border-2 border-black/10 h-fit w-full overflow-hidden overflow-x-scroll custom-scrollbar mt-4  bg-black/10 p-2 rounded-lg ">
+      {/* <div className=" border-2 border-black/10 h-fit w-full overflow-hidden overflow-x-scroll custom-scrollbar mt-4  bg-black/10 p-2 rounded-lg ">
       <div className=" flex flex-row justify-evenly  gap-4   w-fit darkShadow">
         {warriorsInfo.map((warrior, key) => (
           <div key={key} className="cardBg ml-auto mr-auto darkShadow w-max">
@@ -77,7 +80,7 @@ export default function AttackTargetInfo() {
           
         ))}
       </div>
-      </div>
+      </div> */}
     </div>
   );
 }

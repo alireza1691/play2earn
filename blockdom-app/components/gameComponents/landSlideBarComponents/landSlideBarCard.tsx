@@ -36,17 +36,9 @@ export default function LandSlideBarCard() {
       }, [imageUrl, selectedLand,ownedLands]);
     
   return (
-    <div className=" flex justify-center mt- h-[35%] mb-3 flex-shrink ">
+    <div className=" flex justify-center  mb-3 flex-shrink h-[10rem]">
     {imageUrl && (
-      // <div className=" w-auto  h-auto !p-2 cardBg !rounded-lg darkShadow">
-      //   <Image
-      //     src={imageUrl}
-      //     width={256}
-      //     height={364}
-      //     alt="card"
-      //     className=" h-full w-auto "
-      //   />
-      // </div>
+    
       <LandCard tokenId={selectedLand?.coordinate || 0}/>
     )}
   </div>

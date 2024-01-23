@@ -75,7 +75,7 @@ export default function LandSlidebarContent() {
                 <FoodIcon /> {formattedNumber(data?.food || 0)}
               </h3>
             </div>
-            <div className="w-full overflow-x-scroll h-auto p-2 bg-black/20 rounded-md custom-scrollbar">
+            {/* <div className="w-full overflow-x-scroll h-auto p-2 bg-black/20 rounded-md custom-scrollbar">
               <div className="w-max  flex-grow relative flex flex-row   p-1 sm:p-0 rounded-t-md  gap-4 mr-auto ml-auto sm:h-full  ">
                 {warriorsInfo.map((warrior, key) => (
                   <div
@@ -95,7 +95,7 @@ export default function LandSlidebarContent() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         // </div>
       )}

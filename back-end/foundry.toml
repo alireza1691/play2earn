@@ -4,3 +4,13 @@ out = "out"
 libs = ["lib"]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+remappings = ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts']
+
+[fuzz]
+runs = 600
+max-test-rejects = 65536
+seed = "0x3e8"
+dictionary-weight = 40
+include-storage = true
+include-push-bytes = true

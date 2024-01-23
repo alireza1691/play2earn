@@ -19,7 +19,7 @@ export default function BottomBar() {
   return (
     <>
     {currentRoute != "/" && 
-      <div className=" lg:hidden w-[94dvw] rounded-lg left-1/2 -translate-x-1/2 z-30 h-[4rem] fixed bottom-2  bottomBar flex flex-row  justify-around ">  <a
+      <div className=" lg:hidden w-[94dvw] rounded-lg left-1/2 -translate-x-1/2 z-50 h-[4rem] fixed bottom-2  bottomBar flex flex-row  justify-around backdrop-blur-sm ">  <a
       onClick={() => {setSelectedParcel(null) , setSelectedLand(null)}}
       className={`${
         selectedParcel == null

@@ -14,7 +14,7 @@ export default function Explore() {
 
       <div className=" flex flex-row justify-center">
         <Slidebar/>
-        <Attack />
+    
       </div>
     </div>
   );

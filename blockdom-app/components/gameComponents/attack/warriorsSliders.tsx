@@ -25,7 +25,7 @@ export default function WarriorsSliders() {
   return (
     <>
     {inViewLand && 
-    <div className=" flex flex-col gap-1 flex-grow md:mt-6 w-full max-w-[17.5rem] h-[20dvh] max-h-[20dvh] sm:max-h-[25rem] px-2 !sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
+    <div className=" flex flex-col gap-1 flex-shrink md:mt-6 w-full max-w-[17.5rem] h-auto  sm:max-h-[25rem] px-2 !sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
       {warriorsInfo.map((warrior,key) => (
     <div key={key} className=" flex flex-row relative ">
     <Image
