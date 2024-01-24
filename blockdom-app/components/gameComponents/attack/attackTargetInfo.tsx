@@ -4,7 +4,7 @@ import { useMapContext } from "@/context/map-context";
 import { warriorsInfo } from "@/lib/data";
 import { townPInst } from "@/lib/instances";
 import { MintedLand } from "@/lib/types";
-import { getOwnerFromEvents, shortenAddress, zeroAddress } from "@/lib/utils";
+import { formattedNumber, getOwnerFromEvents, shortenAddress, zeroAddress } from "@/lib/utils";
 import CoinIcon from "@/svg/coinIcon";
 import CopyIcon from "@/svg/copyIcon";
 import FoodIcon from "@/svg/foodIcon";
@@ -37,7 +37,7 @@ export default function AttackTargetInfo() {
            const goods = landData.goodsBalance
           const army = await townPInst.getArmy(selectedLand.coordinate)
           
-          const infoObj = {gold: formatEther(goods[1]) ,food:  formatEther(goods[0]) ,army: army  }
+          const infoObj = {gold: formattedNumber(goods[1]) ,food:  formattedNumber(goods[0]) ,army: army  }
           setInfo(infoObj)
         } catch (error) {
           console.log(error);

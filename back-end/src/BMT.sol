@@ -8,4 +8,6 @@ contract BMT is ERC20 {
     constructor() ERC20("BMT","Blockdom Token") {
 
     }
+
+
 }
