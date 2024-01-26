@@ -25,7 +25,7 @@ export default function WarriorsSliders() {
   return (
     <>
     {inViewLand && 
-    <div className=" flex flex-col gap-1 flex-shrink md:mt-6 w-full max-w-[17.5rem] h-auto  sm:max-h-[25rem] px-2 !sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2 border-2 border-gray-300/20 rounded-md">
+    <div className=" flex flex-col gap-1 flex-shrink lg:mt-6 w-full max-w-[25rem] max-h-[200px]  lg:max-h-[25rem] px-2 !sm:h-[45%] overflow-y-scroll warriorsSlidersBg py-2  rounded-md">
       {warriorsInfo.map((warrior,key) => (
     <div key={key} className=" flex flex-row relative ">
     <Image
@@ -50,6 +50,9 @@ export default function WarriorsSliders() {
       // className="max-w-md "
       onChangeEnd={(value: SliderValue)=> {updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)}}
      classNames={{
+      // endContent: "text-[#87F0E5]",
+      value:"text-[#87F0E5]" ,
+      label: " text-[#87F0E5] font-semibold",
       base:" text-white",
       filler:"-ml-3 bg-[#9BFCD4] rounded-l-full ",
       track:" bg-gray-400/30 darkShadow border border-gray-300/30",
@@ -59,7 +62,7 @@ export default function WarriorsSliders() {
      renderThumb={(props) => (
       <div
         {...props}
-        className="group p-[2px] top-1/2 bg-gray-200/70 border-small border-default-200 dark:border-gray-300/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
+        className="group p-[1px] top-1/2 bg-[#87F0E5] border-small border-default-200 dark:border-gray-300/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
       >
         <span className="transition-transform bg-[#9BFCD4] shadow-small  rounded-full w-5 h-5 block group-data-[dragging=true]:scale-90" />
       </div>
@@ -88,7 +91,7 @@ export default function WarriorsSliders() {
      renderThumb={(props) => (
       <div
         {...props}
-        className="group p-[2px] top-1/2 bg-gray-200/70 border-small border-default-200 dark:border-gray-300/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
+        className="group p-[2px] top-1/2 bg-[#87F0E5] border-small border-default-200 dark:border-gray-300/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
       >
         <span className="transition-transform bg-[#9BFCD4] shadow-small  rounded-full w-5 h-5 block group-data-[dragging=true]:scale-90" />
       </div>

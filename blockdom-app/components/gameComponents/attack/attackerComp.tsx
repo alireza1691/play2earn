@@ -72,7 +72,7 @@ export default function AttackerComp() {
   const WideScreen = () => {
     return (
       <>
-        <div className="relative hidden md:flex flex-col gap-3 items-center w-full px-4 md:px-1 md:w-[35%] max-w-[22.5rem] pb-[3rem] ">
+        <div className="relative hidden lg:flex flex-col gap-3 items-center w-full px-4 lg:px-1 lg:w-[35%] max-w-[22.5rem] pb-[3rem] ">
           <div className="flex flex-col  max-h-[20rem] w-auto relative">
             <LandCard tokenId={Number(chosenLand?.tokenId)} />
             <div className=" bottom-0 absolute w-full ">
@@ -90,7 +90,7 @@ export default function AttackerComp() {
                 )}
               </ul>
               {dropDown && (
-                <div className="z-10   absolute w-full mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
+                <div className="z-10 max-h-[340px] overflow-y-scroll custom-scrollbar  absolute w-full mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
                   {ownedLands &&
                     ownedLands.map((land, key) => (
                       <li
@@ -147,7 +147,7 @@ export default function AttackerComp() {
     };
 
     return (
-      <div className="relative md:hidden flex flex-col gap-3 items-center px-4  w-full">
+      <div className="relative lg:hidden flex flex-col gap-3 items-center px-4  w-full">
         <div className=" w-full justify-center">
           <h2 className="darkGreenBg blueText p-2 w-full text-center">
             Target land
@@ -228,6 +228,52 @@ export default function AttackerComp() {
             <p>{ info?.food}</p>
           </div>
         </div>
+        <div className=" w-full justify-center">
+          <h2 className="darkGreenBg blueText p-2 w-full text-center">
+            Your land
+          </h2>
+        </div>
+        <div className=" flex flex-row gap-3 w-full">
+        <div className="w-[50%] ml-auto mr-auto flex flex-col">
+          <h3 className=" p-1 ml-1 !text-white/60">Select your army:</h3>
+          <WarriorsSliders/>
+        </div>
+        <div className="w-[50%] flex flex-col">
+        <h3 className=" p-1 ml-1 !text-white/60">Select your land:</h3>
+        <div className=" w-full relative">
+              <ul
+                onClick={() => setDropDown(!dropDown)}
+                className={`${
+                  dropDown ? " " : "bg-[#06291D]/50"
+                } transition-all active:opacity-60 ring-gray-600 group  cursor-pointer flex flex-row justify-between items-center bg-[#06291D]/50 text-[#98FBD7] font-medium text-[16px] w-full px-6 py-3 rounded-[0.5rem] backdrop-blur-sm border border-[#87F0E599]/50`}
+              >
+                {chosenLand?.tokenId}
+                {dropDown ? (
+                  <IoIosArrowUp className="  group-active:-translate-y-1" />
+                ) : (
+                  <IoIosArrowDown className=" group-active:translate-y-1" />
+                )}
+              </ul>
+              {dropDown && (
+                <div className="z-10  max-h-[380px] overflow-y-scroll custom-scrollbar absolute w-full mt-2 bg-gradient-to-r from-[#34594B] to-[#213830] rounded-lg border border-[#D4D4D4]/20">
+                  {ownedLands &&
+                    ownedLands.map((land, key) => (
+                      <li
+                        key={key}
+                        onClick={() => {
+                          setChosenLand(land), setDropDown(false);
+                        }}
+                        className=" text-white cursor-pointer px-3 py-2 hover:bg-green-100/10 rounded-lg"
+                      >
+                        {Number(land.tokenId)}
+                      </li>
+                    ))}
+                </div>
+              )}
+            </div>
+        </div>
+        </div>
+      
       </div>
     );
   };

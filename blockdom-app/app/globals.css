@@ -159,14 +159,7 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   padding-top: 0.2rem;
 }
 .warriorsSlidersBg {
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.6),
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.6)
-  );
+@apply bg-[#06291D80]/50 border border-[#87F0E599]/60
 }
 .warriorsGridBg {
   background: linear-gradient(

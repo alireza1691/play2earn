@@ -105,7 +105,7 @@ export default function Navbar() {
       console.log(address);
       
       if (address  && mintedLands) {
-        console.log("minted lands an addres fetched. getting in view lands...");
+        console.log("minted lands and address fetched. getting in view lands...");
         
         const ownedl = getOwnedLands(mintedLands, address);
         setOwnedLands(ownedl);
