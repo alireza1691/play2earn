@@ -23,7 +23,7 @@ export default function SelectedBuilding() {
           selectedItem &&
           activeMode &&
           "!-left-[50rem]"
-        } !z-30 transition-all !flex-shrink-0 flex flex-col buildingWindow`}
+        } !z-100 transition-all !flex-shrink-0 flex flex-col buildingWindow`}
       >
         <BuildingWindowHeader />
         <BuildingWindowImage />

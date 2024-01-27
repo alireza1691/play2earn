@@ -76,7 +76,7 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
   @apply absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col
 }
 .buildingWindow {
-  @apply fixed sm:left-10 top-[4.1rem] sm:top-24 z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80dvh] max-h-[80rem] bg-[#21302A]/60 backdrop-blur-sm;
+  @apply  fixed sm:left-10 top-[4.5rem]  sm:top-[8rem] z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80dvh] sm:h-[75dvh] max-h-[80rem] bg-[#21302A]/60 backdrop-blur-sm;
 }
 .greenButton {
   @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
