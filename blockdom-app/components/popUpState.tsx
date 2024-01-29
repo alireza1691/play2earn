@@ -90,7 +90,7 @@ export default function PopUpState() {
           </div>
         </div>
       )}{isUserDataLoading && address 
-        && pathname == "/myLand"
+        && pathname.includes("myLand") 
          && (
           <div className=" popUpStatus">
             <div className="flex flex-grow relative">

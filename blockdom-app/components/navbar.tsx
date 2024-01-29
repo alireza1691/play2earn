@@ -26,11 +26,10 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   // const [isTestnet,setIsTestnet] = useState()
   const {
-
     mintedLands,
     buildedResourceBuildings,
 
-    loading
+    loading,
   } = useApiData();
   const {
     setOwnedLands,
@@ -39,34 +38,35 @@ export default function Navbar() {
     inViewLand,
     chosenLand,
     setChosenLand,
- setIsUserDataLoading,setBMTBalance,
- landUpdateTrigger,setLandUpdateTrigger
+    setIsUserDataLoading,
+    setBMTBalance,
+    landUpdateTrigger,
+    setLandUpdateTrigger,
   } = useUserDataContext();
   const { setSelectedParcel, setSelectedLand, selectedParcel } =
     useMapContext();
   const address = useAddress();
-  const chainId = useChainId()
+  const chainId = useChainId();
 
   const { theme, toggleTheme } = useTheme();
 
   const currentRoute = usePathname();
- 
-    const isTestnet = currentRoute.includes("/testnet/");
 
- 
+  const isTestnet = currentRoute.includes("/testnet/");
+
   const handleInViewLand = async (land: MintedLand) => {
-  
     try {
-      
+      console.log(townPInst);
+
       const defaultLandData: landDataResType = await townPInst.getLandIdData(
         Number(land.tokenId)
       );
-      console.log("instances fetched");
+
+      console.log("instance fetched");
       const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(
         Number(land.tokenId)
       );
-      
-      
+
       const warriors = await townPInst.getArmy(Number(land.tokenId));
       const defaultLand: InViewLandType = {
         tokenId: Number(land.tokenId),
@@ -80,7 +80,7 @@ export default function Navbar() {
         ],
         buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
         remainedBuildTime: remainedWorkerBusyTime,
-        army: warriors
+        army: warriors,
       };
       setInViewLand(defaultLand);
       console.log("default land:", defaultLand);
@@ -90,57 +90,58 @@ export default function Navbar() {
           Number(land.tokenId)
         );
         setBuildedResBuildings(resBildingsOfDefaultLand);
-
       }
-      setIsUserDataLoading(false)
+      setIsUserDataLoading(false);
     } catch (error) {
       console.log("We have a trouble with getting inViewLand");
-      
     }
-  
   };
 
   useEffect(() => {
     const data = async () => {
       console.log(address);
-      
-      if (address  && mintedLands) {
-        console.log("minted lands and address fetched. getting in view lands...");
-        
+
+      if (address && mintedLands) {
+        console.log(
+          "minted lands and address fetched. calling smart contract view funncst to get in view land..."
+        );
+
         const ownedl = getOwnedLands(mintedLands, address);
         setOwnedLands(ownedl);
+
         if (!chosenLand && ownedl.length > 0) {
           setChosenLand(ownedl[0]);
         }
-        if (isTestnet) { 
+        if (isTestnet) {
           if (!inViewLand && !chosenLand) {
             console.log("1");
-            await handleInViewLand(ownedl[0])
-          
+            await handleInViewLand(ownedl[0]);
           }
           if (landUpdateTrigger && chosenLand) {
             console.log("land data triggered");
-            await handleInViewLand(ownedl[0])
+            await handleInViewLand(ownedl[0]);
             console.log("land data updated by trigger");
-            setLandUpdateTrigger(false)
+            setLandUpdateTrigger(false);
           }
-          if (chosenLand && inViewLand && Number(chosenLand.tokenId) != inViewLand.tokenId) {  
-            setIsUserDataLoading(true)
-            await handleInViewLand(chosenLand)
-           
+          if (
+            chosenLand &&
+            inViewLand &&
+            Number(chosenLand.tokenId) != inViewLand.tokenId
+          ) {
+            setIsUserDataLoading(true);
+            await handleInViewLand(chosenLand);
           }
-        }  else {
-          setInViewLand(null)
-          setIsUserDataLoading(false)
+        } else {
+          setInViewLand(null);
+          setIsUserDataLoading(false);
         }
-    
       }
       if (!address) {
         setOwnedLands(null);
       }
-      if(address){
-        const connectedWalletBal = await townPInst.getBMTbalance(address)
-        setBMTBalance(connectedWalletBal)
+      if (address) {
+        const connectedWalletBal = await townPInst.getBMTbalance(address);
+        setBMTBalance(connectedWalletBal);
       }
     };
     data();
@@ -150,15 +151,15 @@ export default function Navbar() {
     chosenLand,
     inViewLand,
     chainId,
-    landUpdateTrigger
+    landUpdateTrigger,
   ]);
 
   return (
     <>
       <header className=" z-50 relative">
-        <div className="fixed  w-full  h-[4rem] from-[#A9FFDE] to-[#7ECFB3] bg-gradient-to-r dark:from-[#34594B] dark:to-[#213830]  top-0 z-30  shadow-md md:shadow-none"></div>
+        <div className="fixed  w-full  h-[4rem] from-[#A9FFDE] to-[#7ECFB3] bg-gradient-to-r dark:from-[#34594B] dark:to-[#213830]  top-0 z-900  shadow-md md:shadow-none"></div>
         <nav
-          className="fixed mx-auto top-0 flex   items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-30 "
+          className="fixed mx-auto top-0 flex   items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-800 "
           aria-label="Global"
         >
           <div className="flex  flex-row items-center gap-4  ">
@@ -171,11 +172,13 @@ export default function Navbar() {
             >
               {theme === "light" ? <DarkLogo /> : <LightLogo />}
             </a>
-            
-            <div className="hidden md:flex"> <ChainIdButton/></div>
-           
+
+            <div className="hidden md:flex">
+              {" "}
+              <ChainIdButton />
+            </div>
           </div>
-   
+
           {currentRoute == "myLand" && <BalanceContainer />}
 
           <div className=" ml-3 md:ml-5 flex md:hidden   ">
@@ -193,13 +196,15 @@ export default function Navbar() {
           {currentRoute === "/" ? <NavbarLandingItems /> : <NavbarGameItems />}
 
           <div className=" !hidden md:!flex   justify-center items-center gap-3">
-            {currentRoute == "/" &&   <button
-              onClick={toggleTheme}
-              className="  bg-[#06291D] text-white bg-opacity-50  w-[2.5rem] h-[2.5rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
-            >
-              {theme === "light" ? <BsSun /> : <BsMoon />}
-            </button> }
-          
+            {currentRoute == "/" && (
+              <button
+                onClick={toggleTheme}
+                className="  bg-[#06291D] text-white bg-opacity-50  w-[2.5rem] h-[2.5rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
+              >
+                {theme === "light" ? <BsSun /> : <BsMoon />}
+              </button>
+            )}
+
             <ConnectWallet
               className=" !bg-[#06291D]  !bg-opacity-50 !p-3 "
               modalSize="wide"

@@ -1,12 +1,14 @@
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react'
 import { IoMdDownload } from 'react-icons/io';
 
 export default function NavbarLandingItems() {
 
+  const pathname = usePathname()
+
     const router = useRouter()
   return (
-    <div className="hidden  md:flex md:gap-x-10  translate-x-[30%] ">
+    <div className={`hidden  md:flex md:gap-x-10 ${pathname == "/" ? "" : "translate-x-[30%]"} `}>
           
     <a
       onClick={() => {
@@ -17,8 +19,10 @@ export default function NavbarLandingItems() {
       Explore
     </a>
     <a
-      href="#"
-      className="text-sm transition-all hover:bg-black/10 p-2 rounded-lg  font-semibold leading-6 text-gray-800 dark:text-gray-50"
+      onClick={() => {
+        router.push("/dashboard");
+      }}
+      className="text-sm transition-all hover:bg-black/10 p-2 rounded-lg cursor-pointer font-semibold leading-6 text-gray-800 dark:text-gray-50"
     >
       Dashboard
     </a>

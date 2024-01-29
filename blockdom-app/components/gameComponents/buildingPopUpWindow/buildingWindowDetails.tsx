@@ -298,7 +298,7 @@ const TownhallContainer = () => {
   const [isBuy, setIsBuy] = useState(true);
   const [isGoldSelected, setIsGoldSelected] = useState(true);
   const [activeInput, setActiveInput] =
-    useState<ActiveInputType>("Deposit/Withdraw");
+    useState<ActiveInputType>("Buy/Sell");
     const [approvedAmount,setApprovedAmount ] = useState(0)
     const address = useAddress()
 
@@ -386,7 +386,7 @@ const TownhallContainer = () => {
         {!upgradeMode && !activeMode && (
           <>
           
-          <div className={`flex flex-col  p-1 rounded-md ${ activeInput == "Deposit/Withdraw"? "border border-[#98fbd7]" : "hover:border hover:border-[#98fbd7] brightness-50"}`}>
+          {/* <div className={`flex flex-col  p-1 rounded-md ${ activeInput == "Deposit/Withdraw"? "border border-[#98fbd7]" : "hover:border hover:border-[#98fbd7] brightness-50"}`}>
               <a onClick={() => setActiveInput("Deposit/Withdraw")} className="blueText mt-3 text-center cursor-pointer darkGreenBg p-2 justify-around">
               Deposit/Withdraw
               </a>
@@ -410,7 +410,7 @@ const TownhallContainer = () => {
               <p className=" text-[12px] text-white/70">
                 Balance: {BMTBalance && formattedNumber(BMTBalance)}
               </p>
-            </div>
+            </div> */}
             <div className={`mt-2 flex flex-col  p-1 rounded-md ${ activeInput == "Buy/Sell" ? "border border-[#98fbd7]" : "hover:border hover:border-[#98fbd7] brightness-50"}`}>
               <a onClick={() => setActiveInput("Buy/Sell")} className="blueText mt-3 text-center cursor-pointer darkGreenBg p-2 justify-around">
                 Buy/Sell

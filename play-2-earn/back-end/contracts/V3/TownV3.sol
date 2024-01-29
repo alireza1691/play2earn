@@ -741,23 +741,31 @@ contract Town is Barracks{
 
 
     function finishNow(uint256 landTokenId) external onlyLandOwner(landTokenId){
-        uint256 remainedTimestamp;
-        uint256 requiredGold;
-        if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
-            remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
-            requiredGold = (remainedTimestamp / 1 minutes) * VAR.WorkerGoldPerMinute();
-            if (landData[landTokenId].goodsBalance[0] >= requiredGold) {
-                landData[landTokenId].goodsBalance[1] -= requiredGold;
+        uint256 finishCost = calculateFinishCost(landTokenId);
+        if (finishCost > 0) {
+
+            if (landData[landTokenId].goodsBalance[0] >= finishCost) {
+                landData[landTokenId].goodsBalance[1] -= finishCost;
                 landData[landTokenId].latestBuildTimeStamp = block.timestamp - 1 minutes;
-                totalExistedGood[1] -= requiredGold;
+                totalExistedGood[1] -= finishCost;
             } else {
                 revert InsufficientGoods(); 
             }
         } else {
             revert AlreadyFinished();
         }
-        emit GoodsConsumption( [0,requiredGold], landTokenId);
+        emit GoodsConsumption( [0,finishCost], landTokenId);
 
+    }
+
+    function calculateFinishCost(uint256 landTokenId) view public returns (uint256 requiredGold) {
+        if (landData[landTokenId].latestBuildTimeStamp > block.timestamp) {
+        uint256 remainedTimestamp = landData[landTokenId].latestBuildTimeStamp - block.timestamp;
+        requiredGold = (remainedTimestamp / 1 minutes) * VAR.WorkerGoldPerMinute();
+        } else {
+            requiredGold = 0;
+        }
+   
     }
 
     // function recruit(uint256 landTokenId, uint256 typeIndex, uint256 amount) external onlyLandOwner(landTokenId){

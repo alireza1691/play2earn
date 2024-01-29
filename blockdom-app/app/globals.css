@@ -28,6 +28,15 @@ body{
 .z-500 {
   z-index: 500 !important;
 }
+.z-600 {
+  z-index: 600 !important;
+}
+.z-700 {
+  z-index: 700 !important;
+}
+.z-800 {
+  z-index: 800 !important;
+}
 
 .lightBlue {
   color: #96f9d9;
@@ -71,6 +80,14 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
   height: 7rem;
   width: 7rem;
   filter: blur(5px);
+}
+.settingsButton{
+  border-radius: 41px;
+  background: linear-gradient(173deg, rgba(94, 207, 164, 0.50) 3.83%, rgba(33, 56, 48, 0.50) 97.15%);
+}
+.logOutButton{
+  border-radius: 41px;
+background: rgba(168, 75, 75, 0.50);
 }
 .popUpStatus{
   @apply absolute z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col

@@ -3,13 +3,14 @@ import { useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { Sepolia, Arbitrum ,Polygon} from "@thirdweb-dev/chains";
 import React, { useState } from "react";
 import Router from "next/router";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function ChainIdButton() {
   const [isNotifActive, setIsNotifActive] = useState(false);
   const chainId = useChainId();
   const switchChain = useSwitchChain();
   const router = useRouter()
+  const currentRoute = usePathname()
 
   const switchMainnet = async () => {
     try {
@@ -41,12 +42,13 @@ export default function ChainIdButton() {
   // !bg-[#06291D]/30 
   return (
     <>
-      <div className="flex flex-col  top-[0.45rem] right-[14rem] ">
+    { currentRoute != "/" &&
+      <div className="flex flex-col  top-[0.45rem] right-[14rem] z-400">
         <button
           onClick={() => setIsNotifActive(!isNotifActive)}
           className={`${
             isNotifActive ? "!bg-black/20  " :" hover:brightness-110 "
-          } border border-[#98FBD7] text-[14px] text-[#98FBD7] !bg-opacity-50 py-[12px] px-3 rounded-xl `}
+          } border border-[#98FBD7] text-[14px] text-[#98FBD7] !bg-opacity-50 py-[12px] px-3 rounded-xl min-w-[8rem]`}
         >
           {chainIdStatus()}
         </button>
@@ -56,7 +58,7 @@ export default function ChainIdButton() {
           }`}
         >
           <div
-            className={` darkShadow w-[12rem] absolute py-2 px-1 chainIdDropDownBg rounded-lg   max-h-40 gap-1 flex  flex-col`}
+            className={` darkShadow w-[12rem]  absolute py-2 px-1 chainIdDropDownBg rounded-lg   max-h-40 gap-1 flex  flex-col`}
           >
             <a onClick={() => {switchMainnet(),router.push("/explore"),setIsNotifActive(false)}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
               Polygon (Mainnet)
@@ -67,7 +69,7 @@ export default function ChainIdButton() {
           </div>
         </div>
       </div>
-     
+     }
     </>
   );
 }
