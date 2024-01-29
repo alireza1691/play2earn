@@ -157,9 +157,9 @@ export default function Navbar() {
   return (
     <>
       <header className=" z-50 relative">
-        <div className="fixed  w-full  h-[4rem] from-[#A9FFDE] to-[#7ECFB3] bg-gradient-to-r dark:from-[#34594B] dark:to-[#213830]  top-0 z-900  shadow-md md:shadow-none"></div>
+        <div className="fixed  w-full  h-[4rem] from-[#A9FFDE] to-[#7ECFB3] bg-gradient-to-r dark:from-[#34594B] dark:to-[#213830]  top-0 z-100  shadow-md md:shadow-none"></div>
         <nav
-          className="fixed mx-auto top-0 flex   items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-800 "
+          className="fixed mx-auto top-0 flex   items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-100 "
           aria-label="Global"
         >
           <div className="flex  flex-row items-center gap-4  ">

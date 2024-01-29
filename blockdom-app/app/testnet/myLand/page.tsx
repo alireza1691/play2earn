@@ -6,12 +6,14 @@ import Image from "next/image";
 import React from "react";
 import ToggleLand from "@/components/gameComponents/townComponents/toggleLand";
 import BottomBar from "@/components/gameComponents/bottomBar";
+import WorkerComp from "@/components/gameComponents/townComponents/workerComp";
 
 export default function MyLand() {
   return (
     <>
       <ToggleLand />
       <Notifications />
+      <WorkerComp/>
       <div className=" w-screen h-screen overflow-hidden relative">
         <div className=" w-[100dvw] h-[100dvh]   overflow-scroll custom-scrollbar  items-center justify-center  relative ">
           <div className=" 2xl:h-[138rem] absolute w-[1920px]    h-[138rem] xl:w-[2560px]  ">

@@ -1,4 +1,5 @@
 "use client";
+import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { formattedNumber } from "@/lib/utils";
@@ -18,6 +19,7 @@ import React from "react";
 export default function BalanceContainer() {
   const { inViewLand, BMTBalance } = useUserDataContext();
   const { setSelectedWindowComponent } = useSelectedWindowContext();
+  const {setSelectedItem} = useSelectedBuildingContext()
 
   const pathname = usePathname();
 
@@ -66,7 +68,7 @@ export default function BalanceContainer() {
             } z-40 flex flex-row absolute top-[80px] justify-around gap-4 w-full px-4 lg:w-auto`}
           >
             <button
-              onClick={() => setSelectedWindowComponent("tokenActions")}
+              onClick={() => {setSelectedWindowComponent("tokenActions"),setSelectedItem(null)}}
               className={`${
                 pathname.includes("myLand")
                   ? "flex-1"
@@ -86,10 +88,10 @@ export default function BalanceContainer() {
                   <CoinIcon />
                   {inViewLand && formattedNumber(inViewLand.goodsBalance[1])}
                 </h3>
-                <h3 className="flex-1 backdrop-blur-sm text-[#87F0E5] font-semibold text-[15px]  lg:w-[10rem]  balBg flex flex-row gap-2 items-center justify-center px-2 py-1 ">
+                <button onClick={() =>{ setSelectedWindowComponent("workerComp"),setSelectedItem(null)}} className="flex-1 backdrop-blur-sm cursor-pointer transition-all hover:bg-white/10 text-[#87F0E5] font-semibold text-[15px]  lg:w-[10rem]  balBg flex flex-row gap-2 items-center justify-center px-2 py-1 ">
                   <HammerIcon />
                   {workerStatus()}
-                </h3>
+                </button>
               </>
             )}
           </div>

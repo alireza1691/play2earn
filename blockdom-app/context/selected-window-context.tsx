@@ -12,7 +12,8 @@ const windowComponentsList = [
     "myLand",
     "battleLog",
     "attackStatus",
-    "tokenActions"
+    "tokenActions",
+    "workerComp"
 ] as const
 
 const tokenCompTabs = [

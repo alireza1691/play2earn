@@ -78,7 +78,7 @@ export default function PopUpState() {
       {isUserDataLoading && address 
       && isLoading() 
        && (
-        <div className=" popUpStatus">
+        <div className=" popUpStatus ">
           <div className="flex flex-grow relative">
             {/* <Spinner color="success" size="lg" className='customSpinner ml-auto mr-auto absolute w-full mt-auto h-full '/> */}
             <div className="flex ml-auto mr-auto w-full h-full  mt-auto mb-auto  absolute ">
