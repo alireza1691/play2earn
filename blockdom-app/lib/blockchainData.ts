@@ -11,3 +11,5 @@ export const landsMainnetAddress = "0x539f6dB158b6663cBB5E05Cc557C03102d873405"
 export const townMainnetAddress= ""
 export const tokenMainnetAddress=""
 
+
+export const landsProxyTestnet = ""

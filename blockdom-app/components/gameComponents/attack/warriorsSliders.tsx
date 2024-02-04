@@ -4,8 +4,8 @@ import { warriors, warriorsInfo } from "@/lib/data";
 import { Slider, SliderValue } from "@nextui-org/react";
 import { Span } from "next/dist/trace";
 import Image from "next/image";
-import React from "react";
-import { isArray, isNumber } from "util";
+import React, { useState } from "react";
+
 
 
 
@@ -14,11 +14,16 @@ export default function WarriorsSliders() {
   const {ownedLands,inViewLand,chosenLand,setChosenLand} = useUserDataContext()
   const {selectedArmy, setSelectedArmy} = useSelectedWindowContext()
 
+  // const updateAmountAtIndex = (index: number, value: number) => {
+  //   setSelectedArmy((prevSelectedArmy) =>
+  //   prevSelectedArmy.map((prevValue, i) => (i === index ? value : prevValue))
+  // );
+
   const updateAmountAtIndex = (index: number, value: number) => {
-    setSelectedArmy((prevSelectedArmy) =>
-    prevSelectedArmy.map((prevValue, i) => (i === index ? value : prevValue))
-  );
-  console.log(selectedArmy);
+    const currentArmy = selectedArmy
+    currentArmy[index] = value
+    setSelectedArmy(currentArmy)
+
   
   };
 
@@ -48,7 +53,10 @@ export default function WarriorsSliders() {
       defaultValue={0}
       getValue={(existedAmount) => `${existedAmount} of ${Number(inViewLand.army[key])}`}
       // className="max-w-md "
-      onChangeEnd={(value: SliderValue)=> {updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)}}
+      onChangeEnd={(value: SliderValue)=> {  updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)
+      }}
+
+      // onChangeEnd={(value: SliderValue)=> {updateAmountAtIndex(key,Array.isArray(value) ? value[0] : value)}}
      classNames={{
       // endContent: "text-[#87F0E5]",
       value:"text-[#87F0E5]" ,
