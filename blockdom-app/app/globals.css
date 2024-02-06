@@ -89,6 +89,9 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
   border-radius: 41px;
 background: rgba(168, 75, 75, 0.50);
 }
+.balanceText{
+  @apply text-[#87F0E5] font-semibold text-[8px] sm:text-[15px]
+}
 .popUpStatus{
   @apply absolute z-500 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col
 }
