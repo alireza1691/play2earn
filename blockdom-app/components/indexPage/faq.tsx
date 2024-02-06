@@ -19,9 +19,10 @@ export default function FAQ() {
       <Image
         className=" left-[2rem] -top-[6rem] md:-top-[4rem] xl:left-[10rem] lg:left-[6rem] 2xl:left-[15%] md:left-[3.75rem]  absolute"
         src={
-          theme == "dark"
-            ? "/svgs/bgArts/questionsLeftUnion.svg"
-            : "/svgs/bgArts/lightQuestionsLeftUnion.svg"
+          // theme == "dark"
+          //   ? 
+            "/svgs/bgArts/questionsLeftUnion.svg"
+            // : "/svgs/bgArts/lightQuestionsLeftUnion.svg"
         }
         width={240}
         height={240}
@@ -30,9 +31,10 @@ export default function FAQ() {
       <Image
         className=" right-0 xl:right-[10rem] lg:right-[6rem] 2xl:right-[15%] top-[27.5rem] md:top-[25rem] lg:top-[22.5rem]  md:bottom-[10rem]  md:right-[3.75rem] -bottom-[5rem] absolute "
         src={
-          theme == "dark"
-            ? "/svgs/bgArts/questionsRightUnion.svg"
-            : "/svgs/bgArts/lightQuestionsRightUnion.svg"
+          // theme == "dark"
+          //   ?
+             "/svgs/bgArts/questionsRightUnion.svg"
+            // : "/svgs/bgArts/lightQuestionsRightUnion.svg"
         }
         width={240}
         height={240}
@@ -41,7 +43,10 @@ export default function FAQ() {
         <div className="z-10 mb-[3rem]">
         <h2
         className={` text-[36px]   text-center font-bold ${
-          theme === "dark" ? "text-white" : "gradientTitle"
+          // theme === "dark" ? 
+          "text-white"
+          //  : 
+          // "gradientTitle"
         }`}
       >
         Frequently Asked Questions
@@ -56,7 +61,7 @@ export default function FAQ() {
 
           
             <AccordionItem
-              className={`relative !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 dark:from-gray-800/40 dark:via-gray-800/40 dark:to-green-700/90 `}
+              className={`relative !bg-transparent !shadow-none bg-gradient-to-l  from-gray-800/40 via-gray-800/40 to-green-700/90 `}
               // className={` !bg-transparent !shadow-none bg-gradient-to-l from-gray-300/70 via-gray-300/70 to-white/80 `}
 
               key={key}
@@ -66,9 +71,10 @@ export default function FAQ() {
        
               <p
                 className={`${
-                  theme === "dark"
-                    ? "text-gray-200"
-                    : "gradientParagraph opacity-80"
+                  // theme === "dark"
+                  //   ? 
+                    "text-gray-200"
+                    // : "gradientParagraph opacity-80"
                 }}`}
               >
                 {" "}

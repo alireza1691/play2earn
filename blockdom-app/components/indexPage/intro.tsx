@@ -50,10 +50,10 @@ export default function Intro() {
               duration: 0.5,
             }}
           >
-            <h1 className="mt-10 text-3xl text-gray-800 dark:text-gray-200 sm:text-[48px] text-center sm:text-left font-bold">
+            <h1 className="mt-10 text-3xl text-gray-200 sm:text-[48px] text-center sm:text-left font-bold">
               Blockdom
             </h1>
-            <p className=" text-center text-[16px] text-gray-600 dark:text-gray-400  font-medium sm:text-left pt-4">
+            <p className=" text-center text-[16px] text-gray-400  font-medium sm:text-left pt-4">
               Blockdom is a P2E game based on digital assets.
               <br></br>
               Let&apos;s start your journey by minting an NFT land and establishing your kingdom on the blockchain.
@@ -139,21 +139,7 @@ export default function Intro() {
           ></Image>
         </div>
       </div>
-      {/* <motion.div
-        initial={{ opacity: 0, scale: 1 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2 }}
-        className=" flex flex-col items-center invisible lg:visible w-full h-[30rem]  absolute mt-[10rem]"
-      >
-        <Image
-          className={`opacity-30 dark:blur-none  rounded-full dark:opacity-70 dark:brightness-140 w-[574px] h-[660px]`}
-          src={theme === "dark" ? `/svg/other/grid.svg` : "/svg/other/lightGrid.svg"}
-          width={300}
-          height={300}
-          objectFit="cover"
-          alt="Grid"
-        />
-      </motion.div> */}
+
     </section>
   );
 }

@@ -55,12 +55,12 @@ export default function NavDropdownMobileScreen({
                 }}
               />
              
-              {currentRoute == "/" &&       <button
+              {/* {currentRoute == "/" &&       <button
                 onClick={toggleTheme}
                 className="   bg-[#06291D] text-white bg-opacity-50  !w-[2.6rem] !h-[2.6rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
               >
                 {theme === "light" ? <BsSun /> : <BsMoon />}
-              </button>}
+              </button>} */}
             
             </div>
          

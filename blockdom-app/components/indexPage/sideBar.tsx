@@ -23,8 +23,8 @@ export default function SideBar() {
             key={index}
             className={` group px-3 py-3 rounded-full transition-all ease-linear text-center cursor-pointer ${
               activeSection === link.name
-                ? "w-36 my-[3rem]  bg-gradient-to-r  -rotate-90 from-[#63AE94]/50 to-[#8EE5C4]/50 hover:from-gray-500/50 hover:to-[#8EE5C4]  dark:from-gray-900/80 dark:to-[#5ECFA4]/40  dark:hover:from-gray-800/80 dark:hover:to-[#5ECFA4]/50 "
-                : " bg-gray-400/70 dark:bg-gray-800/70 hover:bg-gray-700/70 dark:hover:bg-gray-600/70"
+                ? "w-36 my-[3rem]  bg-gradient-to-r  -rotate-90   from-gray-900/80 to-[#5ECFA4]/40  hover:from-gray-800/80 hover:to-[#5ECFA4]/50 "
+                : " bg-gray-800/70 hover:bg-gray-600/70"
             }`}
             onClick={() => {
               setActiveSection(link.name);
@@ -36,11 +36,11 @@ export default function SideBar() {
               <h3 className=" text-[16px] font-medium">
               {link.name}
               </h3>
-              <Image className="  rotate-90" src={theme === "dark" ? link.icon : link.darkIcon} width={20} height={20} alt="icon" />
+              <Image className="  rotate-90" src={link.icon} width={20} height={20} alt="icon" />
               </div>
               
             ) : (
-              <Image src={theme === "dark" ? link.icon : link.darkIcon} width={20} height={20} alt="icon" />
+              <Image src={link.icon } width={20} height={20} alt="icon" />
             )}
           </motion.a>
         ))}

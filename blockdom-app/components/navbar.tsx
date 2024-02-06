@@ -196,14 +196,14 @@ export default function Navbar() {
           {currentRoute === "/" ? <NavbarLandingItems /> : <NavbarGameItems />}
 
           <div className=" !hidden md:!flex   justify-center items-center gap-3">
-            {currentRoute == "/" && (
+            {/* {currentRoute == "/" && (
               <button
                 onClick={toggleTheme}
                 className="  bg-[#06291D] text-white bg-opacity-50  w-[2.5rem] h-[2.5rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
               >
                 {theme === "light" ? <BsSun /> : <BsMoon />}
               </button>
-            )}
+            )} */}
 
             <ConnectWallet
               className=" !bg-[#06291D]  !bg-opacity-50 !p-3 "
