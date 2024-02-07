@@ -38,6 +38,10 @@ body{
   z-index: 800 !important;
 }
 
+.lightGreen {
+ color:  #98FBD7
+}
+
 .lightBlue {
   color: #96f9d9;
 }

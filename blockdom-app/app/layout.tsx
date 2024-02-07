@@ -18,6 +18,9 @@ import PopUpState from "@/components/popUpState";
 import BalanceContainer from "@/components/gameComponents/balanceContainer";
 import TokenActionComp from "@/components/gameComponents/tokenActionComp";
 import Attack from "@/components/gameComponents/attack/attack";
+// import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -32,6 +35,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+
 
 
   return (
@@ -52,6 +57,7 @@ export default function RootLayout({
           <ThemeContextProvider>
             <ActiveSectionContextProvider>
               <BlockchainUtilsContextProvider>
+              <ToastContainer />
                 <PopUpState/>
                 <Navbar/>
                 <BalanceContainer/>
@@ -59,6 +65,7 @@ export default function RootLayout({
                 <Attack/>
                 {children}
                 <BottomBar/>
+            
                 </BlockchainUtilsContextProvider>
             </ActiveSectionContextProvider>
           </ThemeContextProvider>

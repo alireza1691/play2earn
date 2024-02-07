@@ -13,7 +13,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 export default function PopUpState() {
-  const { setTransactionState, transactionState, txError, setReloadHandler } =
+  const { setTransactionState, transactionState, txError, setReloadHandler, message } =
     useBlockchainStateContext();
   const { isUserDataLoading,setLandUpdateTrigger } = useUserDataContext();
   const {setApiTrigger} = useApiData()
@@ -41,7 +41,12 @@ export default function PopUpState() {
           "Transaction failed. Please try again or contact support.";
       }
       if (transactionState == "confirmed") {
-        titleString = "Transaction submitted";
+        if (message == "Land minted successfully !") {
+          titleString = "Land minted successfully !";
+        } else {
+          titleString = "Transaction submitted";
+        }
+
       }
       if (transactionState == "connectionRejected") {
         titleString =
@@ -110,6 +115,7 @@ export default function PopUpState() {
           <h3 className="px-[10%]  mt-4 text-center !text-white font-semibold">
             {title()}
           </h3>
+          {message == "Land minted successfully !" && <h3 className="px-[10%]  mt-4 text-center !text-white font-semibold">Visit <a className=" hover:text-[#98FBD7] underline cursor-pointer" href="/testnet/myLand">My land</a> </h3>}
           {transactionState == "txRejected" && (
             <div className="flex flex-grow">
               {" "}

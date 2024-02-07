@@ -13,6 +13,8 @@ type BlockchainStateContextProviderProps = {
 
 type BlockchainStateContextType = {
     // errorMsg: string | null,
+    message: string | null
+    setMessage: React.Dispatch<React.SetStateAction<string | null>>,
     txError: TxError | null,
     setTxError: React.Dispatch<React.SetStateAction<TxError | null>>,
     transactionState: TxStateType | null,
@@ -27,10 +29,11 @@ export default function BlockchainStateContextProvider({children}:BlockchainStat
     const [txError, setTxError] = useState<any | null>(null);
     const [transactionState, setTransactionState] = useState<TxStateType| null>(null)
     const [reloadHandler,setReloadHandler] = useState(false)
+    const [message, setMessage] = useState<null | string>(null)
         
 
       return(
-        <BlockchainStateContext.Provider value={{txError, setTxError, transactionState, setTransactionState,reloadHandler,setReloadHandler}}>
+        <BlockchainStateContext.Provider value={{txError, setTxError, transactionState, setTransactionState,reloadHandler,setReloadHandler, message,setMessage}}>
             {children}
         </BlockchainStateContext.Provider>
       )

@@ -24,6 +24,9 @@ import { useMapContext } from "./map-context";
 import { useApiData } from "./api-data-context";
 import { parseEther, TransactionTypes } from "ethers/lib/utils";
 import { townAddress } from "@/lib/blockchainData";
+import { toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 type BlockchainUtilsProviderProps = {
   children: React.ReactNode;
@@ -54,7 +57,7 @@ const BlockchainUtilsContext = createContext<BlockchainUtilsContextType | null>(
 export default function BlockchainUtilsContextProvider({
   children
 }: BlockchainUtilsProviderProps) {
-  const { setTransactionState, setTxError } = useBlockchainStateContext();
+  const { setTransactionState, setTxError ,setMessage} = useBlockchainStateContext();
   const {
     selectedItem,
     selectedResourceBuilding, setSelectedResourceBuilding
@@ -72,7 +75,30 @@ export default function BlockchainUtilsContextProvider({
   const mainnetChainId = Polygon.chainId
   const switchChain = useSwitchChain();
   const metamaskConfig = metamaskWallet();
+  const notify = () => {
+    // toast("Default Notification !");
 
+    toast.success("Transaction submitted !", {
+      position: "top-right"
+    });
+
+    // toast.error("Error Notification !", {
+    //   position: "top-left"
+    // });
+
+    // toast.warn("Warning Notification !", {
+    //   position: "bottom-left"
+    // });
+
+    // toast.info("Info Notification !", {
+    //   position: "bottom-center"
+    // });
+
+    // toast("Custom Style Notification with css class!", {
+    //   position: "bottom-right",
+    //   className: 'foo-bar'
+    // });
+  };
 
   const handleConnectWithMetamask = async () => {
     try {
@@ -132,6 +158,8 @@ export default function BlockchainUtilsContextProvider({
       console.log(receipt.status === 1);
       setTransactionState("confirmed");
       success = true
+      notify()
+      setMessage("Land minted successfully !")
     }
     return success
   }

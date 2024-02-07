@@ -1,4 +1,4 @@
-
+"use client"
 import Questions from '@/components/indexPage/askedQ'
 import Carousel from '@/components/indexPage/carousel'
 import FAQ from '@/components/indexPage/faq'
@@ -10,8 +10,13 @@ import Starter from '@/components/indexPage/starter'
 
 
 export default function Home() {
+ 
+
   return (
+
     <main className="flex flex-col pt-[7rem]">
+ 
+ 
          <SideBar/>
       <Intro/>
       <Starter/>
