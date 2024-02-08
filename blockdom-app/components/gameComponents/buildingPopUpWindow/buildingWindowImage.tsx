@@ -8,7 +8,6 @@ import { barracksImage, farmImage,  goldMineImage, townHallImage, trainingCampIm
 export default function BuildingWindowImage() {
   const [isImageSelected, setIsImageSelected] = useState(true);
   const { selectedItem, setSelectedItem ,selectedResourceBuilding,upgradeMode}  = useSelectedBuildingContext();
-  const imageUrl = selectedItem?.imageUrl || "";
 
   const { inViewLand } = useUserDataContext();
 
