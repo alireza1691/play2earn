@@ -4,11 +4,13 @@ import Image from "next/image";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { gateImage, wallImage } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 export default function TownWalls() {
   const { setSelectedItem } = useSelectedBuildingContext();
   const { inViewLand} = useUserDataContext()
-
+  const currentRoute = usePathname()
+  const isMyland = currentRoute.includes("myLand")
   const wall = landItems[4];
   return (
     <>
@@ -35,10 +37,10 @@ export default function TownWalls() {
       }
 
       <button
-     onClick={() => {
-      wall.name && inViewLand?.wallLvl && wall.imageUrl && setSelectedItem(wall);
+     onClick={() => { isMyland 
+     && inViewLand?.wallLvl && setSelectedItem(wall);
     }}
-        className="p-3 hover:blur-sm hover:bg-white/10 h-24 w-52 rotate30 flex justify-center items-center  cursor-pointer  z-10 absolute left-[54.5%] -translate-x-1/2 top-[68rem]"
+        className={`p-3 hover:blur-sm ${isMyland && " hover:bg-white/10"} h-24 w-52 rotate30 flex justify-center items-center  cursor-pointer  z-10 absolute left-[54.5%] -translate-x-1/2 top-[68rem]`}
       >
        {/* <h3 className="text-white text-center "> Wall lvl{Number(inViewLand?.wallLvl) ||0 }</h3> */}
       </button>

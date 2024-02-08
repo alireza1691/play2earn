@@ -5,11 +5,15 @@ import { useSelectedBuildingContext } from '@/context/selected-building-context'
 import { barracksImage } from '@/lib/utils';
 import { useUserDataContext } from '@/context/user-data-context';
 import { Tooltip } from '@nextui-org/react';
+import { usePathname } from 'next/navigation';
 
 export default function TownBarracks() {
     const {setSelectedItem} = useSelectedBuildingContext()
     const {inViewLand} = useUserDataContext()
     const barracks = landItems[1]
+    const currentRoute = usePathname()
+    const isMyland = currentRoute.includes("myLand")
+    
   return (
 <>
  <Image
@@ -18,7 +22,7 @@ export default function TownBarracks() {
     width={580}
     height={480}
     alt="Barracks"
-    onClick={() => {
+    onClick={() => {isMyland &&
       setSelectedItem(barracks);
     }}
   />

@@ -5,10 +5,13 @@ import { useSelectedBuildingContext } from "@/context/selected-building-context"
 import { useUserDataContext } from "@/context/user-data-context";
 import { townHallImage } from "@/lib/utils";
 import { Tooltip } from "@nextui-org/react";
+import { usePathname } from "next/navigation";
 export default function TownHall() {
   const { setSelectedItem } = useSelectedBuildingContext();
   const { inViewLand } = useUserDataContext();
   const townHall = landItems[0];
+  const currentRoute = usePathname()
+  const isMyland = currentRoute.includes("myLand")
   return (
     <>
 
@@ -18,7 +21,7 @@ export default function TownHall() {
           width={580}
           height={480}
           alt="townHall"
-          onClick={() => {
+          onClick={() => {isMyland &&
             setSelectedItem(townHall);
           }}
         />

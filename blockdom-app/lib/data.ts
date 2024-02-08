@@ -128,15 +128,14 @@ export const questions = [
 ];
 
 export const landItems = [
-  { name: "Townhall", imageUrl: "/buildings/townhallLv1.png" },
-  { name: "Barracks", imageUrl: "/buildings/barracksLv1.png" },
-  { name: "GoldMine", imageUrl: "/buildings/goldMineLv0.png" },
-  { name: "Farm", imageUrl: "/buildings/farmLv0.png" },
-  { name: "Wall", imageUrl: "/testWalls.svg" },
+  { name: "Townhall"},
+  { name: "Barracks" },
+  { name: "GoldMine" },
+  { name: "Farm"},
+  { name: "Wall"},
   {
     name: "TrainingCamp",
     imageUrl: "/buildings/trainingCampLv1.png",
-    level: 2,
   },
 ] as const;
 export const warriors = [

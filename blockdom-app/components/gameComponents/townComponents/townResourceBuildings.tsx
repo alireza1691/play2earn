@@ -7,6 +7,7 @@ import { useUserDataContext } from "@/context/user-data-context";
 import { townPInst } from "@/lib/instances";
 import { formatEther } from "ethers/lib/utils";
 import { farmImage, goldMineImage } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 type ResourceBuildingObj = {
   tokenId: number;
@@ -28,6 +29,8 @@ export default function TownResourceBuildings() {
   } = useUserDataContext();
   const farm = landItems[3];
   const goldMine = landItems[2];
+  const currentRoute = usePathname()
+  const isMyland = currentRoute.includes("myLand")
 
 
   useEffect(() => {
@@ -96,7 +99,7 @@ export default function TownResourceBuildings() {
             width={580}
             height={480}
             alt="farm"
-            onClick={() => {
+            onClick={() => {isMyland &&
               setSelectedItem(farm);
               setSelectedResourceBuilding({
                 tokenId: 0,
@@ -126,7 +129,7 @@ export default function TownResourceBuildings() {
                   width={580}
                   height={480}
                   alt="farm"
-                  onClick={() => {
+                  onClick={() => {isMyland &&
                     setSelectedItem(farm);
                     setSelectedResourceBuilding({
                       tokenId: item.tokenId,
@@ -153,7 +156,7 @@ export default function TownResourceBuildings() {
               width={580}
               height={480}
               alt="farm"
-              onClick={() => {
+              onClick={() => { isMyland &&
                 setSelectedItem(farm);
                 setSelectedResourceBuilding({
                   tokenId: 0,
@@ -184,7 +187,7 @@ export default function TownResourceBuildings() {
             width={580}
             height={480}
             alt="goldmine"
-            onClick={() => {
+            onClick={() => { isMyland &&
               setSelectedItem(goldMine);
               setSelectedResourceBuilding({
                 tokenId: 0,
@@ -216,7 +219,7 @@ export default function TownResourceBuildings() {
                   width={580}
                   height={480}
                   alt="goldmine"
-                  onClick={() => {
+                  onClick={() => { isMyland &&
                     setSelectedItem(goldMine);
                     setSelectedResourceBuilding({
                       tokenId: item.tokenId,
@@ -245,6 +248,7 @@ export default function TownResourceBuildings() {
               height={480}
               alt="goldmine"
               onClick={() => {
+                isMyland &&
                 setSelectedItem(goldMine);
                 setSelectedResourceBuilding({
                   tokenId: 0,

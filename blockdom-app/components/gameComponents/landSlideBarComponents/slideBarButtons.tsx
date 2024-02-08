@@ -1,66 +1,57 @@
 import { useMapContext } from "@/context/map-context";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useUserDataContext } from "@/context/user-data-context";
-import {  landsMainnetPInst, landsPInst, landsSInst } from "@/lib/instances";
-import {
-
-  useSigner,
-} from "@thirdweb-dev/react";
+import { landsMainnetPInst, landsPInst, landsSInst } from "@/lib/instances";
+import { useSigner } from "@thirdweb-dev/react";
 import { BigNumberish, Transaction } from "ethers";
 import { Sepolia } from "@thirdweb-dev/chains";
 import React, { useEffect, useState } from "react";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
-import { usePathname } from "next/navigation";
-
+import { usePathname, useRouter } from "next/navigation";
 
 export default function SlideBarButtons() {
   const { selectedLand } = useMapContext();
-  const { ownedLands } = useUserDataContext();
-  const {  mint } = useBlockchainUtilsContext()
+  const { ownedLands, setInViewLand, setChosenLand, setIsUserDataLoading } =
+    useUserDataContext();
+  const { mint } = useBlockchainUtilsContext();
+
+  const router = useRouter();
 
   const [priceFormatEther, setPriceFromatEther] = useState<BigNumberish | null>(
     null
   );
 
-  const pathname = usePathname()
-  const isTestnet = pathname.includes("/testnet/")
-  const {  setSelectedWindowComponent } =
-    useSelectedWindowContext();
+  const pathname = usePathname();
+  const isTestnet = pathname.includes("/testnet/");
+  const { setSelectedWindowComponent } = useSelectedWindowContext();
 
-  const isOwned = () =>{
+  const isOwned = () => {
     if (ownedLands && selectedLand) {
       if (
         ownedLands.some(
           (item) => item.tokenId == selectedLand.coordinate.toString()
         )
       ) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     }
-
-  }
-
+  };
 
   useEffect(() => {
     const getData = async () => {
       if (selectedLand?.isMinted == false) {
-
         const inst = isTestnet ? landsPInst : landsMainnetPInst;
 
         const price = await inst.getPrice();
         setPriceFromatEther(price);
-        
       }
     };
     getData();
-    
-    
   }, [selectedLand]);
-
 
   return (
     <div className="w-full mt-auto flex flex-col py-3 flex-shrink">
@@ -79,71 +70,94 @@ export default function SlideBarButtons() {
       </div>
       <div className=" flex flex-col md:flex-row  w-full gap-2">
         <>
-        {selectedLand && !selectedLand.isMinted && priceFormatEther && (
-          <button
-            onClick={() => mint(selectedLand,priceFormatEther)}
-            className="greenButton !w-full mt-2"
-          >
-            Mint
-          </button>
-        )}
-        {selectedLand && !selectedLand.isMinted && !priceFormatEther && (
-          <button
-          disabled
-            className="greenButton !w-full mt-2"
-          >
-            Mint
-          </button>
-        )}
-        {selectedLand && selectedLand.isMinted && !isOwned() && (
-           <>
-           {ownedLands && ownedLands?.length > 0 ? (
+          {selectedLand && !selectedLand.isMinted && priceFormatEther && (
+            <button
+              onClick={() => mint(selectedLand, priceFormatEther)}
+              className="greenButton !w-full mt-2"
+            >
+              Mint
+            </button>
+          )}
+          {selectedLand && !selectedLand.isMinted && !priceFormatEther && (
+            <button disabled className="greenButton !w-full mt-2">
+              Mint
+            </button>
+          )}
+          {selectedLand && selectedLand.isMinted && !isOwned() && (
+            <>
+              <button
+                onClick={() => {
+                  setChosenLand({
+                    tokenId: selectedLand.coordinate.toString(),
+                    owner: selectedLand.owner,
+                  }),
+                    setIsUserDataLoading(true),
+                    router.push(`/testnet/land/${selectedLand.coordinate.toString()}`);
+                }}
+                className="outlineGreenButton !w-full md:!w-[50%]"
+              >
+                Visit land
+              </button>
+              {/* {ownedLands && ownedLands?.length > 0 ? (
           <button className="outlineGreenButton !w-full md:!w-[50%]"disabled >
             Send help
           </button>
            ):(<button className="outlineGreenButton !w-full md:!w-[50%]" disabled>
            Send help
-         </button>)}
-          </>
-        )}
-        {selectedLand && selectedLand.isMinted && !isOwned() && (
-          <>
-          {ownedLands && ownedLands?.length > 0 ? (
-        <button
-        onClick={() => {
-          setSelectedWindowComponent("attack");
-        }}
-        className="redButton z-30 !w-full md:!w-[50%]"
-      >
-        Attack
-      </button>
-          ):(
-            <button
-           disabled
-            className=" redButton !w-full md:!w-[50%]"
-          >
-            Attack
-          </button>
+         </button>)} */}
+            </>
           )}
-  
-          </>
-        )}
-        {selectedLand && selectedLand.isMinted && isOwned() && (
-          <>
-           {ownedLands && ownedLands?.length > 0 ? (
-          <button className="outlineGreenButton !w-full md:!w-[50%]" disabled>
-            Send help
-          </button>
-           ):(<button className="outlineGreenButton !w-full md:!w-[50%]" disabled>
-           Send help
-         </button>)}
-          </>
-        )}
-        {selectedLand && selectedLand.isMinted && isOwned() && (
-          <button className="greenButton !w-full md:!w-[50%]">
-            Visit land
-          </button>
-        )}
+          {selectedLand && selectedLand.isMinted && !isOwned() && (
+            <>
+              {ownedLands && ownedLands?.length > 0 ? (
+                <button
+                  onClick={() => {
+                    setSelectedWindowComponent("attack");
+                  }}
+                  className="redButton z-30 !w-full md:!w-[50%]"
+                >
+                  Attack
+                </button>
+              ) : (
+                <button disabled className=" redButton !w-full md:!w-[50%]">
+                  Attack
+                </button>
+              )}
+            </>
+          )}
+
+          {selectedLand && selectedLand.isMinted && isOwned() && (
+            <>
+              {ownedLands && ownedLands?.length > 0 ? (
+                <button
+                  className="outlineGreenButton !w-full md:!w-[50%]"
+                  disabled
+                >
+                  Send help
+                </button>
+              ) : (
+                <button
+                  className="outlineGreenButton !w-full md:!w-[50%]"
+                  disabled
+                >
+                  Send help
+                </button>
+              )}
+            </>
+          )}
+          {selectedLand && selectedLand.isMinted && isOwned() && (
+            <button className="greenButton !w-full md:!w-[50%]"      onClick={() => {
+              setChosenLand({
+                tokenId: selectedLand.coordinate.toString(),
+                owner: selectedLand.owner,
+              }),
+                setIsUserDataLoading(true),
+                isTestnet ? router.push(`/testnet/myLand`) : router.push("/myLand")
+                
+            }}>
+              Visit land
+            </button>
+          )}
         </>
       </div>
     </div>

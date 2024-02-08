@@ -1,5 +1,6 @@
 "use client";
 import { useUserDataContext } from "@/context/user-data-context";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
@@ -7,9 +8,12 @@ export default function ToggleLand() {
   const [isNotifActive, setIsNotifActive] = useState(false);
   const { ownedLands, inViewLand, setChosenLand, setIsUserDataLoading } =
     useUserDataContext();
+  const currentRoute = usePathname()
+  const isMyland = currentRoute.includes("myLand")
   return (
     <>
-      {" "}
+      {isMyland &&
+      <>
       <div
         className={`sm:max-w-[15rem] overflow-hidden transition-max-height duration-300 mt-1 absolute bottom-[120px] z-30 sm:w-[50%] w-[95dvw] left-1/2 -translate-x-1/2 ${
           isNotifActive ? "max-h-40" : "max-h-0"
@@ -47,6 +51,8 @@ export default function ToggleLand() {
         Land {inViewLand?.tokenId}{" "}
         {!isNotifActive ? <IoIosArrowUp /> : <IoIosArrowDown />}
       </button>
+      </>
+       }
     </>
   );
 }

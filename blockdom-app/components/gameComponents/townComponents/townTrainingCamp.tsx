@@ -5,6 +5,7 @@ import { useSelectedBuildingContext } from '@/context/selected-building-context'
 import { useUserDataContext } from '@/context/user-data-context';
 import { townHallImage, trainingCampImage } from '@/lib/utils';
 import { Tooltip } from '@nextui-org/react';
+import { usePathname } from 'next/navigation';
 
 export default function TownTrainingCamp() {
 
@@ -12,6 +13,8 @@ export default function TownTrainingCamp() {
     const {inViewLand} = useUserDataContext()
 
     const trainingCamp = landItems[5]
+    const currentRoute = usePathname()
+    const isMyland = currentRoute.includes("myLand")
   return (
     <>
     {/* {Number(inViewLand?.trainingCampLvl) > 0 ?  */}
@@ -21,7 +24,7 @@ export default function TownTrainingCamp() {
     width={580}
     height={480}
     alt="trainingCamp"
-    onClick={() => {
+    onClick={() => { isMyland &&
       setSelectedItem(trainingCamp);
     }}
   /> 
