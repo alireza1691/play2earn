@@ -5,8 +5,8 @@ export const varsAddress ="0xDC8c2fA6B1bad701B8F38BBfe7eC18cC874f7754"
 export const tokenAddress="0x57363eA640178A20DeAB01561dB3bD57FE85733e"
 export const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T";
 
-export const arbitrumApiKey ="BUKB4DF7KDT5QA2RUAJR2HYCPSKEJ2KI5N"
-export const polygonApiKey = "XIKJU3IXDE37FI4XW6YYDCUG9H8YI6NKMY"
+export const arbitrumApiKey =process.env.POLYGON_API_KEY
+export const polygonApiKey = process.env.ARBITRUM_API_KEY
 export const landsMainnetAddress = "0x539f6dB158b6663cBB5E05Cc557C03102d873405"
 export const townMainnetAddress= ""
 export const tokenMainnetAddress=""
