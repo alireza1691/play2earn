@@ -50,7 +50,9 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const isTestnet = currentRoute.includes("/testnet/");
 
   const sepoliaAPIRequest= (address: string) =>{
-   return `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${address}&apikey=${apiKey}`
+     const url = `https://api.etherscan.io/v2/api?chainid=11155111&module=logs&action=getLogs&address=${address}&apikey=${apiKey}`;
+    return url;
+   // return `https://api-sepolia.etherscan.io/api?module=logs&action=getLogs&address=${address}&apikey=${apiKey}`
   }   
   const polygonAPIRequest = (address: string) => {
     // return `https://api.polygonscan.com/api
