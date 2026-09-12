@@ -1,5 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
+import { townMainnetAddress, v5Deployed } from "./blockchainData";
 
 /**
  * Which set of deployed contracts a route talks to.
@@ -69,7 +70,43 @@ export const deploymentLabel = (deployment: Deployment) =>
     ? "v4"
     : deployment === "v3-testnet"
     ? "v3"
-    : "mainnet";
+    : "Main";
+
+/**
+ * Why a deployment cannot be opened, or null if it can.
+ *
+ * Mainnet is listed but unreachable: `townMainnetAddress` and
+ * `tokenMainnetAddress` are empty strings, so there is no Town and no token
+ * behind it. An empty address becomes the zero address in ethers, which answers
+ * every read with zero rather than failing — the game would render an intact
+ * world with nothing in it. Better to say so on the button.
+ *
+ * This is derived rather than hardcoded so that filling the addresses in is all
+ * it takes to enable the tab.
+ */
+export function unavailableReason(deployment: Deployment): string | null {
+  if (deployment === "v3-mainnet" && !townMainnetAddress) {
+    return "Mainnet is not deployed yet — no Town contract behind it";
+  }
+  if (deployment === "v5-testnet" && !v5Deployed) {
+    return "v5 is not deployed yet";
+  }
+  return null;
+}
+
+/**
+ * Pages each deployment actually has.
+ *
+ * They are not the same set: mainnet has no `land/[land]`, and v3-testnet has
+ * no `dashboard`. Switching straight across would 404 on exactly the routes a
+ * player is most likely to be looking at, so `switchDeployment` falls back.
+ */
+const PAGES: Record<Deployment, readonly string[]> = {
+  "v3-mainnet": ["explore", "myLand", "battleLog", "clans", "dashboard"],
+  "v3-testnet": ["explore", "myLand", "battleLog", "clans", "land"],
+  "v4-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land"],
+  "v5-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land"],
+};
 
 export function useDeployment(): Deployment {
   return deploymentFor(usePathname());
@@ -121,5 +158,16 @@ export function switchDeployment(
       break;
     }
   }
-  return routeFor(to, page === pathname ? pathname : page);
+  if (page === pathname) page = pathname.replace(/^\//, "");
+
+  // The landing page belongs to no deployment; entering one should open the
+  // map rather than a route that does not exist.
+  const head = page.split("/")[0];
+  if (!head) return routeFor(to, "explore");
+
+  // Fall back rather than 404: /v4/dashboard has no v3-testnet equivalent, and
+  // /testnet/land/104104 has no mainnet one.
+  return PAGES[to].includes(head)
+    ? routeFor(to, page)
+    : routeFor(to, "explore");
 }

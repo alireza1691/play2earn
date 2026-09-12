@@ -277,8 +277,15 @@ export default function Navbar() {
               <ChainIdButton />
             </div>
 
-            {/* Only renders on the two testnet rewrites; null everywhere else. */}
-            <DeploymentSwitch />
+            {/*
+              Four tabs, on every screen including the landing page — the v4
+              and v5 routes had no link anywhere and could only be reached by
+              typing the URL. `shrink-0` so it is not squeezed out of the
+              header on a narrow phone.
+            */}
+            <div className="shrink-0">
+              <DeploymentSwitch />
+            </div>
           </div>
 
           {currentRoute == "myLand" && <BalanceContainer />}
