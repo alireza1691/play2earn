@@ -112,5 +112,18 @@ export type WarLogType = {
   from: number,
   to: number,
   lootedAmounts: number[],
-  success: boolean
+  success: boolean,
+  /**
+   * Both armies and what each of them lost, per warrior type.
+   *
+   * The Attack event carries only the outcome and the loot, so these come from
+   * the DispatchArmy, ArmyReturned and WarriorLosses events emitted around it.
+   * They are optional because a log can be read before its companions have been
+   * indexed — the card shows what it has rather than blocking on all four.
+   */
+  attackerArmy?: number[],
+  attackerLosses?: number[],
+  defenderLosses?: number[],
+  /** Share of the attacking army that walked away, 0-100. */
+  attackerSurvivingPercent?: number,
 }

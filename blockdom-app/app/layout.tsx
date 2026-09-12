@@ -16,7 +16,12 @@ import BottomBar from "@/components/gameComponents/bottomBar";
 import GlobalErrorBoundary from "@/components/errorBoundary";
 import PopUpState from "@/components/popUpState";
 import BalanceContainer from "@/components/gameComponents/balanceContainer";
+import ArmyOverview from "@/components/gameComponents/armyOverview";
 import TokenActionComp from "@/components/gameComponents/tokenActionComp";
+import LandPicker from "@/components/gameComponents/landPicker";
+import SwapComp from "@/components/gameComponents/swapComp";
+import GoodsComp from "@/components/gameComponents/goodsComp";
+import PoolComp from "@/components/gameComponents/poolComp";
 import Attack from "@/components/gameComponents/attack/attack";
 // import toast, { Toaster } from 'react-hot-toast';
 import { ToastContainer, toast } from 'react-toastify';
@@ -26,8 +31,9 @@ import { ToastContainer, toast } from 'react-toastify';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Blockdom",
-  description: "Play to earn gaming application",
+  title: "Plotwar — 10,000 lands, one map",
+  description:
+    "A 100x100 map of 10,000 lands. Build, recruit, march, and convert goods into PLOT. Free on the Sepolia testnet, mainnet on Polygon from 1 October.",
 };
 
 export default function RootLayout({
@@ -44,7 +50,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} w-screen bg-black text-yellow-50 relative overflow-x-hidden overflow-y-hidden `}
       >
-        <div className=" absolute bg-[#7FDDAD]  -top-[20rem] z-0 left-[10rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-50 lg:left-[10rem] lg:w-[22.5rem]"></div>
+        <div className=" absolute bg-[color:var(--pw-accent)]  -top-[20rem] z-0 left-[10rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[13rem] sm:w-[15.75rem] sm:left-[3rem] sm:blur-[10rem] opacity-50 lg:left-[10rem] lg:w-[22.5rem]"></div>
         <GlobalErrorBoundary>
         <ThirdwebProvider>
         <BlockchainStateContextProvider>
@@ -61,7 +67,12 @@ export default function RootLayout({
                 <PopUpState/>
                 <Navbar/>
                 <BalanceContainer/>
+                <ArmyOverview/>
                 <TokenActionComp/>
+                <SwapComp/>
+                <GoodsComp/>
+                <PoolComp/>
+                <LandPicker/>
                 <Attack/>
                 {children}
                 <BottomBar/>

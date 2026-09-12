@@ -1,8 +1,7 @@
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
-import { baseTrainingCampCapacity, warriors, warriorsInfo } from "@/lib/data";
+import { armyCapacity, warriorsInfo } from "@/lib/data";
 import ArmyCapacityIcon from "@/svg/armyCapacityIcon";
-import CloseIcon from "@/svg/closeIcon";
-import CoinIcon from "@/svg/coinIcon";
+import GoldIcon from "@/svg/goldIcon";
 import DamageIcon from "@/svg/damageIcon";
 import HpIcon from "@/svg/hpIcon";
 import { Input, Slider } from "@nextui-org/react";
@@ -18,6 +17,27 @@ import { formatUnits } from "ethers/lib/utils";
 type InputAmountType = number | null;
 type EnteredAmountsType = InputAmountType[];
 
+/** One of a warrior's four figures, on the shared .statChip treatment. */
+const StatChip = ({
+  icon,
+  label,
+  value,
+  intent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  intent?: "attack" | "hp";
+}) => (
+  <div className={`statChip ${intent ? `statChip--${intent}` : ""}`}>
+    {icon}
+    <div className="min-w-0">
+      <div className="statChip__label">{label}</div>
+      <div className="statChip__value">{value}</div>
+    </div>
+  </div>
+);
+
 export default function SelectedBuildingActive() {
   return (
     <>
@@ -27,7 +47,7 @@ export default function SelectedBuildingActive() {
   );
 }
 const BarracksActiveComponent = () => {
-  const { selectedItem, setSelectedItem, activeMode, setActiveMode } =
+  const { selectedItem, activeMode, setActiveMode } =
     useSelectedBuildingContext();
   const { inViewLand } = useUserDataContext();
   const { recruitArmy } = useBlockchainUtilsContext();
@@ -75,14 +95,11 @@ const BarracksActiveComponent = () => {
     };
   };
 
-  const capacity = () => {
-    let cap = 0;
-    if (inViewLand) {
-      cap =
-        2 ** (Number(inViewLand.barracksLvl) - 1) * baseTrainingCampCapacity;
-    }
-    return cap;
-  };
+  // The cap is the training camp's, not the barracks', and it scales linearly
+  // — this raised 50 to a power of the barracks level, so it gated recruiting
+  // on a number the contract had never heard of. See armyCapacity in lib/data.
+  const capacity = () =>
+    inViewLand ? armyCapacity(Number(inViewLand.trainingCampLvl)) : 0;
 
   const totalArmy = () => {
     let armyAmount = 0;
@@ -101,17 +118,12 @@ const BarracksActiveComponent = () => {
         selectedItem && selectedItem.name != "Barracks" && "!left-[-120rem]"
       } z-40 barracksActiveBg flex flex-col absolute  w-[95%] left-1/2 -translate-x-1/2 top-[4.3rem]  sm:top-[8rem] h-[80dvh] sm:h-[70dvh] `}
     >
-      <div className=" flex flex-row justify-between py-2 px-3 !text-white items-center flex-shrink-0">
-        <h3>Barracks</h3>
-        <a
-          className="closeIcon"
-          onClick={() => {
-            setActiveMode(false), setSelectedItem(null);
-          }}
-        >
-          <CloseIcon />
-        </a>
-      </div>
+      {/*
+        The shared header, as every other building window uses — this one was
+        hand-rolled, so it sat at a different height and was the only window
+        that did not show the building's level.
+      */}
+      <BuildingWindowHeader />
       <div className=" flex flex-row sm:justify-evenly flex-shrink-0 justify-center ">
         <div className="w-[80%]  sm:w-[30%] flex flex-col ">
           <div className=" flex flex-row items-center font-semibold !text-white ">
@@ -125,19 +137,19 @@ const BarracksActiveComponent = () => {
         </div>
         <div className="w-[30%] hidden sm:flex"></div>
       </div>
-      <div className="md:pb-3 md:px-2 rounded-md darkShadow md:shadow-none bg-black/20 md:bg-transparent py-2 flex flex-col overflow-y-auto custom-scrollbar  md:grid md:grid-cols-2 gap-4 w-[85%] ml-auto mr-auto flex-grow mt-6 ">
+      <div className="md:pb-3 md:px-2 rounded-[4px] darkShadow md:shadow-none bg-black/20 md:bg-transparent py-2 flex flex-col overflow-y-auto custom-scrollbar  md:grid md:grid-cols-2 gap-4 w-[85%] ml-auto mr-auto flex-grow mt-6 ">
         {warriorsInfo.map((warrior, key) => (
           <div
             key={key}
-            className={`flex flex-col gap-1  !rounded-lg  relative  ${
+            className={`flex flex-col gap-1  !rounded-[4px]  relative  ${
               inViewLand &&
               key >= Number(inViewLand?.barracksLvl) &&
               "opacity-50"
             }`}
           >
             {inViewLand && key >= Number(inViewLand.barracksLvl) && (
-              <div className="flex  justify-center z-10 absolute  w-full h-full rounded-md backdrop-brightness-75 bg-black/60 ">
-                <h3 className=" text-center text-[#98FBD7] text-[14px] mt-2">
+              <div className="flex  justify-center z-10 absolute  w-full h-full rounded-[4px] backdrop-brightness-75 bg-black/60 ">
+                <h3 className=" text-center text-[color:var(--pw-accent)] text-[14px] mt-2">
                   Unlock at <span className=" font-bold">level {key + 1}</span>{" "}
                 </h3>
               </div>
@@ -147,79 +159,60 @@ const BarracksActiveComponent = () => {
             </div>
             <div className=" flex flex-row relative h-full glassBg">
               <Image
-                className="py-1 px-1 rounded-lg !h-auto w-[35%]"
+                className="py-1 px-1 rounded-[4px] !h-auto w-[35%]"
                 src={warrior.image}
                 width={100}
                 height={150}
                 alt="warrior"
               />
               <div className=" flex flex-col w-full">
-                <div className=" flex flex-row justify-around py-2 ">
-                  <div className="redItemHolder flex !w-[45%] px-2">
-                    <DamageIcon />{" "}
-                    <p className=" text-[12px] w-full">
-                      Attack<br></br>
-                      <a>{warrior.attPw}</a>
-                    </p>
-                  </div>
-                  <div className="redItemHolder flex !w-[45%] px-2">
-                    <DamageIcon />
-                    <p className=" text-[12px] w-full">
-                      Def<br></br>
-                      <a>{warrior.defPw}</a>
-                    </p>
-                  </div>
-                </div>
-                <div className=" flex flex-row justify-around  mb-2">
-                  <div className="lightGreenItemHolder flex !w-[45%] px-2 ">
-                    <HpIcon />
-                    <p className=" text-[12px] w-full">
-                      Hp<br></br>
-                      <a>{warrior.hp}</a>
-                    </p>
-                  </div>
-                  <div className="redItemHolder flex !w-[45%] px-2 ">
-                    <CoinIcon />{" "}
-                    <p className=" text-[12px] w-full">
-                      Price<br></br>
-                      <a>{warrior.price}</a>
-                    </p>
-                  </div>
+                <div className="grid grid-cols-2 gap-2 px-2 py-2">
+                  <StatChip
+                    intent="attack"
+                    icon={<DamageIcon />}
+                    label="Attack"
+                    value={warrior.attPw}
+                  />
+                  <StatChip
+                    icon={<DamageIcon />}
+                    label="Def"
+                    value={warrior.defPw}
+                  />
+                  <StatChip
+                    intent="hp"
+                    icon={<HpIcon />}
+                    label="HP"
+                    value={warrior.hp}
+                  />
+                  <StatChip
+                    icon={<GoldIcon size={16} />}
+                    label="Price"
+                    value={warrior.price}
+                  />
                 </div>
                 <div className=" flex flex-row px-2 gap-1 mt-auto mb-3 ">
                   <input
                     type="number"
+                    min={0}
                     onChange={(event) =>
                       handleEnteredAmount(Number(event.target.value), key)
                     }
-                    className=" bg-black/20 w-full rounded-md focus:outline-0 text-[12px] py-1 px-3 border border-[#98fbd7]/40"
+                    className="inputBg w-full text-[12px] py-[6px] px-3 placeholder:text-[color:var(--pw-muted)]"
                     placeholder="Enter amount"
                   />
-                  {/* {isValidAmount && isValidAmount ==true? (
-                    <button
-                
-                      className="greenButton !rounded-md !text-[12px] !py-1 px-2"
-                    >
-                      Recruit
-                    </button>
-                  ) : (
-                    <button
-                      disabled
-                      className="greenButton !rounded-md !text-[12px] !py-1 px-2"
-                    >
-                      Recruit
-                    </button>
-                  )} */}
                 </div>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <div className=" flex-shrink flex flex-row justify-center gap-3 mb-2 mt-4 ">
+      {/* Same footer shape as buildingWindowButtons — this one centred two
+          fixed 12.5rem buttons, which matched nothing and overflowed narrow
+          screens. */}
+      <div className="flex justify-between gap-2 p-2 flex-shrink-0 mt-auto">
         <button
           onClick={() => setActiveMode(false)}
-          className="!w-[12.5rem] redButton"
+          className="redButton !w-1/2"
         >
           Back
         </button>
@@ -233,7 +226,7 @@ const BarracksActiveComponent = () => {
           onClick={() => {
             enteredAmount && recruitArmy(enteredAmount);
           }}
-          className="!w-[12.5rem] greenButton"
+          className="greenButton !w-1/2"
         >
           Confirm
         </button>
@@ -243,7 +236,7 @@ const BarracksActiveComponent = () => {
 };
 
 const TrainingCampActiveComponent = () => {
-  const { selectedItem, setSelectedItem, activeMode, setActiveMode } =
+  const { selectedItem, activeMode, setActiveMode } =
     useSelectedBuildingContext();
 
   return (
@@ -263,7 +256,7 @@ const TrainingCampActiveComponent = () => {
         </div>
         <CapacityProgressBar amount={50} />
       </div>
-      <div className=" flex flex-grow flex-col w-4/5 ml-auto mr-auto mt-4 gap-3 overflow-scroll sm:overflow-auto bg-black/10 sm:bg-transparent  px-1 py-1 rounded-md">
+      <div className=" flex flex-grow flex-col w-4/5 ml-auto mr-auto mt-4 gap-3 overflow-scroll sm:overflow-auto bg-black/10 sm:bg-transparent  px-1 py-1 rounded-[4px]">
         {warriorsInfo.map((warrior, key) => (
           <div key={key} className="flex flex-row h-full">
             <Image

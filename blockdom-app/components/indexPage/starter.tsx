@@ -3,10 +3,12 @@ import Image from 'next/image'
 import React from 'react'
 import { useSectionInView } from '@/lib/hooks'
 import { useTheme } from '@/context/theme-context'
+import { useRouter } from 'next/navigation'
 
 export default function Starter() {
 
   const { theme } = useTheme()
+  const router = useRouter()
 
   const { ref } = useSectionInView("Get strated", 0.5)
   return (
@@ -19,8 +21,8 @@ export default function Starter() {
         </div>
         <div className='flex flex-col z-20 px-[25%] mt-[8rem] md:mt-[13rem] items-center xl:px-[30%]'>
             <h2 className=' font-bold text-[48px] text-center text-white'>Lets start earning</h2>
-            <p className=' font-light text-[#718574] mt-6'>The game is inspired by popular strategy games. All you need is to mint land and build your kingdom. To earn from the game you can simply collect goods and convert them to BMT which is Blockdom Token. </p>
-            <button className='greenButton shadow-lg mt-6 !px-12' >Get started</button>
+            <p className=' font-light text-[#718574] mt-6'>The game is inspired by popular strategy games. All you need is to mint land and build your kingdom. To earn from the game you can simply collect goods and convert them to PLOT which is Plotwar Token. </p>
+            <button className='greenButton shadow-lg mt-6 !px-12' onClick={() => router.push("/testnet/explore")}>Get started</button>
         </div>
     </section>
   )

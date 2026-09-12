@@ -7,10 +7,12 @@ import React from "react";
 import ToggleLand from "@/components/gameComponents/townComponents/toggleLand";
 import BottomBar from "@/components/gameComponents/bottomBar";
 import WorkerComp from "@/components/gameComponents/townComponents/workerComp";
+import { TownUrlState } from "@/components/gameComponents/urlState";
 
 export default function MyLand() {
   return (
     <>
+    <TownUrlState/>
     <BalanceContainer/>
     <ToggleLand/>
     <Notifications/>

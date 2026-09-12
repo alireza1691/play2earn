@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!--
+    Browser tab icon: the Plotwar mark from svg/plotwarMark.tsx, sitting on the
+    brand dark plate. The mark on its own is a light mint with a transparent
+    background, which vanishes against a light tab strip — the plate is what
+    makes it legible in both browser themes. Kept as one vector so it stays
+    crisp at 16px and at 512px.
+  -->
+  <rect width="64" height="64" rx="13" fill="#06291D"/>
+  <g transform="translate(6.15 6.15) scale(0.517)">
+    <g transform="translate(0 3.55)">
+      <g transform="rotate(45 50 50)">
+        <rect x="16" y="16" width="26" height="26" fill="#98FBD7"/>
+        <rect x="53" y="21" width="26" height="26" fill="#F4F4F1"/>
+        <rect x="21" y="53" width="26" height="26" fill="#F4F4F1"/>
+        <rect x="53" y="53" width="26" height="26" fill="#F4F4F1"/>
+      </g>
+    </g>
+  </g>
+</svg>

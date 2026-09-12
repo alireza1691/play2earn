@@ -13,11 +13,12 @@ import { useMapContext } from "@/context/map-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 import { usePathname, useRouter } from "next/navigation";
-import { townMainnetPInst, townPInst } from "@/lib/instances";
+import { townMainnetPInst, townPInst, townRead } from "@/lib/instances";
 import { landDataResType } from "@/lib/types";
 import { formattedNumber } from "@/lib/utils";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import AttackSmScreen from "./attackSmScreen";
+import { useDeployment } from "@/lib/deployments";
 
 export default function Attack() {
   const { selectedLand } = useMapContext();
@@ -26,6 +27,7 @@ export default function Attack() {
   const currentRoute = usePathname();
   const router = useRouter();
   const isTestnet = currentRoute.includes("/testnet/");
+  const deployment = useDeployment();
 
   const { selectedWindowComponent, setSelectedWindowComponent, selectedArmy } =
     useSelectedWindowContext();
@@ -45,8 +47,9 @@ export default function Attack() {
     const getBal = async () => {
       setFoodBal(null);
 
-      if (isTestnet && chosenLand && selectedLand) {
-        const inst = isTestnet ? townPInst : townMainnetPInst;
+      // v3-mainnet has no Town deployed; the other two do.
+      if (deployment !== "v3-mainnet" && chosenLand && selectedLand) {
+        const inst = townRead(deployment);
         const res: landDataResType = await inst.getLandIdData(
           chosenLand.tokenId
         );
@@ -77,8 +80,8 @@ export default function Attack() {
         } w-[90%] h-[78dvh] absolute left-1/2 -translate-x-1/2 z-500 transition-all `}
       >
         {/* <AttackSmScreen/> */}
-        <div className="flex flex-col  w-full h-full border-[#87F0E5]/30 bg-[#21302A]/60  backdrop-blur-md  rounded-xl border">
-          <div className="w-full flex p-1 items-center flex-row bg-[#06291D80]/50 rounded-t-lg mb-3 border-b border-[#D4D4D459]/20">
+        <div className="flex flex-col  w-full h-full border-[color:var(--pw-accent)]/30 bg-[#0D0F12]/85  backdrop-blur-md  rounded-[4px] border">
+          <div className="w-full flex p-1 items-center flex-row bg-[#0D0F12]/85 rounded-t-lg mb-3 border-b border-[#D4D4D459]/20">
             <a
               className=" mr-auto hidden md:flex  closeIcon text-[24px]"
               onClick={() => setSelectedWindowComponent("emptyLand")}

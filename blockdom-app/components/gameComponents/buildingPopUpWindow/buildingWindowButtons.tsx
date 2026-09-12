@@ -144,12 +144,29 @@ export default function BuildingWindowButtons() {
             }
             </>
           ) }
-          {selectedItem?.name == "Wall" &&  <button
-              onClick={() => claim()}
-              className="greenButton !py-2 !w-full"
-            >
-              {relevantButton()}
-            </button>}
+          {/*
+            The walls have no active mode and no upgrade chevron, so this one
+            button is the whole window's action — and it called claim(), which
+            reads selectedResourceBuilding and so bailed out on a wall without
+            saying anything. It says Upgrade, so it upgrades.
+
+            Guarded the same way the upgrade branch above is: a busy worker or
+            a town hall that is not ahead of the walls would both revert.
+          */}
+          {selectedItem?.name == "Wall" &&
+            (inViewLand && Number(inViewLand.remainedBuildTime) > 0 ? (
+              <button className="greenButton !py-2 !w-full" disabled>
+                Worker is busy
+              </button>
+            ) : (
+              <button
+                onClick={() => upgrade()}
+                disabled={!isAllowed()}
+                className="greenButton !py-2 !w-full"
+              >
+                {relevantButton()}
+              </button>
+            ))}
           
        {selectedItem?.name != "Wall" &&   <button
             onClick={() => {setUpgradeMode(true),console.log("upgrade mode actived");

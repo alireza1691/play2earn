@@ -4,10 +4,14 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSelectedBuildingContext } from "@/context/selected-building-context";
 import { useUserDataContext } from "@/context/user-data-context";
-import { townPInst } from "@/lib/instances";
+import { townRead } from "@/lib/instances";
 import { formatEther } from "ethers/lib/utils";
 import { farmImage, goldMineImage } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { isRewrite, useDeployment } from "@/lib/deployments";
+import BuildingLabel from "./buildingLabel";
+import ReadyToClaimBadge from "./readyToClaimBadge";
+import { buildingCapacity } from "@/lib/data";
 
 type ResourceBuildingObj = {
   tokenId: number;
@@ -27,11 +31,26 @@ export default function TownResourceBuildings() {
     goldMines,
     buildedResBuildings,
   } = useUserDataContext();
+  const deployment = useDeployment();
   const farm = landItems[3];
   const goldMine = landItems[2];
   const currentRoute = usePathname()
   const isMyland = currentRoute.includes("myLand")
 
+  /**
+   * Whether this building has stopped producing.
+   *
+   * `getCurrentRevenue` clamps to the cap, so a full building reports exactly
+   * it — no tolerance needed, and none wanted either: a building one good short
+   * of the cap is still earning and should not be badged.
+   *
+   * Only on your own land. Somewhere else's town is not something you can act
+   * on, so the prompt would be noise.
+   */
+  const isFull = (level: number, earnedAmount: number) => {
+    const capacity = buildingCapacity(level, isRewrite(deployment));
+    return isMyland && capacity > 0 && earnedAmount >= capacity;
+  };
 
   useEffect(() => {
     const getResourcesBuildings = async () => {
@@ -46,7 +65,7 @@ export default function TownResourceBuildings() {
             index < buildedResBuildings.farms.length;
             index++
           ) {
-            const currentRevenue = await townPInst.getCurrentRevenue(
+            const currentRevenue = await townRead(deployment).getCurrentRevenue(
               buildedResBuildings.farms[index].tokenId
             );
             const obj = {
@@ -68,7 +87,7 @@ export default function TownResourceBuildings() {
             index < buildedResBuildings.goldMines.length;
             index++
           ) {
-            const currentRevenue = await townPInst.getCurrentRevenue(
+            const currentRevenue = await townRead(deployment).getCurrentRevenue(
               buildedResBuildings.goldMines[index].tokenId
             );
             const obj = {
@@ -87,12 +106,15 @@ export default function TownResourceBuildings() {
       }
     };
     getResourcesBuildings();
-  }, [inViewLand, buildedResBuildings]);
+    // deployment included: switching between /testnet and /v4 changes which
+    // contract the revenue is read from, and without it the old figures stuck.
+  }, [inViewLand, buildedResBuildings, deployment]);
   return (
     <>
-      <div className="z-10 flex flex-col left-[25rem]  gap-4   absolute top-[30rem] xl:left-[40rem] ">
+      <div className="z-10 flex flex-col left-[25rem]  gap-8   absolute top-[30rem] xl:left-[40rem] ">
         {farms && farms.length == 0 && (
           <div className=" relative">
+          <BuildingLabel name={farm.name} level={0} />
           <Image
             className="z-10 cursor-pointer  w-[7rem] h-auto"
             src={farmImage(0)}
@@ -123,6 +145,8 @@ export default function TownResourceBuildings() {
           <>
             {farms.map((item, key) => (
               <div key={key} className="relative">
+                {isFull(item.level, item.earnedAmount) && <ReadyToClaimBadge />}
+                <BuildingLabel name={farm.name} level={item.level} />
                 <Image
                   className="z-10 cursor-pointer   w-[7rem] h-auto"
                   src={farmImage(item.level)}
@@ -150,6 +174,7 @@ export default function TownResourceBuildings() {
               </div>
             ))}
             <div className=" relative">
+            <BuildingLabel name={farm.name} level={0} />
             <Image
               className="z-10 cursor-pointer   w-[7rem] h-auto "
               src={farmImage(0)}
@@ -178,9 +203,10 @@ export default function TownResourceBuildings() {
           </>
         )}
       </div>
-      <div className="z-10 flex flex-col left-[87rem] ml-auto gap-4 absolute  xl:left-[110rem] top-[30rem]">
+      <div className="z-10 flex flex-col left-[87rem] ml-auto gap-8 absolute  xl:left-[110rem] top-[30rem]">
         {goldMines && goldMines.length == 0 && (
           <div className=" relative">
+          <BuildingLabel name={goldMine.name} level={0} />
           <Image
             className=" cursor-pointer  w-[7rem] h-auto "
             src={goldMineImage(0)}
@@ -213,6 +239,8 @@ export default function TownResourceBuildings() {
           <>
             {goldMines.map((item, key) => (
               <div key={key} className="relative">
+                {isFull(item.level, item.earnedAmount) && <ReadyToClaimBadge />}
+                <BuildingLabel name={goldMine.name} level={item.level} />
                 <Image
                   className=" cursor-pointer  w-[7rem] h-auto"
                   src={goldMineImage(item.level)}
@@ -241,6 +269,7 @@ export default function TownResourceBuildings() {
   
             ))}
             <div className=" relative">
+            <BuildingLabel name={goldMine.name} level={0} />
             <Image
               className=" cursor-pointer w-[7rem] h-auto gap-20"
               src={goldMineImage(0)}

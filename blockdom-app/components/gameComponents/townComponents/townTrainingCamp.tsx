@@ -6,6 +6,7 @@ import { useUserDataContext } from '@/context/user-data-context';
 import { townHallImage, trainingCampImage } from '@/lib/utils';
 import { Tooltip } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
+import BuildingLabel from './buildingLabel';
 
 export default function TownTrainingCamp() {
 
@@ -18,16 +19,22 @@ export default function TownTrainingCamp() {
   return (
     <>
     {/* {Number(inViewLand?.trainingCampLvl) > 0 ?  */}
-        <Image
-    className="z-20 cursor-pointer absolute top-[54.5rem] left-[50.5%] xl:left-[51%]  w-[10rem] h-auto translate-x-1/2"
-    src={trainingCampImage(Number(inViewLand?.trainingCampLvl) || 0) }
-    width={580}
-    height={480}
-    alt="trainingCamp"
-    onClick={() => { isMyland &&
-      setSelectedItem(trainingCamp);
-    }}
-  /> 
+        <div className="z-20 absolute top-[54.5rem] left-[50.5%] xl:left-[51%] w-[10rem] translate-x-1/2">
+    <BuildingLabel
+      name={trainingCamp.name}
+      level={Number(inViewLand?.trainingCampLvl) || 0}
+    />
+    <Image
+      className="cursor-pointer w-full h-auto"
+      src={trainingCampImage(Number(inViewLand?.trainingCampLvl) || 0) }
+      width={580}
+      height={480}
+      alt="trainingCamp"
+      onClick={() => { isMyland &&
+        setSelectedItem(trainingCamp);
+      }}
+    />
+  </div>
      <Image
     className="z-10 cursor-pointer absolute top-[58rem] -translate-x-1/2 left-[57%] xl:left-[56%]  w-[10rem] h-auto"
     src={"/buildings/shadow.png"}

@@ -21,10 +21,10 @@ export default function Carousel() {
           </h3>
           <p className=" text-white/90 mb-6">
             What makes BLOCKDOM from the other play to earn apps is TOKENOMICS.
-            Blockdom is not a P2E game for the short term like others.We have
+            Plotwar is not a P2E game for the short term like others.We have
             developed innovative solutions to address the imbalance in the
-            supply and demand of BMT (Blockdom token), ensuring the sustained
-            value of BMT. This provides users with a reliable source of
+            supply and demand of PLOT (Plotwar token), ensuring the sustained
+            value of PLOT. This provides users with a reliable source of
             long-term income. For additional details, Refer to the white paper.
           </p>
           <button

@@ -22,7 +22,7 @@ export default function Footer() {
             Join our community
           </h2>
           <p className="text-[14px] opacity-60 text-white">
-          Blockdom is a place where you can build your kingdom and earn from.
+          Plot War is a place where you can build your kingdom and earn from.
 
           </p>
           <div className=" w-fit flex flex-row relative mt-8 left-1/2 -translate-x-1/2 lg:left-0 lg:-translate-x-0">
@@ -37,20 +37,20 @@ export default function Footer() {
         <div className="w-full  lg:w-[45%] px-[4rem] flex flex-wrap gap-10 justify-center lg:justify-start mt-20 lg:mt-0">
           <div className=" justify-center flex flex-col gap-4">
             {footerRow1.map((item,key) => (
-              <h3 key={key} className="  cursor-pointer  hover:opacity-70 opacity-90">{item.name}</h3>
+              <a key={key} href={item.route} className="  cursor-pointer  hover:opacity-70 opacity-90">{item.name}</a>
             ))}
             {/* <h2 className="  text-[22px] font-bold">Support</h2>*/}
           </div>
           <div className=" flex flex-col gap-4 justify-center">
           {footerRow2.map((item,key) => (
-              <h3 key={key} className=" cursor-pointer hover:opacity-70 opacity-90">{item.name}</h3>
+              <a key={key} href={item.route} className=" cursor-pointer hover:opacity-70 opacity-90">{item.name}</a>
             ))}
           </div>
         </div>
       </div>
       <div className=" flex flex-col sm:flex-row justify-around items-center p-10 mt-10 relative" >
-        <Image src={"/BlockdomLogo.png"} width={70} height={60} alt={"logo"}></Image>
-        <p className="absolute">@2024 Blockdom. All right reserved</p>
+        <Image src={"/plotwarMark.svg"} width={70} height={60} alt={"logo"}></Image>
+        <p className="absolute">@2024 Plot War. All right reserved</p>
         <a className="p-4 bg-[#62AE94] rounded-full"><FaAngleUp/></a>
       </div>
     </section>

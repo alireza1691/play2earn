@@ -1,11 +1,23 @@
 [profile.default]
+optimizer = true
+optimizer_runs = 1
+via_ir = true
 src = "src"
 out = "out"
 libs = ["lib"]
 
+# The deploy script writes the resulting addresses to deployments/<network>.json.
+fs_permissions = [{ access = "read-write", path = "./deployments" }]
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
-remappings = ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts','@openzeppelin/=lib/openzeppelin-contracts/']
+# The contracts-upgradeable entry must come first: the generic '@openzeppelin/'
+# fallback would otherwise resolve it inside the non-upgradeable package.
+remappings = [
+    '@openzeppelin/contracts-upgradeable=lib/openzeppelin-contracts-upgradeable/contracts',
+    '@openzeppelin/contracts=lib/openzeppelin-contracts/contracts',
+    '@openzeppelin/=lib/openzeppelin-contracts/',
+]
 
 [fuzz]
 runs = 600
@@ -14,3 +26,17 @@ seed = "0x3e8"
 dictionary-weight = 40
 include-storage = true
 include-push-bytes = true
+
+# Named endpoints, so --rpc-url takes a name rather than a pasted URL.
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
+base = "${BASE_RPC_URL}"
+base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
+anvil = "http://127.0.0.1:8545"
+
+# Etherscan V2 serves every chain from one host with one key, Basescan included,
+# so ETHERSCAN_API_KEY covers all three.
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}", chain = 11155111 }
+base = { key = "${ETHERSCAN_API_KEY}", chain = 8453 }
+base_sepolia = { key = "${ETHERSCAN_API_KEY}", chain = 84532 }

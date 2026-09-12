@@ -5,6 +5,7 @@ import { useSelectedBuildingContext } from "@/context/selected-building-context"
 import { useUserDataContext } from "@/context/user-data-context";
 import { gateImage, wallImage } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import BuildingLabel from "./buildingLabel";
 
 export default function TownWalls() {
   const { setSelectedItem } = useSelectedBuildingContext();
@@ -36,13 +37,22 @@ export default function TownWalls() {
             />
       }
 
+      {/*
+        Positioned by hand rather than hung off the click target below it: that
+        target is rotated to sit flat against the wall in the isometric view,
+        and a label inheriting the rotation would read at an angle.
+      */}
+      <BuildingLabel
+        name={wall.name}
+        level={Number(inViewLand?.wallLvl) || 0}
+        className="top-[66.5rem] left-[54.5%] -translate-x-1/2"
+      />
       <button
-     onClick={() => { isMyland 
+     onClick={() => { isMyland
      && inViewLand?.wallLvl && setSelectedItem(wall);
     }}
         className={`p-3 hover:blur-sm ${isMyland && " hover:bg-white/10"} h-24 w-52 rotate30 flex justify-center items-center  cursor-pointer  z-10 absolute left-[54.5%] -translate-x-1/2 top-[68rem]`}
       >
-       {/* <h3 className="text-white text-center "> Wall lvl{Number(inViewLand?.wallLvl) ||0 }</h3> */}
       </button>
     </>
   );

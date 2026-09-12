@@ -2,10 +2,10 @@ import { useApiData } from "@/context/api-data-context";
 import { useSelectedWindowContext } from "@/context/selected-window-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { warriors, warriorsInfo } from "@/lib/data";
-import { townMainnetPInst, townPInst } from "@/lib/instances";
+import { townMainnetPInst, townPInst, townRead } from "@/lib/instances";
 import { DispatchedArmy, WarLogType } from "@/lib/types";
 import { filterLandLogs } from "@/lib/utils";
-import CoinIcon from "@/svg/coinIcon";
+import GoldIcon from "@/svg/goldIcon";
 
 import FoodIcon from "@/svg/foodIcon";
 import OpenIcon from "@/svg/openIcon";
@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import OngoingLog from "./ongoingLog";
 import ResultLog from "./resultLog";
+import { useDeployment } from "@/lib/deployments";
 
 
 type WarLogs = {
@@ -32,12 +33,13 @@ export default function Logs() {
   const { chosenLand } = useUserDataContext();
   const currentRoute = usePathname();
   const isTestnet = currentRoute.includes("/testnet/");
+  const deployment = useDeployment();
 
   useEffect(() => {
     const getLogs = async () => {
       if (chosenLand) {
       try { 
-        const townInstant = isTestnet ? townPInst : townMainnetPInst;
+        const townInstant = townRead(deployment);
         const tx: DispatchedArmy[] = await townInstant.getDispatchedArmies(
           chosenLand?.tokenId
         );
@@ -70,12 +72,34 @@ export default function Logs() {
     }
     {battleLogTab == "Attacks" && warLogs && warLogs.attackLogs.map((log,key) => (
  
-      <ResultLog key={key} from={log.from} to={log.to} success={log.success} lootedAmounts={log.lootedAmounts} isAttack={true}/>
+      <ResultLog
+        key={key}
+        from={log.from}
+        to={log.to}
+        success={log.success}
+        lootedAmounts={log.lootedAmounts}
+        isAttack={true}
+        attackerArmy={log.attackerArmy}
+        attackerLosses={log.attackerLosses}
+        defenderLosses={log.defenderLosses}
+        attackerSurvivingPercent={log.attackerSurvivingPercent}
+      />
   
     ))}
     {battleLogTab == "Defenses" && warLogs && warLogs.defenseLogs.map((log,key) => (
  
- <ResultLog key={key} from={log.from} to={log.to} success={log.success} lootedAmounts={log.lootedAmounts} isAttack={false}/>
+ <ResultLog
+        key={key}
+        from={log.from}
+        to={log.to}
+        success={log.success}
+        lootedAmounts={log.lootedAmounts}
+        isAttack={false}
+        attackerArmy={log.attackerArmy}
+        attackerLosses={log.attackerLosses}
+        defenderLosses={log.defenderLosses}
+        attackerSurvivingPercent={log.attackerSurvivingPercent}
+      />
 
 ))}
     </>

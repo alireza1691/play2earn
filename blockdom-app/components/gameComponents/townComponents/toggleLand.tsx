@@ -26,7 +26,7 @@ export default function ToggleLand() {
         >
           {ownedLands?.map((land, key) => (
             <a
-              className=" cursor-pointer hover:bg-white/10 rounded-md px-2 w-full"
+              className=" cursor-pointer hover:bg-white/10 rounded-[4px] px-2 w-full"
               key={key}
               onClick={() => {
                 setChosenLand(land),

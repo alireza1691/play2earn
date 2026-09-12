@@ -21,15 +21,15 @@ export default function NavDropdownMobileScreen({
   const currentRoute = usePathname();
   const { theme, toggleTheme } = useTheme();
   return (
-    <div className="z-10 fixed  left-0 pb-11 pt-9 w-full  mt-[4rem] rounded-b-xl h-fit overflow-y-auto bg-gradient-to-r from-[#A9FFDE] to-[#7ECFB3] dark:from-[#34594B] dark:to-[#213830] bg-transparent px-6 shadow-lg ">
+    <div className="pwNavPanel z-10 fixed  left-0 pb-11 pt-9 w-full  mt-[4rem] h-fit overflow-y-auto px-6 shadow-lg ">
       <button
         type="button"
-        className=" bg-black/10 dark:bg-white/10  absolute -m-2.5 active:bg-white/20 dark:active:bg-black/10 rounded-md p-1 text-gray-700 right-5 bottom-5"
+        className=" bg-white/10  absolute -m-2.5 active:bg-black/10 rounded-md p-1 right-5 bottom-5"
         onClick={() => setMobileMenuOpen(false)}
       >
         <span className="sr-only">Close menu</span>
         <IoClose
-          className="h-6 w-6 text-gray-800 dark:text-gray-300  "
+          className="h-6 w-6 text-[#F4F4F1]  "
           aria-hidden="true"
         />
       </button>
@@ -41,14 +41,14 @@ export default function NavDropdownMobileScreen({
            
           
               <ConnectWallet
-                className={` !bg-[#06291D] !bg-opacity-50 mb-3 !rounded-r-none !p-3    ${currentRoute == "/" ?"!w-[80%]" : "!w-[100%]"} `}
+                className={` !bg-[#0D0F12]/60 mb-3 !rounded-r-none !p-3 !w-[100%] `}
                 modalSize="wide"
-                theme={theme === "dark" ? "dark" : "light"}
+                theme="dark"
                 welcomeScreen={{
-                  title: "Blockdom",
+                  title: "Plotwar",
                   subtitle: "Decentralized P2E game",
                   img: {
-                    src: "/BlockdomLogo.png",
+                    src: "/plotwarMark.svg",
                     width: 120,
                     height: 120,
                   },
@@ -63,32 +63,11 @@ export default function NavDropdownMobileScreen({
               </button>} */}
             
             </div>
-         
-       
-            {currentRoute == "/" && (
-              <>
-                <a
-                  href="/explore"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-gray-700/10  dark:text-gray-100/90 dark:hover:bg-white/10"
-                >
-                  Explore
-                </a>
-                <a
-                  href=""
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7  hover:bg-gray-700/10 dark:text-gray-100/90 dark:hover:bg-white/10"
-                >
-                  Dashboard
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3  flex flex-row items-center gap-2 rounded-lg px-3 py-2 text-base font-semibold leading-7  hover:bg-gray-700/10  dark:text-gray-100/90 dark:hover:bg-white/10"
-                >
-                  Whitepaper
-                  <IoMdDownload className=" text-xl group-hover:translate-y-1 transition-all" />
-                </a>
-              </>
-           
-            )}
+            {/*
+              The landing's links used to live here too, behind a
+              `currentRoute == "/"` check. The landing renders its own header
+              and its own mobile sheet now, so this one is game routes only.
+            */}
           </div>
         </div>
       </div>

@@ -1,8 +1,307 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* Landing page only — see components/indexPage/plotwarLanding.tsx. */
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body{
   font-family:'Roboto',sans-serif
 }
+
+/*
+  Shared navigation skin. The landing header and the in-game navbar are the
+  same bar in two places, so both are built from the tokens and classes below
+  rather than each carrying its own colours.
+
+  The landing wrapper re-declares --pw-accent / --pw-on-accent from its palette
+  prop; everything outside it (the game navbar) reads these defaults.
+*/
+:root {
+  --pw-accent: #98fbd7;
+  --pw-on-accent: #06291d;
+  --pw-ink: #0d0f12;
+  --pw-paper: #f4f4f1;
+  --pw-line: rgba(244, 244, 241, 0.12);
+  --pw-muted: rgba(244, 244, 241, 0.6);
+  --pw-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* One surface, one hairline, one corner for every panel in the game. */
+  --pw-surface: rgba(13, 15, 18, 0.86);
+  --pw-surface-raised: rgba(244, 244, 241, 0.06);
+  --pw-radius: 4px;
+  --pw-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --pw-danger: #f48475;
+  --pw-on-danger: #2b0f0a;
+}
+
+/*
+  Buttons. Three intents, one shape — the same block the navbar CTA uses, so a
+  Mint button on the map and Play free on the landing are the same object.
+*/
+.pwBtn,
+.greenButton,
+.redButton,
+.outlineGreenButton,
+.outlineRedButton,
+.txStateButton {
+  font-family: var(--pw-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  width: fit-content;
+  border-radius: 0;
+  white-space: nowrap;
+  transition: filter 0.2s ease, background 0.2s ease, border-color 0.2s ease,
+    color 0.2s ease;
+}
+.greenButton {
+  background: var(--pw-accent);
+  color: var(--pw-on-accent);
+  border: 1px solid var(--pw-accent);
+}
+.greenButton:hover:not(:disabled) { filter: brightness(1.08); }
+.greenButton:active:not(:disabled) { filter: brightness(0.9); }
+.redButton {
+  background: var(--pw-danger);
+  color: var(--pw-on-danger);
+  border: 1px solid var(--pw-danger);
+}
+.redButton:hover:not(:disabled) { filter: brightness(1.08); }
+.redButton:active:not(:disabled) { filter: brightness(0.9); }
+.outlineGreenButton,
+.txStateButton {
+  background: transparent;
+  border: 1px solid var(--pw-accent);
+  color: var(--pw-accent);
+}
+.outlineGreenButton:hover:not(:disabled),
+.txStateButton:hover:not(:disabled) {
+  background: rgba(152, 251, 215, 0.1);
+}
+.outlineRedButton {
+  background: transparent;
+  border: 1px solid var(--pw-danger);
+  color: var(--pw-danger);
+}
+.outlineRedButton:hover:not(:disabled) { background: rgba(244, 132, 117, 0.12); }
+.greenButton:disabled,
+.redButton:disabled,
+.outlineGreenButton:disabled,
+.outlineRedButton:disabled {
+  opacity: 0.4;
+  filter: none;
+  cursor: default;
+}
+
+/*
+  Tab in a game panel (token actions, battle log). Same micro-type as the nav
+  links — selected is the accent one, the rest are quiet.
+*/
+.pwTab {
+  font-family: var(--pw-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  border: 1px solid var(--pw-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--pw-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.pwTab:hover { color: var(--pw-paper); }
+.pwTab[data-active="true"] {
+  color: var(--pw-accent);
+  border-color: var(--pw-accent);
+  background: rgba(152, 251, 215, 0.1);
+}
+
+.pwNavBar {
+  background: rgba(13, 15, 18, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--pw-line);
+}
+.pwNavBrand {
+  font-family: Archivo, Helvetica, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  color: var(--pw-paper);
+}
+.pwNavLink {
+  font-family: var(--pw-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pw-muted);
+  transition: color 0.2s ease;
+}
+.pwNavLink:hover {
+  color: var(--pw-paper);
+}
+.pwNavLink[data-active="true"] {
+  color: var(--pw-accent);
+}
+/* Disabled entry — My land / Battle log before the wallet owns a land. */
+.pwNavLink[data-disabled="true"] {
+  color: rgba(244, 244, 241, 0.28);
+  cursor: default;
+}
+.pwNavCta {
+  background: var(--pw-accent);
+  color: var(--pw-on-accent);
+  font-family: var(--pw-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  white-space: nowrap;
+  transition: filter 0.2s ease;
+}
+.pwNavCta:hover {
+  filter: brightness(1.08);
+}
+/* Outlined counterpart of .pwNavCta — the chain switch. */
+.pwNavGhost {
+  border: 1px solid rgba(152, 251, 215, 0.5);
+  color: var(--pw-accent);
+  font-family: var(--pw-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.pwNavGhost:hover,
+.pwNavGhost[data-open="true"] {
+  border-color: var(--pw-accent);
+  background: rgba(152, 251, 215, 0.1);
+}
+/* Dropdown / mobile sheet hanging off the bar. */
+.pwNavPanel {
+  background: var(--pw-ink);
+  border: 1px solid var(--pw-line);
+}
+.pwNavPanel a {
+  font-family: var(--pw-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pw-paper);
+}
+
+/*
+  World stats on the explore map, in the top-left corner under the $PLOT
+  balance. Same badge as that one (.balBg) with the micro-label / value pairing
+  the landing page uses, so the corner reads as one block.
+*/
+.pwBadge {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+.pwBadgeLabel {
+  font-family: var(--pw-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(244, 244, 241, 0.45);
+}
+.pwBadgeValue {
+  font-family: Archivo, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--pw-paper);
+  font-variant-numeric: tabular-nums;
+}
+.pwBadgeUnit {
+  font-family: var(--pw-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(244, 244, 241, 0.45);
+  margin-left: 4px;
+}
+@media (max-width: 767px) {
+  .pwBadge { padding: 4px 8px; gap: 6px; }
+  .pwBadgeValue { font-size: 13px; }
+}
+
+/*
+  The landing page's own type and animations. Scoped to .pwLanding so the game
+  screens keep Roboto and nothing here leaks into them.
+*/
+.pwLanding {
+  font-family: Archivo, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.pwLanding * { box-sizing: border-box; }
+.pwLanding a { text-decoration: none; }
+/* Clears the fixed header when an anchor jumps to a section. */
+.pwLanding section[id] { scroll-margin-top: 88px; }
+
+/*
+  Section rail on the left of the landing page. Labels stay hidden until the
+  dot is hovered or its section is the one on screen, so the rail costs the
+  page no width.
+*/
+.pwRail {
+  position: fixed;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 10px;
+  border-radius: 4px;
+  background: rgba(13, 15, 18, 0.55);
+  backdrop-filter: blur(6px);
+}
+.pwRail a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 8px;
+}
+.pwRailDot {
+  display: block;
+  height: 8px;
+  flex: none;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+.pwRailLabel {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 4px 8px;
+  background: rgba(13, 15, 18, 0.9);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.pwRail a:hover .pwRailLabel,
+.pwRail a[data-active='true'] .pwRailLabel {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes pw-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.28; } }
+@keyframes pw-ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes pw-scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(1100%); } }
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -39,24 +338,23 @@ body{
 }
 
 .lightGreen {
- color:  #98FBD7
+  color: var(--pw-accent);
 }
 
 .lightBlue {
-  color: #96f9d9;
+  color: var(--pw-accent);
 }
 .blueText {
-  color: #98fbd7;
+  color: var(--pw-accent);
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
 .balBg {
-  border-radius: 6.4px;
-  border: 1px solid rgba(135, 240, 229, 0.6);
-  background: rgba(6, 41, 29, 0.5);
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
 }
 .navBalBg{
 display:flex;
@@ -66,15 +364,14 @@ padding: 5px 8px;
 justify-content: center;
 align-items: center;
 gap: 4.608px;
-border-radius: 2.949px;
-border: 0.461px solid rgba(135, 240, 229, 0.60);
-background: rgba(6, 41, 29, 0.50);
-box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
+border-radius: var(--pw-radius);
+border: 1px solid var(--pw-line);
+background: var(--pw-surface);
 }
 .greenBg {
-  border-radius: 10px;
-  border: 1px solid rgba(212, 212, 212, 0.35);
-  background: rgba(33, 48, 42, 0.6);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
   backdrop-filter: blur(10px);
 }
 .buildPlace {
@@ -86,81 +383,73 @@ box-shadow: -1.568px 1.96px 2.901px 0px rgba(0, 0, 0, 0.25);
   filter: blur(5px);
 }
 .settingsButton{
-  border-radius: 41px;
-  background: linear-gradient(173deg, rgba(94, 207, 164, 0.50) 3.83%, rgba(33, 56, 48, 0.50) 97.15%);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface-raised);
 }
 .logOutButton{
-  border-radius: 41px;
-background: rgba(168, 75, 75, 0.50);
+  border-radius: var(--pw-radius);
+  border: 1px solid rgba(244, 132, 117, 0.45);
+  color: var(--pw-danger);
+  background: rgba(244, 132, 117, 0.12);
 }
 .balanceText{
-  @apply text-[#87F0E5] font-semibold text-[8px] sm:text-[15px]
+  @apply text-[color:var(--pw-accent)] font-semibold text-[8px] sm:text-[15px]
 }
 .popUpStatus{
   @apply absolute z-500 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem] -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 txStateBg flex flex-col
 }
 .buildingWindow {
-  @apply  fixed sm:left-10 top-[4.5rem]  sm:top-[8rem] z998 rounded-xl left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80dvh] sm:h-[75dvh] max-h-[80rem] bg-[#21302A]/60 backdrop-blur-sm;
+  @apply fixed sm:left-10 top-[4.5rem] sm:top-[8rem] z998 left-1/2 sm:-translate-x-0 -translate-x-1/2 w-[99%] sm:w-[25rem] h-[80dvh] sm:h-[75dvh] max-h-[80rem] backdrop-blur-md;
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
+  box-shadow: var(--pw-shadow);
 }
-.greenButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF]  rounded-[0.8rem] text-[16px] font-medium   hover:from-[#4DFBB9] hover:to-[#4DFBB9]  active:from-[#1F6C4F] active:to-[#1F6C4F] text-[#424040];
-}
-.greenButton:disabled {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#75E5F4] from-[#9FFFCF] opacity-60  rounded-[0.8rem] text-[16px] font-medium    text-[#424040];
-
-}
-.redButton {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] rounded-[0.8rem] text-[16px] font-medium   hover:from-[#FFBFB1] hover:to-[#FFBFB1]  text-[#424040] active:from-[#9C695E] active:to-[#9C695E];
-}
-.redButton:disabled {
-  @apply py-3 px-7 w-fit  bg-gradient-to-l  to-[#F48475] from-[#FFB69F] opacity-60  rounded-[0.8rem] text-[16px] font-medium    text-[#424040];
-
-}
+/* The button intents themselves live with the tokens at the top of the file. */
 .closeIcon {
-  @apply cursor-pointer rounded-md hover:bg-gray-500/20 p-1;
-}
-.outlineRedButton {
-  @apply disabled:dark:border-[#F48475]/60 disabled:opacity-60 disabled:dark:hover:text-[#F48475] py-3 px-7 w-fit border font-medium dark:text-[#F48475] dark:border-[#F48475] text-[16px] dark:hover:text-[#FFBFB1] dark:hover:border-[#FFBFB1] rounded-[0.8rem] dark:active:border-[#9C695E] dark:active:text-[#9C695E] transition-all;
-}
-.outlineGreenButton {
-  @apply disabled:dark:hover:text-[#98FBD7]  py-3 px-7 w-fit border border-gray-800 hover:bg-gray-100 dark:hover:bg-transparent font-medium dark:text-[#98FBD7] dark:border-[#98FBD7] text-[16px] dark:hover:border-[#4DFBB9] dark:hover:text-[#4DFBB9]  rounded-[0.8rem] dark:active:border-[#1F6C4F] dark:active:text-[#1F6C4F] transition-all;
-}
-.outlineGreenButton:disabled {
-  @apply opacity-40 ;
+  @apply cursor-pointer hover:bg-white/10 p-1;
+  border-radius: var(--pw-radius);
 }
 .goodsBalanceKeeper {
-  @apply items-center rounded-lg px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 shadow-xl text-[12px] sm:text-[14px] overflow-x-hidden;
+  @apply items-center px-2 sm:px-4 py-2 flex flex-row gap-1 sm:gap-2 text-[12px] sm:text-[14px] overflow-x-hidden;
+  border-radius: var(--pw-radius);
 }
 .balHighlight{
   /* background: rgba(12, 69, 49, 0.6); */
   background: linear-gradient(90deg,transparent, #98FBD7,transparent);
 }
 .logBg {
-  border-radius: 10px;
-/* border: 1px solid #98FBD7; */
-background: rgba(6, 41, 29, 0.50);
-border: 1px solid rgba(6, 41, 29, 0.50); 
+  border-radius: var(--pw-radius);
+  background: var(--pw-surface);
+  border: 1px solid var(--pw-line);
+  transition: border-color 0.2s ease;
 }
 .logBg:hover {
-  border: 1px solid #98FBD7; 
+  border-color: var(--pw-accent);
 }
 
 .darkShadow {
   box-shadow: -0.2rem 0.15rem 0.3rem 0.04rem rgba(0, 0, 0, 0.3);
 }
 .attackWindowBg {
-  @apply bg-[#21302A]/60  backdrop-blur-md;
+  @apply backdrop-blur-md;
+  background: var(--pw-surface);
+  border: 1px solid var(--pw-line);
+  border-radius: var(--pw-radius);
+  box-shadow: var(--pw-shadow);
 }
 .battleLogWindowBg {
-  border-radius: 10px;
-border: 1px solid rgba(212, 212, 212, 0.35);
-background: rgba(33, 48, 42, 0.60);
-backdrop-filter: blur(10px);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
+  backdrop-filter: blur(10px);
 }
+/* Result of a battle: the accent tint marks it out from the log rows around it. */
 .logResultBg{
-  border-radius: 6px;
-border: 1px solid #42713A;
-background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
+  border-radius: var(--pw-radius);
+  border: 1px solid rgba(152, 251, 215, 0.4);
+  background: rgba(152, 251, 215, 0.1);
 }
 
 /* .attackWindowBg {
@@ -170,20 +459,16 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
 
 } */
 .cardBg {
-  background: linear-gradient(
-    to bottom left,
-    #ffffff44,
-    #ffffff17,
-    #ffffff53,
-    #ffffff00,
-    #ffffff21
-  );
-  border-radius: 0.2rem;
+  background: var(--pw-surface-raised);
+  border: 1px solid var(--pw-line);
+  border-radius: var(--pw-radius);
   padding-inline: 0.2rem;
   padding-top: 0.2rem;
 }
 .warriorsSlidersBg {
-@apply bg-[#06291D80]/50 border border-[#87F0E599]/60
+  background: var(--pw-surface);
+  border: 1px solid var(--pw-line);
+  border-radius: var(--pw-radius);
 }
 .warriorsGridBg {
   background: linear-gradient(
@@ -196,65 +481,45 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   );
 }
 .goldBg {
-  background-image: linear-gradient(
-    to bottom left,
-    #ffffff44,
-    #ffffff17,
-    #ffffff25,
-    #ffffff00,
-    #ffffff21
-  );
-  background-color: #9e954784;
+  background: rgba(158, 149, 71, 0.28);
+  border: 1px solid rgba(158, 149, 71, 0.5);
+  border-radius: var(--pw-radius);
 }
 .foodBg {
-  background-image: linear-gradient(
-    to bottom left,
-    #ffffff44,
-    #ffffff17,
-    #ffffff25,
-    #ffffff00,
-    #ffffff21
-  );
-  background-color: #589e478e;
+  background: rgba(88, 158, 71, 0.28);
+  border: 1px solid rgba(88, 158, 71, 0.5);
+  border-radius: var(--pw-radius);
 }
 .bronzeBg {
-  background-image: linear-gradient(
-    to bottom left,
-    #ffffff44,
-    #ffffff17,
-    #ffffff25,
-    #ffffff00,
-    #ffffff21
-  );
-  background-color: #50110541;
+  background: rgba(158, 102, 71, 0.28);
+  border: 1px solid rgba(158, 102, 71, 0.5);
+  border-radius: var(--pw-radius);
 }
 
 .tw-connect-wallet {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
-  color: white !important;
-  border-radius: 1rem !important;
-  height: 3.5rem !important;
+  color: var(--pw-paper) !important;
+  border-radius: var(--pw-radius) !important;
+  border: 1px solid var(--pw-line) !important;
   opacity: 0.9 !important;
-  filter: blur(15px); /* Adjust the blur radius as per your requirement */
   padding-inline: 1rem !important;
-
   height: fit-content !important;
 }
 .tw-connect-wallet:hover {
-  color: white !important;
-  background-color: rgba(0, 0, 0, 0.25) !important;
+  color: var(--pw-paper) !important;
+  background-color: rgba(244, 244, 241, 0.08) !important;
   /* box-shadow: 0 0.2rem 0.3rem 0.1rem rgba(0, 0, 0, 0.5) !important; */
   transition: all 0.15s ease-in-out;
 }
 .tw-connected-wallet {
-  background-color: rgba(0, 0, 0, 0.15) !important;
-  border: none !important;
-  height: 3.5rem !important;
-  border-radius: 1rem !important;
+  background-color: rgba(13, 15, 18, 0.6) !important;
+  border: 1px solid var(--pw-line) !important;
+  height: fit-content !important;
+  border-radius: var(--pw-radius) !important;
 }
 .tw-connected-wallet__balance {
-  color: rgb(209, 209, 209) !important;
+  color: var(--pw-muted) !important;
 }
 .question {
   transition: max-height 0.3s ease-out;
@@ -318,8 +583,117 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
 .viewGrid {
   transform: perspective(50000px) rotateY(-4deg) scale(1) rotateX(55deg)
     rotateZ(42deg);
-  transition: 0.6s ease all;
+  /* `all` animated every property the 3x3 block and its children declare on
+     each parcel switch; only the transform is meant to move. */
+  transition: transform 0.6s ease;
   /* box-shadow: 1rem 1rem 0.7rem 0.3rem rgba(0, 0, 0, 0.55); */
+}
+
+/*
+  Terrain tile behind a parcel in the zoomed view. Set --terrain inline (see
+  terrainStyle in parcels.tsx) so the centre parcel and the neighbours, which
+  layer a grid on top of it, can share one declaration.
+*/
+.parcelTerrain {
+  background-image: var(--terrain);
+  background-size: cover;
+}
+
+/*
+  Neighbour parcel in the zoomed view: not clickable, so its 10x10 land grid is
+  a repeating background rather than 100 nodes — the same trick .mapParcel uses
+  on the world map. --cell must stay in sync with the centre parcel's cells in
+  parcels.tsx: 35px land + 1px gutter, 52 + 1 from md, 70 + 1 from 2xl. The
+  grid tile is a square SVG, so background-size alone rescales it.
+*/
+.neighbourParcel {
+  --cell: 36px;
+  --gutter: 1px;
+  /* Ten cells, but the trailing gutter is not part of the parcel. */
+  width: calc(var(--cell) * 10 - var(--gutter));
+  height: calc(var(--cell) * 10 - var(--gutter));
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='35' height='35' fill='%23000' fill-opacity='0.25'/%3E%3C/svg%3E"),
+    var(--terrain);
+  background-size: var(--cell) var(--cell), cover;
+  background-repeat: repeat, no-repeat;
+}
+
+/*
+  v4 neighbour parcels: the land grid as a light hairline. The v3 pattern is a
+  black cell with 25% opacity, which is what buries the terrain detail under
+  it; here the ground shows and only the lines sit on top.
+*/
+.neighbourParcelV4 {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='35' height='35' fill='none' stroke='%23F4F4F1' stroke-opacity='0.11'/%3E%3C/svg%3E"),
+    var(--terrain);
+}
+/* Sea has no lands, so it keeps no grid in either skin. */
+.neighbourParcelV4.neighbourParcelSea {
+  background-image: var(--terrain);
+}
+
+/* Sea parcels hold no land, so they get the terrain and no grid at all. */
+.neighbourParcelSea {
+  background-image: var(--terrain);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .neighbourParcel {
+    --cell: 53px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .neighbourParcel {
+    --cell: 71px;
+  }
+}
+
+/* The mobile grid, which only mounts below 768px, uses 52px lands and a 2px
+   gutter. Declared last so it wins over the breakpoints above. */
+.neighbourParcelMobile {
+  --cell: 54px;
+  --gutter: 2px;
+}
+
+/*
+  World-map parcel: the 10x10 land grid used to be 100 <p> nodes per parcel
+  (10.000 nodes for the whole map). It is a repeating pattern, so it is painted
+  as a tiled background instead and costs zero DOM nodes. Only owned lands are
+  rendered as real elements on top.
+  7px cell + 1px gutter => 79px parcel; 10px + 1px => 109px from xl up.
+*/
+.mapParcel {
+  width: 79px;
+  height: 79px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='7' height='7' fill='%23000' fill-opacity='0.1'/%3E%3C/svg%3E");
+  background-size: 8px 8px;
+}
+
+/*
+  v4 world map: the parcel grid as a light hairline. v3 paints every land cell
+  black at 10%, which at this zoom turns the island grey — the whole point of
+  the new terrain is that you can see it.
+*/
+.mapParcelV4 {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='7' height='7' fill='none' stroke='%2398FBD7' stroke-opacity='0.13'/%3E%3C/svg%3E");
+}
+
+@media (min-width: 1280px) {
+  .mapParcelV4 {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Crect width='10' height='10' fill='none' stroke='%2398FBD7' stroke-opacity='0.13'/%3E%3C/svg%3E");
+  }
+}
+
+@media (min-width: 1280px) {
+  .mapParcel {
+    width: 109px;
+    height: 109px;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11'%3E%3Crect width='10' height='10' fill='%23000' fill-opacity='0.1'/%3E%3C/svg%3E");
+    background-size: 11px 11px;
+  }
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -353,16 +727,9 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   border-radius: 10px;
 }
 .notifBg {
-  border-radius: 6.4px;
-  background: linear-gradient(
-    212deg,
-    rgba(255, 255, 255, 0.44) -5.43%,
-    rgba(255, 255, 255, 0.17) 30.19%,
-    rgba(255, 255, 255, 0.25) 57.82%,
-    rgba(255, 255, 255, 0) 72.56%,
-    rgba(255, 255, 255, 0.21) 112.48%
-  );
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
 }
 
 .buildigImageContainer {
@@ -374,77 +741,97 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
-  border-radius: 15.045px;
-  background: linear-gradient(
-    212deg,
-    rgba(255, 255, 255, 0.44) -5.43%,
-    rgba(255, 255, 255, 0.17) 30.19%,
-    rgba(255, 255, 255, 0.54) 57.82%,
-    rgba(255, 255, 255, 0) 72.56%,
-    rgba(255, 255, 255, 0.21) 112.48%
-  );
-  box-shadow: -8px 10px 14.8px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface-raised);
 }
 
+/* Build timer and any other bar: hairline track, accent fill, no rounding. */
 .progress {
-  border-radius: 5px;
-  border: 1px solid rgba(212, 212, 212, 0.35);
-  background: linear-gradient(
-    90deg,
-    rgba(185, 185, 185, 0.2) 0%,
-    rgba(149, 149, 149, 0.2) 100%
-  );
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 0;
+  border: 1px solid var(--pw-line);
+  background: rgba(244, 244, 241, 0.08);
 }
 .progressIndicator {
-  border-radius: 5px;
-  background: linear-gradient(90deg, #f1d05b 0.07%, #f2d56f 100%);
+  border-radius: 0;
+  background: var(--pw-accent);
 }
 
 .darkGreenBg {
-  border-radius: 10px;
-  background: rgba(6, 41, 29, 0.5);
+  border-radius: var(--pw-radius);
+  background: var(--pw-surface-raised);
 }
+/*
+  The barracks recruitment panel.
+
+  It used to be a mint-washed pane — a 40% accent border over a 10% accent
+  fill — while every other window in the game (.buildingWindow, .tokenActionBg,
+  .greenBg) is dark glass with a hairline. It read as a different product. Same
+  treatment as the rest now; the accent stays for the things that are actually
+  interactive.
+*/
 .barracksActiveBg {
-  border-radius: 10px;
-  border: 1px solid rgba(212, 212, 212, 0.35);
-  background: linear-gradient(
-      270deg,
-      rgba(168, 131, 76, 0.2) 0%,
-      rgba(106, 168, 76, 0.2) 100%
-    ),
-    rgba(33, 48, 42, 0.6);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
   backdrop-filter: blur(10px);
+  box-shadow: var(--pw-shadow);
+}
+
+/*
+  A warrior's stat readout. Width comes from the layout it sits in, which is
+  what .redItemHolder and friends fought with — they hardcoded 200x42 and every
+  caller overrode it with !w-[45%].
+
+  The intent modifiers carry meaning: damage is the danger hue, defence and
+  health are neutral and positive, and a price is neither — it used to be red,
+  which read as a warning about the player's own gold.
+*/
+.statChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 4px 8px;
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface-raised);
+  color: var(--pw-paper);
+}
+.statChip > svg {
+  flex-shrink: 0;
+}
+.statChip--attack {
+  border-color: rgba(244, 132, 117, 0.45);
+  background: rgba(244, 132, 117, 0.14);
+}
+.statChip--hp {
+  border-color: rgba(152, 251, 215, 0.35);
+  background: rgba(152, 251, 215, 0.1);
+}
+.statChip__label {
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pw-muted);
+}
+.statChip__value {
+  font-family: var(--pw-mono);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 500;
 }
 .glassBg {
-  border-radius: 6.4px;
-  background: linear-gradient(
-    185deg,
-    rgba(255, 255, 255, 0.44) -5.43%,
-    rgba(255, 255, 255, 0.17) 30.19%,
-    rgba(255, 255, 255, 0.21) 57.82%,
-    rgba(255, 255, 255, 0) 72.56%,
-    rgba(255, 255, 255, 0.21) 112.48%
-  );
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface-raised);
 }
 
 .redItemHolder {
-  border-radius: 6.4px;
-  background: linear-gradient(
-      0deg,
-      rgba(158, 71, 71, 0.4) 0%,
-      rgba(158, 71, 71, 0.4) 100%
-    ),
-    linear-gradient(
-      212deg,
-      rgba(255, 255, 255, 0.44) -5.43%,
-      rgba(255, 255, 255, 0.17) 30.19%,
-      rgba(255, 255, 255, 0.25) 57.82%,
-      rgba(255, 255, 255, 0) 72.56%,
-      rgba(255, 255, 255, 0.21) 112.48%
-    );
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  background: rgba(158, 71, 71, 0.28);
+  border: 1px solid rgba(158, 71, 71, 0.5);
 
   display: flex;
   width: 200px;
@@ -455,21 +842,9 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   flex-shrink: 0;
 }
 .orangeItemHolder {
-  border-radius: 6.4px;
-  background: linear-gradient(
-      0deg,
-      rgba(158, 102, 71, 0.4) 0%,
-      rgba(158, 102, 71, 0.4) 100%
-    ),
-    linear-gradient(
-      212deg,
-      rgba(255, 255, 255, 0.44) -5.43%,
-      rgba(255, 255, 255, 0.17) 30.19%,
-      rgba(255, 255, 255, 0.25) 57.82%,
-      rgba(255, 255, 255, 0) 72.56%,
-      rgba(255, 255, 255, 0.21) 112.48%
-    );
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  background: rgba(158, 102, 71, 0.28);
+  border: 1px solid rgba(158, 102, 71, 0.5);
 
   display: flex;
   width: 200px;
@@ -480,21 +855,9 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   flex-shrink: 0;
 }
 .greenItemHolder {
-  border-radius: 6.4px;
-  background: linear-gradient(
-      0deg,
-      rgba(89, 158, 71, 0.4) 0%,
-      rgba(89, 158, 71, 0.4) 100%
-    ),
-    linear-gradient(
-      212deg,
-      rgba(255, 255, 255, 0.44) -5.43%,
-      rgba(255, 255, 255, 0.17) 30.19%,
-      rgba(255, 255, 255, 0.25) 57.82%,
-      rgba(255, 255, 255, 0) 72.56%,
-      rgba(255, 255, 255, 0.21) 112.48%
-    );
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  background: rgba(89, 158, 71, 0.28);
+  border: 1px solid rgba(89, 158, 71, 0.5);
 
   display: flex;
   width: 200px;
@@ -505,21 +868,9 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
   flex-shrink: 0;
 }
 .lightGreenItemHolder {
-  border-radius: 6.4px;
-  background: linear-gradient(
-      0deg,
-      rgba(115, 158, 71, 0.4) 0%,
-      rgba(115, 158, 71, 0.4) 100%
-    ),
-    linear-gradient(
-      212deg,
-      rgba(255, 255, 255, 0.44) -5.43%,
-      rgba(255, 255, 255, 0.17) 30.19%,
-      rgba(255, 255, 255, 0.25) 57.82%,
-      rgba(255, 255, 255, 0) 72.56%,
-      rgba(255, 255, 255, 0.21) 112.48%
-    );
-  box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  background: rgba(115, 158, 71, 0.28);
+  border: 1px solid rgba(115, 158, 71, 0.5);
 
   display: flex;
   width: 200px;
@@ -531,28 +882,35 @@ background: linear-gradient(92deg, #3A4A3D 13.46%, #81BB8C 87.46%);
 }
 
 .txStateBg{
-  border-radius: 10px;
-  border: 1px solid rgba(212, 212, 212, 0.35);
-  background: rgba(33, 48, 42, 0.80);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: rgba(13, 15, 18, 0.94);
   backdrop-filter: blur(10px);
-}
-.txStateButton{
-color: #87F0E5;
-border: 1px solid #98FBD7;
-/* Skeuomorphic • Dark */
-box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.19), -2px -2px 5px 0px rgba(255, 255, 255, 0.10);
+  box-shadow: var(--pw-shadow);
 }
 .spinner {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   border: 4px solid transparent;
-  border-top-color: #87F0E5; /* Your custom color */
+  border-top-color: var(--pw-accent);
   animation: spin 1s linear infinite;
   /* background-color: #87F0E54D;  */
   /* border-color: #87F0E54D; */
   /* border-color: rgba(135, 240, 229, 0.3); */
 }
+/* Inline-sized variant of .spinner, for standing in for a value that is still
+   loading rather than covering a whole panel. */
+.spinnerSm {
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--pw-accent);
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
 .rotate30 {
   transform: rotatex(-35deg) rotateY(45deg);
 }
@@ -567,34 +925,43 @@ box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.19), -2px -2px 5px 0px rgba(255, 255
 }
 
 .slideBarBg{
-  border-radius: 15.05px;
-background: linear-gradient(212deg, rgba(255, 255, 255, 0.44) -5.43%, rgba(255, 255, 255, 0.17) 30.19%, rgba(255, 255, 255, 0.33) 57.82%, rgba(255, 255, 255, 0.00) 72.56%, rgba(255, 255, 255, 0.21) 112.48%);
-box-shadow: -3.403px 4.254px 6.296px 0px rgba(0, 0, 0, 0.25);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
+  box-shadow: var(--pw-shadow);
 }
 input::placeholder {
-  color: #98fbd7; /* Replace with the color you want */
-  opacity: 0.5;
+  color: var(--pw-accent);
+  opacity: 0.4;
 }
 
 .chainIdDropDownBg{
-  background: rgba(6, 41, 29, 0.90);
-  
+  background: var(--pw-ink);
+  border: 1px solid var(--pw-line);
 }
 
+/* Mobile game navigation — same skin as .pwNavBar, on a floating bar. */
 .bottomBar{
-  border-radius: 14px;
-  border: 1px solid rgba(135, 240, 229, 0.60);
-  background: rgba(6, 41, 29, 0.50);
+  border-radius: 4px;
+  border: 1px solid var(--pw-line);
+  background: rgba(13, 15, 18, 0.92);
 }
 .tokenActionBg{
-  border-radius: 15px;
-border: 1px solid rgba(212, 212, 212, 0.35);
-background: rgba(6, 41, 29, 0.50);
-backdrop-filter: blur(10px);
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: var(--pw-surface);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--pw-shadow);
 }
 
 .inputBg{
-  border-radius: 10px;
-border: 1px solid #2C3D33;
-background: #435C52;
+  border-radius: var(--pw-radius);
+  border: 1px solid var(--pw-line);
+  background: rgba(244, 244, 241, 0.06);
+  color: var(--pw-paper);
+}
+.inputBg:focus-within,
+input.inputBg:focus {
+  border-color: var(--pw-accent);
+  outline: none;
 }

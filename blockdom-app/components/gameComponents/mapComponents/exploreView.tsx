@@ -5,6 +5,8 @@ import Map from "./map";
 import { useMapContext } from "@/context/map-context";
 import ParcelSwitchArrows from "./parcelSwitchArrows";
 import Parcels from "./parcels";
+import ExploreStats from "./exploreStats";
+import ParcelRangeHeader from "./parcelRangeHeader";
 
 
 
@@ -26,17 +28,13 @@ export default function ExploreView() {
 
   return (
     <>
-      {selectedParcel && (
-        <>
-          {/* <MapHandler setIsParcelSelected={setIsParcelSelected} /> */}
-          <div className="hidden md:flex z-50 sm:z-20 absolute top-[4.5rem] h-[3rem] w-full greenHeaderGradient items-center justify-center ">
-            <h3 className="text-[#98FBD7] -z-10">
-              {selectedParcel.x}-{selectedParcel.y}
-            </h3>
-          </div>
-          <h3 className="blueText absolute top-[5.5rem] right-10 md:hidden z-50">   {selectedParcel.x}-{selectedParcel.y}</h3>
-        </>
-      )}
+      {/*
+        Replaces the green header that used to sit here just to print the open
+        parcel's coordinates — that is the last cell of this strip now, next to
+        the supply, the live mint price and how many lands the wallet holds.
+      */}
+      <ExploreStats />
+      <ParcelRangeHeader />
 
       <div
         ref={containerRef}

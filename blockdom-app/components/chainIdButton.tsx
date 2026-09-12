@@ -46,9 +46,8 @@ export default function ChainIdButton() {
       <div className="flex flex-col  top-[0.45rem] right-[14rem] z-400">
         <button
           onClick={() => setIsNotifActive(!isNotifActive)}
-          className={`${
-            isNotifActive ? "!bg-black/20  " :" hover:brightness-110 "
-          } border border-[#98FBD7] text-[14px] text-[#98FBD7] !bg-opacity-50 py-[12px] px-3 rounded-xl min-w-[8rem]`}
+          data-open={isNotifActive}
+          className="pwNavGhost min-w-[8rem]"
         >
           {chainIdStatus()}
         </button>
@@ -58,12 +57,12 @@ export default function ChainIdButton() {
           }`}
         >
           <div
-            className={` darkShadow w-[12rem]  absolute py-2 px-1 chainIdDropDownBg rounded-lg   max-h-40 gap-1 flex  flex-col`}
+            className={` pwNavPanel darkShadow w-[12rem] absolute mt-2 py-2 px-1 max-h-40 gap-1 flex flex-col`}
           >
-            <a onClick={() => {switchMainnet(),router.push("/explore"),setIsNotifActive(false)}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
+            <a onClick={() => {switchMainnet(),router.push("/explore"),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
               Polygon (Mainnet)
             </a>
-            <a onClick={() => {switchTestnet(),router.push("/testnet/explore"),setIsNotifActive(false)}} className="px-3 py-1 cursor-pointer rounded-md hover:bg-[#98FBD7] hover:text-gray-900 transition-all">
+            <a onClick={() => {switchTestnet(),router.push("/testnet/explore"),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
               Sepolia (Testnet)
             </a>
           </div>

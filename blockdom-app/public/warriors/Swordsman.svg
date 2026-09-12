@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1008" viewBox="0 0 720 1008" role="img" aria-label="Swordsman">
+<defs>
+  <pattern id="grid-swordsman" width="26" height="26" patternUnits="userSpaceOnUse">
+    <path d="M 26 0 V 26 M 0 26 H 26" fill="none" stroke="#f4f4f1" stroke-width="1" stroke-opacity="0.045"/>
+  </pattern>
+  <pattern id="scan-swordsman" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="1.4" fill="#f4f4f1" fill-opacity="0.03"/>
+  </pattern>
+  <clipPath id="plateClip-swordsman"><rect width="720" height="1008"/></clipPath>
+  <clipPath id="leftHalf-swordsman"><rect width="360" height="1008"/></clipPath>
+</defs><g clip-path="url(#plateClip-swordsman)">
+
+  <rect width="720" height="1008" fill="#08090b"/>
+  <circle cx="360" cy="470" r="460" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="428" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="396" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="364" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="332" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="300" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="268" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="236" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="204" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="172" fill="#98fbd7" opacity="0.014"/><circle cx="360" cy="470" r="140" fill="#98fbd7" opacity="0.014"/>
+  <rect width="720" height="1008" fill="url(#grid-swordsman)" opacity="0.5"/>
+  <!-- heraldic arch: the accent halo that tells the six apart at thumbnail size -->
+  <path d="M 118 1008 V 430 A 242 242 0 0 1 602 430 V 1008 Z" fill="#98fbd7" opacity="0.075"/>
+  <path d="M 118 1008 V 430 A 242 242 0 0 1 602 430 V 1008 Z" fill="none" stroke="#98fbd7" stroke-width="3" opacity="0.3"/>
+
+<g>
+
+  <!-- cloak behind -->
+  <path d="M 186 566 L 296 490 L 424 490 L 534 566 L 578 1008 L 142 1008 Z" fill="#0e6549"/>
+  <path d="M 186 566 L 296 490 L 360 490 L 360 1008 L 142 1008 Z" fill="#3fbe90" opacity="0.22"/>
+  <path d="M 226 566 L 300 516 L 420 516 L 494 566 L 520 1008 L 200 1008 Z" fill="#08090b" opacity="0.45"/>
+
+  <!-- cuirass -->
+  <path d="M 244 546 C 256 494 300 466 360 466 C 420 466 464 494 476 546 L 494 1008 L 226 1008 Z" fill="#52616f"/>
+  <path d="M 244 546 C 254 502 288 476 330 468 L 338 1008 L 226 1008 Z" fill="#78899a"/>
+  <path d="M 360 466 C 420 466 464 494 476 546 L 494 1008 L 396 1008 Z" fill="#36424e"/>
+  <path d="M 342 476 L 378 476 L 382 1008 L 338 1008 Z" fill="#a3b2be"/>
+  <path d="M 342 476 L 360 476 L 360 1008 L 338 1008 Z" fill="#d2dce4"/>
+  <!-- two fauld lames, not a staircase -->
+  <path d="M 228 856 L 492 856 L 494 894 L 226 894 Z" fill="#36424e"/>
+  <path d="M 228 858 L 360 858" fill="none" stroke="#d2dce4" stroke-width="5"/>
+  <path d="M 226 918 L 494 918 L 496 956 L 224 956 Z" fill="#36424e"/>
+  <path d="M 226 920 L 360 920" fill="none" stroke="#d2dce4" stroke-width="5"/>
+
+  <!-- square pauldrons -->
+  <path d="M 198 490 L 300 456 L 316 546 L 208 580 Z" fill="#52616f"/>
+  <path d="M 198 490 L 300 456 L 302 496 L 200 530 Z" fill="#a3b2be"/>
+  <path d="M 208 580 L 316 546 L 322 600 L 216 632 Z" fill="#36424e"/>
+  <path d="M 208 582 L 316 548" fill="none" stroke="#d2dce4" stroke-width="4"/>
+  <path d="M 240 490 L 288 474 L 292 500 L 244 516 Z" fill="#98fbd7" opacity="0.75"/>
+  <path d="M 522 490 L 420 456 L 404 546 L 512 580 Z" fill="#36424e"/>
+  <path d="M 522 490 L 420 456 L 418 496 L 520 530 Z" fill="#78899a"/>
+  <path d="M 512 580 L 404 546 L 398 600 L 504 632 Z" fill="#222a32"/>
+  <path d="M 432 474 L 480 490 L 476 516 L 428 500 Z" fill="#3fbe90" opacity="0.75"/>
+
+  <!-- arms in to the grip -->
+  <path d="M 232 596 C 206 626 214 676 250 696 L 320 618 L 268 566 Z" fill="#52616f"/>
+  <path d="M 232 596 C 216 616 214 646 226 668 L 276 620 Z" fill="#78899a"/>
+  <path d="M 488 596 C 514 626 506 676 470 696 L 400 618 L 452 566 Z" fill="#36424e"/>
+
+  <!-- sword, point down -->
+  <path d="M 344 566 L 376 566 L 376 684 L 344 684 Z" fill="#2d343a"/>
+  <path d="M 344 566 L 358 566 L 358 684 L 344 684 Z" fill="#63707b"/>
+  <path d="M 346 592 L 374 592 M 346 622 L 374 622 M 346 652 L 374 652" fill="none" stroke="#1a1e22" stroke-width="5"/>
+  <circle cx="360" cy="542" r="30" fill="#52616f"/>
+  <path d="M 330 542 A 30 30 0 0 1 360 512 L 360 542 Z" fill="#d2dce4"/>
+  <circle cx="360" cy="542" r="30" fill="none" stroke="#a3b2be" stroke-width="3"/>
+  <circle cx="360" cy="542" r="10" fill="#d2dce4"/>
+  <g transform="translate(322,664) rotate(90) scale(0.6)">
+    <path d="M -50 -34 L 46 -34 L 50 34 L -50 34 Z" fill="#12161a"/>
+    <path d="M -50 -40 L -84 -30 L -84 30 L -50 40 Z" fill="#36424e"/>
+    <path d="M -50 -40 L -84 -30 L -84 0 L -50 0 Z" fill="#a3b2be"/>
+    <path d="M -32 -38 L -14 -38 L -12 28 L -30 28 Z" fill="#a3b2be"/><path d="M -10 -38 L 8 -38 L 10 28 L -8 28 Z" fill="#52616f"/><path d="M 12 -38 L 30 -38 L 32 28 L 14 28 Z" fill="#a3b2be"/><path d="M 32 -38 L 50 -38 L 52 28 L 34 28 Z" fill="#52616f"/>
+    <path d="M -30 -6 L -13 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M -8 -6 L 9 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M 14 -6 L 31 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M 34 -6 L 51 -6" fill="none" stroke="#12161a" stroke-width="4"/>
+    <path d="M -40 22 L 34 26 L 38 48 L -36 44 Z" fill="#52616f"/>
+    <path d="M -40 22 L 34 26 L 36 36 L -38 32 Z" fill="#a3b2be"/>
+  </g>
+  <g transform="translate(398,664) rotate(90) scale(0.58)">
+    <path d="M -50 -34 L 46 -34 L 50 34 L -50 34 Z" fill="#12161a"/>
+    <path d="M -50 -40 L -84 -30 L -84 30 L -50 40 Z" fill="#222a32"/>
+    <path d="M -50 -40 L -84 -30 L -84 0 L -50 0 Z" fill="#78899a"/>
+    <path d="M -32 -38 L -14 -38 L -12 28 L -30 28 Z" fill="#78899a"/><path d="M -10 -38 L 8 -38 L 10 28 L -8 28 Z" fill="#36424e"/><path d="M 12 -38 L 30 -38 L 32 28 L 14 28 Z" fill="#78899a"/><path d="M 32 -38 L 50 -38 L 52 28 L 34 28 Z" fill="#36424e"/>
+    <path d="M -30 -6 L -13 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M -8 -6 L 9 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M 14 -6 L 31 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M 34 -6 L 51 -6" fill="none" stroke="#12161a" stroke-width="4"/>
+    <path d="M -40 22 L 34 26 L 38 48 L -36 44 Z" fill="#36424e"/>
+    <path d="M -40 22 L 34 26 L 36 36 L -38 32 Z" fill="#78899a"/>
+  </g>
+  <!-- crossguard -->
+  <path d="M 232 748 L 488 748 L 476 790 L 244 790 Z" fill="#52616f"/>
+  <path d="M 232 748 L 360 748 L 360 790 L 244 790 Z" fill="#a3b2be"/>
+  <path d="M 240 764 L 480 764" fill="none" stroke="#98fbd7" stroke-width="6" opacity="0.65"/>
+  <path d="M 340 736 L 380 736 L 380 798 L 340 798 Z" fill="#78899a"/>
+  <!-- blade -->
+  <path d="M 330 790 L 390 790 L 378 956 L 360 1008 L 342 956 Z" fill="#a3b2be"/>
+  <path d="M 330 790 L 360 790 L 360 1008 L 342 956 Z" fill="#f0f4f7"/>
+  <path d="M 357 790 L 363 790 L 363 980 L 357 980 Z" fill="#52616f"/>
+
+  <!-- gorget + barbute helm -->
+  <path d="M 294 418 L 426 418 L 440 482 L 280 482 Z" fill="#36424e"/>
+  <path d="M 294 418 L 360 418 L 360 482 L 280 482 Z" fill="#78899a"/>
+  <path d="M 288 452 L 434 452" fill="none" stroke="#222a32" stroke-width="6"/>
+  <path d="M 286 396 V 312 C 286 238 434 238 434 312 V 396 L 412 422 L 308 422 Z" fill="#52616f"/>
+  <path d="M 298 400 V 314 C 298 264 328 246 356 242 L 356 422 L 306 422 Z" fill="#a3b2be"/>
+  <path d="M 434 396 V 312 C 434 264 406 246 384 242 L 384 422 L 412 422 Z" fill="#222a32"/>
+  <path d="M 350 242 L 370 242 L 370 402 L 350 402 Z" fill="#d2dce4"/>
+  <path d="M 298 326 L 348 326 L 348 356 L 298 356 Z" fill="#08090b"/>
+  <path d="M 372 326 L 422 326 L 422 356 L 372 356 Z" fill="#08090b"/>
+  <path d="M 348 326 L 372 326 L 372 424 L 348 424 Z" fill="#08090b"/>
+  <path d="M 304 332 L 342 332 L 342 348 L 304 348 Z" fill="#98fbd7" opacity="0.9"/>
+  <path d="M 378 332 L 416 332 L 416 348 L 378 348 Z" fill="#3fbe90" opacity="0.9"/>
+  <path d="M 286 320 L 434 320" fill="none" stroke="#d2dce4" stroke-width="4" opacity="0.5"/>
+
+</g>
+<rect y="788" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="810" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="832" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="854" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="876" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="898" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="920" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="942" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="964" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="986" width="720" height="22" fill="#08090b" opacity="0.075"/>
+
+  <rect width="720" height="1008" fill="url(#scan-swordsman)" opacity="0.65"/>
+  <rect x="20" y="20" width="680" height="968" fill="none" stroke="#98fbd7" stroke-width="2" opacity="0.2"/>
+  <path d="M 20 54 V 20 H 54" fill="none" stroke="#98fbd7" stroke-width="3" opacity="0.85"/>
+  <path d="M 700 54 V 20 H 666" fill="none" stroke="#98fbd7" stroke-width="3" opacity="0.85"/>
+  <path d="M 20 954 V 988 H 54" fill="none" stroke="#98fbd7" stroke-width="3" opacity="0.85"/>
+  <path d="M 700 954 V 988 H 666" fill="none" stroke="#98fbd7" stroke-width="3" opacity="0.85"/></g></svg>

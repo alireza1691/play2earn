@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Secrets. Was tracked until 2026-09-12; the keys in git history are burned.
+.env

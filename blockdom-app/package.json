@@ -3,35 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
+  },
+  "comments": {
+    "overrides": "@thirdweb-dev/wallets asks for @magic-ext/oauth ^7, whose ESM build inlines CryptoJS's UMD wrapper — an AMD define([\"./core\"]) that Turbopack cannot resolve, so the whole app fails to bundle. 16.0.0 is the first release that depends on crypto-js instead of inlining it. Nothing here uses Magic Link (ThirdwebProvider runs the default wallets), so the module is only ever imported, never instantiated."
+  },
+  "overrides": {
+    "@magic-ext/oauth": "^16.0.0"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.2.9",
+    "@nextui-org/react": "^2.6.11",
     "@thirdweb-dev/react": "^4.1.17",
     "@thirdweb-dev/sdk": "^4.0.23",
     "axios": "^1.6.3",
     "bignumber.js": "^9.1.2",
     "ethers": "^5.7.2",
-    "framer-motion": "^10.16.16",
-    "next": "14.0.4",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-icons": "^4.12.0",
-    "react-intersection-observer": "^9.5.3",
-    "react-toastify": "^10.0.4",
+    "framer-motion": "^13.1.1",
+    "next": "^16.3.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-icons": "^5.7.0",
+    "react-intersection-observer": "^11.0.0",
+    "react-toastify": "^11.1.0",
     "tailwind-scrollbar": "^3.0.5",
     "typeface-roboto": "^1.1.13"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
     "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.0.4",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.2",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"

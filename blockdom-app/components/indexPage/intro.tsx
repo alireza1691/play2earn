@@ -51,10 +51,10 @@ export default function Intro() {
             }}
           >
             <h1 className="mt-10 text-3xl text-gray-200 sm:text-[48px] text-center sm:text-left font-bold">
-              Blockdom
+              Plot War
             </h1>
             <p className=" text-center text-[16px] text-gray-400  font-medium sm:text-left pt-4">
-              Blockdom is a P2E game based on digital assets.
+              Plot War is a P2E game based on digital assets.
               <br></br>
               Let&apos;s start your journey by minting an NFT land and establishing your kingdom on the blockchain.
               <br></br>

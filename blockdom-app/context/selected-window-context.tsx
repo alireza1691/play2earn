@@ -13,7 +13,14 @@ const windowComponentsList = [
     "battleLog",
     "attackStatus",
     "tokenActions",
-    "workerComp"
+    "workerComp",
+    "landPicker",
+    "swap",
+    // Goods logistics: ship between your own lands, or trade food for gold.
+    // Separate from "swap", which is goods against PLOT.
+    "goods",
+    // The pool's own state — reserves, price, depth.
+    "pool"
 ] as const
 
 const tokenCompTabs = [

@@ -1,7 +1,7 @@
 "use client";
 
 import { landItems } from "@/lib/data";
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 type itemType = (typeof landItems)[number];
 
@@ -38,11 +38,28 @@ export default function SelectedBuildingContextProvider({
   const [selectedResourceBuilding, setSelectedResourceBuilding] =
     useState<null | SelectedResourceBuildingType>(null);
 
+  /**
+   * Opening a building always starts from its normal panel.
+   *
+   * `upgradeMode` and `activeMode` used to be cleared only by the window's own
+   * close button, so putting one building into upgrade mode and then clicking a
+   * different one left the new building showing the upgrade panel — a state it
+   * was never put into. Clearing them here means every entry point gets it
+   * right, rather than each of the dozen call sites having to remember.
+   */
+  const selectItem = useCallback<
+    React.Dispatch<React.SetStateAction<itemType | null>>
+  >((value) => {
+    setUpgradeMode(false);
+    setActiveMode(false);
+    setSelectedItem(value);
+  }, []);
+
   return (
     <StatesContext.Provider
       value={{
         selectedItem,
-        setSelectedItem,
+        setSelectedItem: selectItem,
         activeMode,
         setActiveMode,
         upgradeMode,

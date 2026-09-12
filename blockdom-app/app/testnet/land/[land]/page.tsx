@@ -8,7 +8,13 @@ import ToggleLand from "@/components/gameComponents/townComponents/toggleLand";
 import BottomBar from "@/components/gameComponents/bottomBar";
 import WorkerComp from "@/components/gameComponents/townComponents/workerComp";
 
-export default function MyLand() {
+/**
+ * Someone else's town. The `[land]` id is not read here: the navbar takes it
+ * off the path through lib/urlState.ts#townFromLocation, the same way it takes
+ * `?town=` on /myLand, so opening this URL cold shows that town rather than
+ * whatever the previous screen had selected.
+ */
+export default function VisitLand() {
   return (
     <>
       <ToggleLand />

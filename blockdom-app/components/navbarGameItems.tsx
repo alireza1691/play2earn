@@ -3,6 +3,7 @@ import { useUserDataContext } from "@/context/user-data-context";
 import BackIcon from "@/svg/backIcon";
 import BattleLogActiveIcon from "@/svg/battleLogActiveIcon";
 import BattleLogIcon from "@/svg/battleLogIcon";
+import ClansIcon from "@/svg/clansIcon";
 import ExploreActiveIcon from "@/svg/exploreActiveIcon";
 import ExploreIcon from "@/svg/exploreIcon";
 import MyLandActiveIcon from "@/svg/myLandActiveIcon";
@@ -10,15 +11,21 @@ import MyLandIcon from "@/svg/myLandIcon";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { HiChevronDown } from "react-icons/hi";
+import { routeFor, useDeployment } from "@/lib/deployments";
+import { useOpenMyLand } from "./gameComponents/landPicker";
 
 
 export default function NavbarGameItems() {
   const { selectedParcel, setSelectedParcel, setSelectedLand } = useMapContext();
   const { ownedLands } = useUserDataContext();
+  // Several lands means asking which one first, rather than dropping the
+  // player on whichever the event log happened to return first.
+  const openMyLand = useOpenMyLand();
 
   const router = useRouter();
   const currentRoute = usePathname();
   const isTestnet = currentRoute.includes("/testnet/");
+  const deployment = useDeployment();
   useEffect(() => {
     
   },[ownedLands])
@@ -29,51 +36,41 @@ export default function NavbarGameItems() {
       <>
         <a
           onClick={() => {setSelectedParcel(null) , setSelectedLand(null)}}
-          className={`${
-            selectedParcel == null
-              ? " brightness-50"
-              : " text-gray-800 dark:text-gray-50 hover:bg-black/10 cursor-pointer "
-          } flex flex-col justify-center items-center transition-all  p-2 rounded-lg text-sm font-semibold leading-6`}
+          data-disabled={selectedParcel == null}
+          className="pwNavLink flex flex-col justify-center items-center gap-1 transition-all p-2 cursor-pointer"
         >
           <BackIcon />
           Back
         </a>
-        <h3 className=" mt-auto mb-auto">|</h3>
+        <span className="mt-auto mb-auto h-4 w-px bg-[#F4F4F1]/20"></span>
       </>
 
       {/* } */}
 
       <a
         onClick={() => {
-          router.push(isTestnet ? "/testnet/explore" : "/explore");
+          router.push(routeFor(deployment, "explore"));
         }}
-        className={`${
-          currentRoute == "/explore" || currentRoute == "/testnet/explore"
-            ? " brightness-100  bg-black/20 text-[#B9F8EE] "
-            : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
-        } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
+        data-active={currentRoute.endsWith("/explore")}
+        className="pwNavLink flex flex-col justify-center items-center gap-1 transition-all p-2 cursor-pointer"
       >
-        {currentRoute == "/explore" ? <ExploreActiveIcon /> : <ExploreIcon />}
+        {currentRoute.endsWith("/explore") ? <ExploreActiveIcon /> : <ExploreIcon />}
         Explore
       </a>
-      {ownedLands && ownedLands.length > 0 ? (  <a 
-        onClick={() => {
-          router.push(isTestnet ? "/testnet/myLand" : "/myLand");
-        }}
-        className={`${
-          currentRoute == "/myLand" || currentRoute == "/testnet/myLand"
-            ? " brightness-100  bg-black/20 text-[#B9F8EE] "
-            : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
-        } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
+      {ownedLands && ownedLands.length > 0 ? (  <a
+        onClick={openMyLand}
+        data-active={currentRoute.endsWith("/myLand")}
+        className="pwNavLink flex flex-col justify-center items-center gap-1 transition-all p-2 cursor-pointer"
       >
-        {currentRoute == "/myLand" || currentRoute == "/testnet/myLand" ? <MyLandActiveIcon /> : <MyLandIcon />}
+        {currentRoute.endsWith("/myLand") ? <MyLandActiveIcon /> : <MyLandIcon />}
         My land
 
       </a>) :(
         <a
-          className={` brightness-50 flex flex-col justify-center items-center   p-2 rounded-lg  text-sm font-semibold leading-6 `}
+          data-disabled="true"
+          className="pwNavLink flex flex-col justify-center items-center gap-1 p-2"
         >
-          {currentRoute == "/myLand"|| currentRoute == "/testnet/myLand"  ? <MyLandActiveIcon /> : <MyLandIcon />}
+          {currentRoute.endsWith("/myLand") ? <MyLandActiveIcon /> : <MyLandIcon />}
           My land
         </a>
       )}
@@ -81,15 +78,12 @@ export default function NavbarGameItems() {
     {ownedLands && ownedLands.length > 0 ? ( 
       <a
         onClick={() => {
-          router.push(isTestnet ? "/testnet/battleLog": "/battleLog");
+          router.push(routeFor(deployment, "battleLog"));
         }}
-        className={`${
-          currentRoute == "/battleLog"|| currentRoute == "/testnet/battleLog"
-            ? " brightness-100  bg-black/20 text-[#B9F8EE] "
-            : "text-gray-800 dark:text-gray-50 hover:bg-black/10"
-        } flex flex-col justify-center items-center transition-all  p-2 rounded-lg cursor-pointer text-sm font-semibold leading-6 `}
+        data-active={currentRoute.endsWith("/battleLog")}
+        className="pwNavLink flex flex-col justify-center items-center gap-1 transition-all p-2 cursor-pointer"
       >
-        {currentRoute == "/battleLog" ? (
+        {currentRoute.endsWith("/battleLog") ? (
           <BattleLogActiveIcon />
         ) : (
           <BattleLogIcon />
@@ -99,9 +93,10 @@ export default function NavbarGameItems() {
     ) : (
       <a
  
-        className={` brightness-50 flex flex-col justify-center items-center transition-all  p-2 rounded-lg  text-sm font-semibold leading-6 `}
+        data-disabled="true"
+        className="pwNavLink flex flex-col justify-center items-center gap-1 p-2"
       >
-        {currentRoute == "/battleLog" ? (
+        {currentRoute.endsWith("/battleLog") ? (
           <BattleLogActiveIcon />
         ) : (
           <BattleLogIcon />
@@ -109,6 +104,22 @@ export default function NavbarGameItems() {
         Battle log
       </a>
     )}
+
+    {/* Not gated on owning a land: this is where a new player goes to apply to
+        a clan, and where anyone founds one. Gating it would hide the entry
+        point from exactly the people looking for it. */}
+    <a
+      onClick={() => {
+        router.push(routeFor(deployment, "clans"));
+      }}
+      data-active={currentRoute.endsWith("/clans")}
+      className="pwNavLink flex flex-col justify-center items-center gap-1 transition-all p-2 cursor-pointer"
+    >
+      <ClansIcon
+        active={currentRoute.endsWith("/clans")}
+      />
+      Clans
+    </a>
     </div>
   );
 }

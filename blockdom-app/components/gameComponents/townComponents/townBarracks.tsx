@@ -6,6 +6,7 @@ import { barracksImage } from '@/lib/utils';
 import { useUserDataContext } from '@/context/user-data-context';
 import { Tooltip } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
+import BuildingLabel from './buildingLabel';
 
 export default function TownBarracks() {
     const {setSelectedItem} = useSelectedBuildingContext()
@@ -16,16 +17,22 @@ export default function TownBarracks() {
     
   return (
 <>
- <Image
-    className="z-20 cursor-pointer absolute top-[54.5rem] -translate-x-1/2 left-[41%] xl:left-[42.5%]  w-[10rem] h-auto"
-    src={barracksImage(Number(inViewLand?.barracksLvl )|| 0)}
-    width={580}
-    height={480}
-    alt="Barracks"
-    onClick={() => {isMyland &&
-      setSelectedItem(barracks);
-    }}
-  />
+ <div className="z-20 absolute top-[54.5rem] -translate-x-1/2 left-[41%] xl:left-[42.5%] w-[10rem]">
+    <BuildingLabel
+      name={barracks.name}
+      level={Number(inViewLand?.barracksLvl) || 0}
+    />
+    <Image
+      className="cursor-pointer w-full h-auto"
+      src={barracksImage(Number(inViewLand?.barracksLvl )|| 0)}
+      width={580}
+      height={480}
+      alt="Barracks"
+      onClick={() => {isMyland &&
+        setSelectedItem(barracks);
+      }}
+    />
+  </div>
   
  
       <Image

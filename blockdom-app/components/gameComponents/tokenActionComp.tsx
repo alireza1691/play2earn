@@ -5,7 +5,7 @@ import { useUserDataContext } from "@/context/user-data-context";
 import { townAddress } from "@/lib/blockchainData";
 import { bmtPInst } from "@/lib/instances";
 import { formattedNumber } from "@/lib/utils";
-import BMTIcon from "@/svg/bmtIcon";
+import PlotCoin from "@/svg/plotCoin";
 import CloseIcon from "@/svg/closeIcon";
 import { useAddress } from "@thirdweb-dev/react";
 import { BigNumberish } from "ethers";
@@ -24,7 +24,7 @@ export default function TokenActionComp() {
   const [enteredAmount, setEnteredAmount] = useState(0);
   const address = useAddress();
   const { approve, deposit, withdraw, faucet } = useBlockchainUtilsContext();
-  const { BMTBalance } = useUserDataContext();
+  const { plotBalance } = useUserDataContext();
 
   const handleApprove = async () => {
     const approvedAm = await approve(enteredAmount);
@@ -52,11 +52,11 @@ export default function TokenActionComp() {
     <>
       {selectedWindowComponent == "tokenActions" && (
         <section className="z-40 absolute h-[70dvh] lg:h-[80dvh] w-[91dvw] lg:w-[25rem] top-[8rem] lg:left-9 left-1/2 -translate-x-1/2 lg:-translate-x-0 tokenActionBg flex flex-col">
-          <div className="h-[2rem] rounded-t-xl px-3 py-1 blueText bg-[#06291D80]/50 flex flex-row items-center justify-between">
-            <h3>BMT</h3>
+          <div className="h-[2rem] rounded-[4px] px-3 py-1 blueText bg-[#0D0F12]/85 flex flex-row items-center justify-between">
+            <h3>PLOT</h3>
             <button
               onClick={() => setSelectedWindowComponent(null)}
-              className=" hover:bg-white/10 rounded-lg p-1 transition-all"
+              className=" hover:bg-white/10 rounded-[4px] p-1 transition-all"
             >
               {" "}
               <CloseIcon />
@@ -65,21 +65,15 @@ export default function TokenActionComp() {
           <div className="flex flex-row  justify-center gap-4 py-4">
             <button
               onClick={() => setTokenCompTab("deposit/withdraw")}
-              className={` ${
-                tokenCompTab == "deposit/withdraw"
-                  ? "bg-gradient-to-t from-[#213830]/50 to-[#5ECFA4]/50"
-                  : " bg-[#555555]/60"
-              } py-2 px-4 rounded-full cursor-pointer hover:brightness-110 transition-all`}
+              data-active={tokenCompTab == "deposit/withdraw"}
+              className="pwTab"
             >
               Deposit/Withdraw
             </button>
             <button
               onClick={() => setTokenCompTab("faucet")}
-              className={` ${
-                tokenCompTab == "faucet"
-                  ? "bg-gradient-to-t from-[#213830]/50 to-[#5ECFA4]/50"
-                  : " bg-[#555555]/60"
-              } py-2 px-4 rounded-full cursor-pointer hover:brightness-110 transition-all`}
+              data-active={tokenCompTab == "faucet"}
+              className="pwTab"
             >
               Faucet
             </button>
@@ -89,12 +83,12 @@ export default function TokenActionComp() {
               <>
                 <button
                   onClick={() => setIsDeposit(!isDeposit)}
-                  className=" blueText py-2 px-3 rounded-md bg-[#06291D80]/50 hover:brightness-125"
+                  className=" blueText py-2 px-3 rounded-[4px] bg-[#0D0F12]/85 hover:brightness-125"
                 >
                   {isDeposit ? "Deposit" : "Withdraw"}
                 </button>
                 <div className="inputBg flex flex-row py-1 px-2 gap-2">
-                  <BMTIcon />
+                  <PlotCoin size={32} />
                   <input
                     type="number"
                     onChange={(event) =>
@@ -115,7 +109,7 @@ export default function TokenActionComp() {
             {tokenCompTab == "faucet" && (
               <div className="flex mt-auto flex-col  px-3">
                 <p className="balBg px-3 py-2 blueText text-[14px] !font-normal">
-                  Claim test BMT and conver them to Gold/Food (Convert them in
+                  Claim test PLOT and conver them to Gold/Food (Convert them in
                   townhall).
                 </p>
               </div>
@@ -147,7 +141,7 @@ export default function TokenActionComp() {
               <button
                 onClick={() => withdraw(approvedAmount)}
                 disabled={
-                  enteredAmount > Number(formattedNumber(BMTBalance || 0))
+                  enteredAmount > Number(formattedNumber(plotBalance || 0))
                 }
                 className="greenButton !w-1/2"
               >
@@ -156,7 +150,7 @@ export default function TokenActionComp() {
             )}
             {tokenCompTab == "faucet" && (
               <button onClick={() => faucet()} className="greenButton !w-1/2">
-                Get BMT
+                Get PLOT
               </button>
             )}
           </div>

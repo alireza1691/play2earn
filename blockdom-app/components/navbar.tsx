@@ -1,26 +1,29 @@
 "use client";
 import { ConnectWallet, useAddress, useChainId } from "@thirdweb-dev/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { useTheme } from "@/context/theme-context";
 import { usePathname } from "next/navigation";
-import { BsMoon, BsSun } from "react-icons/bs";
-import DarkLogo from "@/svg/darkLogo";
-import LightLogo from "@/svg/lightLogo";
+import Link from "next/link";
+import PlotwarMark from "@/svg/plotwarMark";
 import NavDropdownMobileScreen from "./navDropdownMobileScreen";
 import NavbarLandingItems from "./navbarLandingItems";
 import NavbarGameItems from "./navbarGameItems";
-import { getOwnedBuildings, getOwnedLands } from "@/lib/utils";
+import { getOwnedBuildings, getOwnedLands, zeroAddress } from "@/lib/utils";
+import { townFromLocation } from "@/lib/urlState";
 import { useApiData } from "@/context/api-data-context";
 import { useUserDataContext } from "@/context/user-data-context";
-import { townPInst } from "@/lib/instances";
-import { InViewLandType, landDataResType, MintedLand } from "@/lib/types";
+import { townRead } from "@/lib/instances";
+import { InViewLandType, landDataResType } from "@/lib/types";
 import BackIcon from "@/svg/backIcon";
 import { useMapContext } from "@/context/map-context";
 import BalanceContainer from "./gameComponents/balanceContainer";
 
 import ChainIdButton from "./chainIdButton";
 import { useBlockchainStateContext } from "@/context/blockchain-state-context";
+import { useDeployment, isRewrite } from "@/lib/deployments";
+import DeploymentSwitch from "./deploymentSwitch";
+import { readPlotBalance } from "@/lib/plotBalance";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,13 +38,13 @@ export default function Navbar() {
     setOwnedLands,
     setInViewLand,
     setBuildedResBuildings,
-    inViewLand,
     chosenLand,
     setChosenLand,
+    isUserDataLoading,
     setIsUserDataLoading,
-    setBMTBalance,
-    landUpdateTrigger,
-    setLandUpdateTrigger,
+    setPlotBalance,
+    landRefresh,
+    refreshLand,
   } = useUserDataContext();
   const { setSelectedParcel, setSelectedLand, selectedParcel } =
     useMapContext();
@@ -53,137 +56,236 @@ export default function Navbar() {
   const currentRoute = usePathname();
 
   const isTestnet = currentRoute.includes("/testnet/");
+  const deployment = useDeployment();
+  const town = townRead(deployment);
 
-  const handleInViewLand = async (land: MintedLand) => {
-    try {
-      console.log(townPInst);
+  // The land whose data is currently in `inViewLand`. Kept in a ref rather than
+  // read off `inViewLand` so the loader below does not depend on the state it
+  // writes — that dependency made it re-run after every load, and it also let
+  // blockchain-utils-context's optimistic setInViewLand kick off a refetch.
+  const loadedTokenId = useRef<number | null>(null);
+  // The land a request is already out for, and a sequence number so a slow
+  // response for a land the user has since left cannot overwrite a newer one.
+  const inFlightTokenId = useRef<number | null>(null);
+  const requestId = useRef(0);
+  // The highest refresh id this loader has acted on, so a bumped id reads as a
+  // new request without anyone having to reset a flag afterwards.
+  const servedRefresh = useRef(0);
 
-      const defaultLandData: landDataResType = await townPInst.getLandIdData(
-        Number(land.tokenId)
-      );
+  // Chosen land as a plain number: "Visit land" hands us a fresh object for the
+  // land already on screen, and keying on the object meant that re-render was
+  // the only thing the loader saw.
+  const chosenTokenId = chosenLand ? Number(chosenLand.tokenId) : null;
 
-      console.log("instance fetched");
-      const remainedWorkerBusyTime = await townPInst.getRemainedBuildTimestamp(
-        Number(land.tokenId)
-      );
-
-      const warriors = await townPInst.getArmy(Number(land.tokenId));
-      const defaultLand: InViewLandType = {
-        tokenId: Number(land.tokenId),
-        townhallLvl: defaultLandData.townhallLevel,
-        wallLvl: defaultLandData.wallLevel,
-        barracksLvl: defaultLandData.barracksLevel,
-        trainingCampLvl: defaultLandData.trainingCampLevel,
-        goodsBalance: [
-          defaultLandData.goodsBalance[0],
-          defaultLandData.goodsBalance[1],
-        ],
-        buildedResourceBuildings: defaultLandData.buildedResourceBuildings,
-        remainedBuildTime: remainedWorkerBusyTime,
-        army: warriors,
-      };
-      setInViewLand(defaultLand);
-      console.log("default land:", defaultLand);
-      if (buildedResourceBuildings) {
-        const resBildingsOfDefaultLand = getOwnedBuildings(
-          buildedResourceBuildings,
-          Number(land.tokenId)
-        );
-        setBuildedResBuildings(resBildingsOfDefaultLand);
-      }
-      setIsUserDataLoading(false);
-    } catch (error) {
-      console.log("We have a trouble with getting inViewLand");
-    }
-  };
-
+  // Which lands the connected wallet owns, and a default selection.
   useEffect(() => {
-    const data = async () => {
-      console.log(address);
+    // A town named in the URL — /land/<id>, or ?town= on the my-land screens —
+    // is an explicit choice: a refresh, or a link to someone else's town. It
+    // outranks everything below, so that neither the default nor the wallet's
+    // asynchronous reconnect can swallow it on the way in.
+    const wanted = townFromLocation();
 
-      if (address && mintedLands) {
-        console.log(
-          "minted lands and address fetched. calling smart contract view funncst to get in view land..."
-        );
+    if (!address) {
+      setOwnedLands(null);
+      if (wanted === null) setChosenLand(null);
+      loadedTokenId.current = null;
+      setInViewLand(null);
+      setIsUserDataLoading(false);
+      return;
+    }
+    if (!mintedLands) return;
 
-        const ownedl = getOwnedLands(mintedLands, address);
-        setOwnedLands(ownedl);
+    const owned = getOwnedLands(mintedLands, address);
+    setOwnedLands(owned);
+    // Keep the current selection if the wallet still owns it. Replacing it with
+    // an equal-but-new object on every log refetch restarted the loader.
+    setChosenLand((current) => {
+      if (current && Number(current.tokenId) === wanted) return current;
+      if (wanted !== null) {
+        const owner = mintedLands.find(
+          (land) => Number(land.tokenId) === wanted
+        )?.owner;
+        return { tokenId: String(wanted), owner: owner ?? zeroAddress };
+      }
+      return current && owned.some((land) => land.tokenId === current.tokenId)
+        ? current
+        : owned[0] ?? null;
+    });
+  }, [mintedLands, address]);
 
-        if (!chosenLand && ownedl.length > 0) {
-          setChosenLand(ownedl[0]);
+  /**
+   * Loads the selected land's on-chain data.
+   *
+   * The three reads used to be awaited one after another, so opening a land
+   * cost three full round trips to Infura before the spinner could clear —
+   * plus a fourth for the PLOT balance, which the old effect re-ran on every
+   * pass. None of them depend on each other.
+   *
+   * The spinner also used to hang for good when the chosen land was already
+   * the one in view: "Visit land" set isUserDataLoading, but the only branch
+   * that cleared it required chosenLand and inViewLand to differ. That is the
+   * common case — a wallet with one land visiting that land.
+   */
+  useEffect(() => {
+    // Land data is only read on the Sepolia deployments; v3-mainnet has no Town
+    // to ask. This used to test isTestnet, which is false on /v4/ routes, so the
+    // whole fetch was skipped there and the balance bar stayed empty.
+    if (deployment === "v3-mainnet") {
+      loadedTokenId.current = null;
+      setInViewLand(null);
+      setIsUserDataLoading(false);
+      return;
+    }
+    if (!address || chosenTokenId == null) {
+      // No wallet, or a wallet with no land: there is nothing to wait for.
+      if (address && !mintedLands) return;
+      setIsUserDataLoading(false);
+      return;
+    }
+
+    const requested = landRefresh.id !== servedRefresh.current;
+
+    if (!requested) {
+      // A request for it is already out, so let it finish and clear the
+      // spinner. The effect re-runs on its own setIsUserDataLoading, so
+      // without this check every load fired twice. Checked before the one
+      // below so a refresh of the land already on screen still shows as busy.
+      if (inFlightTokenId.current === chosenTokenId) return;
+      // Already showing this land — clear a spinner a caller turned on for it.
+      if (loadedTokenId.current === chosenTokenId) {
+        if (isUserDataLoading) setIsUserDataLoading(false);
+        return;
+      }
+    }
+
+    // Marked served here rather than after the reads, so the re-render this
+    // causes takes the branch above instead of starting a second request.
+    if (requested) servedRefresh.current = landRefresh.id;
+
+    // An explicit refresh says whether it blocks; anything reaching this point
+    // without one is a first load or a land switch, which has nothing on
+    // screen yet and so always blocks.
+    const blocking = requested ? landRefresh.blocking : true;
+
+    const id = ++requestId.current;
+    inFlightTokenId.current = chosenTokenId;
+    if (blocking) setIsUserDataLoading(true);
+
+    (async () => {
+      try {
+        const [landData, remainedBuildTime, army] = await Promise.all([
+          town.getLandIdData(chosenTokenId) as Promise<landDataResType>,
+          town.getRemainedBuildTimestamp(chosenTokenId),
+          town.getArmy(chosenTokenId),
+        ]);
+        // Superseded by a newer land while this was in flight.
+        if (requestId.current !== id) return;
+
+        const land: InViewLandType = {
+          tokenId: chosenTokenId,
+          townhallLvl: landData.townhallLevel,
+          wallLvl: landData.wallLevel,
+          barracksLvl: landData.barracksLevel,
+          trainingCampLvl: landData.trainingCampLevel,
+          goodsBalance: [landData.goodsBalance[0], landData.goodsBalance[1]],
+          buildedResourceBuildings: landData.buildedResourceBuildings,
+          remainedBuildTime,
+          army,
+        };
+        loadedTokenId.current = chosenTokenId;
+        setInViewLand(land);
+      } catch (error) {
+        // Leave loadedTokenId alone so the next trigger retries this land.
+        console.log("We have a trouble with getting inViewLand", error);
+      } finally {
+        if (requestId.current === id) {
+          inFlightTokenId.current = null;
+          // Unconditional for a blocking load: a failed read must not leave
+          // the game behind a spinner with no way out.
+          if (blocking) setIsUserDataLoading(false);
         }
-        if (isTestnet) {
-          if (!inViewLand && !chosenLand) {
-            console.log("1");
-            await handleInViewLand(ownedl[0]);
-          }
-          if (landUpdateTrigger && chosenLand) {
-            console.log("land data triggered");
-            await handleInViewLand(ownedl[0]);
-            console.log("land data updated by trigger");
-            setLandUpdateTrigger(false);
-          }
-          if (
-            chosenLand &&
-            inViewLand &&
-            Number(chosenLand.tokenId) != inViewLand.tokenId
-          ) {
-            setIsUserDataLoading(true);
-            await handleInViewLand(chosenLand);
-          }
-        } else {
-          setInViewLand(null);
-          setIsUserDataLoading(false);
-        }
       }
-      if (!address) {
-        setOwnedLands(null);
-      }
-      if (address) {
-        const connectedWalletBal = await townPInst.getBMTbalance(address);
-        setBMTBalance(connectedWalletBal);
-      }
-    };
-    data();
+    })();
   }, [
-    mintedLands,
+    chosenTokenId,
+    deployment,
+    town,
     address,
-    chosenLand,
-    inViewLand,
     chainId,
-    landUpdateTrigger,
+    landRefresh,
+    isUserDataLoading,
+    mintedLands,
   ]);
+
+  // Resource buildings come from the event log, not from a call, so they are
+  // kept off the critical path above — they used to be skipped entirely when
+  // the logs happened to arrive after the land data.
+  useEffect(() => {
+    if (!buildedResourceBuildings || chosenTokenId == null) return;
+    setBuildedResBuildings(
+      getOwnedBuildings(buildedResourceBuildings, chosenTokenId)
+    );
+  }, [buildedResourceBuildings, chosenTokenId]);
+
+  // The wallet's PLOT balance is per address, not per land; the old effect
+  // refetched it on every one of its passes.
+  useEffect(() => {
+    if (!address) {
+      setPlotBalance(null);
+      return;
+    }
+    let cancelled = false;
+    // The method was renamed with the token, and the contract deployed behind
+    // the v4 addresses has not caught up — see lib/plotBalance.ts.
+    readPlotBalance(deployment, address)
+      .then((balance) => !cancelled && setPlotBalance(balance as unknown as number))
+      .catch((error: unknown) => {
+        console.log("PLOT balance failed", error);
+        // Otherwise the pill sits on the previous land's figure, or on nothing.
+        if (!cancelled) setPlotBalance(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [address, chainId, landRefresh.id, deployment]);
+
+  // The landing page renders its own navbar (components/indexPage/plotwarLanding.tsx),
+  // which already carries the brand, the same game links and Connect Wallet.
+  // Returning after the hooks above keeps the land/PLOT loaders running.
+  if (currentRoute === "/") return null;
 
   return (
     <>
+      {/*
+        Same bar as the landing header: .pwNav* classes in globals.css are the
+        one place its colours live, so the two cannot drift apart.
+      */}
       <header className=" z-50 relative">
-        <div className="fixed  w-full  h-[4rem] from-[#A9FFDE] to-[#7ECFB3] bg-gradient-to-r dark:from-[#34594B] dark:to-[#213830]  top-0 z-100  shadow-md md:shadow-none"></div>
+        <div className="pwNavBar fixed w-full h-[4rem] top-0 z-100"></div>
         <nav
           className="fixed mx-auto top-0 flex   items-center justify-between px-4  lg:px-8 h-[4rem] w-screen z-100 "
           aria-label="Global"
         >
           <div className="flex  flex-row items-center gap-4  ">
-            <a
-              href="/"
-              // onClick={() => {
-              //   router.push("/");
-              // }}
-              className="md:m-2.5 cursor-pointer "
-            >
-              {theme === "light" ? <DarkLogo /> : <LightLogo />}
-            </a>
+            <Link href="/" className="flex flex-row items-center gap-3 cursor-pointer">
+              <PlotwarMark size={30} />
+              <span className="pwNavBrand hidden sm:block !text-[19px]">Plotwar</span>
+            </Link>
 
             <div className="hidden md:flex">
               {" "}
               <ChainIdButton />
             </div>
+
+            {/* Only renders on the two testnet rewrites; null everywhere else. */}
+            <DeploymentSwitch />
           </div>
 
           {currentRoute == "myLand" && <BalanceContainer />}
 
           <div className=" ml-3 md:ml-5 flex md:hidden   ">
             <button
-              className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-800 dark:text-gray-50 right-0 w-fit mr-2"
+              className=" -m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-[#F4F4F1] right-0 w-fit mr-2"
               onClick={() => {
                 mobileMenuOpen === false
                   ? setMobileMenuOpen(true)
@@ -196,24 +298,15 @@ export default function Navbar() {
           {currentRoute === "/" ? <NavbarLandingItems /> : <NavbarGameItems />}
 
           <div className=" !hidden md:!flex   justify-center items-center gap-3">
-            {/* {currentRoute == "/" && (
-              <button
-                onClick={toggleTheme}
-                className="  bg-[#06291D] text-white bg-opacity-50  w-[2.5rem] h-[2.5rem]  backdrop-blur-[0.5rem]  rounded-xl flex items-center justify-center hover:scale-115 active:scale-105 transition-all hover:bg-opacity-70  "
-              >
-                {theme === "light" ? <BsSun /> : <BsMoon />}
-              </button>
-            )} */}
-
             <ConnectWallet
-              className=" !bg-[#06291D]  !bg-opacity-50 !p-3 "
+              className=" !bg-[#0D0F12]/60 !p-3 "
               modalSize="wide"
-              theme={theme === "dark" ? "dark" : "light"}
+              theme="dark"
               welcomeScreen={{
-                title: "Blockdom",
+                title: "Plotwar",
                 subtitle: "Decentralized P2E game",
                 img: {
-                  src: "/BlockdomLogo.png",
+                  src: "/plotwarMark.svg",
                   width: 120,
                   height: 120,
                 },

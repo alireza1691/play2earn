@@ -12,3 +12,6 @@ docs/
 
 # Dotenv file
 .env
+
+# Local throwaway chain output; real deployments are committed.
+deployments/anvil.json

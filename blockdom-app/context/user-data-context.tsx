@@ -5,7 +5,7 @@ import {
   MintedLand,
   MintedResourceBuildingType,
 } from "@/lib/types";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 
 type ResourceBuildingObj = {
   tokenId: number;
@@ -47,11 +47,26 @@ type UserDataContextType = {
   setArmy: React.Dispatch<React.SetStateAction<number|null>>
   isUserDataLoading: boolean
   setIsUserDataLoading: React.Dispatch<React.SetStateAction<boolean>>
-  BMTBalance: number | null 
-  setBMTBalance : React.Dispatch<React.SetStateAction<number | null >>
-  landUpdateTrigger: boolean
-  setLandUpdateTrigger: React.Dispatch<React.SetStateAction<boolean>>
+  plotBalance: number | null
+  setPlotBalance : React.Dispatch<React.SetStateAction<number | null >>
+  landRefresh: LandRefresh
+  refreshLand: (options?: { blocking?: boolean }) => void
 };
+
+/**
+ * A request to re-read the selected land from chain.
+ *
+ * `id` only ever goes up, so the reader can tell a fresh request from one it
+ * has already served without anyone having to reset a flag.
+ *
+ * `blocking` decides whether the player waits behind the full-screen spinner.
+ * A first load or a land switch has nothing on screen worth keeping, so it
+ * blocks. A refresh after the player's own transaction lands on a screen that
+ * is already populated and correct, so it stays silent — the old code blocked
+ * for both, which is why every confirmed transaction made the whole game
+ * blank out and re-appear.
+ */
+export type LandRefresh = { id: number; blocking: boolean };
 
 const UserDataContext = createContext<UserDataContextType | null>(null);
 
@@ -59,7 +74,7 @@ export default function UserDataContextProvider({
   children,
 }: UserDataContextProviderProps) {
   const [ownedLands, setOwnedLands] = useState<MintedLand[] | null>(null);
-  const [BMTBalance, setBMTBalance] = useState<null | number>(null)
+  const [plotBalance, setPlotBalance] = useState<null | number>(null)
   const [inViewLand, setInViewLand] = useState<InViewLandType | null>(null);
   const [chosenLand,setChosenLand] = useState<MintedLand | null>(null)
   const [buildedResBuildings, setBuildedResBuildings] =
@@ -70,7 +85,13 @@ export default function UserDataContextProvider({
   );
   const [army, setArmy] = useState<number | null>(null);
   const [isUserDataLoading, setIsUserDataLoading] = useState <boolean>(true)
-  const [landUpdateTrigger, setLandUpdateTrigger] = useState<boolean>(false)
+  const [landRefresh, setLandRefresh] = useState<LandRefresh>({ id: 0, blocking: false })
+
+  const refreshLand = useCallback(
+    ({ blocking = false }: { blocking?: boolean } = {}) =>
+      setLandRefresh((current) => ({ id: current.id + 1, blocking })),
+    []
+  )
 
   return (
     <UserDataContext.Provider
@@ -79,8 +100,8 @@ export default function UserDataContextProvider({
         setOwnedLands,
         inViewLand,
         setInViewLand,
-        landUpdateTrigger,
-        setLandUpdateTrigger,
+        landRefresh,
+        refreshLand,
         farms,
         setFarms,
         goldMines,
@@ -88,7 +109,7 @@ export default function UserDataContextProvider({
         buildedResBuildings,
         setBuildedResBuildings,
         chosenLand,setChosenLand,army,setArmy,
-        isUserDataLoading,setIsUserDataLoading,BMTBalance,setBMTBalance
+        isUserDataLoading,setIsUserDataLoading,plotBalance,setPlotBalance
       }}
     >
       {children}

@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1008" viewBox="0 0 720 1008" role="img" aria-label="Knight">
+<defs>
+  <pattern id="grid-knight" width="26" height="26" patternUnits="userSpaceOnUse">
+    <path d="M 26 0 V 26 M 0 26 H 26" fill="none" stroke="#f4f4f1" stroke-width="1" stroke-opacity="0.045"/>
+  </pattern>
+  <pattern id="scan-knight" width="4" height="4" patternUnits="userSpaceOnUse">
+    <rect width="4" height="1.4" fill="#f4f4f1" fill-opacity="0.03"/>
+  </pattern>
+  <clipPath id="plateClip-knight"><rect width="720" height="1008"/></clipPath>
+  <clipPath id="leftHalf-knight"><rect width="360" height="1008"/></clipPath>
+</defs><g clip-path="url(#plateClip-knight)">
+
+  <rect width="720" height="1008" fill="#08090b"/>
+  <circle cx="360" cy="470" r="460" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="428" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="396" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="364" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="332" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="300" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="268" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="236" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="204" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="172" fill="#ffb9ed" opacity="0.014"/><circle cx="360" cy="470" r="140" fill="#ffb9ed" opacity="0.014"/>
+  <rect width="720" height="1008" fill="url(#grid-knight)" opacity="0.5"/>
+  <!-- heraldic arch: the accent halo that tells the six apart at thumbnail size -->
+  <path d="M 118 1008 V 430 A 242 242 0 0 1 602 430 V 1008 Z" fill="#ffb9ed" opacity="0.075"/>
+  <path d="M 118 1008 V 430 A 242 242 0 0 1 602 430 V 1008 Z" fill="none" stroke="#ffb9ed" stroke-width="3" opacity="0.3"/>
+
+<g>
+
+  <!-- couched lance, corner to corner, behind everything -->
+  <g>
+    <path d="M 70 138 L 710 688 L 690 712 L 50 162 Z" fill="#3d3025"/>
+    <path d="M 70 138 L 710 688 L 700 700 L 60 150 Z" fill="#5b4832"/>
+    <path d="M 6 96 L 92 124 L 56 188 Z" fill="#78899a"/>
+    <path d="M 6 96 L 92 124 L 50 142 Z" fill="#d2dce4"/>
+    <path d="M 690 664 L 726 694 L 702 722 L 668 692 Z" fill="#36424e"/>
+    <!-- pennon -->
+    <path d="M 200 268 L 336 322 L 294 352 L 328 390 L 188 342 Z" fill="#dc82bb"/>
+    <path d="M 200 268 L 336 322 L 262 334 L 194 306 Z" fill="#ffb9ed"/>
+  </g>
+
+  <!-- rider, behind the horse's head -->
+  <path d="M 404 626 C 418 556 470 516 534 520 C 600 524 646 570 652 638 L 674 1008 L 414 1008 Z" fill="#36424e"/>
+  <path d="M 404 626 C 416 568 456 536 508 526 L 512 1008 L 414 1008 Z" fill="#52616f"/>
+  <path d="M 518 530 L 556 530 L 566 1008 L 510 1008 Z" fill="#a3b2be"/>
+  <path d="M 518 530 L 538 530 L 540 1008 L 510 1008 Z" fill="#d2dce4"/>
+  <!-- surcoat -->
+  <path d="M 440 776 L 652 776 L 672 1008 L 428 1008 Z" fill="#774063"/>
+  <path d="M 440 776 L 534 776 L 538 1008 L 428 1008 Z" fill="#dc82bb" opacity="0.4"/>
+  <path d="M 538 822 L 588 886 L 538 950 L 488 886 Z" fill="#ffb9ed" opacity="0.9"/>
+  <path d="M 538 822 L 588 886 L 538 886 Z" fill="#f4f4f1" opacity="0.4"/>
+  <!-- neck and gorget: the helm sat clear of the shoulders with ink between -->
+  <path d="M 484 430 L 588 430 L 592 524 L 480 524 Z" fill="#12161a"/>
+  <path d="M 484 430 L 532 430 L 532 524 L 480 524 Z" fill="#222a32"/>
+  <path d="M 466 486 L 606 486 L 622 546 L 450 546 Z" fill="#52616f"/>
+  <path d="M 466 486 L 536 486 L 536 546 L 450 546 Z" fill="#a3b2be"/>
+  <path d="M 456 522 L 616 522" fill="none" stroke="#222a32" stroke-width="6"/>
+  <path d="M 458 546 L 614 546 L 626 594 L 446 594 Z" fill="#36424e"/>
+  <path d="M 458 546 L 536 546 L 536 594 L 446 594 Z" fill="#78899a"/>
+  <path d="M 450 570 L 622 570" fill="none" stroke="#222a32" stroke-width="5"/>
+
+  <!-- pauldrons -->
+  <path d="M 396 640 L 484 570 L 526 638 L 428 706 Z" fill="#52616f"/>
+  <path d="M 396 640 L 484 570 L 498 592 L 408 660 Z" fill="#d2dce4"/>
+  <path d="M 660 640 L 584 566 L 538 630 L 630 704 Z" fill="#222a32"/>
+  <path d="M 660 640 L 584 566 L 596 582 L 662 650 Z" fill="#52616f"/>
+
+  <!-- lance arm: hand forward on the shaft, elbow dropped back behind it -->
+  
+    <path d="M 585.6 631.2 L 646.4 600.8 L 679.9 679.0 L 628.1 705.0 Z" fill="#52616f"/>
+    <path d="M 600.8 623.6 L 631.2 608.4 L 646.2 648.4 L 623.8 659.6 Z" fill="#a3b2be"/>
+    <path d="M 676.2 676.6 L 631.8 707.4 L 586.8 632.0 L 621.2 608.0 Z" fill="#52616f"/>
+    <path d="M 663.2 685.6 L 644.8 698.4 L 620.8 661.7 L 637.2 650.3 Z" fill="#a3b2be"/>
+    <path d="M 678.9 702.3 L 664.3 716.9 L 643.7 716.9 L 629.1 702.3 L 629.1 681.7 L 643.7 667.1 L 664.3 667.1 L 678.9 681.7 Z" fill="#52616f"/><path d="M 629.1 702.3 L 629.1 681.7 L 643.7 667.1 L 664.3 667.1 L 654 692 Z" fill="#a3b2be"/><path d="M 662.5 695.5 L 657.5 700.5 L 650.5 700.5 L 645.5 695.5 L 645.5 688.5 L 650.5 683.5 L 657.5 683.5 L 662.5 688.5 Z" fill="#222a32"/><path d="M 659.0 694.1 L 656.1 697.0 L 651.9 697.0 L 649.0 694.1 L 649.0 689.9 L 651.9 687.0 L 656.1 687.0 L 659.0 689.9 Z" fill="#a3b2be"/>
+  <g transform="translate(600,614) rotate(41) scale(0.6)">
+    <path d="M -50 -34 L 46 -34 L 50 34 L -50 34 Z" fill="#12161a"/>
+    <path d="M -50 -40 L -84 -30 L -84 30 L -50 40 Z" fill="#36424e"/>
+    <path d="M -50 -40 L -84 -30 L -84 0 L -50 0 Z" fill="#a3b2be"/>
+    <path d="M -32 -38 L -14 -38 L -12 28 L -30 28 Z" fill="#a3b2be"/><path d="M -10 -38 L 8 -38 L 10 28 L -8 28 Z" fill="#52616f"/><path d="M 12 -38 L 30 -38 L 32 28 L 14 28 Z" fill="#a3b2be"/><path d="M 32 -38 L 50 -38 L 52 28 L 34 28 Z" fill="#52616f"/>
+    <path d="M -30 -6 L -13 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M -8 -6 L 9 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M 14 -6 L 31 -6" fill="none" stroke="#12161a" stroke-width="4"/><path d="M 34 -6 L 51 -6" fill="none" stroke="#12161a" stroke-width="4"/>
+    <path d="M -40 22 L 34 26 L 38 48 L -36 44 Z" fill="#52616f"/>
+    <path d="M -40 22 L 34 26 L 36 36 L -38 32 Z" fill="#a3b2be"/>
+  </g>
+
+
+  <!-- great helm with an angular crest -->
+  <path d="M 466 300 L 606 300 L 614 424 C 614 456 458 456 458 424 Z" fill="#52616f"/>
+  <path d="M 466 300 L 530 300 L 530 450 C 488 448 458 440 458 424 Z" fill="#78899a"/>
+  <path d="M 606 300 L 614 424 C 614 440 590 448 554 450 L 554 300 Z" fill="#222a32"/>
+  <path d="M 460 300 L 612 300 L 616 330 L 456 330 Z" fill="#a3b2be"/>
+  <path d="M 460 300 L 534 300 L 534 330 L 456 330 Z" fill="#d2dce4"/>
+  <path d="M 470 268 C 470 234 602 234 602 268 L 602 302 L 470 302 Z" fill="#36424e"/>
+  <path d="M 462 352 L 524 352 L 524 382 L 462 382 Z" fill="#08090b"/>
+  <path d="M 548 352 L 610 352 L 610 382 L 548 382 Z" fill="#08090b"/>
+  <path d="M 470 358 L 516 358 L 516 376 L 470 376 Z" fill="#ffb9ed" opacity="0.9"/>
+  <path d="M 556 358 L 602 358 L 602 376 L 556 376 Z" fill="#dc82bb" opacity="0.9"/>
+  <path d="M 514 398 L 526 398 L 526 440 L 514 440 Z" fill="#08090b"/><path d="M 536 398 L 548 398 L 548 440 L 536 440 Z" fill="#08090b"/><path d="M 558 398 L 570 398 L 570 440 L 558 440 Z" fill="#08090b"/>
+  <!-- crest: a low fan of angular blades, steel with an accent edge -->
+  <path d="M 492 268 L 512 176 L 536 268 Z" fill="#52616f"/>
+  <path d="M 492 268 L 512 176 L 520 268 Z" fill="#a3b2be"/>
+  <path d="M 524 268 L 552 144 L 578 268 Z" fill="#52616f"/>
+  <path d="M 524 268 L 552 144 L 558 268 Z" fill="#d2dce4"/>
+  <path d="M 566 268 L 596 186 L 606 268 Z" fill="#36424e"/>
+  <path d="M 512 176 L 536 268 M 552 144 L 578 268 M 596 186 L 606 268" fill="none" stroke="#ffb9ed" stroke-width="4" opacity="0.85"/>
+  <path d="M 486 262 L 610 262 L 614 294 L 482 294 Z" fill="#78899a"/>
+  <path d="M 486 262 L 540 262 L 540 294 L 482 294 Z" fill="#d2dce4"/>
+
+  <!-- horse: mane, then the head in profile -->
+  <path d="M 336 546 C 400 620 444 736 456 862 L 372 874 C 362 762 326 664 286 596 Z" fill="#1a1e22"/>
+  <path d="M 360 616 l 52 40 l -32 24 l 50 46 l -28 26 l 44 54 l -24 22 l 30 60 l -76 10 C 372 748 352 676 320 620 Z" fill="#2d343a"/>
+  <!-- neck -->
+  <path d="M 362 656 L 470 772 L 512 1008 L 252 1008 L 250 884 L 322 858 L 356 772 Z" fill="#36424e"/>
+  <path d="M 356 772 L 322 858 L 250 884 L 252 1008 L 372 1008 L 388 856 Z" fill="#52616f"/>
+  <path d="M 268 906 C 340 884, 404 906, 446 948" fill="none" stroke="#222a32" stroke-width="9"/><path d="M 276 952 C 348 930, 410 952, 452 994" fill="none" stroke="#222a32" stroke-width="9"/><path d="M 284 998 C 356 976, 416 998, 458 1040" fill="none" stroke="#222a32" stroke-width="9"/>
+  <!-- caparison over the shoulder -->
+  <path d="M 244 940 L 470 900 L 500 1008 L 248 1008 Z" fill="#774063"/>
+  <path d="M 244 940 L 360 920 L 372 1008 L 248 1008 Z" fill="#dc82bb" opacity="0.45"/>
+  <path d="M 246 952 L 472 912" fill="none" stroke="#ffb9ed" stroke-width="5" opacity="0.7"/>
+
+  <!-- head: a chess-knight profile, faceted -->
+  <path d="M 306 530 L 240 650 L 168 730 L 96 782 L 82 818 L 100 846 L 168 860 L 250 884 L 322 858 L 356 772 L 362 656 L 344 566 Z" fill="#36424e"/>
+  <path d="M 306 530 L 240 650 L 168 730 L 96 782 L 82 818 L 128 826 L 200 754 L 268 664 L 320 566 Z" fill="#78899a"/>
+  <path d="M 320 566 L 268 664 L 200 754 L 128 826 L 168 860 L 250 884 L 322 858 L 356 772 L 362 656 L 344 566 Z" fill="#36424e"/>
+  <path d="M 250 884 L 322 858 L 356 772 L 362 656 L 344 566 L 332 660 L 318 762 L 288 838 Z" fill="#222a32"/>
+  <!-- chanfron plate down the face -->
+  <path d="M 302 542 L 334 574 L 250 692 L 152 780 L 116 796 L 100 776 L 148 738 L 236 654 Z" fill="#d2dce4"/>
+  <path d="M 302 542 L 318 558 L 236 674 L 140 762 L 108 786 L 100 776 L 148 738 L 236 654 Z" fill="#f0f4f7"/>
+  <!-- chanfron spike -->
+  <path d="M 288 528 L 262 452 L 328 520 Z" fill="#d2dce4"/>
+  <path d="M 280 508 L 264 462 L 306 502 Z" fill="#ffb9ed"/>
+  <!-- eye guard -->
+  <path d="M 244 660 L 312 682 L 300 726 L 232 702 Z" fill="#08090b"/>
+  <path d="M 252 674 L 302 692 L 294 712 L 244 694 Z" fill="#ffb9ed" opacity="0.85"/>
+  <!-- ears -->
+  <path d="M 316 532 L 330 462 L 360 528 Z" fill="#52616f"/>
+  <path d="M 316 532 L 330 462 L 342 496 Z" fill="#a3b2be"/>
+  <path d="M 352 540 L 378 496 L 392 556 Z" fill="#222a32"/>
+  <!-- nostril and mouth -->
+  <path d="M 104 792 l 24 -6 l 6 22 l -24 6 Z" fill="#08090b"/>
+  <path d="M 92 836 L 152 850" fill="none" stroke="#08090b" stroke-width="6"/>
+  <!-- bridle -->
+  <path d="M 104 754 L 172 812" fill="none" stroke="#dc82bb" stroke-width="14"/>
+  <path d="M 196 700 L 292 606" fill="none" stroke="#dc82bb" stroke-width="11"/>
+  <path d="M 268 700 C 296 760 300 812 292 858" fill="none" stroke="#dc82bb" stroke-width="10"/>
+  <path d="M 152 838 C 262 886 344 902 424 894" fill="none" stroke="#dc82bb" stroke-width="8"/>
+  <circle cx="176" cy="828" r="12" fill="#d2dce4"/>
+
+  <!-- rein arm, drawn last so the hand sits on the horse's neck -->
+  
+    <path d="M 391.1 647.3 L 456.9 664.7 L 425.0 769.7 L 367.0 754.3 Z" fill="#52616f"/>
+    <path d="M 407.6 651.7 L 440.4 660.3 L 422.6 712.3 L 397.4 705.7 Z" fill="#a3b2be"/>
+    <path d="M 368.6 767.7 L 423.4 756.3 L 435.5 843.5 L 392.5 852.5 Z" fill="#52616f"/>
+    <path d="M 384.5 764.4 L 407.5 759.6 L 415.2 802.9 L 394.8 807.1 Z" fill="#a3b2be"/>
+    <path d="M 421.9 772.7 L 406.7 787.9 L 385.3 787.9 L 370.1 772.7 L 370.1 751.3 L 385.3 736.1 L 406.7 736.1 L 421.9 751.3 Z" fill="#52616f"/><path d="M 370.1 772.7 L 370.1 751.3 L 385.3 736.1 L 406.7 736.1 L 396 762 Z" fill="#a3b2be"/><path d="M 404.8 765.6 L 399.6 770.8 L 392.4 770.8 L 387.2 765.6 L 387.2 758.4 L 392.4 753.2 L 399.6 753.2 L 404.8 758.4 Z" fill="#222a32"/><path d="M 401.2 764.1 L 398.1 767.2 L 393.9 767.2 L 390.8 764.1 L 390.8 759.9 L 393.9 756.8 L 398.1 756.8 L 401.2 759.9 Z" fill="#a3b2be"/>
+  <g transform="translate(414,872) rotate(12) scale(0.62)">
+    <path d="M -42 -36 L 42 -36 L 46 28 C 46 50 -46 50 -46 28 Z" fill="#52616f"/>
+    <path d="M -42 -36 L 0 -36 L 2 46 C -26 46 -46 40 -46 28 Z" fill="#a3b2be"/>
+    <path d="M -42 -16 L 44 -16" fill="none" stroke="#12161a" stroke-width="6"/><path d="M -42 6 L 44 6" fill="none" stroke="#12161a" stroke-width="6"/><path d="M -42 28 L 44 28" fill="none" stroke="#12161a" stroke-width="6"/>
+    <path d="M -46 -8 L -74 2 L -68 32 L -42 28 Z" fill="#52616f"/>
+    <path d="M -46 -8 L -74 2 L -72 14 L -46 10 Z" fill="#a3b2be"/>
+  </g>
+  <path d="M 380 886 C 300 902 236 898 172 872" fill="none" stroke="#dc82bb" stroke-width="8"/>
+
+</g>
+<rect y="788" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="810" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="832" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="854" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="876" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="898" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="920" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="942" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="964" width="720" height="22" fill="#08090b" opacity="0.075"/><rect y="986" width="720" height="22" fill="#08090b" opacity="0.075"/>
+
+  <rect width="720" height="1008" fill="url(#scan-knight)" opacity="0.65"/>
+  <rect x="20" y="20" width="680" height="968" fill="none" stroke="#ffb9ed" stroke-width="2" opacity="0.2"/>
+  <path d="M 20 54 V 20 H 54" fill="none" stroke="#ffb9ed" stroke-width="3" opacity="0.85"/>
+  <path d="M 700 54 V 20 H 666" fill="none" stroke="#ffb9ed" stroke-width="3" opacity="0.85"/>
+  <path d="M 20 954 V 988 H 54" fill="none" stroke="#ffb9ed" stroke-width="3" opacity="0.85"/>
+  <path d="M 700 954 V 988 H 666" fill="none" stroke="#ffb9ed" stroke-width="3" opacity="0.85"/></g></svg>
