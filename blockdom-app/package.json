@@ -8,8 +8,11 @@
     "start": "next start",
     "lint": "eslint ."
   },
+  "engines": {
+    "node": "24.x"
+  },
   "comments": {
-    "overrides": "@thirdweb-dev/wallets asks for @magic-ext/oauth ^7, whose ESM build inlines CryptoJS's UMD wrapper — an AMD define([\"./core\"]) that Turbopack cannot resolve, so the whole app fails to bundle. 16.0.0 is the first release that depends on crypto-js instead of inlining it. Nothing here uses Magic Link (ThirdwebProvider runs the default wallets), so the module is only ever imported, never instantiated."
+    "overrides": "@thirdweb-dev/wallets asks for @magic-ext/oauth ^7, whose ESM build inlines CryptoJS's UMD wrapper \u2014 an AMD define([\"./core\"]) that Turbopack cannot resolve, so the whole app fails to bundle. 16.0.0 is the first release that depends on crypto-js instead of inlining it. Nothing here uses Magic Link (ThirdwebProvider runs the default wallets), so the module is only ever imported, never instantiated."
   },
   "overrides": {
     "@magic-ext/oauth": "^16.0.0"
