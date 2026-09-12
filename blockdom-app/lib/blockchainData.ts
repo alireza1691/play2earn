@@ -13,8 +13,17 @@ export const polygonChainId = 137;
 export const explorerLogsRequest = (address: string, chainId: number) =>
   `https://api.etherscan.io/v2/api?chainid=${chainId}&module=logs&action=getLogs&address=${address}&apikey=${apiKey}`;
 
-export const arbitrumApiKey =process.env.POLYGON_API_KEY
-export const polygonApiKey = process.env.ARBITRUM_API_KEY
+/*
+  There were two exports here, `arbitrumApiKey` and `polygonApiKey`, reading
+  POLYGON_API_KEY and ARBITRUM_API_KEY respectively — each holding the other
+  chain's key. Both are gone rather than corrected: neither was used anywhere,
+  and neither could have worked. This module is "use client", and Next only
+  exposes NEXT_PUBLIC_* to the browser, so both were undefined there.
+
+  Every explorer call goes through `explorerLogsRequest` above, which uses the
+  single V2 key. If a per-chain key is ever genuinely needed it has to be either
+  NEXT_PUBLIC_ (and therefore public anyway) or read from a server route.
+*/
 export const landsMainnetAddress = "0x539f6dB158b6663cBB5E05Cc557C03102d873405"
 export const townMainnetAddress= ""
 export const tokenMainnetAddress=""
