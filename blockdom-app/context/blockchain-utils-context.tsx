@@ -75,6 +75,7 @@ type BlockchainUtilsContextType = {
   withdraw: (amount: number) => Promise<void>;
   convert: (amount: number, index:number, isBuy: boolean, slippagePercent?: number) => Promise<void>;
   faucet: () => Promise<void>;
+  claimDailyFaucet: (landTokenId: number) => Promise<void>;
   finishNow: () => Promise<void>;
   createClan: (landTokenId: number, name: string) => Promise<void>;
   inviteToClan: (account: string) => Promise<void>;
@@ -272,6 +273,31 @@ export default function BlockchainUtilsContextProvider({
       } else {
         setTransactionState(null);
       } 
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  /**
+   * The daily testnet handout: 1000 food and 1000 gold onto a land you own,
+   * and 1000 PLOT into your in-game balance. One claim per address per day.
+   *
+   * Distinct from `faucet` below, which is the v3 BMT token's own faucet and
+   * lives on the token rather than on Town. This one is Town's, exists only on
+   * the rewrite, and is off unless the owner has opened it.
+   */
+  async function claimDailyFaucet(landTokenId: number) {
+    validateWallet()
+    validateChain()
+    try {
+      if (signer) {
+        const instance = townWrite(signer, deployment)
+        setTransactionState("waitingUserApproval");
+        const tx: ContractTransaction = await instance.faucet(landTokenId)
+        await handleResult(tx, { message: "Daily resources claimed" })
+      } else {
+        setTransactionState(null);
+      }
     } catch (error) {
       handleError(error)
     }
@@ -837,7 +863,7 @@ export default function BlockchainUtilsContextProvider({
     clanAction((instance) => instance.rejectClanRequest(account), "Request rejected");
 
   return (
-    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim, claimAll, finishNow, mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, retreatArmy, disbandArmy, transferGoods, swapGoods, approve,deposit,withdraw,convert,faucet, createClan, inviteToClan, joinClan, leaveClan, kickFromClan, transferClanLeadership, requestToJoinClan, cancelClanRequest, approveClanRequest, rejectClanRequest}}>
+    <BlockchainUtilsContext.Provider value={{ buildBuilding, mint, claim, claimAll, finishNow, mintResourceBuilding, recruitArmy ,dispatchArmy,dispatchedArmyAction, retreatArmy, disbandArmy, transferGoods, swapGoods, approve,deposit,withdraw,convert,faucet, claimDailyFaucet, createClan, inviteToClan, joinClan, leaveClan, kickFromClan, transferClanLeadership, requestToJoinClan, cancelClanRequest, approveClanRequest, rejectClanRequest}}>
       {children}
     </BlockchainUtilsContext.Provider>
   );

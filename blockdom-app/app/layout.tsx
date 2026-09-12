@@ -1,4 +1,5 @@
 import Navbar from "@/components/navbar";
+import FaucetBar from "@/components/faucetBar";
 import ThemeContextProvider from "@/context/theme-context";
 import { ThirdwebProvider } from "../components/ThirdwebProvider";
 import type { Metadata } from "next";
@@ -66,6 +67,7 @@ export default function RootLayout({
               <ToastContainer />
                 <PopUpState/>
                 <Navbar/>
+                <FaucetBar/>
                 <BalanceContainer/>
                 <ArmyOverview/>
                 <TokenActionComp/>

@@ -157,6 +157,24 @@
     },
     {
       "type": "function",
+      "name": "addLiquidity",
+      "inputs": [
+        {
+          "name": "goodIndex",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "plotAmount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
       "name": "approveClanRequest",
       "inputs": [
         {
@@ -427,10 +445,81 @@
     },
     {
       "type": "function",
+      "name": "faucet",
+      "inputs": [
+        {
+          "name": "landTokenId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "faucetEnabled",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "faucetNextClaimAt",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "faucetReserve",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
       "name": "finishNow",
       "inputs": [
         {
           "name": "landTokenId",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "fundFaucet",
+      "inputs": [
+        {
+          "name": "plotAmount",
           "type": "uint256",
           "internalType": "uint256"
         }
@@ -982,6 +1071,19 @@
     },
     {
       "type": "function",
+      "name": "setFaucetEnabled",
+      "inputs": [
+        {
+          "name": "enabled",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
       "name": "setWarModule",
       "inputs": [
         {
@@ -1463,6 +1565,63 @@
     },
     {
       "type": "event",
+      "name": "FaucetClaimed",
+      "inputs": [
+        {
+          "name": "claimer",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "landId",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "goods",
+          "type": "uint256[2]",
+          "indexed": false,
+          "internalType": "uint256[2]"
+        },
+        {
+          "name": "plotAmount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "FaucetFunded",
+      "inputs": [
+        {
+          "name": "plotAmount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "FaucetToggled",
+      "inputs": [
+        {
+          "name": "enabled",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
       "name": "GoodsConsumption",
       "inputs": [
         {
@@ -1527,6 +1686,25 @@
           "type": "uint256[2]",
           "indexed": false,
           "internalType": "uint256[2]"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "LiquidityAdded",
+      "inputs": [
+        {
+          "name": "goodIndex",
+          "type": "uint256",
+          "indexed": true,
+          "internalType": "uint256"
+        },
+        {
+          "name": "plotAmount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
         }
       ],
       "anonymous": false
@@ -2015,6 +2193,21 @@
     {
       "type": "error",
       "name": "FailedInnerCall",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "FaucetClosed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "FaucetEmpty",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "FaucetOnCooldown",
       "inputs": []
     },
     {

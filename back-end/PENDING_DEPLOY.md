@@ -17,6 +17,34 @@ bucket is a number on paper. Owner-only, 344 bytes, `Town` margin 2.86 -> 2.52 k
 Paired with `script/new/TopUpPool.s.sol`, which sizes each top-up against how
 far the reserves have actually drained. See `TOKENOMICS.md`.
 
+### Daily faucet — `setFaucetEnabled`, `fundFaucet`, `faucet`
+
+1000 food, 1000 gold and 1000 PLOT per address per day, for testing.
+
+Two things it could not simply invent. PLOT has no mint function, so the
+handout comes out of a `faucetReserve` the owner funds first — which extends
+the solvency invariant to
+`balanceOf(town) == Σ plotBalance + plotReserve[0..1] + faucetReserve`.
+And the goods are created, so `totalExistedGood` moves with them or the supply
+invariant drifts. Both are covered by SupplyInvariant, which now drives the
+faucet as one of its random actions.
+
+Off by default. `seedTestLands` is an initialize argument that is never stored,
+so there is no "am I a testnet" flag to key off — `faucetEnabled` is the switch,
+and leaving it false is what makes a mainnet deployment safe without anyone
+having to remember.
+
+**After deploying, two owner transactions are needed or the page just says the
+faucet is closed:**
+
+```bash
+cast send $TOWN "setFaucetEnabled(bool)" true --rpc-url sepolia --private-key $PRIVATE_KEY
+cast send $PLOT "approve(address,uint256)" $TOWN 5000000000000000000000000 --rpc-url sepolia --private-key $PRIVATE_KEY
+cast send $TOWN "fundFaucet(uint256)" 5000000000000000000000000 --rpc-url sepolia --private-key $PRIVATE_KEY
+```
+
+5M PLOT is 5,000 claims.
+
 ### `PlotVesting.sol`
 
 New contract, not an upgrade — the team's 150M on a 3-year linear release with a

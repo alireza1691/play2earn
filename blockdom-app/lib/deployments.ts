@@ -102,10 +102,12 @@ export function unavailableReason(deployment: Deployment): string | null {
  * player is most likely to be looking at, so `switchDeployment` falls back.
  */
 const PAGES: Record<Deployment, readonly string[]> = {
+  // No faucet on mainnet: it hands out free resources, which is only harmless
+  // where the resources are worthless.
   "v3-mainnet": ["explore", "myLand", "battleLog", "clans", "dashboard"],
-  "v3-testnet": ["explore", "myLand", "battleLog", "clans", "land"],
-  "v4-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land"],
-  "v5-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land"],
+  "v3-testnet": ["explore", "myLand", "battleLog", "clans", "land", "faucet"],
+  "v4-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land", "faucet"],
+  "v5-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land", "faucet"],
 };
 
 export function useDeployment(): Deployment {

@@ -97,6 +97,15 @@ contract GoodsHandler is Test {
         try TownWar(address(town)).sellGood(landId, goodIndex, bound(amount, 1, held), 0) {} catch {}
     }
 
+    /// The faucet both creates goods and moves PLOT between two tracked pots, so
+    /// it touches every property here — worth having in the random walk rather
+    /// than only in its own unit tests. Time is warped so the cooldown is
+    /// sometimes over and sometimes not, exercising both branches.
+    function faucet(uint256 landSeed, uint256 skip) external {
+        vm.warp(block.timestamp + bound(skip, 0, 2 days));
+        try town.faucet(_land(landSeed)) {} catch {}
+    }
+
     function swapGoods(uint256 landSeed, uint256 goodSeed, uint256 amount) external {
         uint256 landId = _land(landSeed);
         uint256 fromIndex = goodSeed % 2;
@@ -158,6 +167,12 @@ contract SupplyInvariantTest is Test {
         plot.approve(address(town), plotSide * 2);
         town.seedPool(plotSides, goodsSides);
 
+        // Open and stock the faucet so the handler's claims actually go through;
+        // an unfunded faucet would revert every time and test nothing.
+        town.setFaucetEnabled(true);
+        plot.approve(address(town), 5_000_000 ether);
+        town.fundFaucet(5_000_000 ether);
+
         handler = new GoodsHandler(town, lands, plot);
         for (uint256 i = 0; i < 3; i++) {
             lands.setOwner(handler.LANDS_LIST(i), address(handler));
@@ -183,9 +198,16 @@ contract SupplyInvariantTest is Test {
     /// C-02: the contract must always hold every PLOT it owes — player balances plus
     /// both pool reserves. Selling goods can only pay out of the reserve, so this
     /// cannot drift the way the old unbacked plotBalance did.
+    /// @dev `faucetReserve` joined the sum when the faucet landed: PLOT set aside
+    ///      for handouts is held by the contract but owed to nobody yet, so it is
+    ///      neither pool depth nor a player balance. Leaving it out would make the
+    ///      invariant fail the moment the faucet is funded.
     function invariant_contractIsSolvent() public {
         (uint256[2] memory plotRes,) = TownWar(address(town)).getReserves();
-        uint256 owed = town.getPlotBalance(address(handler)) + plotRes[0] + plotRes[1];
+        uint256 owed = town.getPlotBalance(address(handler))
+            + plotRes[0]
+            + plotRes[1]
+            + town.faucetReserve();
         assertEq(plot.balanceOf(address(town)), owed, "contract owes more than it holds");
     }
 

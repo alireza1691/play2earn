@@ -343,6 +343,9 @@ abstract contract TownBase is Barracks, Clans, OwnableUpgradeable, PausableUpgra
     error InsufficientLiquidity();
     /// @dev The pool moved against the trade between quoting and mining it.
     error SlippageExceeded();
+    error FaucetClosed();
+    error FaucetOnCooldown();
+    error FaucetEmpty();
 
   /*  ******************************************************************************
                                     Events
@@ -366,6 +369,9 @@ abstract contract TownBase is Barracks, Clans, OwnableUpgradeable, PausableUpgra
     event WarriorEdited( uint256 indexed index, uint8[3] stats, uint256 price );
     event PoolSeeded( uint256[2] bmtAmounts, uint256[2] goodsAmounts );
     event LiquidityAdded( uint256 indexed goodIndex, uint256 plotAmount );
+    event FaucetFunded( uint256 plotAmount );
+    event FaucetToggled( bool enabled );
+    event FaucetClaimed( address indexed claimer, uint256 indexed landId, uint256[2] goods, uint256 plotAmount );
     event PoolSync( uint256 indexed goodIndex, uint256 plotReserve, uint256 goodsReserve );
     event BuyGood( uint256 indexed landId, uint256 goodIndex, uint256 bmtSpent, uint256 goodsReceived );
     event SellGood( uint256 indexed landId, uint256 goodIndex, uint256 goodsSold, uint256 bmtReceived );
@@ -399,6 +405,13 @@ abstract contract TownBase is Barracks, Clans, OwnableUpgradeable, PausableUpgra
     uint256 internal constant BaseGoldRevenuePer3hours = 2 ether;
     uint256 internal constant BaseWarriorLootCapacity = 30 ether;
     uint256 internal constant RetreatCostPerWarrior = 5 ether;
+
+    /// Daily testnet handout: enough to build and trade with, nowhere near
+    /// enough to skip playing. One claim per address per day, not per land —
+    /// otherwise owning ten parcels would mean ten times the faucet.
+    uint256 internal constant FaucetGoods = 1000 ether;
+    uint256 internal constant FaucetPlot = 1000 ether;
+    uint256 internal constant FaucetCooldown = 1 days;
     uint256 internal constant DispatchCostPerWarrior = 1 ether;
     uint256 internal constant WithdrawalFee = 10;
     uint256 internal constant SwapFee = 5;
@@ -581,6 +594,22 @@ abstract contract TownBase is Barracks, Clans, OwnableUpgradeable, PausableUpgra
 
     /// @notice Wild parcel => raider => when that raider may come back.
     mapping (uint256 => mapping (address => uint64)) internal wildRaidCooldown;
+
+    /*  ---- faucet. Appended last; see the upgradeability rules in CLAUDE.md ----  */
+
+    /// @notice Whether the daily faucet is open. Owner-set, and false by default
+    ///         so a mainnet deployment has it off without anyone remembering to.
+    bool public faucetEnabled;
+
+    /// @notice PLOT set aside for the faucet, funded by the owner.
+    /// @dev Tracked separately from plotReserve and plotBalance because it is
+    ///      neither: it is not pool depth and it is not owed to any player yet.
+    ///      Solvency is
+    ///      `balanceOf(town) == Σ plotBalance + plotReserve[0..1] + faucetReserve`.
+    uint256 public faucetReserve;
+
+    /// @notice Claimer => when they may claim again.
+    mapping (address => uint64) public faucetNextClaimAt;
 
 
   /*  ******************************************************************************
@@ -959,6 +988,71 @@ contract Town is TownBase {
 
         emit LiquidityAdded(goodIndex, plotAmount);
         emit PoolSync(goodIndex, plotReserve[goodIndex], goodsReserve[goodIndex]);
+    }
+
+    /*  ******************************************************************************
+                                    Faucet — testnet only
+        *******************************************************************************  */
+
+    /// @notice Opens or closes the daily faucet. Off unless someone turns it on.
+    /// @dev There is no stored "this is a testnet" flag — `seedTestLands` is an
+    ///      initialize argument and is never kept — so this is the switch, and
+    ///      leaving it false is what makes a mainnet deployment safe by default.
+    function setFaucetEnabled(bool enabled) external onlyOwner {
+        faucetEnabled = enabled;
+        emit FaucetToggled(enabled);
+    }
+
+    /// @notice Puts PLOT aside for the faucet to hand out.
+    /// @dev PLOT cannot be minted, so the faucet cannot conjure it either. Every
+    ///      token it gives away is one the owner put here first. Without this the
+    ///      faucet would credit plotBalance against nothing and break solvency.
+    function fundFaucet(uint256 plotAmount) external onlyOwner nonReentrant {
+        if (plotAmount == 0) {
+            revert InsufficientLiquidity();
+        }
+        faucetReserve += plotAmount;
+        TransferHelper.safeTransferFrom(
+            address(PLOT), msg.sender, address(this), plotAmount
+        );
+        emit FaucetFunded(plotAmount);
+    }
+
+    /// @notice One claim a day: 1000 food and 1000 gold onto a land you own,
+    ///         and 1000 PLOT into your in-game balance.
+    ///
+    /// @dev Rate-limited per address rather than per land. Keyed on the land as
+    ///      well only because goods have to live somewhere; owning ten parcels
+    ///      must not mean ten claims.
+    ///
+    ///      The goods are created — `totalExistedGood` moves with them, which is
+    ///      what keeps the supply invariant true. The PLOT is not: it moves out
+    ///      of `faucetReserve` and into `plotBalance`, both of which the solvency
+    ///      invariant counts, so the contract never owes more than it holds.
+    function faucet(uint256 landTokenId) external whenNotPaused onlyLandOwner(landTokenId) {
+        if (!faucetEnabled) {
+            revert FaucetClosed();
+        }
+        if (block.timestamp < faucetNextClaimAt[msg.sender]) {
+            revert FaucetOnCooldown();
+        }
+        if (faucetReserve < FaucetPlot) {
+            revert FaucetEmpty();
+        }
+
+        faucetNextClaimAt[msg.sender] = uint64(block.timestamp + FaucetCooldown);
+
+        landData[landTokenId].goodsBalance[0] += FaucetGoods;
+        landData[landTokenId].goodsBalance[1] += FaucetGoods;
+        totalExistedGood[0] += FaucetGoods;
+        totalExistedGood[1] += FaucetGoods;
+
+        faucetReserve -= FaucetPlot;
+        plotBalance[msg.sender] += FaucetPlot;
+
+        uint256[2] memory goods = [FaucetGoods, FaucetGoods];
+        emit GoodsProduction(goods, landTokenId);
+        emit FaucetClaimed(msg.sender, landTokenId, goods, FaucetPlot);
     }
 
     function transferGoods(uint256 goodIndex, uint256 amount, uint256 fromId, uint256 toId) external whenNotPaused onlyLandOwner(fromId){
