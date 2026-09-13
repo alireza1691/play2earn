@@ -16,7 +16,7 @@ import React from "react";
  * two read as one interface rather than two.
  */
 export default function TownHeader() {
-  const { inViewLand } = useUserDataContext();
+  const { inViewLand, ownedLands } = useUserDataContext();
   const { claimAll } = useBlockchainUtilsContext();
   const deployment = useDeployment();
   const address = useAddress();
@@ -31,8 +31,15 @@ export default function TownHeader() {
   // Only offered on v4: the v3 contract's claimAll walks the global list of
   // building *types* rather than the land's own buildings, so it reverts on a
   // land with one building and silently skips the rest beyond two.
+  //
+  // Owner-only in the UI as well as on chain. Visiting somebody else's town is
+  // a supported thing to do, and offering a button that can only revert is not
+  // a guard, it is a trap.
   const buildingCount = inViewLand.buildedResourceBuildings?.length ?? 0;
-  const canClaimAll = isRewrite(deployment) && buildingCount > 1;
+  const isMine = !!ownedLands?.some(
+    (land) => Number(land.tokenId) === inViewLand.tokenId
+  );
+  const canClaimAll = isMine && isRewrite(deployment) && buildingCount > 1;
 
   return (
     <div

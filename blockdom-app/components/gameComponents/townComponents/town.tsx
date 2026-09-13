@@ -15,9 +15,11 @@ import TownResourceBuildings from "./townResourceBuildings";
 import TownTrainingCamp from "./townTrainingCamp";
 import TownWalls from "./townWalls";
 import TownHeader from "./townHeader";
+import { routeFor, useDeployment } from "@/lib/deployments";
 
 export default function Town() {
-  const { ownedLands } = useUserDataContext();
+  const { ownedLands, inViewLand, isUserDataLoading } = useUserDataContext();
+  const deployment = useDeployment();
   const address = useAddress();
   const connect = useConnect();
   const router = useRouter();
@@ -41,7 +43,15 @@ export default function Town() {
     <section>
       {address ? (
         <>
-          {ownedLands && ownedLands.length > 0 ? (
+          {/*
+            Gated on there being a town to draw, not on the viewer owning one.
+            This used to test `ownedLands.length > 0`, which meant a wallet with
+            no land of its own got "You have not any land" on /land/<id> — the
+            one route whose whole purpose is looking at somebody else's town.
+            What can be *done* here is the contract's business; every write is
+            onlyLandOwner already.
+          */}
+          {inViewLand ? (
             <>
               {" "}
               <TownHeader />
@@ -54,16 +64,20 @@ export default function Town() {
           ) : (
             <>
               {" "}
+              {/* Nothing loaded yet is not the same as nothing to load. */}
+              {isUserDataLoading ? null : (
               <div className=" fixed z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem]  left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 txStateBg flex flex-col">
                 <h3 className="px-[10%]  mt-6 text-center !text-white font-semibold text-[18px]">
-                  You have not any land.
+                  {ownedLands && ownedLands.length > 0
+                    ? "That town could not be loaded."
+                    : "You have not any land."}
                 </h3>{" "}
                 <h3 className="px-[10%]  mt-4 text-center !text-white ">
                   {" "}
                   <br></br>
                   <br></br>{" "}
                   <a
-                    onClick={() => router.push("/testnet/explore")}
+                    onClick={() => router.push(routeFor(deployment, "explore"))}
                     className=" cursor-pointer blueText underline !font-bold !text-[18px] hover:brightness-110"
                   >
                     Explore
@@ -71,6 +85,7 @@ export default function Town() {
                   the map and mint your land.
                 </h3>{" "}
               </div>
+              )}
             </>
           )}
         </>
