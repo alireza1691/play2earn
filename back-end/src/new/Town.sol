@@ -595,22 +595,6 @@ abstract contract TownBase is Barracks, Clans, OwnableUpgradeable, PausableUpgra
     /// @notice Wild parcel => raider => when that raider may come back.
     mapping (uint256 => mapping (address => uint64)) internal wildRaidCooldown;
 
-    /*  ---- faucet. Appended last; see the upgradeability rules in CLAUDE.md ----  */
-
-    /// @notice Whether the daily faucet is open. Owner-set, and false by default
-    ///         so a mainnet deployment has it off without anyone remembering to.
-    bool public faucetEnabled;
-
-    /// @notice PLOT set aside for the faucet, funded by the owner.
-    /// @dev Tracked separately from plotReserve and plotBalance because it is
-    ///      neither: it is not pool depth and it is not owed to any player yet.
-    ///      Solvency is
-    ///      `balanceOf(town) == Σ plotBalance + plotReserve[0..1] + faucetReserve`.
-    uint256 public faucetReserve;
-
-    /// @notice Claimer => when they may claim again.
-    mapping (address => uint64) public faucetNextClaimAt;
-
 
   /*  ******************************************************************************
                                     Constructor
@@ -905,6 +889,35 @@ contract Town is TownBase {
     /// @dev Appended after every inherited slot, and TownWar never reads it, so
     ///      the layouts stay identical everywhere that matters.
     address public warModule;
+
+    /*  ---- faucet ----
+
+        Declared here, after `warModule`, and *not* at the end of `TownBase`.
+
+        That reads like a violation of the rule in CLAUDE.md, and it is actually
+        the rule's real shape: new state goes after everything already on chain.
+        `warModule` is declared in `Town`, so it sits one slot past TownBase's
+        last variable — slot 22 on the live proxy, which `cast storage` confirms.
+        Appending to TownBase therefore inserts *before* it and shifts it down.
+        An upgraded implementation would then read `warModule` as zero, and every
+        call routed through the fallback — the whole pool included, since the AMM
+        lives in TownWar — would revert with WarModuleNotSet.
+
+        TownWar inherits TownBase and not these, so it never touches these slots.
+        Nothing in the war module needs the faucet.
+    */
+
+    /// @notice Whether the daily faucet is open. Off unless someone opens it, so
+    ///         a mainnet deployment has it closed without anyone remembering to.
+    bool public faucetEnabled;
+
+    /// @notice PLOT set aside for the faucet, funded by the owner.
+    /// @dev Neither pool depth nor a player balance, so solvency counts it too:
+    ///      `balanceOf(town) == Σ plotBalance + plotReserve[0..1] + faucetReserve`.
+    uint256 public faucetReserve;
+
+    /// @notice Claimer => when they may claim again.
+    mapping (address => uint64) public faucetNextClaimAt;
 
     error WarModuleNotSet();
 

@@ -42,6 +42,16 @@ export default function FaucetView() {
   const { claimDailyFaucet } = useBlockchainUtilsContext();
 
   const [open, setOpen] = useState<boolean | null>(null);
+  /**
+   * True when the deployed contract has no faucet at all.
+   *
+   * Distinct from "closed": a contract deployed before the faucet existed does
+   * not answer `faucetEnabled()` — the call reverts, and Town's catch-all
+   * fallback sends the unknown selector into the war module, which does not
+   * have it either. Swallowing that left the page offering a Claim button that
+   * could only revert, which is exactly the trap this page exists to avoid.
+   */
+  const [unsupported, setUnsupported] = useState(false);
   const [reserve, setReserve] = useState<BigNumber | null>(null);
   const [nextAt, setNextAt] = useState<number | null>(null);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
@@ -61,13 +71,16 @@ export default function FaucetView() {
     ])
       .then(([enabled, left, next]: [boolean, BigNumber, BigNumber]) => {
         if (cancelled) return;
+        setUnsupported(false);
         setOpen(enabled);
         setReserve(left);
         setNextAt(Number(next));
       })
-      // An unanswered read leaves the page in its "checking" state rather than
-      // claiming the faucet is closed, which would be a guess.
-      .catch(() => {});
+      .catch(() => {
+        // The three reads are view calls against a live contract; the only way
+        // they fail together is that the contract predates the faucet.
+        if (!cancelled) setUnsupported(true);
+      });
 
     return () => {
       cancelled = true;
@@ -89,6 +102,9 @@ export default function FaucetView() {
   const blockedReason = (): string | null => {
     if (!supported) return "The faucet only exists on the rewritten testnet contracts.";
     if (!address) return "Connect a wallet first.";
+    if (unsupported)
+      return "The contract deployed here predates the faucet — it needs an upgrade first.";
+    if (open === null) return null;
     if (open === false) return "The faucet is closed on this deployment.";
     if (reserve && reserve.isZero()) return "The faucet is empty — it needs topping up.";
     if (!ownedLands?.length) return "You need a land first: the goods have to go somewhere.";
@@ -97,7 +113,9 @@ export default function FaucetView() {
   };
 
   const reason = blockedReason();
-  const canClaim = !reason && !!chosen;
+  // `open === null` means the reads have not landed yet. Claiming on a guess is
+  // what produced a button that reverted, so wait for the answer.
+  const canClaim = !reason && open === true && !!chosen;
 
   const row = (icon: React.ReactNode, label: string) => (
     <div className="flex flex-1 flex-col items-center gap-2 rounded-[4px] bg-white/5 px-4 py-5">

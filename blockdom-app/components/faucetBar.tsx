@@ -52,9 +52,12 @@ export default function FaucetBar() {
         setOpen(enabled);
         setNextAt(Number(next));
       })
-      // Silence is the right failure here: the bar is a shortcut, not a
-      // gatekeeper, and the page itself explains anything that is wrong.
-      .catch(() => {});
+      // A contract deployed before the faucet existed does not answer these
+      // at all. Treating that as closed hides the bar, which beats pointing at
+      // a page that can only say no.
+      .catch(() => {
+        if (!cancelled) setOpen(false);
+      });
 
     return () => {
       cancelled = true;
