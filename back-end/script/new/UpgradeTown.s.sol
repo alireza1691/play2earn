@@ -48,6 +48,7 @@ contract UpgradeTown is Script {
         (address townAddress, address plotAddress) = _addresses();
         _upgrade(townAddress);
         _openFaucet(townAddress, plotAddress);
+        _record(townAddress);
         _report(townAddress);
     }
 
@@ -83,6 +84,24 @@ contract UpgradeTown is Script {
             town.fundFaucet(funding);
         }
         vm.stopBroadcast();
+    }
+
+    /**
+     * @dev deployments/sepolia.json is the record of what is live, and an
+     *      upgrade changes two of its entries. The first run of this script
+     *      left both pointing at the replaced contracts, which is worse than
+     *      having no record: it reads as current.
+     */
+    function _record(address townAddress) internal {
+        // The ERC1967 implementation slot, read off the proxy rather than
+        // assumed from what was just deployed, so the record says what is
+        // actually being delegated to.
+        address implementation = address(uint160(uint256(
+            vm.load(townAddress, 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc)
+        )));
+
+        vm.writeJson(vm.toString(implementation), "deployments/sepolia.json", ".townImplementation");
+        vm.writeJson(vm.toString(Town(townAddress).warModule()), "deployments/sepolia.json", ".warModule");
     }
 
     function _report(address townAddress) internal view {

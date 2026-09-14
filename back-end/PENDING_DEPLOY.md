@@ -8,52 +8,11 @@ rather than shipped one at a time.
 
 ## Pending
 
-### `Town.addLiquidity(uint256 goodIndex, uint256 plotAmount)`
+Nothing. `src/new` and the deployed v5 are in step as of 2026-09-15.
 
-The only route the 45% rewards bucket has to reach players. `seedPool` runs once
-and `deposit` credits the depositor rather than the pool, so without this the
-bucket is a number on paper. Owner-only, 344 bytes, `Town` margin 2.86 -> 2.52 kB.
-
-Paired with `script/new/TopUpPool.s.sol`, which sizes each top-up against how
-far the reserves have actually drained. See `TOKENOMICS.md`.
-
-### Daily faucet — `setFaucetEnabled`, `fundFaucet`, `faucet`
-
-1000 food, 1000 gold and 1000 PLOT per address per day, for testing.
-
-Two things it could not simply invent. PLOT has no mint function, so the
-handout comes out of a `faucetReserve` the owner funds first — which extends
-the solvency invariant to
-`balanceOf(town) == Σ plotBalance + plotReserve[0..1] + faucetReserve`.
-And the goods are created, so `totalExistedGood` moves with them or the supply
-invariant drifts. Both are covered by SupplyInvariant, which now drives the
-faucet as one of its random actions.
-
-Off by default. `seedTestLands` is an initialize argument that is never stored,
-so there is no "am I a testnet" flag to key off — `faucetEnabled` is the switch,
-and leaving it false is what makes a mainnet deployment safe without anyone
-having to remember.
-
-**After deploying, two owner transactions are needed or the page just says the
-faucet is closed:**
-
-```bash
-cast send $TOWN "setFaucetEnabled(bool)" true --rpc-url sepolia --private-key $PRIVATE_KEY
-cast send $PLOT "approve(address,uint256)" $TOWN 5000000000000000000000000 --rpc-url sepolia --private-key $PRIVATE_KEY
-cast send $TOWN "fundFaucet(uint256)" 5000000000000000000000000 --rpc-url sepolia --private-key $PRIVATE_KEY
-```
-
-5M PLOT is 5,000 claims.
-
-### `PlotVesting.sol`
-
-New contract, not an upgrade — the team's 150M on a 3-year linear release with a
-1-year cliff. Deployed directly rather than behind a proxy, deliberately: the
-whole point is that the terms cannot change. Not in `DeployPlotWar`; deploy it
-by hand when the team address exists.
-
-The frontend needs neither of these. The depth indicator in the Pool panel reads
-`getReserves`, which the live v5 already answers.
+The faucet and `addLiquidity` went out as a proxy upgrade rather than a fresh
+deployment — `script/new/UpgradeTown.s.sol`. Addresses unchanged, the seeded
+world intact, 0.042 ETH. Worth preferring whenever the storage layout allows it.
 
 ## Live deployments
 
@@ -66,8 +25,12 @@ worth comparing against, and the navbar switcher flips between them.
 PLOT   0x4c28DA43D5716cF45a23DE305C2fC7Bb3312B083
 Lands  0x06DA741C2527DC6C6C7E1959294608f6110Dd537   (proxy)
 Town   0x0d2234f54a9723B840BF73b02E247Cd0837654B6   (proxy)
-war    0x91e02f8387e36Be88eAf68ef30E96Ac7824Fc82B
+war    0xDca39922B49e4706d7AeC2D984eBdFE3C10352fd
 ```
+
+Upgraded 2026-09-15 to add the faucet and `addLiquidity`. The proxy address is
+the one that matters and it has not moved; the war module is a plain contract
+and was replaced, so that line changes with every upgrade.
 
 **v4** — Sepolia, 2026-09-06. Predates the PLOT rebrand, land types and wild
 lands. Not in `deployments/sepolia.json` any more; its addresses live in
