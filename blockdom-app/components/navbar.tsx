@@ -63,14 +63,22 @@ export default function Navbar() {
   // read off `inViewLand` so the loader below does not depend on the state it
   // writes — that dependency made it re-run after every load, and it also let
   // blockchain-utils-context's optimistic setInViewLand kick off a refetch.
-  const loadedTokenId = useRef<number | null>(null);
+  // Keyed by deployment *and* token id, not the id alone. Switching v4 to v5
+  // keeps the same land — 104104 is 104104 either way — so an id-only key made
+  // the loader see nothing new and skip the fetch, leaving the previous
+  // deployment's buildings and balances on screen under the new version.
+  const loadedTokenId = useRef<string | null>(null);
   // The land a request is already out for, and a sequence number so a slow
   // response for a land the user has since left cannot overwrite a newer one.
-  const inFlightTokenId = useRef<number | null>(null);
+  const inFlightTokenId = useRef<string | null>(null);
   const requestId = useRef(0);
   // The highest refresh id this loader has acted on, so a bumped id reads as a
   // new request without anyone having to reset a flag afterwards.
   const servedRefresh = useRef(0);
+
+  /** What the loader is actually keyed on: which chain, and which land on it. */
+  const landKey = (tokenId: number | null) =>
+    tokenId == null ? null : `${deployment}:${tokenId}`;
 
   // Chosen land as a plain number: "Visit land" hands us a fresh object for the
   // land already on screen, and keying on the object meant that re-render was
@@ -166,9 +174,10 @@ export default function Navbar() {
       // spinner. The effect re-runs on its own setIsUserDataLoading, so
       // without this check every load fired twice. Checked before the one
       // below so a refresh of the land already on screen still shows as busy.
-      if (inFlightTokenId.current === chosenTokenId) return;
-      // Already showing this land — clear a spinner a caller turned on for it.
-      if (loadedTokenId.current === chosenTokenId) {
+      if (inFlightTokenId.current === landKey(chosenTokenId)) return;
+      // Already showing this land on this deployment — clear a spinner a caller
+      // turned on for it.
+      if (loadedTokenId.current === landKey(chosenTokenId)) {
         if (isUserDataLoading) setIsUserDataLoading(false);
         return;
       }
@@ -184,7 +193,7 @@ export default function Navbar() {
     const blocking = requested ? landRefresh.blocking : true;
 
     const id = ++requestId.current;
-    inFlightTokenId.current = chosenTokenId;
+    inFlightTokenId.current = landKey(chosenTokenId);
     if (blocking) setIsUserDataLoading(true);
 
     (async () => {
@@ -208,7 +217,7 @@ export default function Navbar() {
           remainedBuildTime,
           army,
         };
-        loadedTokenId.current = chosenTokenId;
+        loadedTokenId.current = landKey(chosenTokenId);
         setInViewLand(land);
       } catch (error) {
         // Leave loadedTokenId alone so the next trigger retries this land.
