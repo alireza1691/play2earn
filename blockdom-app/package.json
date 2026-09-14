@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check:assets": "node scripts/checkAssets.mjs",
+    "check:abis": "node scripts/checkAbis.mjs",
+    "check": "npm run check:assets && npm run check:abis",
+    "prebuild": "npm run check"
   },
   "engines": {
     "node": "24.x"

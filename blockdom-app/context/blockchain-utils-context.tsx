@@ -27,7 +27,7 @@ import { clanSInst } from "@/lib/clans";
 
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { hasSlippageGuards, isSepolia, routeFor, useDeployment } from "@/lib/deployments";
+import { hasFaucet, hasSlippageGuards, isRewrite, isSepolia, routeFor, useDeployment } from "@/lib/deployments";
 
 
 /**
@@ -289,6 +289,12 @@ export default function BlockchainUtilsContextProvider({
   async function claimDailyFaucet(landTokenId: number) {
     validateWallet()
     validateChain()
+    // Only v5's ABI has `faucet`. Guarded here as well as in the page, because
+    // the page is one caller and this is the only place the call is made.
+    if (!hasFaucet(deployment)) {
+      setTransactionState(null);
+      return;
+    }
     try {
       if (signer) {
         const instance = townWrite(signer, deployment)
@@ -467,6 +473,13 @@ export default function BlockchainUtilsContextProvider({
   async function disbandArmy(amounts: number[]) {
     validateWallet()
     validateChain()
+    // v3's Town has no disbandArmy. Calling a function an ABI does not have
+    // throws synchronously and takes the page down, so the guard belongs here
+    // rather than only on whichever component happens to offer the button.
+    if (!isRewrite(deployment)) {
+      setTransactionState(null);
+      return;
+    }
     try {
       if (signer && chosenLand) {
         const instance = townWrite(signer, deployment)
