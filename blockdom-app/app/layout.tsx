@@ -76,7 +76,14 @@ export default function RootLayout({
                 <PoolComp/>
                 <LandPicker/>
                 <Attack/>
-                {children}
+                {/*
+                  A second boundary inside the providers, around the page only.
+                  The outer one sits above ThirdwebProvider, so anything it
+                  catches takes the wallet button and the navigation down with
+                  it — which is how switching accounts left a black screen with
+                  no way back. A page that throws should cost the page.
+                */}
+                <GlobalErrorBoundary>{children}</GlobalErrorBoundary>
                 <BottomBar/>
             
                 </BlockchainUtilsContextProvider>
