@@ -41,7 +41,7 @@ export default function Town() {
   // const walls = landItems[4]
   return (
     <section>
-      {address ? (
+      {address || inViewLand ? (
         <>
           {/*
             Gated on there being a town to draw, not on the viewer owning one.
@@ -65,7 +65,7 @@ export default function Town() {
             <>
               {" "}
               {/* Nothing loaded yet is not the same as nothing to load. */}
-              {isUserDataLoading ? null : (
+              {isUserDataLoading || !address ? null : (
               <div className=" fixed z999 w-[90%] min-h-[12.5rem]  sm:w-[25.5rem] sm:min-h-[15rem]  left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 txStateBg flex flex-col">
                 <h3 className="px-[10%]  mt-6 text-center !text-white font-semibold text-[18px]">
                   {ownedLands && ownedLands.length > 0

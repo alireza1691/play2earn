@@ -87,10 +87,24 @@ export default function Navbar() {
 
     if (!address) {
       setOwnedLands(null);
-      if (wanted === null) setChosenLand(null);
-      loadedTokenId.current = null;
-      setInViewLand(null);
-      setIsUserDataLoading(false);
+      // A town named in the URL is still worth showing. Reading a land is a
+      // view call — it needs an RPC, not a signer — so a shared link opens the
+      // town for someone who has not connected, and connecting is only asked
+      // for when there is something to sign.
+      if (wanted === null) {
+        setChosenLand(null);
+        loadedTokenId.current = null;
+        setInViewLand(null);
+        setIsUserDataLoading(false);
+        return;
+      }
+      setChosenLand((current) => {
+        if (current && Number(current.tokenId) === wanted) return current;
+        const owner = mintedLands?.find(
+          (land) => Number(land.tokenId) === wanted
+        )?.owner;
+        return { tokenId: String(wanted), owner: owner ?? zeroAddress };
+      });
       return;
     }
     if (!mintedLands) return;
@@ -136,8 +150,10 @@ export default function Navbar() {
       setIsUserDataLoading(false);
       return;
     }
-    if (!address || chosenTokenId == null) {
-      // No wallet, or a wallet with no land: there is nothing to wait for.
+    if (chosenTokenId == null) {
+      // Nothing selected: no wallet and no town in the URL, or a wallet with no
+      // land. Either way there is nothing to wait for. The wallet itself is no
+      // longer a requirement — getLandIdData is a view call.
       if (address && !mintedLands) return;
       setIsUserDataLoading(false);
       return;

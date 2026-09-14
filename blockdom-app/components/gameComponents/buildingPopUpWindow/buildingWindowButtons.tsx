@@ -7,6 +7,8 @@ import TopDuobleArrow from "@/svg/topDuobleArrow";
 import { useSigner } from "@thirdweb-dev/react";
 import React from "react";
 import SelectedBuilding from "./selectedBuilding";
+import { useIsMyLand } from "@/lib/useIsMyLand";
+import { useAddress } from "@thirdweb-dev/react";
 
 export default function BuildingWindowButtons() {
   const {
@@ -20,6 +22,8 @@ export default function BuildingWindowButtons() {
   const { inViewLand } = useUserDataContext();
   const {selectedResourceBuilding} = useSelectedBuildingContext()
   const signer = useSigner();
+  const isMine = useIsMyLand();
+  const address = useAddress();
 
   const relevantButton = () => {
     if (selectedItem?.name == "Townhall") {
@@ -87,6 +91,30 @@ export default function BuildingWindowButtons() {
   }
 
   async function handleAction() {}
+
+  /*
+    Every action in this window is onlyLandOwner on chain, so on somebody
+    else's town they can only revert. Replacing the whole row rather than
+    disabling each branch: there are seven of them across three modes, and a
+    guard that has to be remembered in seven places is one that will be
+    forgotten in the eighth.
+
+    The building details above stay visible — looking around is the point.
+  */
+  if (!isMine) {
+    return (
+      <div className="flex flex-col gap-1 p-3 flex-shrink-0 mt-auto text-center">
+        <p className="text-[12px] text-white/50">
+          {address ? "You are visiting this town." : "Viewing as a guest."}
+        </p>
+        <p className="text-[10px] text-white/30">
+          {address
+            ? "Only the owner can build here."
+            : "Connect a wallet that owns this land to build."}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-between gap-2 p-2  flex-shrink-0  mt-auto ">

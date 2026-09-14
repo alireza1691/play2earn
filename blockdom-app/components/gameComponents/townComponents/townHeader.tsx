@@ -2,6 +2,7 @@
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { isRewrite, useDeployment } from "@/lib/deployments";
+import { useIsMyLand } from "@/lib/useIsMyLand";
 import { separatedCoordinate } from "@/lib/utils";
 import { formattedNumber } from "@/lib/utils";
 import { useAddress } from "@thirdweb-dev/react";
@@ -16,7 +17,8 @@ import React from "react";
  * two read as one interface rather than two.
  */
 export default function TownHeader() {
-  const { inViewLand, ownedLands } = useUserDataContext();
+  const { inViewLand } = useUserDataContext();
+  const isMine = useIsMyLand();
   const { claimAll } = useBlockchainUtilsContext();
   const deployment = useDeployment();
   const address = useAddress();
@@ -36,9 +38,6 @@ export default function TownHeader() {
   // a supported thing to do, and offering a button that can only revert is not
   // a guard, it is a trap.
   const buildingCount = inViewLand.buildedResourceBuildings?.length ?? 0;
-  const isMine = !!ownedLands?.some(
-    (land) => Number(land.tokenId) === inViewLand.tokenId
-  );
   const canClaimAll = isMine && isRewrite(deployment) && buildingCount > 1;
 
   return (
