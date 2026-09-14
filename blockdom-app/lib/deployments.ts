@@ -30,6 +30,19 @@ export type Deployment =
 export const V4_PREFIX = "/v4/";
 export const V5_PREFIX = "/v5/";
 
+/**
+ * Where "play on the testnet" should land someone.
+ *
+ * Every entry point used to say `/testnet/explore` outright, which is v3 — the
+ * oldest contracts, kept live only because state sits behind them. A new player
+ * arriving from the landing page got the version nobody is developing.
+ *
+ * Named rather than written out at each call site because it moved once and
+ * will move again. The `/testnet/` routes stay reachable; they are simply no
+ * longer the front door.
+ */
+export const DEFAULT_TESTNET: Deployment = "v5-testnet";
+
 export function deploymentFor(pathname: string): Deployment {
   if (pathname.includes(V5_PREFIX)) return "v5-testnet";
   if (pathname.includes(V4_PREFIX)) return "v4-testnet";

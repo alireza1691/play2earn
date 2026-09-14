@@ -1,4 +1,5 @@
 "use client"
+import { DEFAULT_TESTNET, routeFor } from "@/lib/deployments";
 import { useTheme } from "@/context/theme-context";
 import { useSectionInView } from "@/lib/hooks";
 import { motion } from "framer-motion";
@@ -68,7 +69,7 @@ export default function Intro() {
               animate={{ opacity: 1, y: 0 }}
               className="greenButton shadow-lg"
              
-              onClick={() => {router.push("/testnet/explore")}}
+              onClick={() => {router.push(routeFor(DEFAULT_TESTNET, "explore"))}}
             >
               Enter Testnet
             </motion.button>

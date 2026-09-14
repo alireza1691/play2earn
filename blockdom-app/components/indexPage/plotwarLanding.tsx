@@ -1,4 +1,5 @@
 'use client';
+import { DEFAULT_TESTNET, routeFor } from "@/lib/deployments";
 
 /**
  * Landing page. Replaces the old Intro/Starter/Carousel/Roadmap/FAQ stack.
@@ -833,8 +834,8 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: mono, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               <div style={{ color: 'rgba(244,244,241,0.35)' }}>Play</div>
               <Link href={TESTNET_ROUTE} style={{ color: 'rgba(244,244,241,0.7)' }}>Explore</Link>
-              <Link href="/testnet/myLand" style={{ color: 'rgba(244,244,241,0.7)' }}>My land</Link>
-              <Link href="/testnet/battleLog" style={{ color: 'rgba(244,244,241,0.7)' }}>Battle log</Link>
+              <Link href={routeFor(DEFAULT_TESTNET, "myLand")} style={{ color: 'rgba(244,244,241,0.7)' }}>My land</Link>
+              <Link href={routeFor(DEFAULT_TESTNET, "battleLog")} style={{ color: 'rgba(244,244,241,0.7)' }}>Battle log</Link>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontFamily: mono, fontSize: '12px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               <div style={{ color: 'rgba(244,244,241,0.35)' }}>More</div>

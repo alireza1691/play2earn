@@ -1,3 +1,4 @@
+import { DEFAULT_TESTNET, routeFor } from "./deployments";
 export const links = [
   {
     name: "Home",
@@ -44,19 +45,12 @@ export const footerRow1 = [
     route: "#questions",
   },
 ];
+// Footer links into the game. Built from DEFAULT_TESTNET rather than written
+// out, so they follow the front door wherever it points.
 export const footerRow2 = [
-  {
-    name: "Explore the map",
-    route: "/testnet/explore",
-  },
-  {
-    name: "My land",
-    route: "/testnet/myLand",
-  },
-  {
-    name: "Battle log",
-    route: "/testnet/battleLog",
-  },
+  { name: "Explore the map", route: routeFor(DEFAULT_TESTNET, "explore") },
+  { name: "My land", route: routeFor(DEFAULT_TESTNET, "myLand") },
+  { name: "Battle log", route: routeFor(DEFAULT_TESTNET, "battleLog") },
 ];
 
 export const roadmapSteps = [

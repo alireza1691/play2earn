@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import { DEFAULT_TESTNET, routeFor } from "@/lib/deployments";;
 import { useChainId, useSwitchChain } from "@thirdweb-dev/react";
 import { Sepolia, Arbitrum ,Polygon} from "@thirdweb-dev/chains";
 import React, { useState } from "react";
@@ -62,7 +63,7 @@ export default function ChainIdButton() {
             <a onClick={() => {switchMainnet(),router.push("/explore"),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
               Polygon (Mainnet)
             </a>
-            <a onClick={() => {switchTestnet(),router.push("/testnet/explore"),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
+            <a onClick={() => {switchTestnet(),router.push(routeFor(DEFAULT_TESTNET, "explore")),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
               Sepolia (Testnet)
             </a>
           </div>
