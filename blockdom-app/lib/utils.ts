@@ -408,32 +408,49 @@ export const formattedNumber = (number: BigNumberish) => {
 
 export const zeroAddress = "0x0000000000000000000000000000000000000000";
 
+/**
+ * Highest level any building has art for.
+ *
+ * The contract lets a town hall reach 10 (`MaxTownhallLevel`), and everything
+ * else is gated one level under it, so levels 7 upward are reachable in play.
+ * The art stops at 6, so without the clamp below a level-7 town hall asks for
+ * a file that does not exist and renders as a broken image — in production
+ * only, because a level that high needs a game further along than any local
+ * test ever gets.
+ *
+ * Clamping shows the level-6 art for anything higher. A tall town hall looking
+ * like a slightly shorter one is a cosmetic loss; a broken image is a bug.
+ * Raise this when the art exists, not before — `scripts/checkAssets.mjs`
+ * expands exactly this range and will fail the build if a file is missing.
+ */
+export const MAX_BUILDING_ART_LEVEL = 6;
+
+const artLevel = (level: number) =>
+  Math.max(0, Math.min(Number(level) || 0, MAX_BUILDING_ART_LEVEL));
+
 export const farmImage = (level: number) => {
-  return `/buildings/farmLv${level}.png`;
+  return `/buildings/farmLv${artLevel(level)}.png`;
 };
 export const goldMineImage = (level: number) => {
-  return `/buildings/goldMineLv${level}.png`;
+  return `/buildings/goldMineLv${artLevel(level)}.png`;
 };
 export const townHallImage = (level: number) => {
-  return `/buildings/townHallLv${level}.png`;
+  return `/buildings/townHallLv${artLevel(level)}.png`;
 };
 export const barracksImage = (level: number) => {
-  return `/buildings/barracksLv${level}.png`;
+  return `/buildings/barracksLv${artLevel(level)}.png`;
 };
 export const trainingCampImage = (level: number) => {
-  return `/buildings/armyCampLv${level}.png`;
-};
-export const marketImage = (level: number) => {
-  return `/buildings/marketLv${level}.png`;
+  return `/buildings/armyCampLv${artLevel(level)}.png`;
 };
 export const wareHouseImage = (level: number) => {
-  return `/buildings/wareHouseLv${level}.png`;
+  return `/buildings/wareHouseLv${artLevel(level)}.png`;
 };
 export const wallImage = (level: number) => {
-  return `/buildings/walls/Full${level}.png`;
+  return `/buildings/walls/Full${artLevel(level)}.png`;
 };
 export const gateImage = (level: number) => {
-  return `/buildings/walls/Gate${level}.png`;
+  return `/buildings/walls/Gate${artLevel(level)}.png`;
 };
 
 

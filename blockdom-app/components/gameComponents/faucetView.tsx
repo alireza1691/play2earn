@@ -1,7 +1,7 @@
 "use client";
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 import { useUserDataContext } from "@/context/user-data-context";
-import { isRewrite, isSepolia, useDeployment } from "@/lib/deployments";
+import { hasFaucet, useDeployment } from "@/lib/deployments";
 import { townRead } from "@/lib/instances";
 import { formattedNumber } from "@/lib/utils";
 import FoodIcon from "@/svg/foodIcon";
@@ -57,7 +57,10 @@ export default function FaucetView() {
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
   const [target, setTarget] = useState<string>("");
 
-  const supported = isRewrite(deployment) && isSepolia(deployment);
+  // hasFaucet, not isRewrite. v4 is a rewrite too, but its ABI has no faucet
+  // function, and calling a missing one throws before any promise exists — the
+  // `.catch` below cannot see it. That crashed every /v4/ page carrying this.
+  const supported = hasFaucet(deployment);
 
   useEffect(() => {
     if (!supported) return;
@@ -100,7 +103,7 @@ export default function FaucetView() {
     target || (inViewLand ? String(inViewLand.tokenId) : ownedLands?.[0] ? String(ownedLands[0].tokenId) : "");
 
   const blockedReason = (): string | null => {
-    if (!supported) return "The faucet only exists on the rewritten testnet contracts.";
+    if (!supported) return "The faucet exists only on v5.";
     if (!address) return "Connect a wallet first.";
     if (unsupported)
       return "The contract deployed here predates the faucet — it needs an upgrade first.";

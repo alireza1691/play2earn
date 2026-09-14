@@ -62,6 +62,22 @@ export const isRewrite = (deployment: Deployment) =>
 export const hasSlippageGuards = (deployment: Deployment) =>
   deployment === "v5-testnet";
 
+/**
+ * The daily faucet is a v5 feature, and asking any earlier deployment about it
+ * is a crash rather than a "no".
+ *
+ * `abis/v4/townAbi.json` has no `faucetEnabled`, so `town.faucetEnabled()`
+ * throws `is not a function` *synchronously* — before any promise exists, which
+ * is why a `.catch` on the surrounding Promise.all did not save it. It took down
+ * the whole of /v4/land/<id>.
+ *
+ * So this is a question about the ABI, not about what is on chain. v5's ABI has
+ * the function whether or not the deployed bytecode does yet; that second case
+ * is a revert, which the callers do catch.
+ */
+export const hasFaucet = (deployment: Deployment) =>
+  deployment === "v5-testnet";
+
 /** Short label for the deployment switcher. */
 export const deploymentLabel = (deployment: Deployment) =>
   deployment === "v5-testnet"
@@ -105,8 +121,10 @@ const PAGES: Record<Deployment, readonly string[]> = {
   // No faucet on mainnet: it hands out free resources, which is only harmless
   // where the resources are worthless.
   "v3-mainnet": ["explore", "myLand", "battleLog", "clans", "dashboard"],
-  "v3-testnet": ["explore", "myLand", "battleLog", "clans", "land", "faucet"],
-  "v4-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land", "faucet"],
+  // No faucet on v3 or v4 either: their contracts have no such function, so
+  // the route would only ever explain itself.
+  "v3-testnet": ["explore", "myLand", "battleLog", "clans", "land"],
+  "v4-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land"],
   "v5-testnet": ["explore", "myLand", "battleLog", "clans", "dashboard", "land", "faucet"],
 };
 

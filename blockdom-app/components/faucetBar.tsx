@@ -5,12 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
-import {
-  isRewrite,
-  isSepolia,
-  routeFor,
-  useDeployment,
-} from "@/lib/deployments";
+import { hasFaucet, routeFor, useDeployment } from "@/lib/deployments";
 import { townRead } from "@/lib/instances";
 
 /**
@@ -38,7 +33,11 @@ export default function FaucetBar() {
 
   const onLanding = pathname === "/";
   const onFaucet = pathname.endsWith("/faucet");
-  const supported = isSepolia(deployment) && isRewrite(deployment);
+  // hasFaucet, not isRewrite: v4 is a rewrite too, but its ABI has no faucet
+  // function, and calling one that is not there throws synchronously — before
+  // any promise exists, so the .catch below cannot see it. That took down every
+  // /v4/ page this bar rendered on.
+  const supported = hasFaucet(deployment);
   const show = supported && !onLanding && !onFaucet;
 
   useEffect(() => {
