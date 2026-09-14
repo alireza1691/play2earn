@@ -17,8 +17,8 @@
  * Anything genuinely version-specific goes in GUARDED with the predicate that
  * gates it, which turns a silent crash into a decision someone wrote down.
  */
-import { execSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { listSources } from "./repoFiles.mjs";
 
 const ABIS = {
   v3: "abis/townAbi.json",
@@ -112,15 +112,12 @@ for (const [version, path] of Object.entries(ABIS)) {
   );
 }
 
-const sources = execSync("git ls-files components lib context app | grep -E '\\.(ts|tsx)$'", {
-  encoding: "utf8",
-}).split("\n").filter(Boolean);
+const sources = listSources(["components", "lib", "context", "app"]);
 
 /** method -> { files, versions it must exist in } */
 const calls = new Map();
 
 for (const file of sources) {
-  if (!existsSync(file)) continue;
   const text = readFileSync(file, "utf8");
 
   for (const { pattern, versions } of HOLDER_SOURCES) {

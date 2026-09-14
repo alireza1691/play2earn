@@ -20,8 +20,8 @@
  *              source and expanded, so a new building family is covered the day
  *              it is added rather than the day someone remembers this file
  */
-import { execSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { listFiles, listSources, listingSource } from "./repoFiles.mjs";
 
 const ROOTS = ["components", "lib", "app", "svg"];
 const EXT = String.raw`png|PNG|jpg|jpeg|svg|gif|webp`;
@@ -36,15 +36,9 @@ const EXT = String.raw`png|PNG|jpg|jpeg|svg|gif|webp`;
  */
 const LEVELS = Array.from({ length: 7 }, (_, i) => i);
 
-const tracked = new Set(
-  execSync("git ls-files public", { encoding: "utf8" }).split("\n").filter(Boolean)
-);
+const tracked = new Set(listFiles("public"));
 const byLowercase = new Map([...tracked].map((p) => [p.toLowerCase(), p]));
-
-const sources = execSync(
-  `git ls-files ${ROOTS.join(" ")} | grep -E '\\.(ts|tsx)$'`,
-  { encoding: "utf8" }
-).split("\n").filter(Boolean);
+const sources = listSources(ROOTS);
 
 /** path -> where it came from, so a failure names a file to open. */
 const wanted = new Map();
@@ -53,9 +47,6 @@ const want = (path, origin) => {
 };
 
 for (const file of sources) {
-  // ls-files still lists a file deleted but not yet staged. Skipping those
-  // keeps the check runnable mid-edit instead of only on a clean tree.
-  if (!existsSync(file)) continue;
   const text = readFileSync(file, "utf8");
 
   for (const [, path] of text.matchAll(
@@ -118,4 +109,7 @@ if (failures) {
   console.error(`checkAssets: ${failures} problem(s).\n`);
   process.exit(1);
 }
-console.log(`checkAssets: ${wanted.size} paths, all present and correctly spelled.`);
+console.log(
+  `checkAssets: ${wanted.size} paths, all present and correctly spelled ` +
+  `(listed from ${listingSource()}).`
+);
