@@ -40,11 +40,17 @@ export default function TownHeader() {
   const buildingCount = inViewLand.buildedResourceBuildings?.length ?? 0;
   const canClaimAll = isMine && isRewrite(deployment) && buildingCount > 1;
 
+  /*
+    `fixed`, not `absolute`. This renders inside Town, which sits inside the
+    map's scrolling container — so positioned absolutely it scrolled away with
+    the terrain and slid under the balance bar, which lives in the layout and
+    does not scroll. Fixed puts the two on the same footing.
+  */
   return (
     <div
       className={`${
         address ? "top-[124px]" : "top-[80px]"
-      } ml-5 z-30 absolute left-0 flex flex-row flex-wrap gap-2 pr-4 max-w-[100dvw]`}
+      } ml-5 z-30 fixed left-0 flex flex-row flex-wrap gap-2 pr-4 max-w-[100dvw]`}
     >
       <div className="pwBadge">
         <span className="pwBadgeLabel">Land</span>
