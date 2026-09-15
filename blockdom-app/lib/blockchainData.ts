@@ -5,11 +5,13 @@ export const varsAddress ="0xDC8c2fA6B1bad701B8F38BBfe7eC18cC874f7754"
 export const tokenAddress="0x57363eA640178A20DeAB01561dB3bD57FE85733e"
 export const apiKey = "7XZM1XPQTW8WHHCW7KUY8BPUUSKPHPSE6T";
 
-// Etherscan V1 endpoints (api-sepolia.etherscan.io, api.polygonscan.com) are
+// Etherscan V1 endpoints (api-sepolia.etherscan.io, api.basescan.org) are
 // deprecated and now reply NOTOK. The V2 API serves every chain from one host
-// with one key, selected by chainid.
+// with one key, selected by chainid — which is also why moving the mainnet
+// from Polygon to Base needed no new key and no new host.
 export const sepoliaChainId = 11155111;
-export const polygonChainId = 137;
+/** Base. The mainnet was going to be Polygon and is not. */
+export const baseChainId = 8453;
 export const explorerLogsRequest = (address: string, chainId: number) =>
   `https://api.etherscan.io/v2/api?chainid=${chainId}&module=logs&action=getLogs&address=${address}&apikey=${apiKey}`;
 

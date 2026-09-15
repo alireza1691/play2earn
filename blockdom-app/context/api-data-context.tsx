@@ -1,7 +1,7 @@
 "use client"
 import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { explorerLogsRequest, landsAddress, landsMainnetAddress, landsV4Address, landsV5Address, polygonChainId, sepoliaChainId, townAddress, townV4Address, townV5Address, v5Deployed } from '@/lib/blockchainData';
+import { explorerLogsRequest, landsAddress, landsMainnetAddress, landsV4Address, landsV5Address, baseChainId, sepoliaChainId, townAddress, townV4Address, townV5Address, v5Deployed } from '@/lib/blockchainData';
 import { useDeployment } from '@/lib/deployments';
 import { APICallData, ArmyType, MintedLand, MintedResourceBuildingType, WarLogType } from '@/lib/types';
 import { getLastRaidsFromEvents, getMintedLandsFromEvents, getOwnedLands, getResBuildingsFromEvents, getTownhallLevelsFromEvents, getWarLogsFromEvents } from '@/lib/utils';
@@ -87,8 +87,8 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
   const sepoliaAPIRequest = (address: string) =>
     explorerLogsRequest(address, sepoliaChainId);
 
-  const polygonAPIRequest = (address: string) =>
-    explorerLogsRequest(address, polygonChainId);
+  const baseAPIRequest = (address: string) =>
+    explorerLogsRequest(address, baseChainId);
 
 
   const fetchData = useCallback(
@@ -117,7 +117,7 @@ const ApiDataProvider: React.FC<ApiDataProviderProps> = ({ children }) => {
     
         } else {
           const response = await axios.get(
-            polygonAPIRequest(landsMainnetAddress)
+            baseAPIRequest(landsMainnetAddress)
           );
           setApiData(response.data);
           console.log("Mainnet lands API response:",response);

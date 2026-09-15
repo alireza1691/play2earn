@@ -30,7 +30,7 @@ const OPTIONS: { id: Deployment; label: string; hint: string }[] = [
   {
     id: "v3-mainnet",
     label: "Main",
-    hint: "The original contracts on Polygon",
+    hint: "The original contracts on Base",
   },
   {
     id: "v3-testnet",

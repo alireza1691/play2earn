@@ -29,7 +29,7 @@ import { IoMdDownload } from 'react-icons/io';
 import { IoClose } from 'react-icons/io5';
 import { RiTelegramFill } from 'react-icons/ri';
 
-/** When the Polygon world opens. The land presale on mainnet is already live. */
+/** When the Base world opens. The land presale on mainnet is already live. */
 const MAINNET_OPEN = Date.parse('2026-10-01T00:00:00Z');
 
 const TESTNET_ROUTE = '/testnet/explore';
@@ -332,7 +332,7 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
           <div style={{ position: 'relative', maxWidth: '1280px', margin: '0 auto', padding: 'clamp(72px, 9vw, 140px) 24px clamp(56px, 6vw, 96px)' }}>
             <div style={{ fontFamily: mono, fontSize: '12px', letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '28px' }}>10,000 lands · x,y from 100 to 199</div>
             <h1 style={{ fontSize: 'clamp(52px, 9vw, 136px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.88, textTransform: 'uppercase', margin: '0 0 32px', maxWidth: '15ch', textWrap: 'balance' }}>Nobody hands you land.</h1>
-            <p style={{ fontSize: 'clamp(17px, 1.6vw, 22px)', lineHeight: 1.5, color: 'rgba(244,244,241,0.68)', maxWidth: '54ch', margin: '0 0 44px', textWrap: 'pretty' }}>A 100×100 map, 10,000 lands, no expansion. Farms and mines make food and gold on a three-hour tick, gold buys warriors, warriors take your neighbour&apos;s goods. Convert the goods to PLOT and withdraw. Free on Sepolia today, real on Polygon from 1 October.</p>
+            <p style={{ fontSize: 'clamp(17px, 1.6vw, 22px)', lineHeight: 1.5, color: 'rgba(244,244,241,0.68)', maxWidth: '54ch', margin: '0 0 44px', textWrap: 'pretty' }}>A 100×100 map, 10,000 lands, no expansion. Farms and mines make food and gold on a three-hour tick, gold buys warriors, warriors take your neighbour&apos;s goods. Convert the goods to PLOT and withdraw. Free on Sepolia today, real on Base from 1 October.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: 'clamp(48px, 6vw, 80px)' }}>
               <Link href={TESTNET_ROUTE} style={{ background: 'var(--pw-accent)', color: 'var(--pw-on-accent)', fontFamily: mono, fontSize: '13px', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '20px 34px' }}>Play free on Sepolia</Link>
               <a href="#play" style={{ border: '1px solid rgba(244,244,241,0.3)', color: '#F4F4F1', fontFamily: mono, fontSize: '13px', letterSpacing: '0.14em', textTransform: 'uppercase', padding: '20px 34px' }}>How the war works</a>
@@ -353,7 +353,7 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
             <div style={{ flex: '1 1 460px', minWidth: '300px' }}>
               <div style={{ fontFamily: mono, fontSize: '12px', letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '24px' }}>Testnet live · Mainnet opens 1 October</div>
               <h2 style={{ fontSize: 'clamp(48px, 7.5vw, 108px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.86, textTransform: 'uppercase', margin: '0 0 28px', textWrap: 'balance' }}>Land is<br />the only<br />supply cap.</h2>
-              <p style={{ fontSize: 'clamp(16px, 1.5vw, 20px)', lineHeight: 1.55, color: 'rgba(13,15,18,0.7)', maxWidth: '46ch', margin: '0 0 36px', textWrap: 'pretty' }}>10,000 lands exist and the contract cannot mint an eleven-thousandth. Build the whole kingdom free on Sepolia today. On 1 October the Polygon world opens, and the goods your land produces convert into PLOT you can withdraw.</p>
+              <p style={{ fontSize: 'clamp(16px, 1.5vw, 20px)', lineHeight: 1.55, color: 'rgba(13,15,18,0.7)', maxWidth: '46ch', margin: '0 0 36px', textWrap: 'pretty' }}>10,000 lands exist and the contract cannot mint an eleven-thousandth. Build the whole kingdom free on Sepolia today. On 1 October the Base world opens, and the goods your land produces convert into PLOT you can withdraw.</p>
               <div style={{ display: 'flex', gap: '1px', background: 'rgba(13,15,18,0.16)', border: '1px solid rgba(13,15,18,0.16)', marginBottom: '32px', flexWrap: 'wrap' }}>
                 <div style={{ flex: '1 1 88px', background: '#F4F4F1', padding: '18px 20px', textAlign: 'center' }}><div style={{ fontSize: 'clamp(28px, 3vw, 40px)', fontWeight: 800, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{mintDays}</div><div style={{ fontFamily: mono, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(13,15,18,0.5)', marginTop: '6px' }}>Days</div></div>
                 <div style={{ flex: '1 1 88px', background: '#F4F4F1', padding: '18px 20px', textAlign: 'center' }}><div style={{ fontSize: 'clamp(28px, 3vw, 40px)', fontWeight: 800, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{mintHours}</div><div style={{ fontFamily: mono, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(13,15,18,0.5)', marginTop: '6px' }}>Hours</div></div>
@@ -451,9 +451,9 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
               <Link href={TESTNET_ROUTE} style={{ display: 'inline-block', marginTop: '24px', fontFamily: mono, fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--pw-accent)', borderBottom: '1px solid var(--pw-accent)', paddingBottom: '4px' }}>Enter the testnet →</Link>
             </div>
             <div style={{ background: '#0D0F12', boxShadow: '0 0 0 1px rgba(244,244,241,0.14)', padding: 'clamp(28px, 3vw, 44px)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: mono, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '22px' }}><span style={{ width: '7px', height: '7px', background: 'var(--pw-accent)', display: 'block', animation: 'pw-pulse 3s ease-in-out infinite' }}></span>Polygon mainnet · land presale live</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontFamily: mono, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '22px' }}><span style={{ width: '7px', height: '7px', background: 'var(--pw-accent)', display: 'block', animation: 'pw-pulse 3s ease-in-out infinite' }}></span>Base mainnet · land presale live</div>
               <div style={{ fontSize: 'clamp(26px, 2.8vw, 36px)', fontWeight: 800, letterSpacing: '-0.03em', textTransform: 'uppercase', marginBottom: '16px' }}>Own land, withdraw PLOT</div>
-              <div style={{ fontSize: '16px', lineHeight: 1.6, color: 'rgba(244,244,241,0.65)', maxWidth: '42ch', textWrap: 'pretty' }}>Lands are minting on Polygon now, ahead of the world opening on 1 October. Separate contracts, separate lands, separate armies — a testnet kingdom does not carry over.</div>
+              <div style={{ fontSize: '16px', lineHeight: 1.6, color: 'rgba(244,244,241,0.65)', maxWidth: '42ch', textWrap: 'pretty' }}>Lands are minting on Base now, ahead of the world opening on 1 October. Separate contracts, separate lands, separate armies — a testnet kingdom does not carry over.</div>
               <Link href={MAINNET_ROUTE} style={{ display: 'inline-block', marginTop: '24px', fontFamily: mono, fontSize: '12px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--pw-accent)', borderBottom: '1px solid var(--pw-accent)', paddingBottom: '4px' }}>Mainnet land presale →</Link>
             </div>
           </div>
@@ -663,7 +663,7 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
             </div>
             <div style={{ background: '#0D0F12', padding: '32px' }}>
               <div style={{ fontFamily: mono, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(244,244,241,0.45)', marginBottom: '14px' }}>Chain</div>
-              <div style={{ fontSize: '16px', lineHeight: 1.6, color: 'rgba(244,244,241,0.7)', textWrap: 'pretty' }}>Sepolia testnet and Polygon mainnet run side by side and share no state. The network you are standing in is always shown in the header.</div>
+              <div style={{ fontSize: '16px', lineHeight: 1.6, color: 'rgba(244,244,241,0.7)', textWrap: 'pretty' }}>Sepolia testnet and Base mainnet run side by side and share no state. The network you are standing in is always shown in the header.</div>
             </div>
           </div>
         </div>
@@ -719,13 +719,13 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
               <div style={{ height: '3px', background: 'var(--pw-accent)', marginBottom: '24px', width: '100%' }}></div>
               <div style={{ fontFamily: mono, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '14px' }}>Now · Testnet</div>
               <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '12px' }}>Free play &amp; presale</div>
-              <div style={{ fontSize: '15px', lineHeight: 1.6, color: 'rgba(244,244,241,0.6)', maxWidth: '26ch' }}>The whole loop — mint, build, recruit, march, convert — live on Sepolia at no cost, while mainnet lands presell on Polygon.</div>
+              <div style={{ fontSize: '15px', lineHeight: 1.6, color: 'rgba(244,244,241,0.6)', maxWidth: '26ch' }}>The whole loop — mint, build, recruit, march, convert — live on Sepolia at no cost, while mainnet lands presell on Base.</div>
             </div>
             <div style={{ background: '#0D0F12', boxShadow: '0 0 0 1px rgba(244,244,241,0.14)', padding: '34px 26px 40px 26px' }}>
               <div style={{ height: '3px', background: 'rgba(244,244,241,0.25)', marginBottom: '24px' }}></div>
               <div style={{ fontFamily: mono, fontSize: '11px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(244,244,241,0.45)', marginBottom: '14px' }}>1 Oct 2026</div>
               <div style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: '12px' }}>Mainnet opens</div>
-              <div style={{ fontSize: '15px', lineHeight: 1.6, color: 'rgba(244,244,241,0.6)', maxWidth: '26ch' }}>The Polygon world opens. 10,000 lands, real ownership, withdrawable PLOT.</div>
+              <div style={{ fontSize: '15px', lineHeight: 1.6, color: 'rgba(244,244,241,0.6)', maxWidth: '26ch' }}>The Base world opens. 10,000 lands, real ownership, withdrawable PLOT.</div>
             </div>
             <div style={{ background: '#0D0F12', boxShadow: '0 0 0 1px rgba(244,244,241,0.14)', padding: '34px 26px 40px 26px' }}>
               <div style={{ height: '3px', background: 'rgba(244,244,241,0.25)', marginBottom: '24px' }}></div>
@@ -774,7 +774,7 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
                 },
                 {
                   q: 'Which chains?',
-                  a: 'Sepolia for the free testnet, Polygon for mainnet. They are separate worlds with separate contracts — nothing transfers between them, and the /testnet/ in the URL is what decides which one you are playing.',
+                  a: 'Sepolia for the free testnet, Base for mainnet. They are separate worlds with separate contracts — nothing transfers between them, and the /testnet/ in the URL is what decides which one you are playing.',
                 },
                 {
                   q: 'Do I have to spend anything to try it?',

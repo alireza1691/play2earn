@@ -13,7 +13,7 @@ import {
 } from "@thirdweb-dev/react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { TxSuccessLink, useBlockchainStateContext } from "./blockchain-state-context";
-import { Sepolia, Polygon } from "@thirdweb-dev/chains";
+import { Sepolia, Base } from "@thirdweb-dev/chains";
 import { landObjectFromTokenId } from "@/lib/utils";
 import { BigNumber, BigNumberish, ContractTransaction, ethers, utils } from "ethers";
 import { useSelectedBuildingContext } from "./selected-building-context";
@@ -113,7 +113,7 @@ export default function BlockchainUtilsContextProvider({
   const connectWithMetamask = useConnect();
   const chainId = useChainId();
   const testnetChainId = Sepolia.chainId;
-  const mainnetChainId = Polygon.chainId
+  const mainnetChainId = Base.chainId
   const switchChain = useSwitchChain();
   const metamaskConfig = metamaskWallet();
   const notify = () => {

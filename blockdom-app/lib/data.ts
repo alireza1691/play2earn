@@ -141,7 +141,7 @@ export const questions = [
   {
     title: "Testnet or mainnet?",
     answer:
-      "The testnet runs on Sepolia and is free — mint with test ETH and take PLOT from the in-game faucet. The mainnet runs on Polygon, where lands and PLOT carry real value. They are two separate worlds with separate contracts; the /testnet/ in the URL is what decides which one you are playing.",
+      "The testnet runs on Sepolia and is free — mint with test ETH and take PLOT from the in-game faucet. The mainnet runs on Base, where lands and PLOT carry real value. They are two separate worlds with separate contracts; the /testnet/ in the URL is what decides which one you are playing.",
     position: "top-[-23rem]",
   },
   {

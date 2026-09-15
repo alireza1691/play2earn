@@ -1,7 +1,7 @@
 "use client"
-import { DEFAULT_TESTNET, routeFor } from "@/lib/deployments";;
+import { DEFAULT_TESTNET, routeFor } from "@/lib/deployments";
 import { useChainId, useSwitchChain } from "@thirdweb-dev/react";
-import { Sepolia, Arbitrum ,Polygon} from "@thirdweb-dev/chains";
+import { Sepolia, Base } from "@thirdweb-dev/chains";
 import React, { useState } from "react";
 import Router from "next/router";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export default function ChainIdButton() {
 
   const switchMainnet = async () => {
     try {
-      await switchChain(Polygon.chainId);
+      await switchChain(Base.chainId);
     } catch (error) {
       console.log("Network change failed");
     }
@@ -35,7 +35,7 @@ export default function ChainIdButton() {
     if (chainId == Sepolia.chainId) {
       status = "Testnet";
     }
-    if (chainId == Polygon.chainId) {
+    if (chainId == Base.chainId) {
       status = "Mainnet";
     }
     return status;
@@ -61,7 +61,7 @@ export default function ChainIdButton() {
             className={` pwNavPanel darkShadow w-[12rem] absolute mt-2 py-2 px-1 max-h-40 gap-1 flex flex-col`}
           >
             <a onClick={() => {switchMainnet(),router.push("/explore"),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
-              Polygon (Mainnet)
+              Base (Mainnet)
             </a>
             <a onClick={() => {switchTestnet(),router.push(routeFor(DEFAULT_TESTNET, "explore")),setIsNotifActive(false)}} className="px-3 py-2 cursor-pointer hover:bg-[color:var(--pw-accent)] hover:!text-[color:var(--pw-on-accent)] transition-all">
               Sepolia (Testnet)

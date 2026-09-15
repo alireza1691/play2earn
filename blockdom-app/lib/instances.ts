@@ -23,7 +23,7 @@ export const provider = new ethers.providers.JsonRpcProvider(
 );
 
 export const mainnetProvider = new ethers.providers.JsonRpcProvider(
-  `https://polygon-mainnet.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
+  `https://base-mainnet.infura.io/v3/67c6eca1cf9c49af826e5476cda53e0c`
 )
 // export const address = useAddress()
 // export const signer = useSigner()

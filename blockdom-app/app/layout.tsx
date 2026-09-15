@@ -34,7 +34,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Plotwar — 10,000 lands, one map",
   description:
-    "A 100x100 map of 10,000 lands. Build, recruit, march, and convert goods into PLOT. Free on the Sepolia testnet, mainnet on Polygon from 1 October.",
+    "A 100x100 map of 10,000 lands. Build, recruit, march, and convert goods into PLOT. Free on the Sepolia testnet, mainnet on Base from 1 October.",
 };
 
 export default function RootLayout({

@@ -8,7 +8,7 @@ import { townMainnetAddress, v5Deployed } from "./blockchainData";
  * The app already derived its network from the URL (`/testnet/` → Sepolia).
  * The same idea now covers four targets, each at its own addresses:
  *
- *   /            v3 on Polygon
+ *   /            v3 on Base
  *   /testnet/    v3 on Sepolia
  *   /v4/         the rewrite: clans, the AMM pool, land types
  *   /v5/         the rewrite plus slippage guards and the swap events
