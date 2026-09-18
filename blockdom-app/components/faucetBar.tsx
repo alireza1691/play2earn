@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
-import { hasFaucet, routeFor, useDeployment } from "@/lib/deployments";
+import { faucetBarTakesRow, routeFor, useDeployment } from "@/lib/deployments";
 import { townRead } from "@/lib/instances";
 
 /**
@@ -31,14 +31,14 @@ export default function FaucetBar() {
   const [open, setOpen] = useState<boolean | null>(null);
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
-  const onLanding = pathname === "/";
-  const onFaucet = pathname.endsWith("/faucet");
   // hasFaucet, not isRewrite: v4 is a rewrite too, but its ABI has no faucet
   // function, and calling one that is not there throws synchronously — before
   // any promise exists, so the .catch below cannot see it. That took down every
   // /v4/ page this bar rendered on.
-  const supported = hasFaucet(deployment);
-  const show = supported && !onLanding && !onFaucet;
+  //
+  // Shared with the map's range header, which centres itself on the same row and
+  // has to clear this strip. One predicate so the two cannot disagree.
+  const show = faucetBarTakesRow(deployment, pathname);
 
   useEffect(() => {
     if (!show || !address) return;

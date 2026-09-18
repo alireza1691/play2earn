@@ -91,6 +91,21 @@ export const hasSlippageGuards = (deployment: Deployment) =>
 export const hasFaucet = (deployment: Deployment) =>
   deployment === "v5-testnet";
 
+/**
+ * Whether the faucet strip takes the row directly under the header.
+ *
+ * Both the strip and the map's centred range header sit in the middle of that
+ * row, so the header has to know to move down — they were landing on top of
+ * each other. Deliberately synchronous: the strip also hides when the contract
+ * reports the faucet closed, but waiting on that read would make the header
+ * jump after load, and a row of empty space costs nothing.
+ */
+export const faucetBarTakesRow = (
+  deployment: Deployment,
+  pathname: string
+): boolean =>
+  hasFaucet(deployment) && pathname !== "/" && !pathname.endsWith("/faucet");
+
 /** Short label for the deployment switcher. */
 export const deploymentLabel = (deployment: Deployment) =>
   deployment === "v5-testnet"

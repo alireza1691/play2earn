@@ -1,6 +1,8 @@
 "use client";
 import { useMapContext } from "@/context/map-context";
+import { faucetBarTakesRow, useDeployment } from "@/lib/deployments";
 import { parcelCoordRange } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 /**
@@ -18,9 +20,18 @@ import React from "react";
 export default function ParcelRangeHeader() {
   const { selectedParcel } = useMapContext();
   const { from, to } = parcelCoordRange(selectedParcel);
+  const deployment = useDeployment();
+  const pathname = usePathname();
+
+  // The faucet strip is centred on this same row and runs to about 86px, so
+  // sitting at 80px put the two badges on top of each other. Drop below it when
+  // it is there, and keep the original position where it is not.
+  const top = faucetBarTakesRow(deployment, pathname) ? "top-[104px]" : "top-[80px]";
 
   return (
-    <div className="hidden md:flex z-30 absolute top-[80px] left-1/2 -translate-x-1/2 pointer-events-none">
+    <div
+      className={`hidden md:flex z-30 absolute ${top} left-1/2 -translate-x-1/2 pointer-events-none`}
+    >
       <div className="pwBadge !gap-3">
         <span className="pwBadgeLabel">
           {selectedParcel ? "Parcel" : "World"}
