@@ -32,7 +32,11 @@ import { RiTelegramFill } from 'react-icons/ri';
 /** When the Base world opens. The land presale on mainnet is already live. */
 const MAINNET_OPEN = Date.parse('2026-10-01T00:00:00Z');
 
-const TESTNET_ROUTE = '/testnet/explore';
+// Every "play free" link on this page goes through here. Hardcoding it sent the
+// whole landing page at v3, which is the oldest deployment and not what anyone
+// arriving from the site should land on; deriving it means the default testnet
+// moves in one place.
+const TESTNET_ROUTE = routeFor(DEFAULT_TESTNET, 'explore');
 const MAINNET_ROUTE = '/explore';
 
 /** In-page sections, and the game routes the old navbar carried. */
@@ -330,8 +334,8 @@ export default function PlotwarLanding({ palette = 'plotwar', hero = 'a' }: Prop
           <div style={{ position: 'absolute', inset: '0', background: 'linear-gradient(to bottom, rgba(13,15,18,0.55) 0%, rgba(13,15,18,0.86) 55%, #0D0F12 100%)' }}></div>
 
           <div style={{ position: 'relative', maxWidth: '1280px', margin: '0 auto', padding: 'clamp(72px, 9vw, 140px) 24px clamp(56px, 6vw, 96px)' }}>
-            <div style={{ fontFamily: mono, fontSize: '12px', letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '28px' }}>10,000 lands · x,y from 100 to 199</div>
-            <h1 style={{ fontSize: 'clamp(52px, 9vw, 136px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.88, textTransform: 'uppercase', margin: '0 0 32px', maxWidth: '15ch', textWrap: 'balance' }}>Nobody hands you land.</h1>
+            <div style={{ fontFamily: mono, fontSize: '12px', letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--pw-accent)', marginBottom: '28px' }}>10,000 lands · there is no 10,001st</div>
+            <h1 style={{ fontSize: 'clamp(52px, 9vw, 136px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 0.88, textTransform: 'uppercase', margin: '0 0 32px', maxWidth: '15ch', textWrap: 'balance' }}>Build it. Defend it. Cash it out.</h1>
             <p style={{ fontSize: 'clamp(17px, 1.6vw, 22px)', lineHeight: 1.5, color: 'rgba(244,244,241,0.68)', maxWidth: '54ch', margin: '0 0 44px', textWrap: 'pretty' }}>A 100×100 map, 10,000 lands, no expansion. Farms and mines make food and gold on a three-hour tick, gold buys warriors, warriors take your neighbour&apos;s goods. Convert the goods to PLOT and withdraw. Free on Sepolia today, real on Base from 1 October.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginBottom: 'clamp(48px, 6vw, 80px)' }}>
               <Link href={TESTNET_ROUTE} style={{ background: 'var(--pw-accent)', color: 'var(--pw-on-accent)', fontFamily: mono, fontSize: '13px', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase', padding: '20px 34px' }}>Play free on Sepolia</Link>

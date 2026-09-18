@@ -100,7 +100,7 @@ export default function Intro() {
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="greenButton shadow-lg "
-                onClick={() => {router.push("/explore")}}
+                onClick={() => {router.push(routeFor(DEFAULT_TESTNET, "explore"))}}
           
               >
                 Explore
