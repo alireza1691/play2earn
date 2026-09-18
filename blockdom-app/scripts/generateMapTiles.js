@@ -38,6 +38,26 @@ const BLEED = 12; // overshoot past a tile bound; everything past it is clipped
 const NDIV = 18; // coastline samples per tile edge
 const STEP = SIZE / NDIV;
 const OVERRUN = 2; // samples carried past a tile bound, see buildShape
+/**
+ * Zero, and it stays zero.
+ *
+ * The nine tiles are still nested <svg> viewports for the parcel view, where
+ * only one is ever on screen and there is no neighbour to seam against. The
+ * world map used to assemble the same nine and did seam; it is drawn as one
+ * body now (see worldBody), so there is no boundary left to paper over.
+ *
+ * Worth knowing if anyone reaches for this again: pushing the viewports out to
+ * overlap was tried at 0.5 and 1.2 and looked WORSE both times, because a tile
+ * paints its semi-transparent mottle twice over the shared strip and the
+ * doubled band reads as a dark line rather than a light one.
+ */
+const OVERLAP = 0;
+// Tuned, not guessed. 0.5 and 1.2 were both tried and both looked worse: a
+// wider overlap does not hide more seam, it just moves the later tile's own
+// antialiased outer edge further into its neighbour's good pixels, where it
+// reads as a longer line. Just over half a pixel at the largest render is
+// enough to cover the join and small enough that the displaced edge does not
+// show. Re-render and look before changing it.
 
 /**
  * The same nine tiles are drawn at two very different scales, so the coastline
@@ -103,6 +123,15 @@ const PALETTES = {
     rockLit: "#8ea0aa",
     surf: "#bfeaf7",
     shore: "#c9bd84",
+    /* Same four steps, warmer, for the brighter skin. */
+    shoreBands: [
+      ["#7d9a52", 9],
+      ["#a8b26a", 6.6],
+      ["#d2c89a", 4.4],
+      ["#e8dfb4", 2.4],
+    ],
+    wetSand: "#a89b6d",
+    /* Same roles as v4, warmer, to match this skin's brighter ground. */
   },
 
   /*
@@ -135,12 +164,27 @@ const PALETTES = {
     ],
     seaHi: "#17313f",
     seaLo: "#0a1720",
-    land: "#4a5f36",
-    landHi: "#5e7a45",
-    landLo: "#3b4c2e",
+    /*
+     * The greens carry a hue spread, not just a lightness ramp.
+     *
+     * They used to sit within three degrees of each other — one colour at three
+     * brightnesses — which is what made the ground read as tinted paper rather
+     * than as land. Real ground does the opposite: what is in shade cools
+     * towards blue-green, what the light reaches warms towards yellow. Spread
+     * across about forty degrees of hue with the lightness left where it was,
+     * the same mottle starts reading as ground.
+     *
+     * The warm end is held back on purpose. Pushed further it goes acidic and
+     * the ground starts looking like moss; about forty degrees of spread is
+     * where it reads as terrain and stops. vegSparse also came down from 53%
+     * to 46% lightness — it was the pale patch that washed out at world zoom.
+     */
+    land: "#486138",
+    landHi: "#657a48",
+    landLo: "#2d4c2c",
     sand: "#9d9068",
-    vegDense: "#3f6b22",
-    vegSparse: "#93ab63",
+    vegDense: "#26642d",
+    vegSparse: "#7d9457",
     /*
      * How hard the two ground layers push, and they are not interchangeable.
      * The soil mottle is a field of light and dark blobs, which the eye reads
@@ -155,6 +199,23 @@ const PALETTES = {
     rockLit: "#8ea0aa",
     surf: "#98fbd7",
     shore: "#8a7f5c",
+    /*
+     * The shore, as a slope rather than a rim. Grass gives way to dry scrub,
+     * scrub to sand, sand to the wet strip the water keeps darker — four
+     * narrowing bands inside the coast, so the ground reads as falling away to
+     * the sea instead of stopping at a line.
+     *
+     * Deliberately only here, in the strip outside the parcel grid: this is
+     * shading, and shading anywhere a land sits would make one plot look like
+     * it stands higher than its neighbour.
+     */
+    shoreBands: [
+      ["#5a7340", 9],
+      ["#7c8a52", 6.6],
+      ["#9d9068", 4.4],
+      ["#b3a97e", 2.4],
+    ],
+    wetSand: "#6f6a4e",
     /*
      * The colour the page behind the map is painted in. Only v4 sets it: the
      * world SVG fades to it at the edges, so the ocean dissolves into the page
@@ -302,8 +363,11 @@ function buildShape(sides, col, row, m) {
   // the neighbouring tile picks the coastline up mid-stride.
   const isCorner = seaEdges.length > 1;
   const pts = [];
+  /** Each sea edge's samples, kept apart so a corner arc can be put between. */
+  const runs = [];
 
   seaEdges.forEach(([name, from, to], edgeIndex) => {
+    const run = [];
     const horizontal = name === "top" || name === "bottom";
     const along = horizontal ? 0 : 1; // axis the edge runs along
     const inward = name === "top" || name === "left" ? 1 : -1;
@@ -353,9 +417,49 @@ function buildShape(sides, col, row, m) {
       const point = [];
       point[along] = a;
       point[1 - along] = base + displace(m.waves, name, u) * m.amp * ease * inward;
-      pts.push(point);
+      run.push(point);
     }
+    runs.push(run);
   });
+
+  if (!isCorner) {
+    pts.push(...runs[0]);
+  } else {
+    /*
+      A real quarter arc across the corner, not one long chord.
+
+      Each run stops `chamfer` short of the tile's inner corner, and what used
+      to bridge them was a single segment. That chord is several times the STEP
+      either side of it, and a smoothed curve meeting a long chord from two
+      short ones turns the joint into a hard V — the notch on the north-east
+      coast, repeated and magnified by every shallows band stroked over it.
+
+      The centre falls out of the geometry: both ends sit `chamfer` from the
+      corner along their own edge, so centre = P0 + P1 - corner. The arc leaves
+      and rejoins each run along that run's own direction, so the joint stops
+      being a joint.
+    */
+    const [p0, p1] = [runs[0][runs[0].length - 1], runs[1][0]];
+    const c = seaEdges[0][2];
+    const centre = [p0[0] + p1[0] - c[0], p0[1] + p1[1] - c[1]];
+    const angle = (q) => Math.atan2(q[1] - centre[1], q[0] - centre[0]);
+
+    let a0 = angle(p0);
+    let a1 = angle(p1);
+    // Always the short way round; the long way would sweep across the island.
+    while (a1 - a0 > Math.PI) a1 -= Math.PI * 2;
+    while (a0 - a1 > Math.PI) a1 += Math.PI * 2;
+
+    const radius = Math.hypot(p0[0] - centre[0], p0[1] - centre[1]);
+    const steps = Math.max(3, Math.round(m.chamfer / STEP) + 2);
+
+    pts.push(...runs[0]);
+    for (let i = 1; i < steps; i++) {
+      const t = a0 + ((a1 - a0) * i) / steps;
+      pts.push([centre[0] + Math.cos(t) * radius, centre[1] + Math.sin(t) * radius]);
+    }
+    pts.push(...runs[1]);
+  }
 
   const coast = smoothPath(pts);
 
@@ -429,14 +533,18 @@ function blobField(period, cells, offset = 0) {
  * mottle(), so it tiles across parcel borders without a seam. Deliberately
  * low-contrast: building icons and the grid wash sit on top of it.
  */
-function grass(id) {
-  const period = 25;
+function grass(id, scale = 1) {
+  // Both zoom levels get the same marks at their own size. A world tile spans
+  // about seven parcels, so tufts drawn for the zoomed view would come out as
+  // coarse dashes there; the period has to keep dividing SIZE either way, or
+  // the pattern breaks at a tile border.
+  const period = 25 * scale;
   const rand = rng(0x6a55);
   let marks = "";
   for (let i = 0; i < 14; i++) {
     const bx = rand() * period;
     const by = rand() * period;
-    const size = 0.5 + rand() * 0.5;
+    const size = (0.5 + rand() * 0.5) * scale;
     const pebble = i % 5 === 0;
     for (const dx of [-period, 0, period]) {
       for (const dy of [-period, 0, period]) {
@@ -451,7 +559,7 @@ function grass(id) {
               size * 1.5
             )} ${r(-size * 0.4)}" fill="none" stroke="${
               palette.landLo
-            }" stroke-width=".28" stroke-linecap="round" opacity=".42"/>`;
+            }" stroke-width="${r2(0.28 * scale)}" stroke-linecap="round" opacity=".42"/>`;
       }
     }
   }
@@ -496,10 +604,66 @@ function mottle(id, hi, lo, opacity, flip = false, period = MOTTLE_PERIOD, cells
     fill: `<rect x="${-BLEED}" y="${-BLEED}" width="${SIZE + BLEED * 2}" height="${
       SIZE + BLEED * 2
     }" fill="url(#${id}-mottle)"/>`,
+    /** The same fill over an arbitrary square — the world backdrop wants one. */
+    fillAt: (side) =>
+      `<rect width="${r(side)}" height="${r(side)}" fill="url(#${id}-mottle)"/>`,
   };
 }
 
 /** Tile body, without the outer <svg> — so it can also be nested into World. */
+/**
+ * The world map as ONE body rather than nine tiles.
+ *
+ * The nine exist because the zoomed view needs a tile per parcel, and the world
+ * map used to be assembled from the same nine nested <svg> viewports. Each of
+ * those clips at its own bound, so two neighbours each antialias their edge
+ * against the other and the two half-covered pixels do not add back up to one.
+ * That shortfall is the hairline seam, and it cannot be tuned away: a wider
+ * overlap paints the mottle twice and turns the light line dark, dropping the
+ * clip lets each tile's BLEED spill into the sea, and a backdrop underneath
+ * only makes the gap blend against something closer.
+ *
+ * Drawn once against the world coastline there is no boundary to antialias, so
+ * the seam is not reduced, it does not exist. The tiles are still generated for
+ * the parcel view, which needs them one at a time and has no seam to speak of.
+ *
+ * Every layer is the same as tileBody's, in the same order.
+ */
+function worldBody(m) {
+  const soil = mottle("wg", palette.landHi, palette.landLo, palette.soil ?? 0.34);
+  const cover = grass("w", 0.25);
+  const water = mottle("ww", palette.seaHi, palette.seaLo, 0.16, true);
+  const land = worldOutline(m, 0);
+  const box = `width="${WORLD}" height="${WORLD}"`;
+
+  const stroke = (color, width, extra = "") =>
+    `<use href="#w-coast" fill="none" stroke="${color}" stroke-width="${width}" stroke-linejoin="round" ${extra}/>`;
+
+  const shallows = palette.shallows
+    .map(([width, color]) => stroke(color, r(width * m.band), 'stroke-linecap="butt"'))
+    .join("");
+
+  return (
+    `<defs>${soil.defs}${cover.defs}${water.defs}` +
+    `<path id="w-coast" d="${land}"/>` +
+    `<clipPath id="w-clip"><use href="#w-coast"/></clipPath></defs>` +
+    `<rect ${box} fill="${palette.deep}"/>` +
+    `<rect ${box} fill="url(#ww-mottle)"/>` +
+    shallows +
+    `<use href="#w-coast" fill="${palette.land}"/>` +
+    `<g clip-path="url(#w-clip)">` +
+    `<rect ${box} fill="url(#wg-mottle)"/>` +
+    `<rect ${box} fill="url(#w-grass)"/>` +
+    palette.shoreBands
+      .map(([tone, width]) => stroke(tone, r(width * m.detail), 'stroke-linecap="butt"'))
+      .join("") +
+    `</g>` +
+    stroke(palette.wetSand, r(1.8 * m.detail), 'stroke-linecap="butt" opacity=".55"') +
+    stroke(palette.surf, r(2.4 * m.detail), 'stroke-linecap="butt" opacity=".3"') +
+    stroke(palette.shore, r(1.1 * m.detail), 'stroke-linecap="butt"')
+  );
+}
+
 function tileBody(name, sides, col, row, m) {
   const id = name.toLowerCase();
   const { land, coast } = buildShape(sides, col, row, m);
@@ -511,7 +675,11 @@ function tileBody(name, sides, col, row, m) {
   const spread = m.grass
     ? mottle(`${id}v`, palette.vegDense, palette.vegSparse, palette.cover ?? 0.5, false, SIZE, 2, 7)
     : null;
-  const cover = m.grass ? grass(id) : null;
+  // The world map gets the same ground marks at a quarter scale. It used to
+  // have nothing but the soft mottle, which reads as cloud rather than as
+  // ground; this is what makes the land look like a surface you could stand on
+  // without implying that any part of it is higher than any other.
+  const cover = grass(id, m.grass ? 1 : 0.25);
   const water = mottle(`${id}w`, palette.seaHi, palette.seaLo, 0.16, true);
   const box = `x="${-BLEED}" y="${-BLEED}" width="${SIZE + BLEED * 2}" height="${
     SIZE + BLEED * 2
@@ -546,14 +714,21 @@ function tileBody(name, sides, col, row, m) {
     `<g clip-path="url(#${id}-clip)">${soil.fill}${spread ? spread.fill : ""}${
       cover ? cover.fill : ""
     }` +
-    // Sand rim: stroked on the coast but clipped to the land, so only the
-    // inland half of the stroke survives.
+    // The shore, widest band first so each narrower one sits inside the last.
+    // All of them are stroked on the coast and clipped to the land, so only the
+    // inland half survives and the sea side stays clean.
     (hasSea
-      ? stroke(palette.sand, r(5 * m.detail), 'stroke-linecap="butt" opacity=".85"')
+      ? palette.shoreBands
+          .map(([tone, width]) =>
+            stroke(tone, r(width * m.detail), 'stroke-linecap="butt"')
+          )
+          .join("")
       : "") +
     `</g>` +
     (hasSea
-      ? stroke(palette.surf, r(2.4 * m.detail), 'stroke-linecap="butt" opacity=".3"') +
+      ? // Wet sand: the strip the water keeps dark, straddling the line.
+        stroke(palette.wetSand, r(1.8 * m.detail), 'stroke-linecap="butt" opacity=".55"') +
+        stroke(palette.surf, r(2.4 * m.detail), 'stroke-linecap="butt" opacity=".3"') +
         stroke(palette.shore, r(1.1 * m.detail), 'stroke-linecap="butt"')
       : "")
   );
@@ -591,17 +766,49 @@ function rng(seed) {
 }
 
 /** Catmull-Rom through a closed loop of points. */
+/**
+ * Closed Catmull-Rom through the points, as cubic Beziers.
+ *
+ * Centripetal (alpha = 0.5), not uniform. The uniform form takes its tangent as
+ * (p2 - p0) / 6 regardless of how far apart the points actually are, so where
+ * the spacing changes abruptly the tangent overshoots and the curve throws a
+ * spike outside the hull. That is what put the sharp barbs in the east coast:
+ * each edge is sampled at a regular STEP, but the chamfer leaves a long jump
+ * between the last point of one edge and the first of the next, and the two
+ * samples either side of that join were being given a tangent sized for the
+ * long chord and applied across the short one.
+ *
+ * Centripetal weighting is the standard cure — it provably produces no cusps
+ * and no self-intersections whatever the spacing — and costs a couple of
+ * square roots per point at build time, none at runtime.
+ */
 function smoothClosed(pts) {
   const at = (i) => pts[(i + pts.length) % pts.length];
+  const knot = (a, b) => {
+    const t = Math.sqrt(Math.hypot(b[0] - a[0], b[1] - a[1]));
+    // Coincident points would divide by zero; fall back to uniform there.
+    return t < 1e-6 ? 1 : t;
+  };
+
   let d = `M${r(pts[0][0])} ${r(pts[0][1])}`;
   for (let i = 0; i < pts.length; i++) {
     const p0 = at(i - 1);
     const p1 = at(i);
     const p2 = at(i + 1);
     const p3 = at(i + 2);
-    d += `C${r(p1[0] + (p2[0] - p0[0]) / 6)} ${r(p1[1] + (p2[1] - p0[1]) / 6)}`;
-    d += ` ${r(p2[0] - (p3[0] - p1[0]) / 6)} ${r(p2[1] - (p3[1] - p1[1]) / 6)}`;
-    d += ` ${r(p2[0])} ${r(p2[1])}`;
+
+    const d1 = knot(p0, p1);
+    const d2 = knot(p1, p2);
+    const d3 = knot(p2, p3);
+
+    const c1 = (k) =>
+      (d1 * d1 * p2[k] - d2 * d2 * p0[k] + (2 * d1 * d1 + 3 * d1 * d2 + d2 * d2) * p1[k]) /
+      (3 * d1 * (d1 + d2));
+    const c2 = (k) =>
+      (d3 * d3 * p1[k] - d2 * d2 * p3[k] + (2 * d3 * d3 + 3 * d3 * d2 + d2 * d2) * p2[k]) /
+      (3 * d3 * (d3 + d2));
+
+    d += `C${r(c1(0))} ${r(c1(1))} ${r(c2(0))} ${r(c2(1))} ${r(p2[0])} ${r(p2[1])}`;
   }
   return d + "Z";
 }
@@ -629,8 +836,28 @@ function worldOutline(m, margin) {
     ["left", 1, hi - ch, lo + ch, lo, 1],
   ];
 
-  for (const [edge, along, from, to, base, inward] of edges) {
-    const dir = Math.sign(to - from);
+  /**
+   * The four corners, as quarter arcs rather than as the gap between two runs.
+   *
+   * Each edge stops `chamfer` short of the corner, so without this the outline
+   * jumps straight from the end of one run to the start of the next. That chord
+   * is long compared with the STEP either side of it, and a long chord meeting
+   * short ones is where a smoothed curve turns into a hard angular notch — the
+   * kink visible on the north-east coast, repeated and magnified by every
+   * shallows band stroked over it.
+   *
+   * Centres sit `chamfer` inward on both axes, so the arc leaves and rejoins
+   * each run along the run's own direction and the joint disappears.
+   */
+  const corners = [
+    [hi - ch, lo + ch, -Math.PI / 2, 0], // top -> right
+    [hi - ch, hi - ch, 0, Math.PI / 2], // right -> bottom
+    [lo + ch, hi - ch, Math.PI / 2, Math.PI], // bottom -> left
+    [lo + ch, lo + ch, Math.PI, Math.PI * 1.5], // left -> top
+  ];
+  const ARC = Math.max(3, Math.round(ch / STEP) + 2);
+
+  edges.forEach(([edge, along, from, to, base, inward], index) => {
     const count = Math.max(2, Math.round(Math.abs(to - from) / STEP));
     for (let i = 0; i <= count; i++) {
       const a = from + ((to - from) * i) / count;
@@ -641,7 +868,15 @@ function worldOutline(m, margin) {
       p[1 - along] = base + off;
       pts.push(p);
     }
-  }
+
+    // The arc that carries this run into the next one. The first and last
+    // samples land exactly on the two runs' ends, so they are dropped.
+    const [cx, cy, a0, a1] = corners[index];
+    for (let i = 1; i < ARC; i++) {
+      const t = a0 + ((a1 - a0) * i) / ARC;
+      pts.push([cx + Math.cos(t) * ch, cy + Math.sin(t) * ch]);
+    }
+  });
   return smoothClosed(pts);
 }
 
@@ -848,15 +1083,8 @@ const rockMarkup = (rocks) =>
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE * 3} ${
       SIZE * 3
     }" preserveAspectRatio="none">` +
-    tiles
-      .map(
-        ([name, sides, col, row]) =>
-          `<svg x="${col * SIZE}" y="${row * SIZE}" width="${SIZE}" height="${SIZE}" viewBox="0 0 ${SIZE} ${SIZE}" preserveAspectRatio="none" overflow="hidden">` +
-          tileBody(name, sides, col, row, m) +
-          `</svg>`
-      )
-      .join("") +
-    // Scenery sits on top of the finished tiles, clipped to water or to land.
+    worldBody(m) +
+    // Scenery sits on top of the finished ground, clipped to water or to land.
     // The sea clip is the viewport with the island punched out of it (even-odd
     // on two subpaths), so swell never rides over the beach.
     `<defs>` +

@@ -609,7 +609,13 @@ background: var(--pw-surface);
 .neighbourParcel {
   --cell: 36px;
   --gutter: 1px;
-  /* Ten cells, but the trailing gutter is not part of the parcel. */
+  /*
+    Ten whole cells. It used to subtract the trailing gutter, which left the
+    parcel a pixel short of the centre parcel beside it and put a sliver of bare
+    terrain at every parcel join. The v4 pattern below draws its line on the
+    cell's right and bottom edge, so the last line lands on the parcel boundary
+    and two neighbours share it.
+  */
   width: calc(var(--cell) * 10 - var(--gutter));
   height: calc(var(--cell) * 10 - var(--gutter));
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='35' height='35' fill='%23000' fill-opacity='0.25'/%3E%3C/svg%3E"),
@@ -623,8 +629,19 @@ background: var(--pw-surface);
   black cell with 25% opacity, which is what buries the terrain detail under
   it; here the ground shows and only the lines sit on top.
 */
+/*
+  Two hairlines per cell — right edge and bottom edge — rather than a rect with
+  a transparent gutter around it. A rect drew a line on all four sides, so every
+  boundary between cells got two of them with a pixel of bare terrain between:
+  the dark seam. Drawn at .5 so a 1px stroke lands on the pixel, not across two.
+*/
 .neighbourParcelV4 {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Crect width='35' height='35' fill='none' stroke='%23F4F4F1' stroke-opacity='0.11'/%3E%3C/svg%3E"),
+  /* Ten whole cells: v4's line sits on the cell edge, so the last one lands on
+     the parcel boundary and the neighbour shares it. v3 keeps the short width
+     above, because its pattern still relies on a transparent gutter. */
+  width: calc(var(--cell) * 10);
+  height: calc(var(--cell) * 10);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36'%3E%3Cpath d='M35.5 0V36M0 35.5H36' stroke='%23F4F4F1' stroke-opacity='0.11' stroke-width='1' fill='none'/%3E%3C/svg%3E"),
     var(--terrain);
 }
 /* Sea has no lands, so it keeps no grid in either skin. */

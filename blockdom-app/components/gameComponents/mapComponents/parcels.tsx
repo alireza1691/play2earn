@@ -280,9 +280,14 @@ const CentreParcel = memo(function CentreParcel({
 }: CentreProps) {
   return (
     <div
-      className={`parcelTerrain relative grid w-fit grid-cols-10 ${
-        desktop ? "gap-[1px]" : "gap-[2px]"
-      }`}
+      /*
+        No gap. Each cell used to carry a hairline on all four sides and the
+        grid put a 1px gap between them, so every internal boundary rendered as
+        hairline + bare terrain + hairline — a three-pixel band that read as a
+        dark line between lands. Cells butt now and draw the line on two sides
+        only, so a boundary is exactly one hairline.
+      */
+      className="parcelTerrain relative grid w-fit grid-cols-10"
       style={terrainStyle(parcel.x, parcel.y, tiles)}
     >
       {/* Under the land cells, so their tint falls over the rock as it does
@@ -307,14 +312,18 @@ const CentreParcel = memo(function CentreParcel({
                   // wall, or canopy over a cache — so the cell itself no longer
                   // has to carry three different treatments. Accent is left to
                   // hover and selection.
-                  "bg-[#0D0F12]/[0.08] hover:bg-[#98FBD7]/20 shadow-[inset_0_0_0_1px_rgba(244,244,241,0.11)]"
+                  // Right and bottom only: two neighbours share one line
+                  // instead of drawing two against each other.
+                  "bg-[#0D0F12]/[0.08] hover:bg-[#98FBD7]/20 shadow-[inset_-1px_-1px_0_0_rgba(244,244,241,0.11)]"
                 : `${
                     isOwned ? "bg-black/40" : "bg-black/25"
                   } hover:bg-black/60 shadow-md`
             } active:bg-black/10 cursor-pointer transition-colors duration-100 relative ${
               desktop
-                ? "text-black text-[8px] w-[35px] h-[35px] md:h-[52px] md:w-[52px] 2xl:h-[70px] 2xl:w-[70px]"
-                : "text-white/40 p-1 text-[8px] h-[52px] w-[52px] 2xl:h-[70px] 2xl:w-[70px]"
+                ? // The gap is gone, so each cell takes the pitch it used to
+                  // share with it: 35+1, 52+1, 70+1.
+                  "text-black text-[8px] w-[36px] h-[36px] md:h-[53px] md:w-[53px] 2xl:h-[71px] 2xl:w-[71px]"
+                : "text-white/40 p-1 text-[8px] h-[54px] w-[54px] 2xl:h-[72px] 2xl:w-[72px]"
             }`}
           >
             {wild && <JungleMarker landId={land} {...wildAt(land)} />}
