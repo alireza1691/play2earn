@@ -111,8 +111,26 @@ export const landObjectFromTokenId = (coordinates: number) => {
   return { x: xCoordinate, y: yCoordinate };
 };
 
+/** ERC721 `Transfer(address,address,uint256)`. */
+const TRANSFER_TOPIC =
+  "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+
+/**
+ * Every land that exists, and who holds it now.
+ *
+ * This used to keep only the mint — `Transfer` from the zero address — which
+ * made `owner` the original minter and froze it there. Any parcel that changed
+ * hands afterwards still listed under whoever first minted it, so the seeded
+ * lands the deploy wallet handed to the test opponents kept being offered back
+ * to the deploy wallet as its own.
+ *
+ * So walk every transfer in the land id range and let the later one win. The
+ * explorer returns logs oldest-first, which is the same ordering the building
+ * levels already depend on, so the last write is the current owner.
+ */
 export function getMintedLandsFromEvents(events: ApiDataResultType) {
-  let mintedLands = [];
+  const owners = new Map<string, string>();
+
   if (events?.length > 1) {
     for (let index = 0; index < events.length; index++) {
       const topics = events[index].topics;
@@ -120,19 +138,22 @@ export function getMintedLandsFromEvents(events: ApiDataResultType) {
       if (
         Array.isArray(topics) &&
         topics.length === 4 &&
-        topics[1] ==
-          "0x0000000000000000000000000000000000000000000000000000000000000000" &&
+        topics[0]?.toLowerCase() === TRANSFER_TOPIC &&
         100100 <= parseInt(topics[3], 16) &&
         parseInt(topics[3], 16) <= 199199
       ) {
-        let ownerAddress = topics[2].replace("000000000000000000000000", "");
-        mintedLands.push({
-          tokenId: parseInt(topics[3], 16).toString(),
-          owner: ownerAddress,
-        });
+        owners.set(
+          parseInt(topics[3], 16).toString(),
+          topics[2].replace("000000000000000000000000", "")
+        );
       }
     }
   }
+
+  const mintedLands = Array.from(owners, ([tokenId, owner]) => ({
+    tokenId,
+    owner,
+  }));
 
   console.log("Here are all minted lands:", mintedLands);
   return mintedLands;

@@ -2,7 +2,7 @@
 import { useBlockchainUtilsContext } from "@/context/blockchain-utils-context";
 import { useUserDataContext } from "@/context/user-data-context";
 import { hasFaucet, useDeployment } from "@/lib/deployments";
-import { townRead } from "@/lib/instances";
+import { landsRead, townRead } from "@/lib/instances";
 import { formattedNumber } from "@/lib/utils";
 import FoodIcon from "@/svg/foodIcon";
 import GoldIcon from "@/svg/goldIcon";
@@ -102,22 +102,56 @@ export default function FaucetView() {
   const chosen =
     target || (inViewLand ? String(inViewLand.tokenId) : ownedLands?.[0] ? String(ownedLands[0].tokenId) : "");
 
+  // The contract enforces ownership anyway; this only exists so a wrong id is a
+  // sentence rather than a reverted transaction the user pays for.
+  const [ownerState, setOwnerState] = useState<
+    "checking" | "mine" | "foreign" | "unminted"
+  >("checking");
+
+  useEffect(() => {
+    if (!supported || !address || !chosen) return;
+    let cancelled = false;
+    setOwnerState("checking");
+
+    landsRead(deployment)
+      .ownerOf(chosen)
+      .then((owner: string) => {
+        if (cancelled) return;
+        setOwnerState(
+          owner.toLowerCase() === address.toLowerCase() ? "mine" : "foreign"
+        );
+      })
+      // ownerOf reverts on a token that was never minted, which is a legitimate
+      // answer here rather than a failure.
+      .catch(() => !cancelled && setOwnerState("unminted"));
+
+    return () => {
+      cancelled = true;
+    };
+  }, [supported, deployment, address, chosen]);
+
   const blockedReason = (): string | null => {
     if (!supported) return "The faucet exists only on v5.";
     if (!address) return "Connect a wallet first.";
     if (unsupported)
       return "The contract deployed here predates the faucet — it needs an upgrade first.";
-    if (open === null) return null;
+    // Never leave the button disabled with nothing said: a control that refuses
+    // to explain itself reads as broken, which is exactly how this was reported.
+    if (open === null) return "Checking the faucet…";
     if (open === false) return "The faucet is closed on this deployment.";
     if (reserve && reserve.isZero()) return "The faucet is empty — it needs topping up.";
-    if (!ownedLands?.length) return "You need a land first: the goods have to go somewhere.";
+    // `ownedLands` is filled in by the map pages. On a page reached directly it
+    // stays null, which is "not known yet", not "you own nothing" — treating the
+    // two the same locked real owners out of the faucet. Fall back to asking.
+    if (!chosen) return "Enter the land the goods should go to.";
+    if (ownerState === "checking") return "Checking that land…";
+    if (ownerState === "foreign") return "That land belongs to somebody else.";
+    if (ownerState === "unminted") return "That land has not been minted yet.";
     if (waiting > 0) return `Already claimed. Next claim in ${formatWait(waiting)}.`;
     return null;
   };
 
   const reason = blockedReason();
-  // `open === null` means the reads have not landed yet. Claiming on a guess is
-  // what produced a button that reverted, so wait for the answer.
   const canClaim = !reason && open === true && !!chosen;
 
   const row = (icon: React.ReactNode, label: string) => (
@@ -143,6 +177,25 @@ export default function FaucetView() {
         {row(<GoldIcon />, "Gold")}
         {row(<PlotCoin size={24} />, "PLOT")}
       </div>
+
+      {/* Reached directly, this page has no list of the wallet's lands to offer,
+          so it asks. The ownership check below turns a typo into a message. */}
+      {address && !ownedLands?.length && (
+        <div className="flex flex-col gap-1">
+          <span className="text-[11px] text-white/50">
+            Goods go to this land
+          </span>
+          <input
+            value={target}
+            onChange={(event) =>
+              setTarget(event.target.value.replace(/\D/g, "").slice(0, 6))
+            }
+            inputMode="numeric"
+            placeholder="104104"
+            className="w-full rounded-[4px] bg-black/40 px-3 py-2 text-[15px] outline-none focus:ring-1 focus:ring-[color:var(--pw-accent)]"
+          />
+        </div>
+      )}
 
       {ownedLands && ownedLands.length > 1 && (
         <div className="flex flex-col gap-1">
